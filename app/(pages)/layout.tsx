@@ -15,7 +15,7 @@ export default function PagesLayout({
   return (
     <div className={`${figtree.className} flex min-h-screen`}>
       <AppMenu />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 flex flex-col">{children}</main>
     </div>
   );
 }
