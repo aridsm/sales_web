@@ -10,12 +10,14 @@ import {
   Inventory2Outlined,
   ReceiptOutlined,
   AccountCircleOutlined,
+  CategoryOutlined,
   Menu,
   ExitToAppOutlined,
 } from "@mui/icons-material";
 
 const menuItems = [
   { name: "Dashboard", href: "/", icon: DashboardOutlined },
+  { name: "Categorias", href: "/categories", icon: CategoryOutlined },
   { name: "Produtos", href: "/products", icon: Inventory2Outlined },
   { name: "Vendas", href: "/sale", icon: ShoppingCartOutlined },
   { name: "Histórico", href: "/history", icon: History },

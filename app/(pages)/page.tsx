@@ -28,7 +28,7 @@ const datePeriods = {
     },
   },
   this_week: {
-    label: "Esta Semana",
+    label: "Esta semana",
     getDates: () => {
       const today = new Date();
       const dayOfWeek = today.getDay();
@@ -44,7 +44,7 @@ const datePeriods = {
     },
   },
   this_month: {
-    label: "Este Mês",
+    label: "Este mês",
     getDates: () => {
       const today = new Date();
       const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -61,7 +61,7 @@ const datePeriods = {
     },
   },
   this_year: {
-    label: "Este Ano",
+    label: "Este ano",
     getDates: () => {
       const today = new Date();
       const firstDay = new Date(today.getFullYear(), 0, 1);
@@ -142,23 +142,23 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-8 gap-5 mt-5 flex-1 min-h-0 grid-dashboard">
         <AppCard className="col-span-5 row-span-2">
-          <span className="font-semibold">Vendas por período</span>
+          <span className="font-semibold text-lg">Vendas por período</span>
         </AppCard>
         <AppCard className="col-span-3">
           <div className="flex justify-between font-semibold">
-            <span>Meta de hoje</span>
+            <span className="text-lg">Meta de hoje</span>
             <span className="text-2xl">R$ 1.000,00</span>
           </div>
-          <div className="w-full h-7 bg-gray-200 rounded-sm overflow-hidden mt-2">
+          <div className="w-full h-7 bg-slate-100 rounded-sm overflow-hidden mt-2">
             <div className="w-1/4 h-full bg-primary-2" />
           </div>
         </AppCard>
 
         <AppCard className="col-span-5 row-span-2">
-          <span className="font-semibold">Histórico de Atividade</span>
+          <span className="font-semibold text-lg">Histórico de Atividade</span>
         </AppCard>
         <AppCard className="col-span-3 row-span-3 col-start-6 row-start-2">
-          <span className="font-semibold">Lucro por Categoria</span>
+          <span className="font-semibold text-lg">Lucro por Categoria</span>
         </AppCard>
       </div>
     </AppPage>

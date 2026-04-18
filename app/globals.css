@@ -31,3 +31,11 @@ body {
 .grid-dashboard {
   grid-template-rows: auto 1fr 1fr;
 }
+
+::selection {
+  @apply bg-yellow-200 text-black!;
+}
+
+::-moz-selection {
+  @apply bg-yellow-200 text-black!;
+}
