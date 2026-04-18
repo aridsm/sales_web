@@ -8,7 +8,9 @@ export default class BaseService {
   }
 
   getAll(params?: Record<string, unknown>) {
-    return axiosClient.get(`/${this.resource}`, { params });
+    return axiosClient
+      .get(`/${this.resource}`, { params })
+      .then((res) => res.data);
   }
 
   delete(id: string | number) {

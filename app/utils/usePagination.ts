@@ -1,0 +1,81 @@
+import { useState, useCallback } from "react";
+
+interface PageData {
+  page: number;
+  page_size: number;
+  total_items: number;
+  total_pages: number;
+}
+
+interface ApiResponse<T> {
+  items: T[];
+  page_size: number;
+  page: number;
+  total_items: number;
+}
+
+interface PaginationResult<T> {
+  items: T[];
+  loading: boolean;
+  load: (params?: Record<string, unknown>) => Promise<void>;
+  pageData: PageData;
+  next: () => void;
+  previous: () => void;
+}
+
+export function usePagination<T>(
+  service: {
+    getAll: (params?: Record<string, unknown>) => Promise<ApiResponse<T>>;
+  },
+  defaultParams: Record<string, unknown> = {},
+): PaginationResult<T> {
+  const [items, setItems] = useState<T[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [pageData, setPageData] = useState<PageData>({
+    page: 1,
+    page_size: 20,
+    total_items: 0,
+    total_pages: 0,
+  });
+  const [params, setParams] = useState<Record<string, unknown>>({
+    ...defaultParams,
+    page: 1,
+    page_size: 20,
+  });
+
+  const load = useCallback(
+    async (newParams?: Record<string, unknown>) => {
+      const currentParams = newParams ? { ...params, ...newParams } : params;
+      setParams(currentParams);
+      setLoading(true);
+      try {
+        const response = await service.getAll(currentParams);
+        setItems(response.items);
+        setPageData({
+          page: response.page,
+          page_size: response.page_size,
+          total_items: response.total_items,
+          total_pages: Math.ceil(response.total_items / response.page_size),
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [service, params],
+  );
+
+  const next = useCallback(() => {
+    setParams((prev) => ({ ...prev, page: (prev.page as number) + 1 }));
+  }, []);
+
+  const previous = useCallback(() => {
+    setParams((prev) => ({
+      ...prev,
+      page: Math.max(1, (prev.page as number) - 1),
+    }));
+  }, []);
+
+  return { items, loading, load, pageData, next, previous };
+}
