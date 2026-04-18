@@ -1,9 +1,11 @@
 "use client";
 
 import AppPage from "../components/AppPage";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { SettingsOutlined } from "@mui/icons-material";
 import AppCard from "../components/AppCard";
+import { useTokenStore } from "@/stores/tokenStore";
 
 const datePeriods = {
   today: {
@@ -73,6 +75,19 @@ const datePeriods = {
 };
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const token = useTokenStore((state) => state.token);
+
+  useEffect(() => {
+    if (!token) {
+      router.push("/login");
+    }
+  }, [token, router]);
+
+  if (!token) {
+    return <div>Redirecting to login...</div>;
+  }
+
   const [activePeriod, setActivePeriod] = useState("today");
   const [activeDate, setActiveDate] = useState(datePeriods.today.getDates());
   const [budget, setBudget] = useState({
