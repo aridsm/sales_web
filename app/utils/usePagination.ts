@@ -1,20 +1,25 @@
 import { useState, useCallback } from "react";
 
-interface PageData {
+export interface PageData {
   page: number;
   page_size: number;
   total_items: number;
   total_pages: number;
 }
 
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
   items: T[];
   page_size: number;
   page: number;
   total_items: number;
+  total_pages: number;
 }
 
-interface PaginationResult<T> {
+export interface PaginationService<T> {
+  getAll: (params?: Record<string, unknown>) => Promise<ApiResponse<T>>;
+}
+
+export interface PaginationResult<T> {
   items: T[];
   loading: boolean;
   load: (params?: Record<string, unknown>) => Promise<void>;
@@ -24,9 +29,7 @@ interface PaginationResult<T> {
 }
 
 export function usePagination<T>(
-  service: {
-    getAll: (params?: Record<string, unknown>) => Promise<ApiResponse<T>>;
-  },
+  service: PaginationService<T>,
   defaultParams: Record<string, unknown> = {},
 ): PaginationResult<T> {
   const [items, setItems] = useState<T[]>([]);
@@ -55,7 +58,7 @@ export function usePagination<T>(
           page: response.page,
           page_size: response.page_size,
           total_items: response.total_items,
-          total_pages: Math.ceil(response.total_items / response.page_size),
+          total_pages: response.total_pages,
         });
       } catch (error) {
         console.error("Error fetching data:", error);

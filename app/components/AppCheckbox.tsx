@@ -1,0 +1,26 @@
+import React from 'react';
+
+export interface AppCheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> { }
+
+export default function AppCheckbox({ className = '', ...props }: AppCheckboxProps) {
+  return (
+    <div className={`relative flex items-center justify-center ${className}`}>
+      <input
+        type="checkbox"
+        className="peer appearance-none w-4 h-4 rounded-sm border border-slate-300 hover:border-slate-400 bg-white checked:bg-primary checked:border-primary transition-colors cursor-pointer m-0"
+        {...props}
+      />
+      <svg
+        className="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </div>
+  );
+}

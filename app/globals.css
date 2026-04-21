@@ -39,3 +39,19 @@ body {
 ::-moz-selection {
   @apply bg-yellow-200 text-black!;
 }
+
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-foreground/2 rounded-md;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-foreground/10 rounded-md;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-foreground/30;
+}

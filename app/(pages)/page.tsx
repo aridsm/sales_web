@@ -75,18 +75,8 @@ const datePeriods = {
 };
 
 export default function DashboardPage() {
-  const router = useRouter();
   const token = useTokenStore((state) => state.token);
-
-  useEffect(() => {
-    if (!token) {
-      router.push("/login");
-    }
-  }, [token, router]);
-
-  if (!token) {
-    return <div>Redirecting to login...</div>;
-  }
+  const router = useRouter();
 
   const [activePeriod, setActivePeriod] = useState("today");
   const [activeDate, setActiveDate] = useState(datePeriods.today.getDates());
@@ -109,6 +99,16 @@ export default function DashboardPage() {
     },
   });
 
+  useEffect(() => {
+    if (!token) {
+      router.push("/login");
+    }
+  }, [token, router]);
+
+  if (!token) {
+    return <div>Redirecting to login...</div>;
+  }
+
   const handlePeriodChange = (periodKey: string) => {
     setActivePeriod(periodKey);
     setActiveDate(
@@ -123,16 +123,15 @@ export default function DashboardPage() {
           <button
             key={key}
             onClick={() => handlePeriodChange(key)}
-            className={`px-5 py-2 rounded-sm border transition-colors cursor-pointer ${
-              activePeriod === key
-                ? "bg-primary text-white border-primary"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-            }`}
+            className={`px-5 py-2 rounded-sm border transition-colors cursor-pointer ${activePeriod === key
+              ? "bg-primary text-white border-primary"
+              : "bg-white text-gray-700 border-slate-200 hover:bg-gray-50"
+              }`}
           >
             {period.label}
           </button>
         ))}
-        <button className="p-2 rounded-sm border border-gray-300 bg-white cursor-pointer hover:bg-gray-50 transition-colors">
+        <button className="p-2 rounded-sm border border-slate-200 bg-white cursor-pointer hover:bg-gray-50 transition-colors">
           <SettingsOutlined />
         </button>
       </div>
@@ -141,11 +140,10 @@ export default function DashboardPage() {
         {Object.entries(budget).map(([key, value]) => (
           <AppCard
             key={key}
-            className={`flex-1 flex-col items-start justify-between ${
-              key === "balance"
-                ? " bg-primary-2! text-white border-transparent!"
-                : ""
-            }`}
+            className={`flex-1 flex-col items-start justify-between ${key === "balance"
+              ? " bg-primary-2! text-white border-transparent!"
+              : ""
+              }`}
           >
             <span className={`${key === "balance" ? "" : "text-label"}`}>
               {value.label}
