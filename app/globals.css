@@ -25,7 +25,6 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 .grid-dashboard {
@@ -54,4 +53,8 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-foreground/30;
+}
+
+input {
+  @apply border border-slate-200 outline-2 outline-transparent rounded-sm px-3 py-3 text-sm focus:outline-primary/20 focus:border-primary transition-colors;
 }

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import AppPage from "../../components/AppPage";
 import AppGrid from "../../components/AppGrid";
+import AppCategoryForm from "./components/AppCategoryForm";
 import {
   usePagination,
   type PaginationService,
@@ -18,7 +19,8 @@ interface Category {
 }
 
 export default function CategoriesPage() {
-  const [rowsSelected, setRowsSelected] = useState([]);
+  const [rowsSelected, setRowsSelected] = useState<Category[]>([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const pagination = usePagination<Category>(
     categoriesService as unknown as PaginationService<Category>,
@@ -76,9 +78,15 @@ export default function CategoriesPage() {
       <AppGrid
         columns={columns}
         pagination={pagination}
-        onNew={() => { }}
+        onNew={() => setIsFormOpen(true)}
+        onDeleteSelected={() => { }}
         selectedRows={rowsSelected}
         onSelectedChange={(rows) => setRowsSelected(rows)}
+      />
+
+      <AppCategoryForm
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
       />
     </AppPage>
   );

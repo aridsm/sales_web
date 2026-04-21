@@ -2,10 +2,11 @@
 
 import React from "react";
 import { PaginationResult } from "../utils/usePagination";
-import { Search, Add, Delete } from "@mui/icons-material";
+import { Search, Add, DeleteOutlined } from "@mui/icons-material";
 import AppPagination from "./AppPagination";
 import AppButton from "./AppButton";
-import AppCheckbox from "./AppCheckbox";
+import AppCheckbox from "./inputs/AppCheckbox";
+import AppInputText from "./inputs/AppInputText";
 
 interface Column<T> {
   column: React.ReactNode | string;
@@ -111,15 +112,15 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
   const tableWidth = colWidths.reduce((acc, w) => acc + w, 0);
 
   return (
-    <div className="flex flex-col h-full min-h-0 min-w-0 flex-1 w-full overflow-hidden">
+    <div className="flex flex-col h-full min-h-0 min-w-0 flex-1 w-full">
       <div className="flex flex-col sm:flex-row justify-between items-center py-3 gap-4">
         <div className="relative w-full sm:max-w-sm">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500 z-10">
             <Search fontSize="small" />
           </div>
-          <input
+          <AppInputText
             type="text"
-            className="bg-background border border-slate-200 hover:border-slate-300 text-slate-900 text-sm rounded-lg focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary block w-full pl-10 p-2.5 outline-none transition-all"
+            className="pl-10!"
             placeholder="Buscar..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
@@ -134,11 +135,11 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
         <div className="flex gap-2 w-full sm:w-auto">
           {hasSelection && selectedRows && selectedRows.length > 0 && onDeleteSelected && (
             <AppButton
-              color="background"
+              color="red"
               onClick={onDeleteSelected}
-              className="px-4 py-2 text-sm shrink-0 w-full sm:w-auto !text-red-500 hover:!bg-red-50 hover:!border-red-200"
+              className="px-4 shrink-0 w-full sm:w-auto"
             >
-              <Delete fontSize="small" />
+              <DeleteOutlined fontSize="small" />
               Excluir
             </AppButton>
           )}
@@ -146,7 +147,7 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
             <AppButton
               color="primary"
               onClick={onNew}
-              className="px-4 py-2 text-sm shrink-0 w-full sm:w-auto"
+              className="px-4 py-2 shrink-0 w-full sm:w-auto"
             >
               <Add fontSize="small" />
               Adicionar item
