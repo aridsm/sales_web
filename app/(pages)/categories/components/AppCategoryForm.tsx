@@ -1,14 +1,17 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import AppModal from "../../../components/AppModal";
 import AppInputText from "../../../components/inputs/AppInputText";
 import AppButton from "@/app/components/AppButton";
+import AppSelect from "@/app/components/inputs/AppSelect";
+import { CategoryType } from "@/enums/CategoryType";
 
 const categorySchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
+  type: z.number({ error: "O tipo é obrigatório" }).min(1, { message: "O tipo é obrigatório" }),
 });
 
 type CategoryFormData = z.infer<typeof categorySchema>;
@@ -23,6 +26,7 @@ export default function AppCategoryForm({ isOpen, onClose }: AppCategoryFormProp
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isValid },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
@@ -39,6 +43,11 @@ export default function AppCategoryForm({ isOpen, onClose }: AppCategoryFormProp
     onClose();
   };
 
+  const categoryTypeOptions = [
+    { id: CategoryType.PRODUCT, name: "Produto" },
+    { id: CategoryType.OTHER_EXPENSE, name: "Outras Despesas" },
+  ];
+
   return (
     <AppModal isOpen={isOpen} onClose={handleClose} title="Adicionar Categoria">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -48,6 +57,22 @@ export default function AppCategoryForm({ isOpen, onClose }: AppCategoryFormProp
           placeholder="Nome da categoria"
           {...register("name")}
           error={errors.name?.message}
+        />
+
+        <Controller
+          name="type"
+          control={control}
+          render={({ field }) => (
+            <AppSelect
+              label="Tipo"
+              placeholder="Selecione o tipo"
+              options={categoryTypeOptions}
+              value={field.value}
+              multiple
+              onChange={field.onChange}
+              error={errors.type?.message}
+            />
+          )}
         />
 
         <div className="mt-4 flex justify-end gap-2">

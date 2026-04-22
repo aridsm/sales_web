@@ -16,7 +16,7 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
                     ref={ref}
                     id={label}
                     type={type}
-                    className={` ${error ? "border-red-500 focus:ring-red-500" : "border-gray-300"
+                    className={`input-field ${error ? "border-red-500 focus:ring-red-500" : "border-gray-300"
                         } ${className}`}
                     {...props}
                 />

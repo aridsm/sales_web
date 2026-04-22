@@ -55,6 +55,10 @@ body {
   @apply bg-foreground/30;
 }
 
-input {
-  @apply border border-slate-200 outline-2 outline-transparent rounded-sm px-3 py-3 text-sm focus:outline-primary/20 focus:border-primary transition-colors;
+.input-field {
+  @apply border border-slate-200 hover:border-slate-300 placeholder:text-foreground/40 outline-2 outline-transparent rounded-sm px-3 h-12 focus:outline-primary/20 focus:border-primary transition-colors;
+}
+
+.input-field.active {
+  @apply outline-2 outline-primary/20 border-primary!;
 }

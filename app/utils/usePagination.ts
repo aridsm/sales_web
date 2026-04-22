@@ -22,7 +22,7 @@ export interface PaginationService<T> {
 export interface PaginationResult<T> {
   items: T[];
   loading: boolean;
-  load: (params?: Record<string, unknown>) => Promise<void>;
+  load: (params?: Record<string, unknown>, append?: boolean) => Promise<void>;
   pageData: PageData;
   next: () => void;
   previous: () => void;
@@ -47,13 +47,17 @@ export function usePagination<T>(
   });
 
   const load = useCallback(
-    async (newParams?: Record<string, unknown>) => {
+    async (newParams?: Record<string, unknown>, append: boolean = false) => {
       const currentParams = newParams ? { ...params, ...newParams } : params;
       setParams(currentParams);
       setLoading(true);
       try {
         const response = await service.getAll(currentParams);
-        setItems(response.items);
+        if (append) {
+          setItems((prev) => [...prev, ...response.items]);
+        } else {
+          setItems(response.items);
+        }
         setPageData({
           page: response.page,
           page_size: response.page_size,
