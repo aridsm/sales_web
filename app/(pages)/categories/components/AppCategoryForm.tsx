@@ -7,11 +7,13 @@ import AppModal from "../../../components/AppModal";
 import AppInputText from "../../../components/inputs/AppInputText";
 import AppButton from "@/app/components/AppButton";
 import AppSelect from "@/app/components/inputs/AppSelect";
+import AppColor from "@/app/components/inputs/AppColor";
 import { CategoryType } from "@/enums/CategoryType";
 
 const categorySchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
-  type: z.number({ error: "O tipo é obrigatório" }).min(1, { message: "O tipo é obrigatório" }),
+  type: z.number().optional(),
+  color: z.string().optional(),
 });
 
 type CategoryFormData = z.infer<typeof categorySchema>;
@@ -68,9 +70,22 @@ export default function AppCategoryForm({ isOpen, onClose }: AppCategoryFormProp
               placeholder="Selecione o tipo"
               options={categoryTypeOptions}
               value={field.value}
-              multiple
               onChange={field.onChange}
               error={errors.type?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="color"
+          control={control}
+          render={({ field }) => (
+            <AppColor
+              label="Cor"
+              placeholder="Selecione a cor"
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.color?.message}
             />
           )}
         />
