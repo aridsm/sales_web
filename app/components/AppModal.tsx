@@ -36,14 +36,16 @@ export default function AppModal({ isOpen, onClose, title, children }: AppModalP
             <AppButton
               onClick={onClose}
               color="background"
-              className="px-2 py-1!"
+              flat
+              rounded
+              className="w-8 h-8"
             >
               ✕
             </AppButton>
           </div>
         )}
 
-        <div className="mt-2 text-gray-600">
+        <div className=" text-gray-600">
           {children}
         </div>
       </div>

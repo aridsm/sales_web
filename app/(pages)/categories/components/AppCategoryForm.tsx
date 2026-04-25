@@ -117,7 +117,7 @@ export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppC
           )}
         />
 
-        <div className="mt-4 flex justify-end gap-2">
+        <div className="mt-2 flex justify-end gap-2">
           <AppButton
             type="button"
             onClick={handleClose}

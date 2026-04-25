@@ -199,7 +199,7 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
               ))}
               <th className={`bg-background-3 border-y border-slate-200 ${!actions ? "rounded-tr-md! border-r" : ""}`}></th>
               {actions && (
-                <th className="border-slate-200 border-y border-l p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!">
+                <th className="border-slate-200 border-y border-l border-r p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!">
                 </th>
               )}
             </tr>
@@ -235,7 +235,7 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
                     ))}
                     <td className={`border-b border-slate-200 ${!actions ? "border-r" : ""}`}></td>
                     {actions && (
-                      <td className={`p-2 border-l border-slate-200 border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${selected ? 'bg-background-3' : 'bg-background'} group-hover:bg-background-3`}>
+                      <td className={`p-2 border-l border-r border-slate-200 border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${selected ? 'bg-background-3' : 'bg-background'} group-hover:bg-background-3`}>
                         <AppActions item={row} actions={actions} />
                       </td>
                     )}

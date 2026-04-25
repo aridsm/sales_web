@@ -4,6 +4,7 @@ import React from "react";
 import { PaginationResult } from "../utils/usePagination";
 import { KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft, KeyboardArrowRight, KeyboardArrowLeft } from "@mui/icons-material";
 import AppButton from "./AppButton";
+import AppInputText from "./inputs/AppInputText";
 
 interface AppPaginationProps<T> {
   pagination: PaginationResult<T>;
@@ -61,7 +62,7 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
           disabled={pageData.page <= 1}
           className="px-3"
         >
-          <KeyboardDoubleArrowLeft fontSize="small" /> Primeira página
+          <KeyboardDoubleArrowLeft fontSize="small" className="text-label/50" /> Primeira página
         </AppButton>
         <AppButton
           color="background"
@@ -69,7 +70,7 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
           disabled={pageData.page <= 1}
           className="px-3"
         >
-          <KeyboardArrowLeft fontSize="small" />  Anterior
+          <KeyboardArrowLeft fontSize="small" className="text-label/50" />  Anterior
         </AppButton>
 
         <div className="flex gap-1 mx-2">
@@ -99,7 +100,7 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
           disabled={pageData.page >= pageData.total_pages}
           className="px-3"
         >
-          Próximo <KeyboardArrowRight fontSize="small" />
+          Próximo <KeyboardArrowRight fontSize="small" className="text-label/50" />
         </AppButton>
         <AppButton
           color="background"
@@ -107,24 +108,26 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
           disabled={pageData.page >= pageData.total_pages}
           className="px-3"
         >
-          Última página <KeyboardDoubleArrowRight fontSize="small" />
+          Última página <KeyboardDoubleArrowRight fontSize="small" className="text-label/50" />
         </AppButton>
       </div>
 
       <div className="flex items-center gap-2 whitespace-nowrap">
         <span>Página</span>
-        <input
-          type="number"
-          min={1}
-          max={pageData.total_pages}
-          value={pageInput}
-          onChange={(e) => setPageInput(e.target.value)}
-          onBlur={handlePageInputSubmit}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handlePageInputSubmit();
-          }}
-          className="w-16 px-2 py-1 border border-slate-300 rounded text-center focus:outline-none focus:border-primary"
-        />
+        <div className="w-18">
+          <AppInputText
+            type="number"
+            min={1}
+            max={pageData.total_pages}
+            value={pageInput}
+            onChange={(e) => setPageInput(e.target.value)}
+            onBlur={handlePageInputSubmit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handlePageInputSubmit();
+            }}
+            className="h-8! py-0!"
+          />
+        </div>
         <span>
           de {pageData.total_pages} ({pageData.total_items} itens)
         </span>

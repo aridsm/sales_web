@@ -58,7 +58,7 @@ body {
 }
 
 .input-field {
-  @apply border border-slate-200 hover:border-slate-300 placeholder:text-foreground/40 outline-2 outline-transparent rounded-sm px-3 h-12 focus:outline-primary/20 focus:border-primary transition-colors;
+  @apply border border-slate-200 hover:border-slate-300 placeholder:text-foreground/40 outline-2 outline-transparent rounded-md px-3 h-12 focus:outline-primary/20 focus:border-primary transition-colors;
 }
 
 .input-field.active {
