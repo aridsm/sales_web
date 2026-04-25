@@ -7,6 +7,7 @@ import AppPagination from "./AppPagination";
 import AppButton from "./AppButton";
 import AppCheckbox from "./inputs/AppCheckbox";
 import AppInputText from "./inputs/AppInputText";
+import AppActions, { ActionItem } from "./AppActions";
 
 interface Column<T> {
   column: React.ReactNode | string;
@@ -21,16 +22,17 @@ interface AppGridProps<T> {
   selectedRows?: T[];
   onSelectedChange?: (rows: T[]) => void;
   onDeleteSelected?: () => void;
+  actions?: ActionItem<T>[];
 }
 
-export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, onSelectedChange, onDeleteSelected }: AppGridProps<T>) {
+export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, onSelectedChange, onDeleteSelected, actions }: AppGridProps<T>) {
   const { items, loading, load } = pagination;
 
   const hasSelection = selectedRows !== undefined && onSelectedChange !== undefined;
 
   const isSelected = (row: T) => selectedRows?.some(r => r === row || (r as any).id === (row as any).id);
 
-  const handleSelectRow = (row: T, checked: boolean) => {
+  function handleSelectRow(row: T, checked: boolean) {
     if (!hasSelection) return;
     if (checked) {
       onSelectedChange([...(selectedRows || []), row]);
@@ -41,26 +43,34 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
 
   const isAllSelected = items.length > 0 && items.every((item) => isSelected(item));
 
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!hasSelection) return;
-    if (e.target.checked) {
-      const newSelected = [...(selectedRows || [])];
-      items.forEach((item) => {
-        if (!newSelected.some(r => r === item || (r as any).id === (item as any).id)) {
-          newSelected.push(item);
-        }
-      });
-      onSelectedChange(newSelected);
-    } else {
-      const newSelected = (selectedRows || []).filter(r => !items.some(item => item === r || (item as any).id === (r as any).id));
-      onSelectedChange(newSelected);
+  function handleSelectAll(e: React.ChangeEvent<HTMLInputElement>) {
+    try {
+      if (!hasSelection) return;
+      if (e.target.checked) {
+        const newSelected = [...(selectedRows || [])];
+        items.forEach((item) => {
+          if (!newSelected.some(r => r === item || (r as any).id === (item as any).id)) {
+            newSelected.push(item);
+          }
+        });
+        onSelectedChange(newSelected);
+      } else {
+        const newSelected = (selectedRows || []).filter(r => !items.some(item => item === r || (item as any).id === (r as any).id));
+        onSelectedChange(newSelected);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const [searchInput, setSearchInput] = React.useState("");
 
-  const handleSearch = () => {
-    load({ search: searchInput, page: 1 });
+  function handleSearch() {
+    try {
+      load({ search: searchInput, page: 1 });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const [colWidths, setColWidths] = React.useState<number[]>(
@@ -78,13 +88,13 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
 
   const [resizingIndex, setResizingIndex] = React.useState<number | null>(null);
 
-  const handleMouseDown = (e: React.MouseEvent, index: number) => {
+  function handleMouseDown(e: React.MouseEvent, index: number) {
     e.preventDefault();
     setResizingIndex(index);
     const startX = e.clientX;
     const startWidth = colWidths[index] || columns[index].size || 140;
 
-    const handleMouseMove = (moveEvent: MouseEvent) => {
+    function handleMouseMove(moveEvent: MouseEvent) {
       const deltaX = moveEvent.clientX - startX;
       setColWidths((prev) => {
         const newWidths = [...prev];
@@ -93,7 +103,7 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
       });
     };
 
-    const handleMouseUp = () => {
+    function handleMouseUp() {
       setResizingIndex(null);
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
@@ -132,35 +142,42 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
             }}
           />
         </div>
-        <div className="flex gap-2 w-full sm:w-auto">
-          {hasSelection && selectedRows && selectedRows.length > 0 && onDeleteSelected && (
-            <AppButton
-              color="red"
-              onClick={onDeleteSelected}
-              className="px-4 shrink-0 w-full sm:w-auto"
-            >
-              <DeleteOutlined fontSize="small" />
-              Excluir
-            </AppButton>
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+          {hasSelection && selectedRows && selectedRows.length > 0 && (
+            <span className="font-medium text-sm whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
+              {selectedRows.length} {selectedRows.length === 1 ? "item selecionado" : "itens selecionados"}
+            </span>
           )}
-          {onNew && (
-            <AppButton
-              color="primary"
-              onClick={onNew}
-              className="px-4 py-2 shrink-0 w-full sm:w-auto"
-            >
-              <Add fontSize="small" />
-              Adicionar item
-            </AppButton>
-          )}
+          <div className="flex gap-2 w-full sm:w-auto">
+            {hasSelection && selectedRows && selectedRows.length > 0 && onDeleteSelected && (
+              <AppButton
+                color="red"
+                onClick={onDeleteSelected}
+                className="px-4 shrink-0 w-full sm:w-auto"
+              >
+                <DeleteOutlined fontSize="small" />
+                Excluir
+              </AppButton>
+            )}
+            {onNew && (
+              <AppButton
+                color="primary"
+                onClick={onNew}
+                className="px-4 py-2 shrink-0 w-full sm:w-auto"
+              >
+                <Add fontSize="small" />
+                Adicionar item
+              </AppButton>
+            )}
+          </div>
         </div>
       </div>
       <div className="overflow-auto flex-1 min-w-0 w-full">
         <table className="table-fixed max-w-none border-separate border-spacing-0" style={{ width: "100%", minWidth: tableWidth > 0 ? tableWidth : "100%" }}>
-          <thead className="uppercase text-xs tracking-wide sticky top-0 z-20 bg-white text-foreground">
+          <thead className="uppercase text-xs tracking-wide sticky top-0 z-20 text-foreground">
             <tr>
               {hasSelection && (
-                <th className="border-slate-200 border-y border-r first:border-l first:rounded-tl-md! p-2 text-center sticky left-0 z-30 bg-slate-100 w-12">
+                <th className="border-slate-200 border-y border-r first:border-l first:rounded-tl-md! p-2 text-center sticky left-0 z-30 bg-background-3 w-12">
                   <AppCheckbox
                     checked={isAllSelected}
                     onChange={handleSelectAll}
@@ -170,7 +187,7 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
               {columns.map((col, index) => (
                 <th
                   key={index}
-                  className={`border-slate-200 border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-slate-100/70 ${resizingIndex === index ? "text-primary" : ""}`}
+                  className={`border-slate-200 border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary" : ""}`}
                   style={{ width: colWidths[index] || col.size || 140 }}
                 >
                   {col.column}
@@ -180,13 +197,17 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
                   />
                 </th>
               ))}
-              <th className="bg-slate-100/70 border-primary/20 border-y border-r rounded-tr-md p-2"></th>
+              <th className={`bg-background-3 border-y border-slate-200 ${!actions ? "rounded-tr-md! border-r" : ""}`}></th>
+              {actions && (
+                <th className="border-slate-200 border-y border-l p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!">
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={columns.length + (hasSelection ? 2 : 1)} className="p-4 text-center border-x border-slate-200">
+                <td colSpan={columns.length + (hasSelection ? 1 : 0) + (actions ? 1 : 0) + 1} className="p-4 text-center border-x border-slate-200">
                   Carregando...
                 </td>
               </tr>
@@ -194,9 +215,9 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
               items.map((row: T, rowIndex: number) => {
                 const selected = isSelected(row);
                 return (
-                  <tr key={rowIndex} className={`hover:bg-slate-100/70 transition-colors ${selected ? "bg-slate-100/70" : ""}`}>
+                  <tr key={rowIndex} className={`group hover:bg-background-3 transition-colors ${selected ? "bg-background-3" : ""}`}>
                     {hasSelection && (
-                      <td className={`p-2 w-12 border-r border-slate-200 first:border-l border-b sticky left-0 z-10 text-center ${selected ? 'bg-slate-100' : 'bg-background'}`}>
+                      <td className={`p-2 w-12 border-r border-slate-200 first:border-l border-b sticky left-0 z-10 text-center transition-colors ${selected ? 'bg-background-3' : 'bg-background'} group-hover:bg-background-3`}>
                         <AppCheckbox
                           checked={selected}
                           onChange={(e) => handleSelectRow(row, e.target.checked)}
@@ -206,13 +227,18 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
                     {columns.map((col, colIndex) => (
                       <td
                         key={colIndex}
-                        className={`p-3 overflow-hidden border-r border-slate-200 ${!hasSelection ? "first:border-l" : ""} border-b ${rowIndex === items.length - 1 ? "" : "border-b"} ${resizingIndex === colIndex ? "bg-slate-100/70" : ""}`}
+                        className={`p-3 overflow-hidden border-r border-slate-200 ${!hasSelection ? "first:border-l" : ""} border-b ${rowIndex === items.length - 1 ? "" : "border-b"} ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
                         style={{ width: colWidths[colIndex] || col.size || 140 }}
                       >
                         {col.cell({ row })}
                       </td>
                     ))}
-                    <td className={`p-2 border-r border-slate-200 border-b`}></td>
+                    <td className={`border-b border-slate-200 ${!actions ? "border-r" : ""}`}></td>
+                    {actions && (
+                      <td className={`p-2 border-l border-slate-200 border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${selected ? 'bg-background-3' : 'bg-background'} group-hover:bg-background-3`}>
+                        <AppActions item={row} actions={actions} />
+                      </td>
+                    )}
                   </tr>
                 );
               })

@@ -17,6 +17,10 @@ export default class BaseService {
     return axiosClient.delete(`/${this.resource}/${id}`);
   }
 
+  bulkDelete(ids: (string | number)[]) {
+    return axiosClient.delete(`/${this.resource}/bulk`, { data: { ids } });
+  }
+
   post(data: unknown) {
     return axiosClient.post(`/${this.resource}`, data);
   }

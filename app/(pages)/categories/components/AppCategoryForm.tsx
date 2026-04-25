@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +10,7 @@ import AppButton from "@/app/components/AppButton";
 import AppSelect from "@/app/components/inputs/AppSelect";
 import AppColor from "@/app/components/inputs/AppColor";
 import { CategoryType } from "@/enums/CategoryType";
+import { categoriesService } from "@/services/Categories";
 
 const categorySchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
@@ -21,9 +23,11 @@ type CategoryFormData = z.infer<typeof categorySchema>;
 interface AppCategoryFormProps {
   isOpen: boolean;
   onClose: () => void;
+  model?: any;
+  onSave: () => Promise<void>;
 }
 
-export default function AppCategoryForm({ isOpen, onClose }: AppCategoryFormProps) {
+export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppCategoryFormProps) {
   const {
     register,
     handleSubmit,
@@ -35,12 +39,35 @@ export default function AppCategoryForm({ isOpen, onClose }: AppCategoryFormProp
     mode: "onChange",
   });
 
-  const onSubmit = (data: CategoryFormData) => {
-    console.log("Form data:", data);
-    handleClose();
+  useEffect(() => {
+    if (isOpen) {
+      if (model) {
+        reset(model);
+      } else {
+        reset({
+          name: "",
+          type: undefined,
+          color: "",
+        });
+      }
+    }
+  }, [isOpen, model, reset]);
+
+  async function onSubmit(data: CategoryFormData) {
+    try {
+      if (model?.id) {
+        await categoriesService.patch(model.id, data);
+      } else {
+        await categoriesService.post(data);
+      }
+      await onSave()
+      handleClose()
+    } catch (error) {
+      console.error(error)
+    }
   };
 
-  const handleClose = () => {
+  function handleClose() {
     reset();
     onClose();
   };
@@ -51,7 +78,7 @@ export default function AppCategoryForm({ isOpen, onClose }: AppCategoryFormProp
   ];
 
   return (
-    <AppModal isOpen={isOpen} onClose={handleClose} title="Adicionar Categoria">
+    <AppModal isOpen={isOpen} onClose={handleClose} title={model ? "Editar Categoria" : "Adicionar Categoria"}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <AppInputText
           label="Nome"

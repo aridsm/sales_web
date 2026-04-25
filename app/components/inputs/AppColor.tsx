@@ -84,7 +84,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
                             <HexColorPicker
                                 color={value || "#ffffff"}
                                 onChange={onChange}
-                                className="!w-full !max-w-[200px]"
+                                className="w-full! max-w-[200px]!"
                             />
                             <div className="mt-3 flex items-center gap-2">
                                 <div

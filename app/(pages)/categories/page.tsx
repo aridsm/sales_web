@@ -10,6 +10,8 @@ import {
 } from "../../utils/usePagination";
 import { categoriesService } from "@/services/Categories";
 import { CategoryType } from "@/enums/CategoryType";
+import { ActionItem } from "../../components/AppActions";
+import { Edit } from "@mui/icons-material";
 
 interface Category {
   id: number;
@@ -20,7 +22,10 @@ interface Category {
 
 export default function CategoriesPage() {
   const [rowsSelected, setRowsSelected] = useState<Category[]>([]);
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [form, setForm] = useState({
+    open: false,
+    item: {} as Category | undefined
+  });
 
   const pagination = usePagination<Category>(
     categoriesService as unknown as PaginationService<Category>,
@@ -73,20 +78,60 @@ export default function CategoriesPage() {
     [],
   );
 
+  const actions: ActionItem<Category>[] = [
+    {
+      text: "Editar",
+      preText: <Edit fontSize="small" />,
+      click: (category) => {
+        setForm({
+          open: true,
+          item: category
+        });
+      },
+    },
+  ];
+
+  function handleNew() {
+    setForm({
+      open: true,
+      item: undefined
+    });
+  };
+
+  async function onSave() {
+    await pagination.load()
+  }
+
+  async function onDeleteSelected() {
+    try {
+      if (confirm("Tem certeza que deseja excluir os itens selecionados?")) {
+        const ids = rowsSelected.map((item) => item.id);
+        await categoriesService.bulkDelete(ids);
+        await pagination.load();
+        setRowsSelected([]);
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <AppPage title="Categorias">
       <AppGrid
         columns={columns}
         pagination={pagination}
-        onNew={() => setIsFormOpen(true)}
-        onDeleteSelected={() => { }}
+        onNew={handleNew}
+        onDeleteSelected={onDeleteSelected}
         selectedRows={rowsSelected}
         onSelectedChange={(rows) => setRowsSelected(rows)}
+        actions={actions}
       />
 
       <AppCategoryForm
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
+        isOpen={form.open}
+        onClose={() => setForm({ open: false, item: undefined })}
+        model={form.item}
+        onSave={onSave}
       />
     </AppPage>
   );

@@ -18,9 +18,9 @@ export default function AppButton({
     colorClasses = "bg-primary text-white hover:bg-primary/90";
   } else if (color === "background") {
     colorClasses =
-      "border border-slate-200 text-foreground hover:bg-slate-100/70 disabled:hover:bg-background bg-background";
+      "border border-slate-200 text-foreground hover:bg-background-3 disabled:hover:bg-background bg-background";
   } else if (color === "red") {
-    colorClasses = "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100";
+    colorClasses = "bg-primary-2 text-white border border-red-200 hover:bg-red-400";
   }
 
   const finalClass = `${baseClasses} ${colorClasses} ${className}`.trim();
