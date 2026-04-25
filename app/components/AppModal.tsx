@@ -35,7 +35,7 @@ export default function AppModal({ isOpen, onClose, title, children }: AppModalP
             <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
             <AppButton
               onClick={onClose}
-              color="background"
+              color="transparent"
               flat
               rounded
               className="w-8 h-8"

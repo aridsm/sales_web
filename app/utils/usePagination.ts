@@ -22,7 +22,11 @@ export interface PaginationService<T> {
 export interface PaginationResult<T> {
   items: T[];
   loading: boolean;
-  load: (params?: Record<string, unknown>, append?: boolean) => Promise<void>;
+  load: (options?: {
+    params?: Record<string, unknown>;
+    append?: boolean;
+    replace?: boolean;
+  }) => Promise<void>;
   pageData: PageData;
   next: () => void;
   previous: () => void;
@@ -41,14 +45,25 @@ export function usePagination<T>(
     total_pages: 0,
   });
   const [params, setParams] = useState<Record<string, unknown>>({
-    ...defaultParams,
     page: 1,
     page_size: 20,
+    ...defaultParams,
   });
 
   const load = useCallback(
-    async (newParams?: Record<string, unknown>, append: boolean = false) => {
-      const currentParams = newParams ? { ...params, ...newParams } : params;
+    async (options: {
+      params?: Record<string, unknown>;
+      append?: boolean;
+      replace?: boolean;
+    } = {}) => {
+      const { params: newParams, append = false, replace = false } = options;
+      const baseParams = replace
+        ? { page: 1, page_size: 20, ...defaultParams }
+        : params;
+      const currentParams = newParams
+        ? { ...baseParams, ...newParams }
+        : baseParams;
+
       setParams(currentParams);
       setLoading(true);
       try {
@@ -70,7 +85,7 @@ export function usePagination<T>(
         setLoading(false);
       }
     },
-    [service, params],
+    [service, params, defaultParams],
   );
 
   const next = useCallback(() => {

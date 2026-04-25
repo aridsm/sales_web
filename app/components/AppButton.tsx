@@ -1,7 +1,7 @@
 import React from "react";
 
 export interface AppButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  color?: "primary" | "background" | "red";
+  color?: "primary" | "background" | "red" | "transparent";
   flat?: boolean;
   rounded?: boolean;
 }
@@ -26,6 +26,8 @@ export default function AppButton({
   } else if (color === "red") {
     colorClasses = `bg-primary-2 text-white ${!flat ? "border border-red-200" : ""
       } hover:bg-red-400`;
+  } else if (color === "transparent") {
+    colorClasses = "bg-transparent text-foreground hover:bg-slate-50";
   }
 
   const finalClass = `${baseClasses} ${colorClasses} ${className}`.trim();

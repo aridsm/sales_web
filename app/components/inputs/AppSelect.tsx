@@ -71,7 +71,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
 
         const handleSelect = (option: AppSelectOption) => {
             if (multiple) {
-                const currentValues = Array.isArray(value) ? value : [];
+                const currentValues = Array.isArray(value) ? value : (value !== undefined && value !== null ? [value] : []);
                 const isSelected = currentValues.includes(option.id);
                 const newValues = isSelected
                     ? currentValues.filter((v: any) => v !== option.id)
@@ -85,7 +85,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
 
         const getSelectedNames = () => {
             if (multiple) {
-                const currentValues = Array.isArray(value) ? value : [];
+                const currentValues = Array.isArray(value) ? value : (value !== undefined && value !== null ? [value] : []);
                 if (currentValues.length === 0) return placeholder;
                 const names = options
                     .filter(opt => currentValues.includes(opt.id))
@@ -99,8 +99,9 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
 
         const removeValue = (e: React.MouseEvent, id: any) => {
             e.stopPropagation();
-            if (multiple && Array.isArray(value)) {
-                onChange?.(value.filter(v => v !== id));
+            if (multiple) {
+                const currentValues = Array.isArray(value) ? value : (value !== undefined && value !== null ? [value] : []);
+                onChange?.(currentValues.filter(v => v !== id));
             }
         };
 
@@ -118,8 +119,8 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                         `}
                     >
                         <div className="flex flex-wrap gap-1 items-center flex-1 overflow-hidden">
-                            {multiple && Array.isArray(value) && value.length > 0 ? (
-                                value.map((v) => {
+                            {multiple && (Array.isArray(value) ? value.length > 0 : (value !== undefined && value !== null && value !== "")) ? (
+                                (Array.isArray(value) ? value : [value]).map((v) => {
                                     const opt = options.find(o => o.id === v);
                                     if (!opt) return null;
                                     return (
@@ -164,7 +165,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                                 {filteredOptions.length > 0 ? (
                                     filteredOptions.map((option) => {
                                         const isSelected = multiple
-                                            ? Array.isArray(value) && value.includes(option.id)
+                                            ? (Array.isArray(value) ? value.includes(option.id) : value === option.id)
                                             : value === option.id;
 
                                         return (

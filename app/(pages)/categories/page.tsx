@@ -12,6 +12,10 @@ import { categoriesService } from "@/services/Categories";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";
+import { Controller, useFormContext } from "react-hook-form";
+import AppGridFilter from "../../components/AppGridFilter";
+import AppSelect from "../../components/inputs/AppSelect";
+import { useSearchParams } from "next/navigation";
 
 interface Category {
   id: number;
@@ -32,8 +36,11 @@ export default function CategoriesPage() {
     {},
   );
 
+  const searchParams = useSearchParams();
+
   useEffect(() => {
-    pagination.load();
+    const params = Object.fromEntries(searchParams.entries());
+    pagination.load({ params });
   }, []);
 
   const CategoryTypes = {
@@ -99,7 +106,7 @@ export default function CategoriesPage() {
   };
 
   async function onSave() {
-    await pagination.load()
+    await pagination.load();
   }
 
   async function onDeleteSelected() {
@@ -125,6 +132,11 @@ export default function CategoriesPage() {
         selectedRows={rowsSelected}
         onSelectedChange={(rows) => setRowsSelected(rows)}
         actions={actions}
+        filter={
+          <AppGridFilter pagination={pagination}>
+            <CategoryFilterFields />
+          </AppGridFilter>
+        }
       />
 
       <AppCategoryForm
@@ -134,5 +146,31 @@ export default function CategoriesPage() {
         onSave={onSave}
       />
     </AppPage>
+  );
+}
+
+function CategoryFilterFields() {
+  const { control } = useFormContext();
+
+  const categoryTypeOptions = [
+    { id: CategoryType.PRODUCT, name: "Produto" },
+    { id: CategoryType.OTHER_EXPENSE, name: "Outras Despesas" },
+  ];
+
+  return (
+    <Controller
+      name="type"
+      control={control}
+      render={({ field }) => (
+        <AppSelect
+          label="Tipo"
+          placeholder="Filtrar por tipo"
+          options={categoryTypeOptions}
+          value={field.value}
+          multiple
+          onChange={field.onChange}
+        />
+      )}
+    />
   );
 }

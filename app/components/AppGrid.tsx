@@ -23,9 +23,10 @@ interface AppGridProps<T> {
   onSelectedChange?: (rows: T[]) => void;
   onDeleteSelected?: () => void;
   actions?: ActionItem<T>[];
+  filter?: React.ReactNode;
 }
 
-export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, onSelectedChange, onDeleteSelected, actions }: AppGridProps<T>) {
+export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, onSelectedChange, onDeleteSelected, actions, filter }: AppGridProps<T>) {
   const { items, loading, load } = pagination;
 
   const hasSelection = selectedRows !== undefined && onSelectedChange !== undefined;
@@ -67,7 +68,7 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
 
   function handleSearch() {
     try {
-      load({ search: searchInput, page: 1 });
+      load({ params: { search: searchInput, page: 1 } });
     } catch (error) {
       console.error(error);
     }
@@ -118,7 +119,6 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
   };
 
 
-
   const tableWidth = colWidths.reduce((acc, w) => acc + w, 0);
 
   return (
@@ -159,6 +159,8 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
                 Excluir
               </AppButton>
             )}
+            {filter}
+
             {onNew && (
               <AppButton
                 color="primary"

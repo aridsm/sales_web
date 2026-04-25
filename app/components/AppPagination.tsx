@@ -21,7 +21,7 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
 
   const handlePageChange = (p: number) => {
     if (p >= 1 && p <= pageData.total_pages && p !== pageData.page) {
-      load({ page: p });
+      load({ params: { page: p } });
     }
   };
 

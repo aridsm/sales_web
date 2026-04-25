@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect, forwardRef, useImperativeHandle, useCallback } from "react";
 import AppLabel from "../AppLabel";
 import { ChevronLeft } from "@mui/icons-material";
-import CheckIcon from "@mui/icons-material/Check";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -16,7 +15,7 @@ export interface AppSelectOption {
 
 export interface AppSelectPaginatedProps {
     label?: string;
-    pagination: PaginationResult<any>; // Should be at least { items, loading, pageData, load }
+    pagination: PaginationResult<any>;
     error?: string;
     search?: boolean;
     multiple?: boolean;
@@ -54,7 +53,7 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
             if (!disabled) {
                 setIsOpen(!isOpen);
                 if (!isOpen && items.length === 0) {
-                    load({ page: 1, search: "" });
+                    load({ params: { page: 1, search: "" } });
                 }
             }
         };
@@ -75,12 +74,11 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
             }
         }, [isOpen, search]);
 
-        // Debounced search
         useEffect(() => {
             if (!isOpen) return;
-            
+
             const timer = setTimeout(() => {
-                load({ search: searchTerm, page: 1 }, false);
+                load({ params: { search: searchTerm, page: 1 } });
             }, 300);
 
             return () => clearTimeout(timer);
@@ -91,7 +89,7 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
 
             const { scrollTop, scrollHeight, clientHeight } = listRef.current;
             if (scrollHeight - scrollTop <= clientHeight + 50) {
-                load({ page: pageData.page + 1 }, true);
+                load({ params: { page: pageData.page + 1 }, append: true });
             }
         }, [loading, pageData, load]);
 
@@ -111,12 +109,9 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
 
         const getSelectedNames = () => {
             if (multiple) {
-                const currentValues = Array.isArray(value) ? value : [];
+                const currentValues = Array.isArray(value) ? value : (value !== undefined && value !== null ? [value] : []);
                 if (currentValues.length === 0) return placeholder;
-                
-                // Note: items might not contain all selected items if they are not in the current paginated list
-                // We should ideally pass the selected objects, but following the "receives a list of items containing id and name" pattern
-                // For paginated select, this is a common issue. We'll show the count if we can't find all names.
+
                 const selectedItems = items.filter(opt => currentValues.includes(opt.id));
                 if (selectedItems.length === currentValues.length) {
                     return selectedItems.map(opt => opt.name).join(", ");
@@ -130,8 +125,9 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
 
         const removeValue = (e: React.MouseEvent, id: any) => {
             e.stopPropagation();
-            if (multiple && Array.isArray(value)) {
-                onChange?.(value.filter(v => v !== id));
+            if (multiple) {
+                const currentValues = Array.isArray(value) ? value : (value !== undefined && value !== null ? [value] : []);
+                onChange?.(currentValues.filter(v => v !== id));
             }
         };
 
@@ -149,15 +145,15 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
                         `}
                     >
                         <div className="flex flex-wrap gap-1 items-center flex-1 overflow-hidden">
-                            {multiple && Array.isArray(value) && value.length > 0 ? (
-                                value.map((v) => {
+                            {multiple && (Array.isArray(value) ? value.length > 0 : (value !== undefined && value !== null && value !== "")) ? (
+                                (Array.isArray(value) ? value : [value]).map((v) => {
                                     const opt = items.find(o => o.id === v);
                                     return (
                                         <span key={v} className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full flex items-center gap-1 animate-in fade-in zoom-in duration-200">
                                             {opt ? opt.name : `ID: ${v}`}
-                                            <CloseIcon 
-                                                className="w-3 h-3 cursor-pointer hover:text-primary-dark" 
-                                                onClick={(e) => removeValue(e, v)} 
+                                            <CloseIcon
+                                                className="w-3 h-3 cursor-pointer hover:text-primary-dark"
+                                                onClick={(e) => removeValue(e, v)}
                                                 style={{ fontSize: '14px' }}
                                             />
                                         </span>
@@ -190,7 +186,7 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
                                     />
                                 </div>
                             )}
-                            <div 
+                            <div
                                 ref={listRef}
                                 onScroll={handleScroll}
                                 className="max-h-60 overflow-y-auto"
@@ -198,7 +194,7 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
                                 {items.length > 0 ? (
                                     <>
                                         {items.map((option) => {
-                                            const isSelected = multiple 
+                                            const isSelected = multiple
                                                 ? Array.isArray(value) && value.includes(option.id)
                                                 : value === option.id;
 
