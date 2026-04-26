@@ -112,9 +112,8 @@ export default function AppGridFilter({
               <AppButton
                 type="button"
                 onClick={handleClear}
-                color="transparent"
+                color="background"
                 className="px-4"
-                flat
               >
                 <DeleteSweepOutlined fontSize="small" />
                 Limpar filtros

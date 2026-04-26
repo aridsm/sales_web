@@ -9,6 +9,7 @@ import AppButton from "./AppButton";
 import AppCheckbox from "./inputs/AppCheckbox";
 import AppInputText from "./inputs/AppInputText";
 import AppActions, { ActionItem } from "./AppActions";
+import { useDialogStore } from "@/stores/dialogStore";
 
 interface Column<T> {
   column: React.ReactNode | string;
@@ -32,6 +33,7 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { openDialog } = useDialogStore();
 
   const hasSelection = selectedRows !== undefined && onSelectedChange !== undefined;
 
@@ -87,6 +89,10 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
       load({ params: { search: searchInput, page: 1 } });
     } catch (error) {
       console.error(error);
+      openDialog({
+        variant: "error",
+        message: "Ocorreu um erro ao realizar a busca. Tente novamente.",
+      });
     }
   };
 

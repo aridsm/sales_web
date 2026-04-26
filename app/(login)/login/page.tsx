@@ -4,14 +4,15 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usersService } from "@/api/services/UserService";
 import { useTokenStore } from "@/stores/tokenStore";
+import { useDialogStore } from "@/stores/dialogStore";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
   const { token, setTokenData } = useTokenStore();
+  const { openDialog } = useDialogStore();
 
   useEffect(() => {
     if (token) {
@@ -22,7 +23,6 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       const formData = new URLSearchParams();
@@ -33,7 +33,10 @@ export default function LoginPage() {
       setTokenData(token || access_token || null, refresh_token || null, expires_at || null);
       router.push("/");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed");
+      openDialog({
+        variant: "error",
+        message: err.response?.data?.message || "Falha ao realizar login. Verifique suas credenciais.",
+      });
     } finally {
       setLoading(false);
     }
@@ -79,7 +82,6 @@ export default function LoginPage() {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
         <button
           type="submit"
           disabled={loading}

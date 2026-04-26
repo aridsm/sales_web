@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useDialogStore } from "@/stores/dialogStore";
 import AppPage from "../../components/AppPage";
 import AppGrid from "../../components/AppGrid";
 import AppCategoryForm from "./components/AppCategoryForm";
@@ -109,17 +110,29 @@ export default function CategoriesPage() {
     await pagination.load();
   }
 
-  async function onDeleteSelected() {
-    try {
-      if (confirm("Tem certeza que deseja excluir os itens selecionados?")) {
-        const ids = rowsSelected.map((item) => item.id);
-        await categoriesService.bulkDelete(ids);
-        await pagination.load();
-        setRowsSelected([]);
-      }
-    } catch (error) {
-      console.error(error)
-    }
+  const { openDialog } = useDialogStore();
+
+  function onDeleteSelected() {
+    openDialog({
+      variant: "confirm",
+      title: "Excluir itens",
+      message: `Tem certeza que deseja excluir ${rowsSelected.length === 1 ? "o item selecionado" : `os ${rowsSelected.length} itens selecionados`}? Esta ação não pode ser desfeita.`,
+      confirmLabel: "Excluir",
+      onConfirm: async () => {
+        try {
+          const ids = rowsSelected.map((item) => item.id);
+          await categoriesService.bulkDelete(ids);
+          await pagination.load();
+          setRowsSelected([]);
+        } catch (error) {
+          console.error(error);
+          openDialog({
+            variant: "error",
+            message: "Ocorreu um erro ao excluir os itens. Tente novamente.",
+          });
+        }
+      },
+    });
   }
 
   return (

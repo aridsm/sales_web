@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "../components/AuthProvider";
+import AppDialog from "./components/AppDialog";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en" className={`${figtree.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <AuthProvider>{children}</AuthProvider>
+        <AppDialog />
       </body>
     </html>
   );

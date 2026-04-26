@@ -11,6 +11,7 @@ import AppSelect from "@/app/components/inputs/AppSelect";
 import AppColor from "@/app/components/inputs/AppColor";
 import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/Categories";
+import { useDialogStore } from "@/stores/dialogStore";
 
 const categorySchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
@@ -28,6 +29,7 @@ interface AppCategoryFormProps {
 }
 
 export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppCategoryFormProps) {
+  const { openDialog } = useDialogStore();
   const {
     register,
     handleSubmit,
@@ -60,10 +62,14 @@ export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppC
       } else {
         await categoriesService.post(data);
       }
-      await onSave()
-      handleClose()
+      await onSave();
+      handleClose();
     } catch (error) {
-      console.error(error)
+      console.error(error);
+      openDialog({
+        variant: "error",
+        message: "Ocorreu um erro ao salvar a categoria. Tente novamente.",
+      });
     }
   };
 

@@ -22,11 +22,7 @@ export default function AppActions<T>({ item, actions, className = "" }: AppActi
   const containerRef = useRef<HTMLDivElement>(null);
 
   function toggleDropdown() {
-    try {
-      setIsOpen(!isOpen);
-    } catch (error) {
-      console.error(error)
-    }
+    setIsOpen(!isOpen);
   };
 
   useEffect(() => {
