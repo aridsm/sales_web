@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { PaginationResult } from "../utils/usePagination";
 import { Search, Add, DeleteOutlined } from "@mui/icons-material";
 import AppPagination from "./AppPagination";
@@ -28,6 +29,9 @@ interface AppGridProps<T> {
 
 export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, onSelectedChange, onDeleteSelected, actions, filter }: AppGridProps<T>) {
   const { items, loading, load } = pagination;
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const hasSelection = selectedRows !== undefined && onSelectedChange !== undefined;
 
@@ -64,10 +68,22 @@ export default function AppGrid<T>({ columns, pagination, onNew, selectedRows, o
     }
   };
 
-  const [searchInput, setSearchInput] = React.useState("");
+  const [searchInput, setSearchInput] = React.useState(() => searchParams.get("search") || "");
+
+  React.useEffect(() => {
+    setSearchInput(searchParams.get("search") || "");
+  }, [searchParams]);
 
   function handleSearch() {
     try {
+      const newParams = new URLSearchParams(searchParams.toString());
+      if (searchInput) {
+        newParams.set("search", searchInput);
+      } else {
+        newParams.delete("search");
+      }
+      newParams.set("page", "1");
+      router.push(`${pathname}?${newParams.toString()}`);
       load({ params: { search: searchInput, page: 1 } });
     } catch (error) {
       console.error(error);

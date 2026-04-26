@@ -1,8 +1,8 @@
-import BaseService from "@/services/BaseService";
+import BaseService from "@/api/services/BaseService";
 
 export class OtherExpenseService extends BaseService {
   constructor() {
-    super("otherExpenses");
+    super("other_expenses");
   }
 }
 

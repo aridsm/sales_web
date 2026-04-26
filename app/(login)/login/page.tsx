@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { usersService } from "@/services/UserService";
+import { usersService } from "@/api/services/UserService";
 import { useTokenStore } from "@/stores/tokenStore";
 
 export default function LoginPage() {

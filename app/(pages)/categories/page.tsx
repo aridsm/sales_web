@@ -8,7 +8,7 @@ import {
   usePagination,
   type PaginationService,
 } from "../../utils/usePagination";
-import { categoriesService } from "@/services/Categories";
+import { categoriesService } from "@/api/services/Categories";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";

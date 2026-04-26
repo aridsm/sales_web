@@ -12,15 +12,15 @@ export class UserService {
   }
 
   signup(data: unknown) {
-    return axiosClient.post(`/${this.resource}/signup`, data);
+    return axiosClient.post(`/${this.resource}/signup`, data, { skipAuth: true } as any);
   }
 
   login(data: unknown) {
-    return axiosClient.post(`/${this.resource}/login`, data);
+    return axiosClient.post(`/${this.resource}/login`, data, { skipAuth: true, formEncoded: true } as any);
   }
 
   refreshToken(data: unknown) {
-    return axiosClient.post(`/${this.resource}/refresh_token`, data);
+    return axiosClient.post(`/${this.resource}/refresh_token`, data, { skipAuth: true } as any);
   }
 
   logout() {

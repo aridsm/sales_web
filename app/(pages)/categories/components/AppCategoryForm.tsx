@@ -10,7 +10,7 @@ import AppButton from "@/app/components/AppButton";
 import AppSelect from "@/app/components/inputs/AppSelect";
 import AppColor from "@/app/components/inputs/AppColor";
 import { CategoryType } from "@/enums/CategoryType";
-import { categoriesService } from "@/services/Categories";
+import { categoriesService } from "@/api/services/Categories";
 
 const categorySchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
