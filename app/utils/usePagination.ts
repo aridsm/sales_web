@@ -30,6 +30,7 @@ export interface PaginationResult<T> {
   pageData: PageData;
   next: () => void;
   previous: () => void;
+  setItems: (items: T[]) => void;
 }
 
 export function usePagination<T>(
@@ -51,11 +52,13 @@ export function usePagination<T>(
   });
 
   const load = useCallback(
-    async (options: {
-      params?: Record<string, unknown>;
-      append?: boolean;
-      replace?: boolean;
-    } = {}) => {
+    async (
+      options: {
+        params?: Record<string, unknown>;
+        append?: boolean;
+        replace?: boolean;
+      } = {},
+    ) => {
       const { params: newParams, append = false, replace = false } = options;
       const baseParams = replace
         ? { page: 1, page_size: 20, ...defaultParams }
@@ -99,5 +102,5 @@ export function usePagination<T>(
     }));
   }, []);
 
-  return { items, loading, load, pageData, next, previous };
+  return { items, setItems, loading, load, pageData, next, previous };
 }

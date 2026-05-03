@@ -29,7 +29,7 @@ export default function AppModal({ isOpen, onClose, title, children }: AppModalP
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-md bg-white rounded-lg shadow-xl p-6 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md bg-white rounded-sm shadow-xl p-6 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
         {title && (
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-800">{title}</h2>

@@ -52,9 +52,6 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
         const toggleDropdown = () => {
             if (!disabled) {
                 setIsOpen(!isOpen);
-                if (!isOpen && items.length === 0) {
-                    load({ params: { page: 1, search: "" } });
-                }
             }
         };
 
@@ -76,13 +73,12 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
 
         useEffect(() => {
             if (!isOpen) return;
-
             const timer = setTimeout(() => {
                 load({ params: { search: searchTerm, page: 1 } });
             }, 300);
-
             return () => clearTimeout(timer);
-        }, [searchTerm, load, isOpen]);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [searchTerm]);
 
         const handleScroll = useCallback(() => {
             if (!listRef.current || loading || pageData.page >= pageData.total_pages) return;
@@ -138,7 +134,7 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
                     <div
                         onClick={toggleDropdown}
                         className={`
-                             input-field cursor-pointer flex items-center justify-between gap-2 transition-all duration-200
+                             input-field min-h-12! h-auto! py-2 cursor-pointer flex items-center justify-between gap-2 transition-all duration-200
                             ${disabled ? "bg-slate-100 cursor-not-allowed opacity-60" : ""}
                             ${error ? "border-red-500 ring-1 ring-red-500" : "border-slate-300 hover:border-primary/50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"}
                             ${isOpen && !error ? "active" : ""}
@@ -178,7 +174,7 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
                                     <input
                                         ref={searchInputRef}
                                         type="text"
-                                        className="w-full outline-none border-none transition-all"
+                                        className="w-full outline-none border-none transition-all py-3"
                                         placeholder="Pesquisar..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}

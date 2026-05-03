@@ -53,17 +53,23 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
     }
   }, [pageData.page, pageData.total_pages]);
 
+  if (pageData.total_pages <= 1) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col xl:flex-row justify-between items-center py-4 border-t border-slate-200 gap-4 text-sm text-slate-600">
       <div className="flex flex-wrap items-center justify-center gap-1">
-        <AppButton
-          color="background"
-          onClick={() => handlePageChange(1)}
-          disabled={pageData.page <= 1}
-          className="px-3"
-        >
-          <KeyboardDoubleArrowLeft fontSize="small" className="text-label/50" /> Primeira página
-        </AppButton>
+        {pageData.total_pages > 2 && (
+          <AppButton
+            color="background"
+            onClick={() => handlePageChange(1)}
+            disabled={pageData.page <= 1}
+            className="px-3"
+          >
+            <KeyboardDoubleArrowLeft fontSize="small" className="text-label/50" /> Primeira página
+          </AppButton>
+        )}
         <AppButton
           color="background"
           onClick={() => handlePageChange(pageData.page - 1)}
@@ -102,14 +108,16 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
         >
           Próximo <KeyboardArrowRight fontSize="small" className="text-label/50" />
         </AppButton>
-        <AppButton
-          color="background"
-          onClick={() => handlePageChange(pageData.total_pages)}
-          disabled={pageData.page >= pageData.total_pages}
-          className="px-3"
-        >
-          Última página <KeyboardDoubleArrowRight fontSize="small" className="text-label/50" />
-        </AppButton>
+        {pageData.total_pages > 2 && (
+          <AppButton
+            color="background"
+            onClick={() => handlePageChange(pageData.total_pages)}
+            disabled={pageData.page >= pageData.total_pages}
+            className="px-3"
+          >
+            Última página <KeyboardDoubleArrowRight fontSize="small" className="text-label/50" />
+          </AppButton>
+        )}
       </div>
 
       <div className="flex items-center gap-2 whitespace-nowrap">

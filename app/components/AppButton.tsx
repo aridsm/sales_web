@@ -19,12 +19,12 @@ export default function AppButton({
 
   let colorClasses = "";
   if (color === "primary") {
-    colorClasses = "bg-primary text-white hover:bg-primary/90 border border-primary-3";
+    colorClasses = `bg-primary text-white hover:bg-primary/90 ${!flat ? "border border-primary-3" : ""}`;
   } else if (color === "background") {
     colorClasses = `${!flat ? "border border-slate-200" : ""
       } text-foreground hover:bg-background-3 disabled:hover:bg-background bg-background`;
   } else if (color === "red") {
-    colorClasses = `bg-primary-2 text-white ${!flat ? "border border-red-500" : ""
+    colorClasses = `bg-primary-2 text-white ${!flat ? "border border-red-600" : ""
       } hover:bg-red-400`;
   } else if (color === "transparent") {
     colorClasses = `${!flat ? "border border-slate-200" : ""

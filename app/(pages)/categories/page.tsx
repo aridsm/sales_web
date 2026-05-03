@@ -145,6 +145,7 @@ export default function CategoriesPage() {
         selectedRows={rowsSelected}
         onSelectedChange={(rows) => setRowsSelected(rows)}
         actions={actions}
+        search
         filter={
           <AppGridFilter pagination={pagination}>
             <CategoryFilterFields />

@@ -153,7 +153,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                                     <input
                                         ref={searchInputRef}
                                         type="text"
-                                        className="w-full outline-none border-none transition-all"
+                                        className="w-full outline-none border-none transition-all py-3"
                                         placeholder="Pesquisar..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
