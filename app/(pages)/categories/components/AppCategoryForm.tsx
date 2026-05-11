@@ -12,14 +12,14 @@ import AppColor from "@/app/components/inputs/AppColor";
 import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/Categories";
 import { useDialogStore } from "@/stores/dialogStore";
+import { CategoryForm } from "@/api/schemas/Category";
 
 const categorySchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
-  type: z.number().optional(),
-  color: z.string().optional(),
+  type: z.number(),
+  color: z.string(),
 });
 
-type CategoryFormData = z.infer<typeof categorySchema>;
 
 interface AppCategoryFormProps {
   isOpen: boolean;
@@ -36,7 +36,7 @@ export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppC
     reset,
     control,
     formState: { errors, isValid },
-  } = useForm<CategoryFormData>({
+  } = useForm<CategoryForm>({
     resolver: zodResolver(categorySchema),
     mode: "onChange",
   });
@@ -55,7 +55,7 @@ export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppC
     }
   }, [isOpen, model, reset]);
 
-  async function onSubmit(data: CategoryFormData) {
+  async function onSubmit(data: CategoryForm) {
     try {
       if (model?.id) {
         await categoriesService.patch(model.id, data);

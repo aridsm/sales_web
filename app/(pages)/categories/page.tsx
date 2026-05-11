@@ -17,13 +17,8 @@ import { Controller, useFormContext } from "react-hook-form";
 import AppGridFilter from "../../components/AppGridFilter";
 import AppSelect from "../../components/inputs/AppSelect";
 import { useSearchParams } from "next/navigation";
+import { Category } from "@/api/schemas/Category";
 
-interface Category {
-  id: number;
-  name: string;
-  color?: string;
-  type?: CategoryType;
-}
 
 export default function CategoriesPage() {
   const [rowsSelected, setRowsSelected] = useState<Category[]>([]);

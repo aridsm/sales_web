@@ -31,7 +31,7 @@ export default function AppMenu() {
 
   return (
     <div
-      className={`bg-foreground py-3 text-background transition-all duration-300 flex flex-col ${isOpen ? "w-64" : "w-18"} min-h-screen`}
+      className={`bg-foreground py-3 text-white transition-all duration-300 flex flex-col ${isOpen ? "w-64" : "w-18"} min-h-screen`}
     >
       <div className="flex items-center pl-3 gap-3">
         <button
@@ -49,11 +49,10 @@ export default function AppMenu() {
             <li key={item.name} className="w-full">
               <Link
                 href={item.href}
-                className={`flex items-center border-l-4 border-transparent gap-5 h-16 pr-1 hover:bg-foreground-2 ${
-                  pathname === item.href
-                    ? "bg-foreground-2 border-primary!"
-                    : ""
-                }`}
+                className={`flex items-center border-l-4 border-transparent gap-5 h-16 pr-1 hover:bg-foreground-2 ${pathname === item.href
+                  ? "bg-foreground-2 border-primary!"
+                  : ""
+                  }`}
               >
                 <div className="w-6 min-w-6 max-w-6 flex items-center justify-center ml-5">
                   <item.icon fontSize="small" />
