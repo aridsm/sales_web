@@ -1,5 +1,3 @@
-import { UUID } from "crypto";
-
 interface OtherExpenseBase {
   name: string;
   category_id: number;
@@ -9,7 +7,7 @@ interface OtherExpenseBase {
 }
 
 export interface OtherExpense extends OtherExpenseBase {
-  id: UUID;
+  id: string;
   category_name: string;
   category_color: string;
   user_id: string;
@@ -17,5 +15,5 @@ export interface OtherExpense extends OtherExpenseBase {
 }
 
 export interface OtherExpenseForm extends OtherExpenseBase {
-  id?: UUID;
+  id?: string;
 }

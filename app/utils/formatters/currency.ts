@@ -16,7 +16,7 @@ export const currencyFormatter = {
     }).format(numberValue);
   },
 
-  unmask: (value: any): number => {
+  unmask: (value: string | number | undefined | null): number => {
     if (value === undefined || value === null || value === "") return 0;
     if (typeof value === "number") return value;
 

@@ -1,8 +1,7 @@
 import { CategoryType } from "@/enums/CategoryType";
-import { UUID } from "crypto";
 
 export interface Category {
-  id: UUID;
+  id: string;
   name: string;
   color: string;
   type: CategoryType;

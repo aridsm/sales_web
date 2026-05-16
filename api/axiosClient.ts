@@ -3,26 +3,12 @@ import { useTokenStore } from "@/stores/tokenStore";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_API;
 
-/**
- * Extends Axios's internal request config with custom flags.
- * - `skipAuth` — skip the Authorization header (e.g. login, signup).
- * - `formEncoded` — set Content-Type to `application/x-www-form-urlencoded` instead of JSON.
- * - `_retry` — internal flag to prevent infinite retry loops on token refresh.
- */
 interface CustomAxiosConfig extends InternalAxiosRequestConfig {
   skipAuth?: boolean;
   formEncoded?: boolean;
   _retry?: boolean;
 }
 
-/**
- * Pre-configured Axios instance used for all API calls.
- *
- * - Base URL is read from `NEXT_PUBLIC_BASE_API`.
- * - Arrays in query params are serialized as repeated keys: `?id=1&id=2`.
- * - `null` and `undefined` param values are automatically stripped.
- * - Default Content-Type is `application/json`.
- */
 export const axiosClient = axios.create({
   baseURL,
   paramsSerializer: {
@@ -44,22 +30,13 @@ export const axiosClient = axios.create({
   },
 });
 
-/** True while a token refresh request is in flight. Prevents multiple simultaneous refresh calls. */
 let isRefreshing = false;
-/** Queue of pending requests that arrived while a refresh was in progress. */
-let failedQueue: any[] = [];
+let failedQueue: {
+  resolve: (value: string | null) => void;
+  reject: (error: unknown) => void;
+}[] = [];
 
-/**
- * Resolves or rejects all requests queued during a token refresh.
- *
- * Called after a refresh attempt completes:
- * - On success: resolves each queued promise with the new `token`.
- * - On failure: rejects each queued promise with the `error`.
- *
- * @param error - The error from a failed refresh, or `null` on success.
- * @param token - The new access token, or `null` on failure.
- */
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -70,17 +47,6 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-/**
- * Exchanges the stored refresh token for a new access token.
- *
- * - Reads `refresh_token` from the Zustand token store.
- * - Uses a plain `axios` call (not `axiosClient`) to avoid interceptor loops.
- * - On success: saves the new tokens and flushes the pending request queue.
- * - On failure: clears the token store, redirects to `/login`, and re-throws.
- *
- * @throws {Error} If no refresh token is stored or the refresh request fails.
- * @returns The new access token string.
- */
 const refreshToken = async () => {
   const { refresh_token, setTokenData, clearToken } = useTokenStore.getState();
   if (!refresh_token) {
@@ -114,15 +80,6 @@ const refreshToken = async () => {
   }
 };
 
-/**
- * Request interceptor — runs before every outgoing request.
- *
- * 1. If `skipAuth` is set, bypasses auth logic entirely.
- *    - If `formEncoded` is also set, overrides Content-Type to `application/x-www-form-urlencoded`.
- * 2. If the stored token is expired, proactively refreshes it before the request goes out.
- *    - If a refresh is already in progress, queues the request and waits.
- * 3. If the token is still valid, attaches it as a Bearer Authorization header.
- */
 axiosClient.interceptors.request.use(async (config: CustomAxiosConfig) => {
   const { token, expires_at } = useTokenStore.getState();
 
@@ -166,15 +123,6 @@ axiosClient.interceptors.request.use(async (config: CustomAxiosConfig) => {
   return config;
 });
 
-/**
- * Response interceptor — runs after every response (or on network error).
- *
- * Handles two failure cases:
- * 1. **401 / 403 with no refresh token** — clears auth state and redirects to `/login`.
- * 2. **`errorExpiredToken` message** — the server signalled expiry that the proactive check
- *    missed. Triggers a token refresh and retries the original request once (`_retry` flag
- *    prevents infinite loops). If a refresh is already in progress, queues the retry.
- */
 axiosClient.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -219,14 +167,6 @@ axiosClient.interceptors.response.use(
   },
 );
 
-/**
- * Manually sets or removes the Authorization header on the `axiosClient` defaults.
- *
- * Useful for initializing the token on app load (e.g. after hydrating from storage)
- * without going through the store interceptor.
- *
- * @param token - The access token to set, or `null` to remove the header.
- */
 export const setAuthToken = (token: string | null) => {
   if (token) {
     axiosClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;

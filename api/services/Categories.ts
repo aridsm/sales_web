@@ -1,6 +1,7 @@
 import BaseService from "@/api/services/BaseService";
+import { Category, CategoryForm } from "@/api/schemas/Category";
 
-export class CategoryService extends BaseService {
+export class CategoryService extends BaseService<Category, CategoryForm> {
   constructor() {
     super("categories");
   }
