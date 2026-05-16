@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import AppInputText from "@/app/components/inputs/AppInputText";
 import AppSelectPaginated from "@/app/components/inputs/AppSelectPaginated";
+import { currencyFormatter } from "@/app/utils/formatters/currency";
 import AppButton from "@/app/components/AppButton";
 import { PaginationResult } from "@/app/utils/usePagination";
 import { productsService } from "@/api/services/ProductService";
@@ -136,17 +137,22 @@ export default function AppProductForm({
         )}
       />
 
-      <AppInputText
-        label="Preço"
-        type="number"
-        placeholder="0,00"
-        step="0.01"
-        min="0"
-        {...register("price", {
+      <Controller
+        name="price"
+        control={control}
+        rules={{
           required: "O preço é obrigatório",
           min: { value: 0, message: "O preço deve ser positivo" },
-        })}
-        error={errors.price?.message}
+        }}
+        render={({ field }) => (
+          <AppInputText
+            label="Preço"
+            placeholder="R$ 0,00"
+            mask={currencyFormatter}
+            {...field}
+            error={errors.price?.message}
+          />
+        )}
       />
 
       <AppInputText

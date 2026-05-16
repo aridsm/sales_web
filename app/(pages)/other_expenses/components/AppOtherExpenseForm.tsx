@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import AppInputText from "@/app/components/inputs/AppInputText";
 import AppSelectPaginated from "@/app/components/inputs/AppSelectPaginated";
+import { currencyFormatter } from "@/app/utils/formatters/currency";
 import AppButton from "@/app/components/AppButton";
 import AppModal from "@/app/components/AppModal";
 import { usePagination } from "@/app/utils/usePagination";
@@ -116,17 +117,22 @@ export default function AppOtherExpenseForm({
           error={errors.name?.message}
         />
 
-        <AppInputText
-          label="Valor"
-          type="number"
-          placeholder="0,00"
-          step="0.01"
-          min="0"
-          {...register("value", {
+        <Controller
+          name="value"
+          control={control}
+          rules={{
             required: "O valor é obrigatório",
             min: { value: 0.01, message: "O valor deve ser maior que zero" },
-          })}
-          error={errors.value?.message}
+          }}
+          render={({ field }) => (
+            <AppInputText
+              label="Valor"
+              placeholder="R$ 0,00"
+              mask={currencyFormatter}
+              {...field}
+              error={errors.value?.message}
+            />
+          )}
         />
 
         <AppInputText
