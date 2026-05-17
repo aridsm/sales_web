@@ -1,33 +1,27 @@
 "use client";
 
-import { useState, useRef, useEffect, forwardRef, useImperativeHandle, useCallback } from "react";
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle, ReactElement } from "react";
 import AppLabel from "../AppLabel";
-import { ChevronLeft } from "@mui/icons-material";
-import SearchIcon from "@mui/icons-material/Search";
-import CloseIcon from "@mui/icons-material/Close";
-import CircularProgress from "@mui/material/CircularProgress";
 import { PaginationResult } from "@/app/utils/usePagination";
+import AppSelectTrigger from "./select/AppSelectTrigger";
+import AppSelectDropdown from "./select/AppSelectDropdown";
+import { AppSelectProvider, SelectOption } from "./select/AppSelectContext";
 
-export interface AppSelectOption {
-    id: string | number;
-    name: string;
-}
-
-export interface AppSelectPaginatedProps {
+export interface AppSelectPaginatedProps<T extends SelectOption> {
     label?: string;
-    pagination: PaginationResult<any>;
+    pagination: PaginationResult<T>;
     error?: string;
     search?: boolean;
     multiple?: boolean;
     placeholder?: string;
     disabled?: boolean;
-    value?: any;
+    value?: T["id"] | T["id"][];
     onChange?: (value: any) => void;
     className?: string;
 }
 
-const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
-    ({
+function AppSelectPaginatedInner<T extends SelectOption>(
+    {
         label,
         pagination,
         error,
@@ -38,199 +32,118 @@ const AppSelectPaginated = forwardRef<HTMLDivElement, AppSelectPaginatedProps>(
         value,
         onChange,
         className = "",
-    }, ref) => {
-        const [isOpen, setIsOpen] = useState(false);
-        const [searchTerm, setSearchTerm] = useState("");
-        const containerRef = useRef<HTMLDivElement>(null);
-        const searchInputRef = useRef<HTMLInputElement>(null);
-        const listRef = useRef<HTMLDivElement>(null);
+    }: AppSelectPaginatedProps<T>,
+    ref: React.Ref<HTMLDivElement>
+) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const containerRef = useRef<HTMLDivElement>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    const listRef = useRef<HTMLDivElement>(null);
 
-        const { items, loading, pageData, load } = pagination;
+    const { items, loading, pageData, load } = pagination;
 
-        useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);
+    useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);
 
-        const toggleDropdown = () => {
-            if (!disabled) {
-                setIsOpen(!isOpen);
-            }
-        };
+    const toggleDropdown = () => {
+        if (!disabled) {
+            setIsOpen((prev) => !prev);
+        }
+    };
 
-        useEffect(() => {
-            const handleClickOutside = (event: MouseEvent) => {
-                if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                    setIsOpen(false);
-                }
-            };
-            document.addEventListener("mousedown", handleClickOutside);
-            return () => document.removeEventListener("mousedown", handleClickOutside);
-        }, []);
-
-        useEffect(() => {
-            if (isOpen && search && searchInputRef.current) {
-                searchInputRef.current.focus();
-            }
-        }, [isOpen, search]);
-
-        useEffect(() => {
-            if (!isOpen) return;
-            const timer = setTimeout(() => {
-                load({ params: { search: searchTerm, page: 1 } });
-            }, 300);
-            return () => clearTimeout(timer);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [searchTerm]);
-
-        const handleScroll = useCallback(() => {
-            if (!listRef.current || loading || pageData.page >= pageData.total_pages) return;
-
-            const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-            if (scrollHeight - scrollTop <= clientHeight + 50) {
-                load({ params: { page: pageData.page + 1 }, append: true });
-            }
-        }, [loading, pageData, load]);
-
-        const handleSelect = (option: any) => {
-            if (multiple) {
-                const currentValues = Array.isArray(value) ? value : [];
-                const isSelected = currentValues.includes(option.id);
-                const newValues = isSelected
-                    ? currentValues.filter((v: any) => v !== option.id)
-                    : [...currentValues, option.id];
-                onChange?.(newValues);
-            } else {
-                onChange?.(option.id);
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
             }
         };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
-        const getSelectedNames = () => {
-            if (multiple) {
-                const currentValues = Array.isArray(value) ? value : (value !== undefined && value !== null ? [value] : []);
-                if (currentValues.length === 0) return placeholder;
+    useEffect(() => {
+        if (isOpen && search && searchInputRef.current) {
+            searchInputRef.current.focus();
+        }
+    }, [isOpen, search]);
 
-                const selectedItems = items.filter(opt => currentValues.includes(opt.id));
-                if (selectedItems.length === currentValues.length) {
-                    return selectedItems.map(opt => opt.name).join(", ");
-                }
-                return `${currentValues.length} selecionados`;
-            } else {
-                const selected = items.find(opt => opt.id === value);
-                return selected ? selected.name : (value ? "Item selecionado" : placeholder);
+    useEffect(() => {
+        if (!isOpen) return;
+        const timer = setTimeout(() => {
+            load({ params: { search: searchTerm, page: 1 } });
+        }, 300);
+        return () => clearTimeout(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchTerm]);
+
+    const getCurrentValuesArray = (): T["id"][] => {
+        if (value === undefined || value === null) return [];
+        return Array.isArray(value) ? value : [value];
+    };
+
+    const getSelectedNames = () => {
+        if (multiple) {
+            const currentValues = getCurrentValuesArray();
+            if (currentValues.length === 0) return placeholder;
+
+            const selectedItems = items.filter(opt => currentValues.includes(opt.id));
+            if (selectedItems.length === currentValues.length) {
+                return selectedItems.map(opt => opt.name).join(", ");
             }
-        };
+            return `${currentValues.length} selecionados`;
+        } else {
+            const selected = items.find(opt => opt.id === value);
+            return selected ? selected.name : (value ? "Item selecionado" : placeholder);
+        }
+    };
 
-        const removeValue = (e: React.MouseEvent, id: any) => {
-            e.stopPropagation();
-            if (multiple) {
-                const currentValues = Array.isArray(value) ? value : (value !== undefined && value !== null ? [value] : []);
-                onChange?.(currentValues.filter(v => v !== id));
-            }
-        };
+    const removeValue = (e: React.MouseEvent, idToRemove: T["id"]) => {
+        e.stopPropagation();
+        if (multiple && onChange) {
+            const currentValues = getCurrentValuesArray();
+            onChange(currentValues.filter(v => v !== idToRemove));
+        }
+    };
 
-        return (
+    const contextValue = {
+        isOpen,
+        setIsOpen,
+        toggleDropdown,
+        multiple,
+        value,
+        onChange,
+        items,
+        loading,
+        pageData,
+        load,
+        search,
+        searchTerm,
+        setSearchTerm,
+        searchInputRef,
+        listRef,
+        disabled,
+        error,
+        removeValue,
+        getSelectedNames,
+    };
+
+    return (
+        <AppSelectProvider value={contextValue}>
             <div className={`flex flex-col gap-1 w-full ${className}`} ref={containerRef}>
                 {label && <AppLabel htmlFor={label}>{label}</AppLabel>}
                 <div className="relative">
-                    <div
-                        onClick={toggleDropdown}
-                        className={`
-                             input-field min-h-12! h-auto! py-2 cursor-pointer flex items-center justify-between gap-2 transition-all duration-200
-                            ${disabled ? "bg-slate-100 cursor-not-allowed opacity-60" : ""}
-                            ${error ? "border-red-500 ring-1 ring-red-500" : "border-slate-300 hover:border-primary/50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"}
-                            ${isOpen && !error ? "active" : ""}
-                        `}
-                    >
-                        <div className="flex flex-wrap gap-1 items-center flex-1 overflow-hidden">
-                            {multiple && (Array.isArray(value) ? value.length > 0 : (value !== undefined && value !== null && value !== "")) ? (
-                                (Array.isArray(value) ? value : [value]).map((v) => {
-                                    const opt = items.find(o => o.id === v);
-                                    return (
-                                        <span key={v} className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full flex items-center gap-1 animate-in fade-in zoom-in duration-200">
-                                            {opt ? opt.name : `ID: ${v}`}
-                                            <CloseIcon
-                                                className="w-3 h-3 cursor-pointer hover:text-primary-dark"
-                                                onClick={(e) => removeValue(e, v)}
-                                                style={{ fontSize: '14px' }}
-                                            />
-                                        </span>
-                                    );
-                                })
-                            ) : (
-                                <span className={`truncate ${(!value && value !== 0) || (Array.isArray(value) && value.length === 0) ? "text-foreground/40" : ""}`}>
-                                    {getSelectedNames()}
-                                </span>
-                            )}
-                        </div>
-                        <ChevronLeft
-                            className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"}`}
-                        />
-                    </div>
-
-                    {isOpen && (
-                        <div className="absolute z-50 w-full mt-1 bg-background-2 border border-slate-200 rounded-sm shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
-                            {search && (
-                                <div className="px-3 border-b border-slate-100 flex items-center gap-2 sticky top-0 bg-background-2 z-10">
-                                    <SearchIcon className="text-gray-400" style={{ fontSize: '20px' }} />
-                                    <input
-                                        ref={searchInputRef}
-                                        type="text"
-                                        className="w-full outline-none border-none transition-all py-3"
-                                        placeholder="Pesquisar..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        onClick={(e) => e.stopPropagation()}
-                                    />
-                                </div>
-                            )}
-                            <div
-                                ref={listRef}
-                                onScroll={handleScroll}
-                                className="max-h-60 overflow-y-auto"
-                            >
-                                {items.length > 0 ? (
-                                    <>
-                                        {items.map((option) => {
-                                            const isSelected = multiple
-                                                ? Array.isArray(value) && value.includes(option.id)
-                                                : value === option.id;
-
-                                            return (
-                                                <div
-                                                    key={option.id}
-                                                    onClick={() => handleSelect(option)}
-                                                    className={`
-                                                        px-3 py-3 cursor-pointer flex items-center justify-between transition-colors
-                                                        ${isSelected ? "bg-primary/6 text-primary" : "text-slate-700 hover:bg-primary/6"}
-                                                    `}
-                                                >
-                                                    <span className="truncate">{option.name}</span>
-                                                </div>
-                                            );
-                                        })}
-                                        {loading && (
-                                            <div className="p-4 flex justify-center sticky bottom-0 bg-white/80 backdrop-blur-sm">
-                                                <CircularProgress size={24} />
-                                            </div>
-                                        )}
-                                    </>
-                                ) : (
-                                    <div className="px-3 py-10 text-center text-gray-400 text-sm italic flex flex-col items-center gap-2">
-                                        {loading ? (
-                                            <CircularProgress size={32} />
-                                        ) : (
-                                            "Nenhum resultado encontrado"
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
+                    <AppSelectTrigger />
+                    {isOpen && <AppSelectDropdown />}
                 </div>
                 {error && <span className="text-xs text-red-500 mt-1">{error}</span>}
             </div>
-        );
-    }
-);
+        </AppSelectProvider>
+    );
+}
+
+const AppSelectPaginated = forwardRef(AppSelectPaginatedInner) as (<T extends SelectOption>(
+    props: AppSelectPaginatedProps<T> & { ref?: React.Ref<HTMLDivElement> }
+) => ReactElement) & { displayName?: string };
 
 AppSelectPaginated.displayName = "AppSelectPaginated";
 
