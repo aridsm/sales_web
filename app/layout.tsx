@@ -11,8 +11,8 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: "Sales Web",
-  description: "Sistema de vendas simples e eficiente",
+  title: "Kivo — Gestão de Vendas",
+  description: "Sistema de gestão de vendas, produtos e despesas.",
 };
 
 export default function RootLayout({

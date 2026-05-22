@@ -4,7 +4,7 @@
 
 :root {
   --primary: #3b69ff;
-  --primary-2: #96afff;
+  --primary-2: #6a8dff;
   --primary-3: #3e67ee;
   --background: #fafbfd;
   --background-2: #ffffff;
@@ -22,7 +22,7 @@
   --background-3: rgb(56, 57, 68);
   --foreground: #fafaf9;
   --foreground-2: #d6d3d1;
-  --label: rgb(125, 129, 153);
+  --label: rgb(139, 141, 155);
   --border: rgb(68, 69, 80);
   --border-2: rgb(87, 90, 105);
 }
@@ -78,9 +78,11 @@ body {
 }
 
 .input-field {
-  @apply border border-border hover:border-border-2 placeholder:text-foreground/40 rounded-sm px-3 h-12 transition-colors text-foreground!;
+  @apply border border-border hover:border-border-2 placeholder:text-foreground/40 rounded-sm px-3 h-12 transition-colors text-foreground! outline-none!;
 }
 
+.input-field:focus,
+.input-field:focus-visible,
 .input-field.active {
-  @apply outline-1 outline-foreground border-foreground!;
+  @apply border-foreground outline-none!;
 }

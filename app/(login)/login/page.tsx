@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 import { usersService } from "@/api/services/UserService";
 import { useTokenStore } from "@/stores/tokenStore";
 import { useDialogStore } from "@/stores/dialogStore";
+import AppLogo from "@/app/components/AppLogo";
+import AppButton from "@/app/components/AppButton";
+import AppInputText from "@/app/components/inputs/AppInputText";
+import AppDarkModeToggle from "@/app/components/AppDarkModeToggle";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -28,14 +33,25 @@ export default function LoginPage() {
       const formData = new URLSearchParams();
       formData.append("username", username);
       formData.append("password", password);
-      const response = await usersService.login(formData.toString());
-      const { token, access_token, refresh_token, expires_at } = response.data;
-      setTokenData(token || access_token || null, refresh_token || null, expires_at || null);
+      const response = await usersService.login(formData.toString() as any);
+      const {
+        token: tokenVal,
+        access_token,
+        refresh_token,
+        expires_at,
+      } = response.data;
+      setTokenData(
+        tokenVal || access_token || null,
+        refresh_token || null,
+        expires_at || null,
+      );
       router.push("/");
     } catch (err: any) {
       openDialog({
         variant: "error",
-        message: err.response?.data?.message || "Falha ao realizar login. Verifique suas credenciais.",
+        message:
+          err.response?.data?.message ||
+          "Falha ao realizar login. Verifique suas credenciais.",
       });
     } finally {
       setLoading(false);
@@ -43,53 +59,77 @@ export default function LoginPage() {
   };
 
   if (token) {
-    return <div>Redirecionando...</div>;
+    return null;
   }
 
   return (
-    <div className="w-full max-w-md mx-auto mt-10">
-      <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label
-            htmlFor="username"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Email
-          </label>
-          <input
-            type="text"
-            id="username"
+    <div className="w-full max-w-md mx-auto px-4">
+      <div className="flex justify-end mb-6">
+        <AppDarkModeToggle />
+      </div>
+
+      <div className="bg-background-2 border border-border rounded-md p-8 transition-colors">
+        <div className="flex flex-col items-center gap-4 mb-8">
+          <div className="w-12 h-12 flex items-center justify-center">
+            <AppLogo />
+          </div>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-foreground">
+              Bem-vindo de volta!
+            </h1>
+            <p className="text-label text-sm mt-1">
+              Entre com suas credenciais para acessar o sistema
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <AppInputText
+            label="Email"
+            type="email"
+            placeholder="seu@email.com"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername((e.target as HTMLInputElement).value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
-        </div>
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
+
+          <div className="flex flex-col gap-1">
+            <AppInputText
+              label="Senha"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) =>
+                setPassword((e.target as HTMLInputElement).value)
+              }
+              required
+            />
+          </div>
+
+          <AppButton
+            type="submit"
+            color="primary"
+            disabled={loading}
+            className="w-full h-12 mt-2 text-sm font-medium"
           >
-            Senha
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+            {loading ? "Entrando..." : "Entrar"}
+          </AppButton>
+        </form>
+
+        <p className="text-center text-sm text-label mt-6">
+          Não tem uma conta?{" "}
+          <Link
+            href="/register"
+            className="text-primary-2 hover:underline font-medium"
+          >
+            Criar conta
+          </Link>
+        </p>
+      </div>
+
+      <p className="text-center text-xs text-label mt-6">
+        © {new Date().getFullYear()} Sales App. Todos os direitos reservados.
+      </p>
     </div>
   );
 }
