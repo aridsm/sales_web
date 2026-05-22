@@ -12,7 +12,7 @@
   --background-3: #f2f4f7;
   --foreground-2: #202325;
   --label: #949aa0;
-  --border: #e2e8f0;
+  --border: #e0e5ec;
   --border-2: #c1cad6;
 }
 
@@ -23,7 +23,7 @@
   --foreground: #fafaf9;
   --foreground-2: #d6d3d1;
   --label: rgb(125, 129, 153);
-  --border: rgb(74, 76, 87);
+  --border: rgb(68, 69, 80);
   --border-2: rgb(87, 90, 105);
 }
 
@@ -39,8 +39,6 @@
   --color-label: var(--label);
   --color-border: var(--border);
   --color-border-2: var(--border-2);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 body {
