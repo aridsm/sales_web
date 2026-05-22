@@ -125,13 +125,13 @@ export default function DashboardPage() {
             onClick={() => handlePeriodChange(key)}
             className={`px-5 py-2 rounded-sm border transition-colors cursor-pointer ${activePeriod === key
               ? "bg-primary text-white border-primary"
-              : "bg-white text-gray-700 border-slate-200 hover:bg-gray-50"
+              : "bg-white text-gray-700 border-border hover:bg-gray-50"
               }`}
           >
             {period.label}
           </button>
         ))}
-        <button className="p-2 rounded-sm border border-slate-200 bg-white cursor-pointer hover:bg-gray-50 transition-colors">
+        <button className="p-2 rounded-sm border border-border bg-white cursor-pointer hover:bg-gray-50 transition-colors">
           <SettingsOutlined />
         </button>
       </div>

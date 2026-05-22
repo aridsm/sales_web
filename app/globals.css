@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  --primary: #577dfc;
-  --primary-2: #f25c5c;
+  --primary: #3b69ff;
+  --primary-2: #96afff;
   --primary-3: #3e67ee;
   --background: #fafbfd;
   --background-2: #ffffff;
@@ -10,6 +12,19 @@
   --background-3: #f2f4f7;
   --foreground-2: #202325;
   --label: #949aa0;
+  --border: #e2e8f0;
+  --border-2: #c1cad6;
+}
+
+:root.dark {
+  --background: rgb(45, 46, 53);
+  --background-2: rgb(57, 58, 66);
+  --background-3: rgb(56, 57, 68);
+  --foreground: #fafaf9;
+  --foreground-2: #d6d3d1;
+  --label: rgb(125, 129, 153);
+  --border: rgb(74, 76, 87);
+  --border-2: rgb(87, 90, 105);
 }
 
 @theme inline {
@@ -22,13 +37,18 @@
   --color-foreground: var(--foreground);
   --color-foreground-2: var(--foreground-2);
   --color-label: var(--label);
+  --color-border: var(--border);
+  --color-border-2: var(--border-2);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .grid-dashboard {
@@ -60,9 +80,9 @@ body {
 }
 
 .input-field {
-  @apply border border-slate-200 hover:border-slate-300 placeholder:text-foreground/40 outline-2 outline-transparent rounded-sm px-3 h-12 focus:outline-primary/20 focus:border-primary transition-colors;
+  @apply border border-border hover:border-border-2 placeholder:text-foreground/40 rounded-sm px-3 h-12 transition-colors text-foreground!;
 }
 
 .input-field.active {
-  @apply outline-2 outline-primary/20 border-primary!;
+  @apply outline-1 outline-foreground border-foreground!;
 }

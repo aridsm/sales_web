@@ -20,7 +20,6 @@ const categorySchema = z.object({
   color: z.string(),
 });
 
-
 interface AppCategoryFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -28,7 +27,12 @@ interface AppCategoryFormProps {
   onSave: () => Promise<void>;
 }
 
-export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppCategoryFormProps) {
+export default function AppCategoryForm({
+  isOpen,
+  onClose,
+  model,
+  onSave,
+}: AppCategoryFormProps) {
   const { openDialog } = useDialogStore();
   const {
     register,
@@ -71,12 +75,12 @@ export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppC
         message: "Ocorreu um erro ao salvar a categoria. Tente novamente.",
       });
     }
-  };
+  }
 
   function handleClose() {
     reset();
     onClose();
-  };
+  }
 
   const categoryTypeOptions = [
     { id: CategoryType.PRODUCT, name: "Produto" },
@@ -84,7 +88,11 @@ export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppC
   ];
 
   return (
-    <AppModal isOpen={isOpen} onClose={handleClose} title={model ? "Editar Categoria" : "Adicionar Categoria"}>
+    <AppModal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title={model ? "Editar Categoria" : "Adicionar Categoria"}
+    >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <AppInputText
           label="Nome"
@@ -129,6 +137,7 @@ export default function AppCategoryForm({ isOpen, onClose, model, onSave }: AppC
             onClick={handleClose}
             color="background"
             className="px-4"
+            flat={false}
           >
             Cancelar
           </AppButton>

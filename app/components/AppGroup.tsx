@@ -63,7 +63,7 @@ function GroupRow<G extends { id: string | number }>({
 
   return (
     <div
-      className={`border border-slate-200 transition rounded-sm overflow-hidden shrink-0 `}
+      className={`border border-border transition rounded-sm overflow-hidden shrink-0 `}
     >
       <div
         className={`group w-full flex items-center bg-background hover:bg-background-3 transition-colors ${open ? "bg-background-3" : ""}`}
@@ -101,13 +101,13 @@ function GroupRow<G extends { id: string | number }>({
 
       <div
         className={`grid transition-all duration-300 ease-in-out ${open
-            ? "grid-rows-[1fr] opacity-100"
-            : "grid-rows-[0fr] opacity-0"
+          ? "grid-rows-[1fr] opacity-100"
+          : "grid-rows-[0fr] opacity-0"
           }`}
       >
         <div className="overflow-hidden">
           {hasBeenOpened && (
-            <div className="px-3 pb-3 flex flex-col gap-2 min-h-0 border-t border-slate-100">
+            <div className="px-3 pb-3 flex flex-col gap-2 min-h-0 border-t border-border">
               {children({ group, search })}
             </div>
           )}

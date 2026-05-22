@@ -2,7 +2,12 @@
 
 import React from "react";
 import { PaginationResult } from "../utils/usePagination";
-import { KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft, KeyboardArrowRight, KeyboardArrowLeft } from "@mui/icons-material";
+import {
+  KeyboardDoubleArrowRight,
+  KeyboardDoubleArrowLeft,
+  KeyboardArrowRight,
+  KeyboardArrowLeft,
+} from "@mui/icons-material";
 import AppButton from "./AppButton";
 import AppInputText from "./inputs/AppInputText";
 
@@ -10,10 +15,14 @@ interface AppPaginationProps<T> {
   pagination: PaginationResult<T>;
 }
 
-export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) {
+export default function AppPagination<T>({
+  pagination,
+}: AppPaginationProps<T>) {
   const { pageData, load } = pagination;
 
-  const [pageInput, setPageInput] = React.useState<string>(String(pageData.page || 1));
+  const [pageInput, setPageInput] = React.useState<string>(
+    String(pageData.page || 1),
+  );
 
   React.useEffect(() => {
     setPageInput(String(pageData.page || 1));
@@ -58,7 +67,7 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
   }
 
   return (
-    <div className="flex flex-col xl:flex-row justify-between items-center py-4 border-t border-slate-200 gap-4 text-sm text-slate-600">
+    <div className="flex flex-col xl:flex-row justify-between items-center py-4 border-t border-border gap-4 text-sm text-foreground">
       <div className="flex flex-wrap items-center justify-center gap-1">
         {pageData.total_pages > 2 && (
           <AppButton
@@ -67,7 +76,11 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
             disabled={pageData.page <= 1}
             className="px-3"
           >
-            <KeyboardDoubleArrowLeft fontSize="small" className="text-label/50" /> Primeira página
+            <KeyboardDoubleArrowLeft
+              fontSize="small"
+              className="text-label/50"
+            />{" "}
+            Primeira página
           </AppButton>
         )}
         <AppButton
@@ -75,8 +88,10 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
           onClick={() => handlePageChange(pageData.page - 1)}
           disabled={pageData.page <= 1}
           className="px-3"
+          flat={false}
         >
-          <KeyboardArrowLeft fontSize="small" className="text-label/50" />  Anterior
+          <KeyboardArrowLeft fontSize="small" className="text-label/50" />{" "}
+          Anterior
         </AppButton>
 
         <div className="flex gap-1 mx-2">
@@ -85,6 +100,7 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
             return (
               <AppButton
                 key={idx}
+                flat={false}
                 color={p === pageData.page ? "primary" : "background"}
                 onClick={() => typeof p === "number" && handlePageChange(p)}
                 disabled={isDots}
@@ -105,8 +121,10 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
           onClick={() => handlePageChange(pageData.page + 1)}
           disabled={pageData.page >= pageData.total_pages}
           className="px-3"
+          flat={false}
         >
-          Próximo <KeyboardArrowRight fontSize="small" className="text-label/50" />
+          Próximo{" "}
+          <KeyboardArrowRight fontSize="small" className="text-label/50" />
         </AppButton>
         {pageData.total_pages > 2 && (
           <AppButton
@@ -115,7 +133,11 @@ export default function AppPagination<T>({ pagination }: AppPaginationProps<T>) 
             disabled={pageData.page >= pageData.total_pages}
             className="px-3"
           >
-            Última página <KeyboardDoubleArrowRight fontSize="small" className="text-label/50" />
+            Última página{" "}
+            <KeyboardDoubleArrowRight
+              fontSize="small"
+              className="text-label/50"
+            />
           </AppButton>
         )}
       </div>

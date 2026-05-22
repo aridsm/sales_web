@@ -11,7 +11,12 @@ interface AppModalProps {
   children: ReactNode;
 }
 
-export default function AppModal({ isOpen, onClose, title, children }: AppModalProps) {
+export default function AppModal({
+  isOpen,
+  onClose,
+  title,
+  children,
+}: AppModalProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -29,10 +34,10 @@ export default function AppModal({ isOpen, onClose, title, children }: AppModalP
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-md bg-white rounded-sm shadow-xl p-6 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md bg-background rounded-sm shadow-xl p-6 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
         {title && (
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+            <h2 className="text-xl font-semibold text-foreground">{title}</h2>
             <AppButton
               onClick={onClose}
               color="transparent"
@@ -45,11 +50,9 @@ export default function AppModal({ isOpen, onClose, title, children }: AppModalP
           </div>
         )}
 
-        <div className=" text-gray-600">
-          {children}
-        </div>
+        <div className=" text-label">{children}</div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

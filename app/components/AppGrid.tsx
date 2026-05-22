@@ -203,7 +203,7 @@ export default function AppGrid<T>({
       <div className="flex flex-col sm:flex-row justify-between items-center pb-3 gap-4">
         {search && (
           <div className="relative w-full sm:max-w-sm">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500 z-10">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-foreground z-10">
               <Search fontSize="small" />
             </div>
             <AppInputText
@@ -274,21 +274,21 @@ export default function AppGrid<T>({
               <table className="table-fixed max-w-none border-separate border-spacing-0 w-full">
                 <thead className="uppercase text-xs tracking-wide sticky top-0 z-20 text-foreground">
                   <tr>
-                    {hasSelection && <th className="border-slate-200 border-y border-r first:border-l first:rounded-tl-md! p-2 bg-background-3 w-12" />}
+                    {hasSelection && <th className="border-border border-y border-r first:border-l first:rounded-tl-md! p-2 bg-background-3 w-12" />}
                     {columns.map((col, index) => (
                       <th
                         key={index}
-                        className={`border-slate-200 border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left bg-background-3`}
+                        className={`border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left bg-background-3`}
                         style={{ width: colWidths[index] || col.size || 140 }}
                       >
                         {col.column}
                       </th>
                     ))}
-                    <th className="bg-background-3 border-y border-slate-200 border-r rounded-tr-md!"></th>
+                    <th className="bg-background-3 border-y border-border border-r rounded-tr-md!"></th>
                   </tr>
                 </thead>
               </table>
-              <div className="flex-1 flex items-center text-sm justify-center p-10 text-slate-500 border-x border-b border-slate-200 bg-background rounded-b-md">
+              <div className="flex-1 flex items-center text-sm justify-center p-10 text-label border-x border-b border-border bg-background rounded-b-md">
                 Nenhum item encontrado
               </div>
             </div>
@@ -304,7 +304,7 @@ export default function AppGrid<T>({
             <thead className="uppercase text-xs tracking-wide sticky top-0 z-20 text-foreground">
               <tr>
                 {hasSelection && (
-                  <th className="border-slate-200 border-y border-r first:border-l first:rounded-tl-md! p-2 text-center sticky left-0 z-30 bg-background-3 w-12">
+                  <th className="border-border border-y border-r first:border-l first:rounded-tl-md! p-2 text-center sticky left-0 z-30 bg-background-3 w-12">
                     <AppCheckbox
                       checked={isAllSelected}
                       onChange={handleSelectAll}
@@ -314,7 +314,7 @@ export default function AppGrid<T>({
                 {columns.map((col, index) => (
                   <th
                     key={index}
-                    className={`border-slate-200 border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary" : ""}`}
+                    className={`border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary" : ""}`}
                     style={{ width: colWidths[index] || col.size || 140 }}
                   >
                     {col.column}
@@ -325,10 +325,10 @@ export default function AppGrid<T>({
                   </th>
                 ))}
                 <th
-                  className={`bg-background-3 border-y border-slate-200 ${!actions ? "rounded-tr-md! border-r" : ""}`}
+                  className={`bg-background-3 border-y border-border ${!actions ? "rounded-tr-md! border-r" : ""}`}
                 ></th>
                 {actions && (
-                  <th className="border-slate-200 border-y border-l border-r p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!"></th>
+                  <th className="border-border border-y border-l border-r p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!"></th>
                 )}
               </tr>
             </thead>
@@ -342,7 +342,7 @@ export default function AppGrid<T>({
                   >
                     {hasSelection && (
                       <td
-                        className={`p-2 w-12 border-r border-slate-200 first:border-l border-b sticky left-0 z-10 text-center transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
+                        className={`p-2 w-12 border-r border-border first:border-l border-b sticky left-0 z-10 text-center transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
                       >
                         <AppCheckbox
                           checked={selected}
@@ -355,7 +355,7 @@ export default function AppGrid<T>({
                     {columns.map((col, colIndex) => (
                       <td
                         key={colIndex}
-                        className={`p-3 overflow-hidden border-r border-slate-200 ${!hasSelection ? "first:border-l" : ""} border-b ${rowIndex === items.length - 1 ? "" : "border-b"} ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
+                        className={`p-3 overflow-hidden border-r border-border ${!hasSelection ? "first:border-l" : ""} border-b ${rowIndex === items.length - 1 ? "" : "border-b"} ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
                         style={{
                           width: colWidths[colIndex] || col.size || 140,
                         }}
@@ -364,11 +364,11 @@ export default function AppGrid<T>({
                       </td>
                     ))}
                     <td
-                      className={`border-b border-slate-200 ${!actions ? "border-r" : ""}`}
+                      className={`border-b border-border ${!actions ? "border-r" : ""}`}
                     ></td>
                     {actions && (
                       <td
-                        className={`p-2 border-l border-r border-slate-200 border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
+                        className={`p-2 border-l border-r border-border border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
                       >
                         <AppActions item={row} actions={actions} />
                       </td>

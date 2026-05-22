@@ -15,7 +15,6 @@ import { categoriesService } from "@/api/services/Categories";
 import { Category } from "@/api/schemas/Category";
 import { OtherExpenseForm } from "@/api/schemas/OtherExpense";
 
-
 interface AppOtherExpenseFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -30,10 +29,10 @@ export default function AppOtherExpenseForm({
   model,
 }: AppOtherExpenseFormProps) {
   const { openDialog } = useDialogStore();
-  const categoriesPagination = usePagination<Category>(
-    categoriesService,
-    { type: CategoryType.OTHER_EXPENSE, page_size: 20 },
-  );
+  const categoriesPagination = usePagination<Category>(categoriesService, {
+    type: CategoryType.OTHER_EXPENSE,
+    page_size: 20,
+  });
 
   const isEditing = !!model?.id;
 
@@ -172,6 +171,7 @@ export default function AppOtherExpenseForm({
             color="background"
             className="px-4"
             onClick={onClose}
+            flat={false}
           >
             Cancelar
           </AppButton>

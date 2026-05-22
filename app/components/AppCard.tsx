@@ -9,7 +9,7 @@ export default function AppCard({
 }) {
   return (
     <div
-      className={`flex flex-col bg-white rounded-md border-slate-200 border p-6 ${className || ""}`}
+      className={`flex flex-col bg-white rounded-md border-border border p-6 ${className || ""}`}
     >
       {children}
     </div>

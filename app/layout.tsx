@@ -3,6 +3,7 @@ import { Figtree } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "../components/AuthProvider";
 import AppDialog from "./components/AppDialog";
+import ColorModeScript from "./components/ColorModeScript";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -20,7 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${figtree.variable} h-full antialiased`}>
+    <html lang="en" className={`${figtree.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        <ColorModeScript />
+      </head>
       <body className="min-h-full flex flex-col">
         <AuthProvider>{children}</AuthProvider>
         <AppDialog />

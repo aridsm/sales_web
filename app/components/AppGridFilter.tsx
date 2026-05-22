@@ -84,7 +84,7 @@ export default function AppGridFilter({
   }
 
   const hasActiveFilters = Object.keys(getParamsFromUrl(searchParams)).some(
-    (key) => !["page", "page_size", "search"].includes(key)
+    (key) => !["page", "page_size", "search"].includes(key),
   );
 
   return (
@@ -92,33 +92,35 @@ export default function AppGridFilter({
       <AppButton
         color="background"
         onClick={handleOpen}
-        className={`px-4 shrink-0 relative ${hasActiveFilters ? "text-primary border-primary!" : ""}`}
+        flat={false}
+        className={`px-4 shrink-0 relative ${hasActiveFilters ? "text-primary dark:text-foreground border-primary! dark:border-foreground!" : ""}`}
       >
         <FilterList fontSize="small" />
         Filtros
         {hasActiveFilters && (
-          <span className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full border-2 border-white" />
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-primary dark:bg-foreground rounded-full border-2 border-background" />
         )}
       </AppButton>
 
       <AppModal isOpen={isOpen} onClose={handleClose} title={title}>
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            <div className="grid grid-cols-1 gap-4">
-              {children}
-            </div>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <div className="grid grid-cols-1 gap-4">{children}</div>
 
             <div className="mt-2 flex justify-between gap-2 ">
               <AppButton
                 type="button"
                 onClick={handleClear}
                 color="background"
+                flat={false}
                 className="px-4"
               >
                 <DeleteSweepOutlined fontSize="small" />
                 Limpar filtros
               </AppButton>
-
 
               <AppButton type="submit" color="primary" className="px-6">
                 Aplicar

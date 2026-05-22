@@ -17,17 +17,24 @@ export interface AppActionsProps<T> {
   className?: string;
 }
 
-export default function AppActions<T>({ item, actions, className = "" }: AppActionsProps<T>) {
+export default function AppActions<T>({
+  item,
+  actions,
+  className = "",
+}: AppActionsProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
-  };
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -36,13 +43,16 @@ export default function AppActions<T>({ item, actions, className = "" }: AppActi
   }, []);
 
   return (
-    <div className={`relative inline-block ${className} ${isOpen ? "z-50" : ""}`} ref={containerRef}>
+    <div
+      className={`relative inline-block ${className} ${isOpen ? "z-50" : ""}`}
+      ref={containerRef}
+    >
       <button
         onClick={toggleDropdown}
         className={`
           flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 cursor-pointer
-          hover:bg-primary/10 hover:text-primary
-          ${isOpen ? "bg-primary/10 text-primary" : ""}
+          hover:bg-primary/10 hover:text-primary dark:hover:bg-foreground/10 dark:hover:text-foreground
+          ${isOpen ? "bg-primary/10 text-primary dark:bg-foreground/10 dark:text-foreground" : ""}
         `}
         aria-label="Ações"
         aria-haspopup="true"
@@ -53,7 +63,7 @@ export default function AppActions<T>({ item, actions, className = "" }: AppActi
 
       {isOpen && (
         <div
-          className="absolute right-0 z-80 mt-1 w-56 origin-top-right rounded-sm bg-background-2 border border-slate-200 shadow-xl py-1 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200"
+          className="absolute right-0 z-80 mt-1 w-56 origin-top-right rounded-sm bg-background-2 border border-border shadow-xl py-1 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200"
           role="menu"
         >
           {actions.map((action, index) => {
@@ -71,15 +81,19 @@ export default function AppActions<T>({ item, actions, className = "" }: AppActi
                 }}
                 className={`
                   w-full flex items-center px-4 py-2.5 transition-colors text-left
-                  ${isDisabled
-                    ? "opacity-50 cursor-not-allowed"
-                    : " hover:bg-slate-50 cursor-pointer active:bg-slate-100"}
+                  ${
+                    isDisabled
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-background-3 dark:hover:bg-foreground/10 cursor-pointer active:bg-slate-100"
+                  }
                   ${action.class || ""}
                 `}
                 role="menuitem"
               >
                 {action.preText && (
-                  <span className={`mr-3 flex items-center shrink-0 ${isDisabled ? "opacity-50" : ""}`}>
+                  <span
+                    className={`mr-3 flex items-center shrink-0 ${isDisabled ? "opacity-50" : ""}`}
+                  >
                     {action.preText}
                   </span>
                 )}

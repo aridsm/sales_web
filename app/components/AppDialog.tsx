@@ -74,14 +74,14 @@ export default function AppDialog() {
         onClick={isConfirm ? undefined : handleCancel}
       />
 
-      <div className="relative w-full max-w-sm bg-white rounded-xl shadow-2xl p-6 flex flex-col items-center gap-4 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-sm bg-background rounded-xl shadow-2xl p-6 flex flex-col items-center gap-4 animate-in fade-in zoom-in-95 duration-200">
         <div className={`${iconColor} mt-1`}>{icon}</div>
 
-        <h2 className="text-lg font-semibold text-gray-800 text-center">
+        <h2 className="text-lg font-semibold text-foreground text-center">
           {options.title ?? defaultTitle}
         </h2>
 
-        <p className="text-gray-600 text-center leading-relaxed">
+        <p className="text-label text-center leading-relaxed">
           {options.message}
         </p>
 
@@ -92,6 +92,7 @@ export default function AppDialog() {
               color="background"
               className="flex-1 px-4"
               onClick={handleCancel}
+              flat={false}
             >
               {options.cancelLabel ?? "Cancelar"}
             </AppButton>
@@ -107,6 +108,6 @@ export default function AppDialog() {
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

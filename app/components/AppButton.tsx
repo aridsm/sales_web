@@ -9,26 +9,30 @@ export interface AppButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEle
 export default function AppButton({
   color = "primary",
   className = "",
-  flat = false,
+  flat = true,
   rounded = false,
   children,
   ...props
 }: AppButtonProps) {
-  const baseClasses = `py-2 flex justify-center items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${rounded ? "rounded-full" : "rounded-sm"
-    }`;
+  const baseClasses = `py-2 flex justify-center items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+    rounded ? "rounded-full" : "rounded-sm"
+  }`;
 
   let colorClasses = "";
   if (color === "primary") {
     colorClasses = `bg-primary text-white hover:bg-primary/90 ${!flat ? "border border-primary-3" : ""}`;
   } else if (color === "background") {
-    colorClasses = `${!flat ? "border border-slate-200" : ""
-      } text-foreground hover:bg-background-3 disabled:hover:bg-background bg-background`;
+    colorClasses = `${
+      !flat ? "border border-border" : ""
+    } text-foreground hover:bg-background-3 disabled:hover:bg-background bg-background`;
   } else if (color === "red") {
-    colorClasses = `bg-primary-2 text-white ${!flat ? "border border-red-600" : ""
-      } hover:bg-red-400`;
+    colorClasses = `bg-red-500 text-white ${
+      !flat ? "border border-red-600" : ""
+    } hover:bg-red-600`;
   } else if (color === "transparent") {
-    colorClasses = `${!flat ? "border border-slate-200" : ""
-      } bg-transparent text-foreground hover:bg-slate-50`;
+    colorClasses = `${
+      !flat ? "border border-border" : ""
+    } bg-transparent text-foreground hover:bg-label/10`;
   }
 
   const finalClass = `${baseClasses} ${colorClasses} ${className}`.trim();

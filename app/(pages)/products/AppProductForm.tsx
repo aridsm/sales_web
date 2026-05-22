@@ -24,14 +24,14 @@ export interface ProductFormValues {
   category_id?: string | null;
   price?: number;
   stock_amount?: number;
-  [key: string]: any
+  [key: string]: any;
 }
 
 interface AppProductFormProps {
   onClose: () => void;
   onSaved?: () => void;
   categoriesPagination: PaginationResult<any>;
-  product: ProductFormValues
+  product: ProductFormValues;
 }
 
 export default function AppProductForm({
@@ -44,9 +44,14 @@ export default function AppProductForm({
 
   const isEditing = !!product?.id;
 
-
   useEffect(() => {
-    categoriesPagination.load({ params: { page: 1, type: CategoryType.PRODUCT, include_ids: product.category_id ? [product.category_id] : undefined } })
+    categoriesPagination.load({
+      params: {
+        page: 1,
+        type: CategoryType.PRODUCT,
+        include_ids: product.category_id ? [product.category_id] : undefined,
+      },
+    });
   }, []);
 
   const {
@@ -109,10 +114,7 @@ export default function AppProductForm({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <AppInputText
         label="Nome"
         placeholder="Nome do produto"
@@ -173,6 +175,7 @@ export default function AppProductForm({
           type="button"
           color="background"
           className="px-4"
+          flat={false}
           onClick={onClose}
         >
           Cancelar
