@@ -47,15 +47,22 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue = [];
 };
 
-const refreshToken = async () => {
-  const { refresh_token, setTokenData, clearToken } = useTokenStore.getState();
+const forceLogout = () => {
+  const { clearToken } = useTokenStore.getState();
+  clearToken();
+  window.location.replace("/login");
+};
+
+const refreshAccessToken = async (): Promise<string> => {
+  const { refresh_token, setTokenData } = useTokenStore.getState();
+
   if (!refresh_token) {
-    clearToken();
-    window.location.href = "/login";
-    throw new Error("No refresh token");
+    forceLogout();
+    throw new Error("No refresh token available");
   }
 
   isRefreshing = true;
+
   try {
     const response = await axios.post(`${baseURL}/users/refresh_token`, {
       refresh_token,
@@ -72,50 +79,23 @@ const refreshToken = async () => {
     return access_token;
   } catch (error) {
     processQueue(error, null);
-    clearToken();
-    window.location.href = "/login";
+    forceLogout();
     throw error;
   } finally {
     isRefreshing = false;
   }
 };
 
-axiosClient.interceptors.request.use(async (config: CustomAxiosConfig) => {
-  const { token, expires_at } = useTokenStore.getState();
+axiosClient.interceptors.request.use((config: CustomAxiosConfig) => {
+  if (config.formEncoded) {
+    config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+  }
 
   if (config.skipAuth) {
-    if (config.formEncoded) {
-      config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-    }
     return config;
   }
 
-  if (expires_at) {
-    const isExpired = new Date(expires_at).getTime() < Date.now();
-
-    if (isExpired) {
-      if (isRefreshing) {
-        try {
-          const newToken = await new Promise((resolve, reject) => {
-            failedQueue.push({ resolve, reject });
-          });
-          config.headers.Authorization = `Bearer ${newToken}`;
-          return config;
-        } catch (error) {
-          return Promise.reject(error);
-        }
-      }
-
-      try {
-        const newToken = await refreshToken();
-        config.headers.Authorization = `Bearer ${newToken}`;
-        return config;
-      } catch (error) {
-        return Promise.reject(error);
-      }
-    }
-  }
-
+  const { token } = useTokenStore.getState();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -127,50 +107,49 @@ axiosClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config as CustomAxiosConfig;
-    const { refresh_token, clearToken } = useTokenStore.getState();
 
-    const status = error.response?.status;
-    const isUnauthorized = status === 401 || status === 403;
-    const isExpiredError =
-      error.response?.data?.message === "errorExpiredToken" ||
-      error.response?.data === "errorExpiredToken";
-
-    if (isUnauthorized && !refresh_token) {
-      clearToken();
-      window.location.href = "/login";
+    if (originalRequest?.skipAuth) {
       return Promise.reject(error);
     }
 
-    if (isExpiredError && !originalRequest._retry && refresh_token) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return axiosClient(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
+    const status = error.response?.status;
+    const isUnauthorized = status === 401 || status === 403;
 
-      originalRequest._retry = true;
-      try {
-        const newToken = await refreshToken();
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return axiosClient(originalRequest);
-      } catch (err) {
-        return Promise.reject(err);
-      }
+    if (!isUnauthorized) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    if (originalRequest._retry) {
+      forceLogout();
+      return Promise.reject(error);
+    }
+
+    const { refresh_token } = useTokenStore.getState();
+
+    if (!refresh_token) {
+      forceLogout();
+      return Promise.reject(error);
+    }
+
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject });
+      })
+        .then((newToken) => {
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return axiosClient(originalRequest);
+        })
+        .catch((err) => Promise.reject(err));
+    }
+
+    originalRequest._retry = true;
+
+    try {
+      const newToken = await refreshAccessToken();
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      return axiosClient(originalRequest);
+    } catch (err) {
+      return Promise.reject(err);
+    }
   },
 );
-
-export const setAuthToken = (token: string | null) => {
-  if (token) {
-    axiosClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  } else {
-    delete axiosClient.defaults.headers.common["Authorization"];
-  }
-};

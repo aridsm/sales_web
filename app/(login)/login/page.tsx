@@ -33,18 +33,9 @@ export default function LoginPage() {
       const formData = new URLSearchParams();
       formData.append("username", username);
       formData.append("password", password);
-      const response = await usersService.login(formData.toString() as any);
-      const {
-        token: tokenVal,
-        access_token,
-        refresh_token,
-        expires_at,
-      } = response.data;
-      setTokenData(
-        tokenVal || access_token || null,
-        refresh_token || null,
-        expires_at || null,
-      );
+      const { access_token, refresh_token, expires_at } =
+        await usersService.login(formData.toString() as any);
+      setTokenData(access_token, refresh_token, expires_at);
       router.push("/");
     } catch (err: any) {
       openDialog({

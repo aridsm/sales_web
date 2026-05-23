@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "../components/AuthProvider";
 import AppDialog from "./components/AppDialog";
 import ColorModeScript from "./components/ColorModeScript";
 
@@ -30,7 +29,7 @@ export default function RootLayout({
         <ColorModeScript />
       </head>
       <body className="min-h-full flex flex-col">
-        <AuthProvider>{children}</AuthProvider>
+        {children}
         <AppDialog />
       </body>
     </html>

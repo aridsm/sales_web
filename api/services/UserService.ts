@@ -23,16 +23,17 @@ export class UserService {
   }
 
   async signup(data: SignUp) {
-    return await axiosClient.post(`/${this.resource}/signup`, data, {
+    return (await axiosClient.post(`/${this.resource}/signup`, data, {
       skipAuth: true,
-    } as any);
+    } as any)).data;
   }
 
   async login(data: Login): Promise<TokenResponse> {
-    return await axiosClient.post(`/${this.resource}/login`, data, {
+    const response = await axiosClient.post(`/${this.resource}/login`, data, {
       skipAuth: true,
       formEncoded: true,
     } as any);
+    return response.data;
   }
 
   async refreshToken(data: RefreshToken) {
