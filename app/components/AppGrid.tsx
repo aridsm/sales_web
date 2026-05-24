@@ -320,7 +320,7 @@ export default function AppGrid<T>({
                 <tbody
                   className={
                     delayedLoading
-                      ? "opacity-50 transition-opacity pointer-events-none"
+                      ? "opacity-50 transition-opacity pointer-events-none "
                       : ""
                   }
                 >
@@ -329,11 +329,15 @@ export default function AppGrid<T>({
                     return (
                       <tr
                         key={rowIndex}
-                        className={`group hover:bg-background-3 transition-colors ${selected ? "bg-background-3" : ""}`}
+                        className={`group hover:bg-background-3 transition-colors ${selected ? "bg-primary-light hover:bg-primary-light" : ""}`}
                       >
                         {hasSelection && (
                           <td
-                            className={`p-2 w-12 border-r border-border first:border-l border-b sticky left-0 z-10 text-center transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
+                            className={`p-2 w-12 border-r first:border-l border-b sticky left-0 z-10 text-center transition-colors group-hover:bg-background-3 ${
+                              selected
+                                ? "bg-primary-light border-border border-b-primary border-l-primary shadow-[inset_0_1px_0_0_var(--primary)]"
+                                : "bg-background border-border"
+                            }`}
                           >
                             <AppCheckbox
                               checked={selected}
@@ -346,7 +350,11 @@ export default function AppGrid<T>({
                         {columns.map((col, colIndex) => (
                           <td
                             key={colIndex}
-                            className={`p-3 overflow-hidden border-r border-border ${!hasSelection ? "first:border-l" : ""} border-b ${rowIndex === items.length - 1 ? "" : "border-b"} ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
+                            className={`p-3 overflow-hidden border-r border-b ${!hasSelection ? "first:border-l" : ""} ${
+                              selected
+                                ? `border-border border-b-primary shadow-[inset_0_1px_0_0_var(--primary)] ${!hasSelection ? "first:border-l-primary" : ""}`
+                                : "border-border"
+                            } ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
                             style={{
                               width: colWidths[colIndex] || col.size || 140,
                             }}
@@ -355,11 +363,19 @@ export default function AppGrid<T>({
                           </td>
                         ))}
                         <td
-                          className={`border-b border-border ${!actions ? "border-r" : ""}`}
+                          className={`border-b ${!actions ? "border-r" : ""} ${
+                            selected
+                              ? `border-border border-b-primary shadow-[inset_0_1px_0_0_var(--primary)] ${!actions ? "border-r-primary" : ""}`
+                              : "border-border"
+                          }`}
                         ></td>
                         {actions && (
                           <td
-                            className={`p-2 border-l border-r border-border border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
+                            className={`p-2 border-l border-r border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors group-hover:bg-background-3 ${
+                              selected
+                                ? "bg-primary-light border-border border-b-primary border-r-primary shadow-[inset_0_1px_0_0_var(--primary)]"
+                                : "bg-background border-border"
+                            }`}
                           >
                             <AppActions item={row} actions={actions} />
                           </td>
