@@ -14,8 +14,8 @@ export default function AppButton({
   children,
   ...props
 }: AppButtonProps) {
-  const baseClasses = `py-2 flex justify-center items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-    rounded ? "rounded-full" : "rounded-sm"
+  const baseClasses = `py-2 px-4 text-sm flex justify-center items-center gap-1.5 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+    rounded ? "rounded-full" : "rounded-md"
   }`;
 
   let colorClasses = "";
@@ -28,7 +28,7 @@ export default function AppButton({
   } else if (color === "red") {
     colorClasses = `bg-red-500 text-white ${
       !flat ? "border border-red-600" : ""
-    } hover:bg-red-600`;
+    } hover:bg-red-400`;
   } else if (color === "transparent") {
     colorClasses = `${
       !flat ? "border border-border" : ""

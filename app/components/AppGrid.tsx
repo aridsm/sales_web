@@ -196,10 +196,10 @@ export default function AppGrid<T>({
 
   const tableWidth = colWidths.reduce((acc, w) => acc + w, 0);
 
-
-
   return (
-    <div className={`flex flex-col h-full min-h-0 min-w-0 flex-1 w-full ${className || ""}`}>
+    <div
+      className={`flex flex-col h-full min-h-0  min-w-0 flex-1 w-full ${className || ""}`}
+    >
       <div className="flex flex-col sm:flex-row justify-between items-center pb-3 gap-4">
         {search && (
           <div className="relative w-full sm:max-w-sm">
@@ -222,14 +222,17 @@ export default function AppGrid<T>({
           </div>
         )}
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto ml-auto">
-          {hasSelection && selectedRows && selectedRows.length > 0 && !hideSelectionCount && (
-            <span className="font-medium text-sm whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
-              {selectedRows.length}{" "}
-              {selectedRows.length === 1
-                ? "item selecionado"
-                : "itens selecionados"}
-            </span>
-          )}
+          {hasSelection &&
+            selectedRows &&
+            selectedRows.length > 0 &&
+            !hideSelectionCount && (
+              <span className="font-medium text-sm whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
+                {selectedRows.length}{" "}
+                {selectedRows.length === 1
+                  ? "item selecionado"
+                  : "itens selecionados"}
+              </span>
+            )}
           <div className="flex gap-3 w-full sm:w-auto">
             {hasSelection &&
               selectedRows &&
@@ -259,125 +262,120 @@ export default function AppGrid<T>({
           </div>
         </div>
       </div>
-      <div className="overflow-auto flex-1 min-w-0 w-full flex flex-col">
-        {items.length === 0 ? (
-          (!hasStartedLoading || loading) ? (
-            delayedLoading ? (
-              <div className="flex justify-center items-center h-full flex-1">
-                <AppLoading className="p-10" />
-              </div>
-            ) : (
-              <div className="h-full w-full flex-1" />
-            )
+      <div className="overflow-auto flex-1 min-w-0 w-full flex flex-col bg-background">
+        {!hasStartedLoading || (loading && items.length === 0) ? (
+          delayedLoading ? (
+            <div className="flex justify-center items-center h-full flex-1">
+              <AppLoading className="p-10" />
+            </div>
           ) : (
-            <div className="flex flex-col flex-1">
-              <table className="table-fixed max-w-none border-separate border-spacing-0 w-full">
-                <thead className="uppercase text-xs tracking-wide sticky top-0 z-20 text-foreground">
-                  <tr>
-                    {hasSelection && <th className="border-border border-y border-r first:border-l first:rounded-tl-md! p-2 bg-background-3 w-12" />}
-                    {columns.map((col, index) => (
-                      <th
-                        key={index}
-                        className={`border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left bg-background-3`}
-                        style={{ width: colWidths[index] || col.size || 140 }}
+            <div className="h-full w-full flex-1" />
+          )
+        ) : (
+          <div className="flex flex-col flex-1">
+            <table
+              className="table-fixed max-w-none border-separate border-spacing-0"
+              style={{
+                width: "100%",
+                minWidth:
+                  items.length > 0 && tableWidth > 0 ? tableWidth : "100%",
+              }}
+            >
+              <thead className="uppercase text-xs tracking-wide sticky top-0 z-20 text-foreground">
+                <tr>
+                  {hasSelection && (
+                    <th className="border-border border-y border-r first:border-l first:rounded-tl-md! p-2 text-center sticky left-0 z-30 bg-background-3 w-12">
+                      {items.length > 0 && (
+                        <AppCheckbox
+                          checked={isAllSelected}
+                          onChange={handleSelectAll}
+                        />
+                      )}
+                    </th>
+                  )}
+                  {columns.map((col, index) => (
+                    <th
+                      key={index}
+                      className={`border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary" : ""}`}
+                      style={{ width: colWidths[index] || col.size || 140 }}
+                    >
+                      {col.column}
+                      {items.length > 0 && (
+                        <div
+                          onMouseDown={(e) => handleMouseDown(e, index)}
+                          className="absolute right-0 top-0 bottom-0 w-2 cursor-e-resize z-10"
+                        />
+                      )}
+                    </th>
+                  ))}
+                  <th
+                    className={`bg-background-3 border-y border-border ${!actions || items.length === 0 ? "rounded-tr-md! border-r" : ""}`}
+                  ></th>
+                  {actions && items.length > 0 && (
+                    <th className="border-border border-y border-l border-r p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!"></th>
+                  )}
+                </tr>
+              </thead>
+              {items.length > 0 && (
+                <tbody
+                  className={
+                    delayedLoading
+                      ? "opacity-50 transition-opacity pointer-events-none"
+                      : ""
+                  }
+                >
+                  {items.map((row: T, rowIndex: number) => {
+                    const selected = isSelected(row);
+                    return (
+                      <tr
+                        key={rowIndex}
+                        className={`group hover:bg-background-3 transition-colors ${selected ? "bg-background-3" : ""}`}
                       >
-                        {col.column}
-                      </th>
-                    ))}
-                    <th className="bg-background-3 border-y border-border border-r rounded-tr-md!"></th>
-                  </tr>
-                </thead>
-              </table>
+                        {hasSelection && (
+                          <td
+                            className={`p-2 w-12 border-r border-border first:border-l border-b sticky left-0 z-10 text-center transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
+                          >
+                            <AppCheckbox
+                              checked={selected}
+                              onChange={(e) =>
+                                handleSelectRow(row, e.target.checked)
+                              }
+                            />
+                          </td>
+                        )}
+                        {columns.map((col, colIndex) => (
+                          <td
+                            key={colIndex}
+                            className={`p-3 overflow-hidden border-r border-border ${!hasSelection ? "first:border-l" : ""} border-b ${rowIndex === items.length - 1 ? "" : "border-b"} ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
+                            style={{
+                              width: colWidths[colIndex] || col.size || 140,
+                            }}
+                          >
+                            {col.cell({ row })}
+                          </td>
+                        ))}
+                        <td
+                          className={`border-b border-border ${!actions ? "border-r" : ""}`}
+                        ></td>
+                        {actions && (
+                          <td
+                            className={`p-2 border-l border-r border-border border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
+                          >
+                            <AppActions item={row} actions={actions} />
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              )}
+            </table>
+            {items.length === 0 && (
               <div className="flex-1 flex items-center text-sm justify-center p-10 text-label border-x border-b border-border bg-background rounded-b-md">
                 Nenhum item encontrado
               </div>
-            </div>
-          )
-        ) : (
-          <table
-            className="table-fixed max-w-none border-separate border-spacing-0 "
-            style={{
-              width: "100%",
-              minWidth: tableWidth > 0 ? tableWidth : "100%",
-            }}
-          >
-            <thead className="uppercase text-xs tracking-wide sticky top-0 z-20 text-foreground">
-              <tr>
-                {hasSelection && (
-                  <th className="border-border border-y border-r first:border-l first:rounded-tl-md! p-2 text-center sticky left-0 z-30 bg-background-3 w-12">
-                    <AppCheckbox
-                      checked={isAllSelected}
-                      onChange={handleSelectAll}
-                    />
-                  </th>
-                )}
-                {columns.map((col, index) => (
-                  <th
-                    key={index}
-                    className={`border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary" : ""}`}
-                    style={{ width: colWidths[index] || col.size || 140 }}
-                  >
-                    {col.column}
-                    <div
-                      onMouseDown={(e) => handleMouseDown(e, index)}
-                      className="absolute right-0 top-0 bottom-0 w-2 cursor-e-resize z-10"
-                    />
-                  </th>
-                ))}
-                <th
-                  className={`bg-background-3 border-y border-border ${!actions ? "rounded-tr-md! border-r" : ""}`}
-                ></th>
-                {actions && (
-                  <th className="border-border border-y border-l border-r p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!"></th>
-                )}
-              </tr>
-            </thead>
-            <tbody className={delayedLoading ? "opacity-50 transition-opacity pointer-events-none" : ""}>
-              {items.map((row: T, rowIndex: number) => {
-                const selected = isSelected(row);
-                return (
-                  <tr
-                    key={rowIndex}
-                    className={`group hover:bg-background-3 transition-colors ${selected ? "bg-background-3" : ""}`}
-                  >
-                    {hasSelection && (
-                      <td
-                        className={`p-2 w-12 border-r border-border first:border-l border-b sticky left-0 z-10 text-center transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
-                      >
-                        <AppCheckbox
-                          checked={selected}
-                          onChange={(e) =>
-                            handleSelectRow(row, e.target.checked)
-                          }
-                        />
-                      </td>
-                    )}
-                    {columns.map((col, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className={`p-3 overflow-hidden border-r border-border ${!hasSelection ? "first:border-l" : ""} border-b ${rowIndex === items.length - 1 ? "" : "border-b"} ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
-                        style={{
-                          width: colWidths[colIndex] || col.size || 140,
-                        }}
-                      >
-                        {col.cell({ row })}
-                      </td>
-                    ))}
-                    <td
-                      className={`border-b border-border ${!actions ? "border-r" : ""}`}
-                    ></td>
-                    {actions && (
-                      <td
-                        className={`p-2 border-l border-r border-border border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${selected ? "bg-background-3" : "bg-background"} group-hover:bg-background-3`}
-                      >
-                        <AppActions item={row} actions={actions} />
-                      </td>
-                    )}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+            )}
+          </div>
         )}
       </div>
       <AppPagination pagination={pagination} />

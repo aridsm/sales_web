@@ -63,7 +63,7 @@ export default function AppActions<T>({
 
       {isOpen && (
         <div
-          className="absolute right-0 z-80 mt-1 w-56 origin-top-right rounded-sm bg-background-2 border border-border shadow-xl py-1 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200"
+          className="absolute right-0 z-80 mt-1 w-56 origin-top-right rounded-md bg-background-2 border border-border shadow-xl py-1 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200"
           role="menu"
         >
           {actions.map((action, index) => {

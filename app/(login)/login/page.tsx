@@ -10,6 +10,7 @@ import AppButton from "@/app/components/AppButton";
 import AppInputText from "@/app/components/inputs/AppInputText";
 import AppDarkModeToggle from "@/app/components/AppDarkModeToggle";
 import Link from "next/link";
+import AppCard from "@/app/components/AppCard";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -59,16 +60,16 @@ export default function LoginPage() {
         <AppDarkModeToggle />
       </div>
 
-      <div className="bg-background-2 border border-border rounded-md p-8 transition-colors">
+      <AppCard className="p-8">
         <div className="flex flex-col items-center gap-4 mb-8">
-          <div className="w-12 h-12 flex items-center justify-center">
+          <div className="w-12 h-12 flex items-center justify-center rounded-md bg-primary/10 p-2 text-primary">
             <AppLogo />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-2xl font-bold tracking-tight">
               Bem-vindo de volta!
             </h1>
-            <p className="text-label text-sm mt-1">
+            <p className="text-label text-sm mt-1.5">
               Entre com suas credenciais para acessar o sistema
             </p>
           </div>
@@ -101,7 +102,7 @@ export default function LoginPage() {
             type="submit"
             color="primary"
             disabled={loading}
-            className="w-full h-12 mt-2 text-sm font-medium"
+            className="w-full h-12 mt-4 text-sm"
           >
             {loading ? "Entrando..." : "Entrar"}
           </AppButton>
@@ -111,14 +112,14 @@ export default function LoginPage() {
           Não tem uma conta?{" "}
           <Link
             href="/register"
-            className="text-primary-2 hover:underline font-medium"
+            className="text-primary hover:text-primary-2 hover:underline font-semibold transition-colors"
           >
             Criar conta
           </Link>
         </p>
-      </div>
+      </AppCard>
 
-      <p className="text-center text-xs text-label mt-6">
+      <p className="text-center text-xs text-label mt-8">
         © {new Date().getFullYear()} Sales App. Todos os direitos reservados.
       </p>
     </div>

@@ -10,6 +10,7 @@ import AppButton from "@/app/components/AppButton";
 import AppInputText from "@/app/components/inputs/AppInputText";
 import AppDarkModeToggle from "@/app/components/AppDarkModeToggle";
 import Link from "next/link";
+import AppCard from "@/app/components/AppCard";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -69,16 +70,16 @@ export default function RegisterPage() {
         <AppDarkModeToggle />
       </div>
 
-      <div className="bg-background-2 border border-border rounded-md p-8 transition-colors">
+      <AppCard className="p-8">
         <div className="flex flex-col items-center gap-4 mb-8">
-          <div className="w-12 h-12 flex items-center justify-center">
+          <div className="w-12 h-12 flex items-center justify-center rounded-md bg-primary/10 p-2 text-primary">
             <AppLogo />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-2xl font-bold text-foreground tracking-tight">
               Criar sua conta
             </h1>
-            <p className="text-label text-sm mt-1">
+            <p className="text-label text-sm mt-1.5">
               Preencha os dados abaixo para começar
             </p>
           </div>
@@ -127,7 +128,7 @@ export default function RegisterPage() {
             type="submit"
             color="primary"
             disabled={loading}
-            className="w-full h-12 mt-2 text-sm font-medium"
+            className="w-full h-12 mt-4 text-sm"
           >
             {loading ? "Criando conta..." : "Criar conta"}
           </AppButton>
@@ -137,14 +138,14 @@ export default function RegisterPage() {
           Já tem uma conta?{" "}
           <Link
             href="/login"
-            className="text-primary-2 hover:underline font-medium"
+            className="text-primary hover:text-primary-2 hover:underline font-semibold transition-colors"
           >
             Entrar
           </Link>
         </p>
-      </div>
+      </AppCard>
 
-      <p className="text-center text-xs text-label mt-6">
+      <p className="text-center text-xs text-label mt-8">
         © {new Date().getFullYear()} Kivo. Todos os direitos reservados.
       </p>
     </div>

@@ -182,7 +182,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
           </div>
 
           {isOpen && (
-            <div className="absolute z-50 w-full mt-1 bg-background-2 border border-border rounded-sm shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+            <div className="absolute z-50 w-full mt-1 bg-background-2 border border-border rounded-md shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
               {search && (
                 <div className="px-3 border-b border-slate-100 flex items-center gap-2 sticky top-0 bg-background-2 z-10">
                   <SearchIcon

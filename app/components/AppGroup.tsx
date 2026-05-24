@@ -63,10 +63,10 @@ function GroupRow<G extends { id: string | number }>({
 
   return (
     <div
-      className={`border border-border transition rounded-sm overflow-hidden shrink-0 `}
+      className={`border border-border transition overflow-hidden rounded-md shrink-0 ${open ? "border-primary/50 dark:border-primary" : ""}`}
     >
       <div
-        className={`group w-full flex items-center bg-background hover:bg-background-3 transition-colors ${open ? "bg-background-3" : ""}`}
+        className={`group w-full flex items-center bg-background hover:bg-background-3 transition-colors ${open ? "bg-background-3 dark:bg-primary/10" : ""}`}
       >
         <button
           type="button"
@@ -74,7 +74,7 @@ function GroupRow<G extends { id: string | number }>({
           className="flex-1 flex items-center gap-3 px-4 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
         >
           <span
-            className={`transition-all duration-200 shrink-0 ${open ? "rotate-90" : ""}`}
+            className={`transition-all duration-200 shrink-0 ${open ? "-rotate-90" : ""}`}
           >
             <KeyboardArrowRight fontSize="small" />
           </span>
@@ -100,14 +100,13 @@ function GroupRow<G extends { id: string | number }>({
       </div>
 
       <div
-        className={`grid transition-all duration-300 ease-in-out ${open
-          ? "grid-rows-[1fr] opacity-100"
-          : "grid-rows-[0fr] opacity-0"
-          }`}
+        className={`grid transition-all duration-300 ease-in-out ${
+          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
       >
         <div className="overflow-hidden">
           {hasBeenOpened && (
-            <div className="px-3 pb-3 flex flex-col gap-2 min-h-0 border-t border-border">
+            <div className="px-3 pb-3 flex flex-col gap-2 min-h-0 border-t border-border dark:border-primary">
               {children({ group, search })}
             </div>
           )}
@@ -248,9 +247,11 @@ export default function AppGroup<G extends { id: string | number }, T>({
           </div>
         </div>
       </div>
-      <div className={`flex flex-col gap-2 min-h-0 flex-1 overflow-auto ${delayedLoading ? "opacity-50 transition-opacity pointer-events-none" : ""}`}>
+      <div
+        className={`flex flex-col gap-2 min-h-0 flex-1 overflow-auto ${delayedLoading ? "opacity-50 transition-opacity pointer-events-none" : ""}`}
+      >
         {groups.items.length === 0 ? (
-          (!hasStartedLoading || groups.loading) ? (
+          !hasStartedLoading || groups.loading ? (
             delayedLoading ? (
               <div className="flex justify-center items-center h-full">
                 <AppLoading className="p-10" />

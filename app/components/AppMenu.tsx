@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useTokenStore } from "@/stores/tokenStore";
+import { usersService } from "@/api/services/UserService";
 import {
   History,
   ShoppingCartOutlined,
@@ -29,58 +31,101 @@ const menuItems = [
 export default function AppMenu() {
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
+  const clearToken = useTokenStore((s) => s.clearToken);
+
+  async function handleLogout() {
+    try {
+      await usersService.logout();
+    } finally {
+      clearToken();
+      router.push("/login");
+    }
+  }
 
   return (
     <div
-      className={`bg-foreground dark:bg-background-3 py-3 text-white transition-all duration-300 flex flex-col ${isOpen ? "w-64" : "w-18"} min-h-screen`}
+      className={`bg-foreground dark:bg-background-3 border-r border-r-border py-4 text-white transition-all duration-300 flex flex-col ${isOpen ? "w-64" : "w-18"} min-h-screen`}
     >
-      <div className="flex items-center pl-3 gap-3">
+      <div
+        className={`flex items-center ${isOpen ? "justify-between" : "justify-center"} px-3 mb-2`}
+      >
+        {isOpen && (
+          <div className="flex items-center gap-2.5 pl-1">
+            <div className="w-7 h-7 rounded-md bg-gradient-to-tr from-primary to-primary-2 flex items-center justify-center shrink-0">
+              <svg
+                className="w-3.5 h-3.5 text-white"
+                viewBox="0 0 200 200"
+                fill="currentColor"
+              >
+                <rect x="25" y="51" width="150" height="34" rx="8" />
+                <rect x="25" y="115" width="150" height="34" rx="8" />
+              </svg>
+            </div>
+            <span className="text-base font-bold tracking-wide text-white">
+              Kivo
+            </span>
+          </div>
+        )}
         <AppButton
           rounded
           color="transparent"
           onClick={() => setIsOpen(!isOpen)}
-          className="min-w-12 h-12 rounded-full text-left hover:bg-foreground-2 flex items-center justify-center cursor-pointer text-white"
+          className="min-w-10 w-10 h-10"
         >
-          <Menu />
+          <Menu fontSize="small" />
         </AppButton>
       </div>
 
-      <nav className="mt-4 my-auto flex-1 flex flex-col justify-center">
+      <nav className="mt-2 flex-1 flex flex-col justify-center px-3">
         <ul className="flex flex-col gap-2">
-          {menuItems.map((item) => (
-            <li key={item.name} className="w-full">
-              <Link
-                href={item.href}
-                className={`flex items-center border-l-4 border-transparent gap-5 h-14 pr-1 hover:bg-foreground-2 dark:hover:bg-background  ${
-                  pathname === item.href
-                    ? "bg-foreground-2 dark:bg-primary border-primary! dark:hover:bg-primary"
-                    : ""
-                }`}
-              >
-                <div className="w-6 min-w-6 max-w-6 flex items-center justify-center ml-5">
-                  <item.icon fontSize="small" />
-                </div>
+          {menuItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <li key={item.name} className="w-full">
+                <Link
+                  href={item.href}
+                  className={`flex items-center gap-3 h-12 rounded-md transition-all duration-200 ${
+                    isOpen ? "px-3" : "justify-center"
+                  } ${
+                    isActive
+                      ? "bg-primary text-white shadow-sm shadow-primary/20"
+                      : "text-white/70 hover:bg-slate-500/15 dark:hover:bg-background-2 hover:text-white"
+                  }`}
+                >
+                  <div className="w-5 min-w-5 flex items-center justify-center">
+                    <item.icon style={{ fontSize: 20 }} />
+                  </div>
 
-                {isOpen && (
-                  <span className="whitespace-nowrap text-nowrap">
-                    {item.name}
-                  </span>
-                )}
-              </Link>
-            </li>
-          ))}
+                  {isOpen && (
+                    <span className="whitespace-nowrap text-sm">
+                      {item.name}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
-      <button
-        className={`cursor-pointer flex items-center border-l-4 border-transparent gap-5 h-16 pr-1 hover:bg-foreground-2`}
-      >
-        <div className="w-6 min-w-6 max-w-6 flex items-center justify-center ml-5">
-          <ExitToAppOutlined fontSize="small" />
-        </div>
+      <div className="px-3 flex flex-col gap-2">
+        <div className="border-t border-white/10"></div>
 
-        {isOpen && <span className="whitespace-nowrap text-nowrap">Sair</span>}
-      </button>
+        <AppButton
+          color="transparent"
+          onClick={handleLogout}
+          className={`h-12 text-start! justify-start  ${isOpen ? "px-3 w-full" : "justify-center"}`}
+        >
+          <div className="w-5 min-w-5 flex items-center justify-center">
+            <ExitToAppOutlined style={{ fontSize: 20 }} />
+          </div>
+
+          {isOpen && (
+            <span className="whitespace-nowrap text-sm mt-0.5 ml-1">Sair</span>
+          )}
+        </AppButton>
+      </div>
     </div>
   );
 }

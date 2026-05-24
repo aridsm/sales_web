@@ -118,21 +118,21 @@ export default function DashboardPage() {
 
   return (
     <AppPage title="Dashboard">
-      <div className="flex items-center gap-5 mb-5">
+      <div className="flex items-center gap-2 mb-5 flex-wrap">
         {Object.entries(datePeriods).map(([key, period]) => (
           <button
             key={key}
             onClick={() => handlePeriodChange(key)}
-            className={`px-5 py-2 rounded-sm border transition-colors cursor-pointer ${activePeriod === key
-              ? "bg-primary text-white border-primary"
-              : "bg-white text-gray-700 border-border hover:bg-gray-50"
+            className={`px-4 py-2 text-sm rounded-md border transition-all duration-200 cursor-pointer ${activePeriod === key
+              ? "bg-primary text-white border-primary shadow-sm shadow-primary/20"
+              : "bg-background-2 text-foreground border-border hover:border-border-2"
               }`}
           >
             {period.label}
           </button>
         ))}
-        <button className="p-2 rounded-sm border border-border bg-white cursor-pointer hover:bg-gray-50 transition-colors">
-          <SettingsOutlined />
+        <button className="p-2 rounded-md border border-border bg-background-2 text-foreground cursor-pointer hover:text-primary hover:border-border-2 transition-all duration-200">
+          <SettingsOutlined fontSize="small" />
         </button>
       </div>
 
@@ -140,12 +140,12 @@ export default function DashboardPage() {
         {Object.entries(budget).map(([key, value]) => (
           <AppCard
             key={key}
-            className={`flex-1 flex-col items-start justify-between ${key === "balance"
-              ? " bg-primary-2! text-white border-transparent!"
+            className={`flex-1 flex-col items-start justify-between gap-1 ${key === "balance"
+              ? " bg-primary text-white border-transparent"
               : ""
               }`}
           >
-            <span className={`${key === "balance" ? "" : "text-label"}`}>
+            <span className={`${key === "balance" ? "text-white/80" : "text-label"}`}>
               {value.label}
             </span>
             <span className="text-2xl font-semibold">{`R$ ${value.value.toFixed(2)}`}</span>
@@ -162,8 +162,8 @@ export default function DashboardPage() {
             <span className="text-lg">Meta de hoje</span>
             <span className="text-2xl">R$ 1.000,00</span>
           </div>
-          <div className="w-full h-7 bg-slate-100 rounded-sm overflow-hidden mt-2">
-            <div className="w-1/4 h-full bg-primary-2" />
+          <div className="w-full h-7 bg-background-3 dark:bg-foreground/10 rounded-md overflow-hidden mt-2">
+            <div className="w-1/4 h-full bg-primary-2 rounded-md" />
           </div>
         </AppCard>
 

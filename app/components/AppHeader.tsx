@@ -4,9 +4,8 @@ import {
   NotificationsOutlined,
   AccountCircleOutlined,
 } from "@mui/icons-material";
-import AppLogo from "./AppLogo";
-import AppDarkModeToggle from "./AppDarkModeToggle";
 import AppButton from "./AppButton";
+import AppDarkModeToggle from "./AppDarkModeToggle";
 
 interface AppHeaderProps {
   title: string;
@@ -14,25 +13,30 @@ interface AppHeaderProps {
 
 export default function AppHeader({ title }: AppHeaderProps) {
   return (
-    <div className="flex items-center justify-between border-b border-border py-3 transition-colors">
+    <div className="flex items-center justify-between border-b border-border py-3 transition-colors bg-background-2 dark:bg-background">
       <div className="max-w-400 w-full flex items-center justify-between mx-auto px-6">
         <div className="flex items-center gap-3">
-          <AppLogo />
-          <h1 className="text-2xl font-semibold dark:text-white transition-colors">
+          <h1 className="text-xl font-semibold text-foreground transition-colors">
             {title}
           </h1>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2">
           <AppDarkModeToggle />
-          <div className="flex items-center gap-4">
-            <AppButton rounded color="background" className="p-2">
-              <NotificationsOutlined />
-            </AppButton>
-            <AppButton rounded color="background" className="p-2">
-              <AccountCircleOutlined />
-            </AppButton>
-          </div>
+          <AppButton
+            rounded
+            color="transparent"
+            className="w-9 h-9 text-label hover:text-foreground"
+          >
+            <NotificationsOutlined fontSize="small" />
+          </AppButton>
+          <AppButton
+            rounded
+            color="transparent"
+            className="w-9 h-9 text-label hover:text-foreground"
+          >
+            <AccountCircleOutlined fontSize="small" />
+          </AppButton>
         </div>
       </div>
     </div>

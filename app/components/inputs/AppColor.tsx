@@ -96,7 +96,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
           </div>
 
           {isOpen && (
-            <div className="absolute z-50 mt-1 p-3 bg-background-2 border border-border rounded-sm shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute z-50 mt-1 p-3 bg-background-2 border border-border rounded-md shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
               <HexColorPicker
                 color={value || "#ffffff"}
                 onChange={onChange}

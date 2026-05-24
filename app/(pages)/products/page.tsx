@@ -91,7 +91,7 @@ export default function ProductsPage() {
   }
 
   async function onSaveItem() {
-    await categories.load()
+    await categories.load();
   }
 
   function onCloseForm() {
@@ -113,9 +113,13 @@ export default function ProductsPage() {
               style={{ backgroundColor: category.color }}
             />
             <span className="mt-0.5">{category.name}</span>
-            <span className="rounded-full bg-primary/10 w-6 h-6 flex items-center justify-center text-xs font-semibold text-primary">
-              {category.products}
-            </span>
+            {!!category.products && (
+              <span
+                className={`rounded-full w-6 h-6 flex items-center justify-center text-xs font-semibold text-primary dark:text-white bg-primary/15 dark:bg-primary`}
+              >
+                {category.products}
+              </span>
+            )}
           </div>
         )}
         search={true}
@@ -171,8 +175,6 @@ function AppProductsGrid({
   rowsSelected: Product[];
   setRowsSelected: React.Dispatch<React.SetStateAction<Product[]>>;
 }) {
-
-
   const products = usePagination<Product>(
     productsService as unknown as PaginationService<Product>,
     { category_id: group.id },
@@ -181,7 +183,6 @@ function AppProductsGrid({
   useEffect(() => {
     products.load();
   }, [group.products]);
-
 
   const columns = useMemo(
     () => [
@@ -195,9 +196,9 @@ function AppProductsGrid({
         cell: ({ row }: { row: Product }) => {
           return row.price !== undefined
             ? new Intl.NumberFormat("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            }).format(row.price)
+                style: "currency",
+                currency: "BRL",
+              }).format(row.price)
             : "-";
         },
         size: 150,
@@ -217,12 +218,12 @@ function AppProductsGrid({
         cell: ({ row }: { row: Product }) => {
           return row.created_at
             ? new Intl.DateTimeFormat("pt-BR", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            }).format(new Date(row.created_at))
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              }).format(new Date(row.created_at))
             : "-";
         },
         size: 200,
@@ -252,7 +253,6 @@ function AppProductsGrid({
     [],
   );
 
-
   return (
     <AppGrid
       columns={columns}
@@ -267,7 +267,7 @@ function AppProductsGrid({
 }
 
 function ProductFilterFields() {
-  const { control } = useFormContext()
+  const { control } = useFormContext();
 
   const categories = usePagination<Category>(
     categoriesService as unknown as PaginationService<Category>,
