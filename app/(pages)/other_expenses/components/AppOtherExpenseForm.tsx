@@ -171,7 +171,6 @@ export default function AppOtherExpenseForm({
             color="background"
             className="px-4"
             onClick={onClose}
-            flat={false}
           >
             Cancelar
           </AppButton>

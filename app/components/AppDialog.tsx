@@ -105,7 +105,6 @@ export default function AppDialog() {
               color="background"
               className="flex-1 px-4"
               onClick={handleCancel}
-              flat={false}
             >
               {options.cancelLabel ?? "Cancelar"}
             </AppButton>

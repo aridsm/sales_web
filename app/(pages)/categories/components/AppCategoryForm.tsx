@@ -137,7 +137,6 @@ export default function AppCategoryForm({
             onClick={handleClose}
             color="background"
             className="px-4"
-            flat={false}
           >
             Cancelar
           </AppButton>

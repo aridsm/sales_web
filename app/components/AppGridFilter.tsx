@@ -92,7 +92,6 @@ export default function AppGridFilter({
       <AppButton
         color="background"
         onClick={handleOpen}
-        flat={false}
         className={`px-4 shrink-0 relative ${hasActiveFilters ? "text-primary dark:text-foreground border-primary! dark:border-foreground!" : ""}`}
       >
         <FilterList fontSize="small" />
@@ -115,7 +114,6 @@ export default function AppGridFilter({
                 type="button"
                 onClick={handleClear}
                 color="background"
-                flat={false}
                 className="px-4"
               >
                 <DeleteSweepOutlined fontSize="small" />

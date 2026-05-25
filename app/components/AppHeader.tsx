@@ -21,19 +21,21 @@ export default function AppHeader({ title }: AppHeaderProps) {
           </h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-5">
           <AppDarkModeToggle />
           <AppButton
             rounded
+            flat
             color="transparent"
-            className="w-9 h-9 text-label hover:text-foreground"
+            className="w-9 h-9 text-foreground hover:text-foreground"
           >
             <NotificationsOutlined fontSize="small" />
           </AppButton>
           <AppButton
             rounded
+            flat
             color="transparent"
-            className="w-9 h-9 text-label hover:text-foreground"
+            className="w-9 h-9 text-foreground hover:text-foreground"
           >
             <AccountCircleOutlined fontSize="small" />
           </AppButton>

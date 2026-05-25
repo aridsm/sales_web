@@ -69,7 +69,8 @@ export default function AppMenu() {
         )}
         <AppButton
           rounded
-          color="transparent"
+          flat
+          color="foreground"
           onClick={() => setIsOpen(!isOpen)}
           className="min-w-10 w-10 h-10"
         >
@@ -113,7 +114,8 @@ export default function AppMenu() {
         <div className="border-t border-white/10"></div>
 
         <AppButton
-          color="transparent"
+          color="foreground"
+          flat
           onClick={handleLogout}
           className={`h-12 text-start! justify-start  ${isOpen ? "px-3 w-full" : "justify-center"}`}
         >

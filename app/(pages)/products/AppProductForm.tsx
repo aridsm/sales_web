@@ -175,7 +175,6 @@ export default function AppProductForm({
           type="button"
           color="background"
           className="px-4"
-          flat={false}
           onClick={onClose}
         >
           Cancelar

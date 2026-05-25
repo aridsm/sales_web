@@ -10,7 +10,7 @@ export default function AppCheckbox({
     <div className={`relative flex items-center justify-center ${className}`}>
       <input
         type="checkbox"
-        className={`peer appearance-none w-4 h-4 border rounded-sm border-border hover:border-slate-300 dark:border-border dark:hover:border-stone-500 bg-background dark:bg-transparent checked:bg-primary! dark:checked:bg-primary! checked:border-primary! dark:checked:border-primary! focus:outline-transparent! transition-colors cursor-pointer m-0 px-0! py-0! ${props.checked ? "hover:border-primary!" : ""}`}
+        className={`peer appearance-none w-4 h-4 border rounded-sm border-border dark:border-border hover:border-border-2 bg-background dark:bg-transparent checked:bg-primary! dark:checked:bg-primary! checked:border-primary! dark:checked:border-primary! focus:outline-transparent! transition-colors cursor-pointer m-0 px-0! py-0! ${props.checked ? "hover:border-primary!" : ""}`}
         {...props}
       />
       <svg

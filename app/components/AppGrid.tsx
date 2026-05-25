@@ -326,6 +326,14 @@ export default function AppGrid<T>({
                 >
                   {items.map((row: T, rowIndex: number) => {
                     const selected = isSelected(row);
+                    const isPrevSelected =
+                      selected &&
+                      rowIndex > 0 &&
+                      isSelected(items[rowIndex - 1]);
+                    const isNextSelected =
+                      selected &&
+                      rowIndex < items.length - 1 &&
+                      isSelected(items[rowIndex + 1]);
                     return (
                       <tr
                         key={rowIndex}
@@ -333,10 +341,10 @@ export default function AppGrid<T>({
                       >
                         {hasSelection && (
                           <td
-                            className={`p-2 w-12 border-r first:border-l border-b sticky left-0 z-10 text-center transition-colors group-hover:bg-background-3 ${
+                            className={`p-2 w-12 border-r first:border-l border-b sticky left-0 z-10 text-center transition-colors ${
                               selected
-                                ? "bg-primary-light border-border border-b-primary border-l-primary shadow-[inset_0_1px_0_0_var(--primary)]"
-                                : "bg-background border-border"
+                                ? `bg-primary-light group-hover:bg-primary-light border-border ${isNextSelected ? "border-b-border" : "border-b-primary"} border-l-primary ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary)]" : ""}`
+                                : "bg-background group-hover:bg-background-3 border-border"
                             }`}
                           >
                             <AppCheckbox
@@ -352,7 +360,7 @@ export default function AppGrid<T>({
                             key={colIndex}
                             className={`p-3 overflow-hidden border-r border-b ${!hasSelection ? "first:border-l" : ""} ${
                               selected
-                                ? `border-border border-b-primary shadow-[inset_0_1px_0_0_var(--primary)] ${!hasSelection ? "first:border-l-primary" : ""}`
+                                ? `border-border ${isNextSelected ? "border-b-border" : "border-b-primary"} ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary)]" : ""} ${!hasSelection ? "first:border-l-primary" : ""}`
                                 : "border-border"
                             } ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
                             style={{
@@ -365,16 +373,16 @@ export default function AppGrid<T>({
                         <td
                           className={`border-b ${!actions ? "border-r" : ""} ${
                             selected
-                              ? `border-border border-b-primary shadow-[inset_0_1px_0_0_var(--primary)] ${!actions ? "border-r-primary" : ""}`
+                              ? `border-border ${isNextSelected ? "border-b-border" : "border-b-primary"} ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary)]" : ""} ${!actions ? "border-r-primary" : ""}`
                               : "border-border"
                           }`}
                         ></td>
                         {actions && (
                           <td
-                            className={`p-2 border-l border-r border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors group-hover:bg-background-3 ${
+                            className={`p-2 border-l border-r border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${
                               selected
-                                ? "bg-primary-light border-border border-b-primary border-r-primary shadow-[inset_0_1px_0_0_var(--primary)]"
-                                : "bg-background border-border"
+                                ? `bg-primary-light group-hover:bg-primary-light border-border ${isNextSelected ? "border-b-border" : "border-b-primary"} border-r-primary ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary)]" : ""}`
+                                : "bg-background group-hover:bg-background-3 border-border"
                             }`}
                           >
                             <AppActions item={row} actions={actions} />

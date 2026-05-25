@@ -88,7 +88,6 @@ export default function AppPagination<T>({
           onClick={() => handlePageChange(pageData.page - 1)}
           disabled={pageData.page <= 1}
           className="px-3"
-          flat={false}
         >
           <KeyboardArrowLeft fontSize="small" className="text-label/50" />{" "}
           Anterior
@@ -100,7 +99,6 @@ export default function AppPagination<T>({
             return (
               <AppButton
                 key={idx}
-                flat={false}
                 color={p === pageData.page ? "primary" : "background"}
                 onClick={() => typeof p === "number" && handlePageChange(p)}
                 disabled={isDots}
@@ -121,7 +119,6 @@ export default function AppPagination<T>({
           onClick={() => handlePageChange(pageData.page + 1)}
           disabled={pageData.page >= pageData.total_pages}
           className="px-3"
-          flat={false}
         >
           Próximo{" "}
           <KeyboardArrowRight fontSize="small" className="text-label/50" />

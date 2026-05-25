@@ -1,7 +1,7 @@
 import React from "react";
 
 export interface AppButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  color?: "primary" | "background" | "red" | "transparent";
+  color?: "primary" | "background" | "red" | "transparent" | "foreground";
   flat?: boolean;
   rounded?: boolean;
 }
@@ -9,7 +9,7 @@ export interface AppButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEle
 export default function AppButton({
   color = "primary",
   className = "",
-  flat = true,
+  flat = false,
   rounded = false,
   children,
   ...props
@@ -20,19 +20,25 @@ export default function AppButton({
 
   let colorClasses = "";
   if (color === "primary") {
-    colorClasses = `bg-primary text-white hover:bg-primary/90 ${!flat ? "border border-primary-3" : ""}`;
+    colorClasses = flat
+      ? "bg-transparent text-primary hover:bg-primary-light active:bg-primary-light/80 border border-transparent"
+      : "bg-primary text-white hover:bg-primary-3 active:bg-primary-3/90 shadow-xs border border-transparent";
   } else if (color === "background") {
-    colorClasses = `${
-      !flat ? "border border-border" : ""
-    } text-foreground hover:bg-background-3 disabled:hover:bg-background bg-background`;
+    colorClasses = flat
+      ? "bg-transparent text-foreground bg-background-3/50 border border-transparent"
+      : "text-foreground border border-border hover:border-border-2 bg-background-2 dark:bg-background-3 dark:hover:bg-background-2";
   } else if (color === "red") {
-    colorClasses = `bg-red-500 text-white ${
-      !flat ? "border border-red-600" : ""
-    } hover:bg-red-400`;
+    colorClasses = flat
+      ? "bg-transparent text-red-500 hover:bg-red-500/10 active:bg-red-500/20 border border-transparent"
+      : "bg-red-500 text-white hover:bg-red-600 active:bg-red-700 shadow-xs border border-transparent";
   } else if (color === "transparent") {
-    colorClasses = `${
-      !flat ? "border border-border" : ""
-    } bg-transparent text-foreground hover:bg-label/10`;
+    colorClasses = flat
+      ? "bg-transparent text-foreground-2 hover:bg-background-3 hover:text-foreground border border-transparent"
+      : "bg-transparent text-foreground-2 border border-border hover:border-border-2 hover:bg-background-3 hover:text-foreground";
+  } else if (color === "foreground") {
+    colorClasses = flat
+      ? "bg-transparent text-white hover:bg-slate-500/15 dark:hover:bg-background-2 hover:text-white border border-transparent"
+      : "bg-foreground dark:bg-background-3 text-white border border-transparent hover:bg-slate-800 dark:hover:bg-background-2 hover:text-white";
   }
 
   const finalClass = `${baseClasses} ${colorClasses} ${className}`.trim();
