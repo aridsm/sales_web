@@ -82,7 +82,7 @@ export default function AppProductForm({
     try {
       const payload = {
         name: data.name,
-        category_id: data.category_id,
+        category_id: data.category_id!,
         price: Number(data.price),
         stock_amount: Number(data.stock_amount),
       };

@@ -1,6 +1,6 @@
 interface OtherExpenseBase {
   name: string;
-  category_id: number;
+  category_id: string;
   value: number;
   description?: string;
   date: string;

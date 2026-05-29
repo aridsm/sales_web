@@ -1,15 +1,14 @@
-"use client";
+import { HTMLAttributes } from "react";
 
 export default function AppCard({
   children,
   className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={`flex flex-col bg-background-2 dark:bg-background-3 border border-border/70 rounded-md ${className || ""}`}
+      className={`flex flex-col bg-background-2 dark:bg-background-3 border border-border rounded-md ${className || ""}`}
+      {...props}
     >
       {children}
     </div>

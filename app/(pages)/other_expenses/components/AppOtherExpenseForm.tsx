@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import AppInputText from "@/app/components/inputs/AppInputText";
 import AppSelectPaginated from "@/app/components/inputs/AppSelectPaginated";
+import AppDate from "@/app/components/inputs/AppDate";
 import { currencyFormatter } from "@/app/utils/formatters/currency";
 import AppButton from "@/app/components/AppButton";
 import AppModal from "@/app/components/AppModal";
@@ -70,7 +71,7 @@ export default function AppOtherExpenseForm({
     try {
       const payload = {
         name: data.name,
-        description: data.description || null,
+        description: data.description || undefined,
         value: Number(data.value),
         date: `${data.date}T00:00:00`,
         category_id: data.category_id,
@@ -134,11 +135,17 @@ export default function AppOtherExpenseForm({
           )}
         />
 
-        <AppInputText
-          label="Data"
-          type="date"
-          {...register("date", { required: "A data é obrigatória" })}
-          error={errors.date?.message}
+        <Controller
+          name="date"
+          control={control}
+          rules={{ required: "A data é obrigatória" }}
+          render={({ field }) => (
+            <AppDate
+              label="Data"
+              {...field}
+              error={errors.date?.message}
+            />
+          )}
         />
 
         <Controller

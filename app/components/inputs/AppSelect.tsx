@@ -29,6 +29,7 @@ export interface AppSelectProps {
   value?: any;
   onChange?: (value: any) => void;
   className?: string;
+  size?: "default" | "small";
 }
 
 const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
@@ -44,6 +45,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
       value,
       onChange,
       className = "",
+      size = "default",
     },
     ref,
   ) => {
@@ -140,7 +142,8 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
           <div
             onClick={toggleDropdown}
             className={`
-                             input-field cursor-pointer flex items-center justify-between gap-2 transition-all duration-200
+                             input-field cursor-pointer flex items-center justify-between transition-all duration-200
+                            ${size === "small" ? "h-8! px-1.5! text-xs! gap-1" : "gap-2"}
                             ${disabled ? "bg-slate-100 cursor-not-allowed opacity-60" : ""}
                             ${error ? "border-red-500 ring-1 ring-red-500" : "border-slate-300"}
                             ${isOpen && !error ? "active" : ""}
@@ -170,14 +173,14 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                 })
               ) : (
                 <span
-                  className={`truncate ${(!value && value !== 0) || (Array.isArray(value) && value.length === 0) ? "text-foreground/40" : ""}`}
+                  className={`${size === "small" ? "" : "truncate"} ${(!value && value !== 0) || (Array.isArray(value) && value.length === 0) ? "text-foreground/40" : ""}`}
                 >
                   {getSelectedNames()}
                 </span>
               )}
             </div>
             <ChevronLeft
-              className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"}`}
+              className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"} ${size === "small" ? "w-4! h-4!" : ""}`}
             />
           </div>
 

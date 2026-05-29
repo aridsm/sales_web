@@ -262,7 +262,7 @@ export default function AppGrid<T>({
           </div>
         </div>
       </div>
-      <div className="overflow-auto flex-1 min-w-0 w-full flex flex-col bg-background">
+      <div className="overflow-auto flex-1 min-w-0 w-full flex flex-col">
         {!hasStartedLoading || (loading && items.length === 0) ? (
           delayedLoading ? (
             <div className="flex justify-center items-center h-full flex-1">

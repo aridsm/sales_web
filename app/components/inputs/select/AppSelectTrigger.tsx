@@ -40,7 +40,7 @@ export default function AppSelectTrigger<T extends SelectOption>() {
                 {opt ? opt.name : `ID: ${v}`}
                 <CloseIcon
                   className="w-3 h-3 cursor-pointer hover:text-primary-dark"
-                  onClick={(e) => removeValue(e, v)}
+                  onClick={(e) => removeValue(e, v!)}
                   style={{ fontSize: "14px" }}
                 />
               </span>

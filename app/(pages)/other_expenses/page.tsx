@@ -15,7 +15,7 @@ import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";
 import { useSearchParams } from "next/navigation";
 import AppOtherExpenseForm from "./components/AppOtherExpenseForm";
-import AppGridFilter from "../../components/AppGridFilter";
+import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { OtherExpense, OtherExpenseForm } from "@/api/schemas/OtherExpense";
@@ -156,9 +156,9 @@ export default function OtherExpensesPage() {
         actions={actions}
         search
         filter={
-          <AppGridFilter pagination={pagination}>
+          <AppFilter pagination={pagination}>
             <OtherExpenseFilterFields />
-          </AppGridFilter>
+          </AppFilter>
         }
       />
 

@@ -11,7 +11,7 @@ import { categoriesService } from "@/api/services/Categories";
 import { productsService } from "@/api/services/ProductService";
 import { CategoryType } from "@/enums/CategoryType";
 import { useDialogStore } from "@/stores/dialogStore";
-import AppGridFilter from "../../components/AppGridFilter";
+import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { useSearchParams } from "next/navigation";
@@ -131,9 +131,9 @@ export default function ProductsPage() {
           });
         }}
         filter={
-          <AppGridFilter pagination={categories}>
+          <AppFilter pagination={categories}>
             <ProductFilterFields />
-          </AppGridFilter>
+          </AppFilter>
         }
       >
         {({ group }) => (

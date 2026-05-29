@@ -4,7 +4,7 @@
 
 :root {
   --primary: #3b69ff; /* Original Blue */
-  --primary-2: #6a8dff; /* Original Light Blue */
+  --primary-2: #7b8fff; /* Original Light Blue */
   --primary-3: #3e67ee; /* Original Deep Blue */
   --background: #f8fafc; /* Clean Slate 50 */
   --background-2: #ffffff; /* Card White */
@@ -23,7 +23,7 @@
   --background-3: rgb(45, 47, 61);
   --foreground: #e4e5ed;
   --foreground-2: #a6a9be;
-  --label: #75788b;
+  --label: #868a9e;
   --border: #3d4156;
   --border-2: #4a4f66;
   --primary-light: #2e3550;
@@ -81,7 +81,7 @@ body {
 }
 
 .input-field {
-  @apply border border-border hover:border-border-2 placeholder:text-foreground/40 rounded-md px-3.5 h-12 transition-all duration-200 text-foreground! outline-none!;
+  @apply border border-border bg-background-2 dark:bg-background-3 hover:border-border-2 placeholder:text-foreground/40 rounded-md px-3.5 h-11 transition-all duration-200 text-foreground! outline-none!;
 }
 
 .input-field:focus,

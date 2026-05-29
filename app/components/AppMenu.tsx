@@ -22,7 +22,7 @@ const menuItems = [
   { name: "Dashboard", href: "/", icon: DashboardOutlined },
   { name: "Categorias", href: "/categories", icon: CategoryOutlined },
   { name: "Produtos", href: "/products", icon: Inventory2Outlined },
-  { name: "Vendas", href: "/sale", icon: ShoppingCartOutlined },
+  { name: "Vendas", href: "/sales", icon: ShoppingCartOutlined },
   { name: "Histórico", href: "/history", icon: History },
   { name: "Outras Despesas", href: "/other_expenses", icon: ReceiptOutlined },
   { name: "Sua conta", href: "/account", icon: AccountCircleOutlined },
@@ -70,7 +70,7 @@ export default function AppMenu() {
         <AppButton
           rounded
           flat
-          color="foreground"
+          color="white"
           onClick={() => setIsOpen(!isOpen)}
           className="min-w-10 w-10 h-10"
         >
@@ -81,7 +81,11 @@ export default function AppMenu() {
       <nav className="mt-2 flex-1 flex flex-col justify-center px-3">
         <ul className="flex flex-col gap-2">
           {menuItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname === item.href ||
+                  pathname.startsWith(item.href + "/");
             return (
               <li key={item.name} className="w-full">
                 <Link
@@ -114,7 +118,7 @@ export default function AppMenu() {
         <div className="border-t border-white/10"></div>
 
         <AppButton
-          color="foreground"
+          color="white"
           flat
           onClick={handleLogout}
           className={`h-12 text-start! justify-start  ${isOpen ? "px-3 w-full" : "justify-center"}`}

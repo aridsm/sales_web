@@ -14,7 +14,7 @@ import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";
 import { Controller, useFormContext } from "react-hook-form";
-import AppGridFilter from "../../components/AppGridFilter";
+import AppFilter from "../../components/AppFilter";
 import AppSelect from "../../components/inputs/AppSelect";
 import { useSearchParams } from "next/navigation";
 import { Category } from "@/api/schemas/Category";
@@ -142,9 +142,9 @@ export default function CategoriesPage() {
         actions={actions}
         search
         filter={
-          <AppGridFilter pagination={pagination}>
+          <AppFilter pagination={pagination}>
             <CategoryFilterFields />
-          </AppGridFilter>
+          </AppFilter>
         }
       />
 

@@ -8,7 +8,7 @@ import AppModal from "./AppModal";
 import AppButton from "./AppButton";
 import { PaginationResult } from "../utils/usePagination";
 
-interface AppGridFilterProps {
+interface AppFilterProps {
   pagination: PaginationResult<any>;
   children: React.ReactNode;
   title?: string;
@@ -27,11 +27,11 @@ const getParamsFromUrl = (params: URLSearchParams) => {
   return obj;
 };
 
-export default function AppGridFilter({
+export default function AppFilter({
   pagination,
   children,
   title = "Filtros",
-}: AppGridFilterProps) {
+}: AppFilterProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

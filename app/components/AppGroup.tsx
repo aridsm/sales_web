@@ -8,6 +8,7 @@ import {
   Search,
   DeleteOutlined,
   Add,
+  SearchOffOutlined,
 } from "@mui/icons-material";
 import AppPagination from "./AppPagination";
 import AppInputText from "./inputs/AppInputText";
@@ -63,10 +64,10 @@ function GroupRow<G extends { id: string | number }>({
 
   return (
     <div
-      className={`border border-border transition overflow-hidden rounded-md shrink-0 ${open ? "border-primary/50 dark:border-primary" : ""}`}
+      className={`border border-border transition overflow-hidden rounded-md shrink-0 ${open ? "border-primary/50 dark:border-primary" : "hover:border-border-2"}`}
     >
       <div
-        className={`group w-full flex items-center bg-background hover:bg-background-3 transition-colors ${open ? "bg-primary-light hover:bg-primary-light" : ""}`}
+        className={`group w-full flex items-center  transition-colors ${open ? "bg-primary-light hover:bg-primary-light" : " bg-background-2 dark:bg-background-3 dark:hover:bg-background-2"}`}
       >
         <button
           type="button"
@@ -260,7 +261,17 @@ export default function AppGroup<G extends { id: string | number }, T>({
               <div className="py-10" />
             )
           ) : (
-            <p className="text-sm py-6 text-center">Nenhum grupo encontrado.</p>
+            <div className="flex flex-col rounded-md items-center justify-center py-12 px-4 text-label">
+              <div className="w-10 h-10 text-primary dark:text-primary-2 mb-4 rounded-full bg-primary-light flex items-center justify-center">
+                <SearchOffOutlined fontSize="medium" />
+              </div>
+              <p className="text-base font-medium text-foreground">
+                Nenhum resultado encontrado
+              </p>
+              <p className="text-sm text-center mt-1 max-w-xs">
+                Não foi encontrado nenhum item correspondente a busca.
+              </p>
+            </div>
           )
         ) : (
           groups.items.map((group) => {

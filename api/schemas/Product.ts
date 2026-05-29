@@ -9,6 +9,8 @@ export interface ProductBase {
 export interface Product extends ProductBase {
   id: string;
   created_at: Date | string;
+  category_color: string;
+  category_name: string;
 }
 
-export interface ProductForm extends ProductBase {}
+export interface ProductForm extends Omit<ProductBase, "sold_amount"> {}
