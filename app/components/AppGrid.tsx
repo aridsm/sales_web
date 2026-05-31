@@ -395,8 +395,28 @@ export default function AppGrid<T>({
               )}
             </table>
             {items.length === 0 && (
-              <div className="flex-1 flex items-center text-sm justify-center p-10 text-label border-x border-b border-border bg-background rounded-b-md">
-                Nenhum item encontrado
+              <div className="flex-1 flex flex-col items-center justify-center p-14 text-label border-x border-b border-border bg-background rounded-b-md gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-border-2 mb-1"
+                >
+                  <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+                  <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+                </svg>
+                <span className=" font-medium text-foreground-2">
+                  Nada por aqui!
+                </span>
+                <span className="text-sm text-label">
+                  Nenhum item encontrado para exibir
+                </span>
               </div>
             )}
           </div>

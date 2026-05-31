@@ -89,3 +89,4 @@ body {
 .input-field.active {
   @apply border-primary outline-none!;
 }
+

@@ -76,9 +76,9 @@ export default function SalePage() {
     <AppPage title="Vendas">
       <div className="flex gap-4 mb-5">
         <AppCard className="flex-1 p-4 flex-row! items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-sky-500/10 flex items-center justify-center shrink-0">
             <ShoppingCartOutlined
-              className="text-primary"
+              className="text-sky-500"
               style={{ fontSize: 20 }}
             />
           </div>
@@ -89,9 +89,9 @@ export default function SalePage() {
         </AppCard>
 
         <AppCard className="flex-1 p-4 flex-row! items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center shrink-0">
             <TrendingUpOutlined
-              className="text-emerald-500"
+              className="text-teal-500"
               style={{ fontSize: 20 }}
             />
           </div>
@@ -104,9 +104,9 @@ export default function SalePage() {
         </AppCard>
 
         <AppCard className="flex-1 p-4 flex-row! items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-rose-500/10 flex items-center justify-center shrink-0">
             <ReceiptOutlined
-              className="text-violet-500"
+              className="text-rose-500"
               style={{ fontSize: 20 }}
             />
           </div>
