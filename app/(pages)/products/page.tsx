@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import AppGroup from "@/app/components/AppGroup";
+import { formatDateTime } from "@/app/utils/formatters/date";
 import AppPage from "../../components/AppPage";
 import {
   usePagination,
@@ -124,10 +125,16 @@ export default function ProductsPage() {
         )}
         search={true}
         onDelete={onDeleteSelected}
-        onNew={({ group }) => {
+        onNew={() => {
           setForm({
             open: true,
-            item: { category_id: group?.id ?? null },
+            item: { category_id: null },
+          });
+        }}
+        onNewRow={({ group }) => {
+          setForm({
+            open: true,
+            item: { category_id: group.id },
           });
         }}
         filter={
@@ -215,17 +222,7 @@ function AppProductsGrid({
       },
       {
         column: "Criado em",
-        cell: ({ row }: { row: Product }) => {
-          return row.created_at
-            ? new Intl.DateTimeFormat("pt-BR", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              }).format(new Date(row.created_at))
-            : "-";
-        },
+        cell: ({ row }: { row: Product }) => formatDateTime(row.created_at),
         size: 200,
       },
       {

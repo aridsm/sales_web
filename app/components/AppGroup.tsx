@@ -19,7 +19,8 @@ import { useDialogStore } from "@/stores/dialogStore";
 interface AppGroupProps<G extends { id: string | number }, T> {
   groups: PaginationResult<G>;
   renderGroupName?: (group: G) => React.ReactNode;
-  onNew?: (props: { group?: G; refresh?: () => void }) => void;
+  onNew?: () => void;
+  onNewRow?: (props: { group: G }) => void;
   onDelete?: () => void;
   filter?: React.ReactNode;
   search?: boolean;
@@ -37,13 +38,13 @@ interface AppGroupProps<G extends { id: string | number }, T> {
 function GroupRow<G extends { id: string | number }>({
   group,
   renderGroupName,
-  onNew,
+  onNewRow,
   search,
   children,
 }: {
   group: G;
   renderGroupName?: (group: G) => React.ReactNode;
-  onNew?: (props: { group?: G; refresh?: () => void }) => void;
+  onNewRow?: (props: { group: G }) => void;
   search?: string;
   children: ({
     group,
@@ -81,7 +82,7 @@ function GroupRow<G extends { id: string | number }>({
           </span>
           <span className="flex-1 text-foreground">{label}</span>
         </button>
-        {onNew && (
+        {onNewRow && (
           <div className="px-4 shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
             <AppButton
               type="button"
@@ -90,7 +91,7 @@ function GroupRow<G extends { id: string | number }>({
               className="w-7 h-7 rounded-full! hover:bg-foreground/5!"
               onClick={(e) => {
                 e.stopPropagation();
-                onNew?.({ group });
+                onNewRow?.({ group });
               }}
               title="Adicionar item"
             >
@@ -121,6 +122,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
   groups,
   renderGroupName,
   onNew,
+  onNewRow,
   onDelete,
   filter,
   search,
@@ -236,9 +238,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
             {onNew && (
               <AppButton
                 color="primary"
-                onClick={() =>
-                  onNew?.({ group: undefined, refresh: undefined })
-                }
+                onClick={() => onNew?.()}
                 className="px-4 py-2 shrink-0 w-full sm:w-auto"
               >
                 <Add fontSize="small" />
@@ -280,7 +280,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
                 key={group.id}
                 group={group}
                 renderGroupName={renderGroupName}
-                onNew={onNew}
+                onNewRow={onNewRow}
                 search={searchInput}
               >
                 {children}

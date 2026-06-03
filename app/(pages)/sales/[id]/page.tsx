@@ -22,23 +22,16 @@ import {
   CalendarTodayOutlined,
   ShoppingBagOutlined,
   AttachMoneyOutlined,
+  ArrowBackOutlined,
 } from "@mui/icons-material";
+
+import { formatDateTime } from "@/app/utils/formatters/date";
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
   }).format(value);
-}
-
-function formatDate(dateStr: string): string {
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(dateStr));
 }
 
 const statusConfig: Record<
@@ -193,20 +186,19 @@ export default function SaleDetailPage() {
 
   return (
     <AppPage title="Venda">
+      <AppButton
+        color="transparent"
+        flat
+        onClick={() => router.push("/sales")}
+        className="gap-1.5! px-2! -ml-2 mr-auto mb-2"
+      >
+        <ArrowBackOutlined style={{ fontSize: 18 }} />
+        <span className="text-sm">Voltar para vendas</span>
+      </AppButton>
       <div className="flex flex-col gap-6">
         <div className="flex items-center  gap-4">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <AppButton
-                color="transparent"
-                flat
-                rounded
-                className="w-9 h-9"
-                onClick={() => router.push("/sales")}
-                title="Voltar"
-              >
-                <ArrowBack fontSize="small" />
-              </AppButton>
               <h2 className=" font-bold text-foreground tracking-tight">
                 #{sale.code.toString().padStart(6, "0")}
               </h2>
@@ -219,14 +211,12 @@ export default function SaleDetailPage() {
             </div>
           </div>
           <span className="text-label truncate text-sm mr-auto">{sale.id}</span>
-
           {!isCanceled && (
             <AppButton color="red" onClick={handleCancel}>
               Cancelar venda
             </AppButton>
           )}
         </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <AppCard className="p-5 flex-row! items-center gap-4">
             <div className="w-11 h-11 rounded-xl bg-indigo-500/10 flex items-center justify-center shrink-0">
@@ -238,7 +228,7 @@ export default function SaleDetailPage() {
             <div className="flex flex-col">
               <span className="text-label">Data</span>
               <span className="font-semibold">
-                {formatDate(sale.created_at)}
+                {formatDateTime(sale.created_at)}
               </span>
             </div>
           </AppCard>
@@ -274,7 +264,6 @@ export default function SaleDetailPage() {
             </div>
           </AppCard>
         </div>
-
         <div className="flex flex-col">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-semibold text-foreground">
