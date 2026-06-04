@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AppPage from "../../../components/AppPage";
 import AppCard from "../../../components/AppCard";
@@ -11,9 +11,16 @@ import { useDialogStore } from "@/stores/dialogStore";
 import { productsService } from "@/api/services/ProductService";
 import {
   usePagination,
-  type ApiResponse,
   type PaginationService,
 } from "@/app/utils/usePagination";
+import {
+  addToCart as addToCartFn,
+  updateQuantity as updateQuantityFn,
+  removeFromCart as removeFromCartFn,
+  getTotalItems,
+  getTotalPrice,
+  type CartItem,
+} from "@/app/utils/cart";
 import type { Product } from "@/api/schemas/Product";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../../components/inputs/AppSelectPaginated";
@@ -32,11 +39,6 @@ import {
 } from "@mui/icons-material";
 import { salesService } from "@/api/services/SaleService";
 
-interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -48,7 +50,7 @@ export default function NewSalePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem<Product>[]>([]);
   const [isFinishing, setIsFinishing] = useState(false);
   const { openDialog } = useDialogStore();
   const searchRef = useRef<HTMLInputElement>(null);
@@ -76,35 +78,15 @@ export default function NewSalePage() {
   }, [search, searchParams]);
 
   function addToCart(product: Product) {
-    setCart((prev) => {
-      const existing = prev.find((i) => i.product.id === product.id);
-      if (existing) {
-        if (existing.quantity >= product.stock_amount) return prev;
-        return prev.map((i) =>
-          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
-        );
-      }
-      return [...prev, { product, quantity: 1 }];
-    });
+    setCart((prev) => addToCartFn(prev, product));
   }
 
   function updateQuantity(productId: string, delta: number) {
-    setCart(
-      (prev) =>
-        prev
-          .map((item) => {
-            if (item.product.id !== productId) return item;
-            const newQty = item.quantity + delta;
-            if (newQty <= 0) return null;
-            if (newQty > item.product.stock_amount) return item;
-            return { ...item, quantity: newQty };
-          })
-          .filter(Boolean) as CartItem[],
-    );
+    setCart((prev) => updateQuantityFn(prev, productId, delta));
   }
 
   function removeFromCart(productId: string) {
-    setCart((prev) => prev.filter((i) => i.product.id !== productId));
+    setCart((prev) => removeFromCartFn(prev, productId));
   }
 
   function clearCart() {
@@ -118,11 +100,8 @@ export default function NewSalePage() {
     });
   }
 
-  const totalItems = cart.reduce((sum, i) => sum + i.quantity, 0);
-  const totalPrice = cart.reduce(
-    (sum, i) => sum + i.product.price * i.quantity,
-    0,
-  );
+  const totalItems = getTotalItems(cart);
+  const totalPrice = getTotalPrice(cart);
 
   async function finishSale() {
     if (cart.length === 0) return;
@@ -134,20 +113,29 @@ export default function NewSalePage() {
       confirmLabel: "Finalizar",
       onConfirm: async () => {
         setIsFinishing(true);
-        await salesService.post({
-          products: cart.map((i) => ({
-            product_id: i.product.id,
-            quantity: i.quantity,
-          })),
-        });
-        setIsFinishing(false);
-        setCart([]);
-        setSearch("");
-        openDialog({
-          variant: "success",
-          message: "Venda registrada com sucesso!",
-        });
-        router.push("/sales");
+        try {
+          await salesService.post({
+            products: cart.map((i) => ({
+              product_id: i.product.id,
+              quantity: i.quantity,
+            })),
+          });
+          setCart([]);
+          setSearch("");
+          openDialog({
+            variant: "success",
+            message: "Venda registrada com sucesso!",
+          });
+          router.push("/sales");
+        } catch (error) {
+          console.error(error);
+          openDialog({
+            variant: "error",
+            message: "Erro ao finalizar a venda. Tente novamente.",
+          });
+        } finally {
+          setIsFinishing(false);
+        }
       },
     });
   }
@@ -345,7 +333,7 @@ function SaleCart({
   onUpdateQuantity,
   onFinishSale,
 }: {
-  cart: CartItem[];
+  cart: CartItem<Product>[];
   totalItems: number;
   totalPrice: number;
   isFinishing: boolean;
