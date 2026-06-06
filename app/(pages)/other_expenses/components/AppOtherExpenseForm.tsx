@@ -15,7 +15,7 @@ import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/Categories";
 import { Category } from "@/api/schemas/Category";
 import { OtherExpenseForm } from "@/api/schemas/OtherExpense";
-import { getLabel } from "@/app/utils/i18n";
+import { useTranslation } from "@/app/utils/i18n";
 
 interface AppOtherExpenseFormProps {
   isOpen: boolean;
@@ -30,6 +30,7 @@ export default function AppOtherExpenseForm({
   onSaved,
   model,
 }: AppOtherExpenseFormProps) {
+  const { t: getLabel } = useTranslation();
   const { openDialog } = useDialogStore();
   const categoriesPagination = usePagination<Category>(categoriesService, {
     type: CategoryType.OTHER_EXPENSE,

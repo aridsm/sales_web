@@ -38,7 +38,7 @@ import {
   ArrowBackOutlined,
 } from "@mui/icons-material";
 import { salesService } from "@/api/services/SaleService";
-import { getLabel } from "@/app/utils/i18n";
+import { useTranslation } from "@/app/utils/i18n";
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
@@ -48,6 +48,8 @@ function formatCurrency(value: number): string {
 }
 
 export default function NewSalePage() {
+  const { t: getLabel } = useTranslation();
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");

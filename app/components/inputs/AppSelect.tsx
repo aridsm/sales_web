@@ -148,10 +148,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
     };
 
     return (
-      <div
-        className={`flex flex-col gap-1 w-full ${className}`}
-        ref={containerRef}
-      >
+      <div className={`flex flex-col gap-1 ${className}`} ref={containerRef}>
         {label && <AppLabel htmlFor={label}>{label}</AppLabel>}
         <div className="relative">
           {triggerTemplate ? (
@@ -164,48 +161,48 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
           ) : (
             <div
               onClick={toggleDropdown}
-            className={`
+              className={`
                              input-field cursor-pointer flex items-center justify-between transition-all duration-200
                             ${size === "small" ? "h-8! px-1.5! text-xs! gap-1" : "gap-2"}
                             ${disabled ? "bg-slate-100 cursor-not-allowed opacity-60" : ""}
                             ${error ? "border-red-500 ring-1 ring-red-500" : "border-slate-300"}
                             ${isOpen && !error ? "active" : ""}
                         `}
-          >
-            <div className="flex flex-wrap gap-1 items-center flex-1 overflow-hidden">
-              {multiple &&
-              (Array.isArray(value)
-                ? value.length > 0
-                : value !== undefined && value !== null && value !== "") ? (
-                (Array.isArray(value) ? value : [value]).map((v) => {
-                  const opt = options.find((o) => o.id === v);
-                  if (!opt) return null;
-                  return (
-                    <span
-                      key={v}
-                      className="bg-primary/10 text-primary dark:text-foreground dark:bg-foreground/5 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 animate-in fade-in zoom-in duration-200"
-                    >
-                      {opt.name}
-                      <CloseIcon
-                        className="w-3 h-3 cursor-pointer hover:text-primary-dark"
-                        onClick={(e) => removeValue(e, v)}
-                        style={{ fontSize: "14px" }}
-                      />
-                    </span>
-                  );
-                })
-              ) : (
-                <span
-                  className={`${size === "small" ? "" : "truncate"} ${(!value && value !== 0) || (Array.isArray(value) && value.length === 0) ? "text-foreground/40" : ""}`}
-                >
-                  {getSelectedNames()}
-                </span>
-              )}
+            >
+              <div className="flex flex-wrap gap-1 items-center flex-1 overflow-hidden">
+                {multiple &&
+                (Array.isArray(value)
+                  ? value.length > 0
+                  : value !== undefined && value !== null && value !== "") ? (
+                  (Array.isArray(value) ? value : [value]).map((v) => {
+                    const opt = options.find((o) => o.id === v);
+                    if (!opt) return null;
+                    return (
+                      <span
+                        key={v}
+                        className="bg-primary/10 text-primary dark:text-foreground dark:bg-foreground/5 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 animate-in fade-in zoom-in duration-200"
+                      >
+                        {opt.name}
+                        <CloseIcon
+                          className="w-3 h-3 cursor-pointer hover:text-primary-dark"
+                          onClick={(e) => removeValue(e, v)}
+                          style={{ fontSize: "14px" }}
+                        />
+                      </span>
+                    );
+                  })
+                ) : (
+                  <span
+                    className={`${size === "small" ? "" : "truncate"} ${(!value && value !== 0) || (Array.isArray(value) && value.length === 0) ? "text-foreground/40" : ""}`}
+                  >
+                    {getSelectedNames()}
+                  </span>
+                )}
+              </div>
+              <ChevronLeft
+                className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"} ${size === "small" ? "w-4! h-4!" : ""}`}
+              />
             </div>
-            <ChevronLeft
-              className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"} ${size === "small" ? "w-4! h-4!" : ""}`}
-            />
-          </div>
           )}
 
           {isOpen && (

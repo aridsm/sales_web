@@ -26,7 +26,7 @@ import {
 } from "@mui/icons-material";
 
 import { formatDateTime } from "@/app/utils/formatters/date";
-import { getLabel } from "@/app/utils/i18n";
+import { useTranslation } from "@/app/utils/i18n";
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
@@ -52,6 +52,7 @@ const statusConfig: Record<
 };
 
 export default function SaleDetailPage() {
+  const { t: getLabel } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { openDialog } = useDialogStore();

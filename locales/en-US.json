@@ -1,5 +1,29 @@
 {
-  "labels": {},
+  "labels": {
+    "login": {
+      "title": "Welcome back!",
+      "subtitle": "Enter your credentials to access the system",
+      "button": "Login",
+      "logging": "Logging in...",
+      "no_account": "Doesn't have an account?",
+      "create_account": "Create account"
+    },
+    "register": {
+      "title": "Create account!",
+      "description": "Fill in the information below to get started",
+      "confirm_password": "Confirm your password",
+      "creating": "Creating account...",
+      "create": "Create account",
+      "have_account": "Already have an account?"
+    },
+    "all": {
+      "all_rights": "All rights reserved",
+      "name": "Name",
+      "password": "Password",
+      "email": "example@email.com",
+      "enter": "Enter"
+    }
+  },
   "errors": {
     "products": {
       "errorHasDoneSales": "The following products have linked sales: {{name}}"

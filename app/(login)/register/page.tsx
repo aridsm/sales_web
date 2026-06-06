@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usersService } from "@/api/services/UserService";
 import { useTokenStore } from "@/stores/tokenStore";
@@ -9,11 +9,13 @@ import AppLogo from "@/app/components/AppLogo";
 import AppButton from "@/app/components/AppButton";
 import AppInputText from "@/app/components/inputs/AppInputText";
 import AppDarkModeToggle from "@/app/components/AppDarkModeToggle";
+import AppLanguageSelect from "@/app/components/AppLanguageSelect";
 import Link from "next/link";
 import AppCard from "@/app/components/AppCard";
-import { getLabel } from "@/app/utils/i18n";
+import { useTranslation } from "@/app/utils/i18n";
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +24,11 @@ export default function RegisterPage() {
   const router = useRouter();
   const { setTokenData } = useTokenStore();
   const { openDialog } = useDialogStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,17 +63,22 @@ export default function RegisterPage() {
     } catch (err: any) {
       openDialog({
         variant: "error",
-        message: getLabel(`errors.auth.${err.response.data.detail.error}`),
+        message: t(`errors.auth.${err.response.data.detail.error}`),
       });
     } finally {
       setLoading(false);
     }
   };
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <div className="w-full max-w-md mx-auto px-4">
-      <div className="flex justify-end mb-6">
+      <div className="flex items-center justify-end gap-4 mb-2">
         <AppDarkModeToggle />
+        <AppLanguageSelect />
       </div>
 
       <AppCard className="p-8">
@@ -76,10 +88,10 @@ export default function RegisterPage() {
           </div>
           <div className="text-center">
             <h1 className="text-2xl font-bold text-foreground tracking-tight">
-              Criar sua conta
+              {t("labels.register.title")}
             </h1>
             <p className="text-label text-sm mt-1.5">
-              Preencha os dados abaixo para começar
+              {t("labels.register.description")}
             </p>
           </div>
         </div>
@@ -88,7 +100,7 @@ export default function RegisterPage() {
           <AppInputText
             label="Nome"
             type="text"
-            placeholder="Seu nome completo"
+            placeholder={t("labels.all.name")}
             value={name}
             onChange={(e) => setName((e.target as HTMLInputElement).value)}
             required
@@ -97,14 +109,14 @@ export default function RegisterPage() {
           <AppInputText
             label="Email"
             type="email"
-            placeholder="seu@email.com"
+            placeholder={t("labels.all.email")}
             value={email}
             onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
             required
           />
 
           <AppInputText
-            label="Senha"
+            label={t("labels.all.password")}
             type="password"
             placeholder="••••••••"
             value={password}
@@ -113,7 +125,7 @@ export default function RegisterPage() {
           />
 
           <AppInputText
-            label="Confirmar senha"
+            label={t("labels.register.confirm_password")}
             type="password"
             placeholder="••••••••"
             value={confirmPassword}
@@ -129,23 +141,25 @@ export default function RegisterPage() {
             disabled={loading}
             className="w-full h-12 mt-4 text-sm"
           >
-            {loading ? "Criando conta..." : "Criar conta"}
+            {loading
+              ? t("labels.register.creating")
+              : t("labels.register.create")}
           </AppButton>
         </form>
 
         <p className="text-center text-sm text-label mt-6">
-          Já tem uma conta?{" "}
+          {t("labels.register.have_account")}{" "}
           <Link
             href="/login"
             className="text-primary hover:text-primary-2 hover:underline font-semibold transition-colors"
           >
-            Entrar
+            {t("labels.all.enter")}
           </Link>
         </p>
       </AppCard>
 
       <p className="text-center text-xs text-label mt-8">
-        © {new Date().getFullYear()} Kivo. Todos os direitos reservados.
+        © {new Date().getFullYear()} Kivo. {t("labels.all.all_rights")}.
       </p>
     </div>
   );

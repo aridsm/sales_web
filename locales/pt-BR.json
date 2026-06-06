@@ -1,5 +1,29 @@
 {
-  "labels": {},
+  "labels": {
+    "login": {
+      "title": "Bem-vindo de volta!",
+      "subtitle": "Entre com suas credenciais para acessar o sistema",
+      "button": "Entrar",
+      "logging": "Entrando...",
+      "no_account": "Não tem uma conta?",
+      "create_account": "Criar conta"
+    },
+    "register": {
+      "title": "Criar conta!",
+      "description": "Preencha os dados abaixo para começar",
+      "confirm_password": "Confirme sua senha",
+      "creating": "Criando conta...",
+      "create": "Criar conta",
+      "have_account": "Já tem uma conta?"
+    },
+    "all": {
+      "all_rights": "Todos os direitos reservados",
+      "name": "Nome",
+      "password": "Senha",
+      "email": "exemplo@email.com",
+      "enter": "Entrar"
+    }
+  },
   "errors": {
     "products": {
       "errorHasDoneSales": "Os seguintes produtos possuem vendas vinculadas: {{name}}"

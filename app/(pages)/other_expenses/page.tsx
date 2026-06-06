@@ -19,9 +19,10 @@ import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { OtherExpense, OtherExpenseForm } from "@/api/schemas/OtherExpense";
-import { getLabel } from "@/app/utils/i18n";
+import { useTranslation } from "@/app/utils/i18n";
 
 export default function OtherExpensesPage() {
+  const { t: getLabel } = useTranslation();
   const [rowsSelected, setRowsSelected] = useState<OtherExpense[]>([]);
   const [form, setForm] = useState({
     open: false,

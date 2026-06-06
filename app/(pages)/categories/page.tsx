@@ -18,9 +18,10 @@ import AppFilter from "../../components/AppFilter";
 import AppSelect from "../../components/inputs/AppSelect";
 import { useSearchParams } from "next/navigation";
 import { Category } from "@/api/schemas/Category";
-import { getLabel } from "@/app/utils/i18n";
+import { useTranslation } from "@/app/utils/i18n";
 
 export default function CategoriesPage() {
+  const { t: getLabel } = useTranslation();
   const [rowsSelected, setRowsSelected] = useState<Category[]>([]);
   const [form, setForm] = useState({
     open: false,

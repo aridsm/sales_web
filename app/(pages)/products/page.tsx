@@ -20,7 +20,7 @@ import AppProductForm, { type ProductFormValues } from "./AppProductForm";
 import { Edit } from "@mui/icons-material";
 import AppModal from "@/app/components/AppModal";
 import AppGrid from "@/app/components/AppGrid";
-import { getLabel } from "@/app/utils/i18n";
+import { getLabel, useTranslation } from "@/app/utils/i18n";
 
 interface Category {
   id: string;
@@ -41,6 +41,7 @@ interface Product {
 }
 
 export default function ProductsPage() {
+  const { t } = useTranslation();
   const [rowsSelected, setRowsSelected] = useState<Product[]>([]);
 
   const [form, setForm] = useState({

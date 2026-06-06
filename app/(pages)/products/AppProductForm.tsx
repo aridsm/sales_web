@@ -10,7 +10,7 @@ import { PaginationResult } from "@/app/utils/usePagination";
 import { productsService } from "@/api/services/ProductService";
 import { useDialogStore } from "@/stores/dialogStore";
 import { CategoryType } from "@/enums/CategoryType";
-import { getLabel } from "@/app/utils/i18n";
+import { useTranslation } from "@/app/utils/i18n";
 
 interface ProductFormData {
   name: string;
@@ -41,6 +41,7 @@ export default function AppProductForm({
   categoriesPagination,
   product,
 }: AppProductFormProps) {
+  const { t: getLabel } = useTranslation();
   const { openDialog } = useDialogStore();
 
   const isEditing = !!product?.id;

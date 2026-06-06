@@ -9,17 +9,24 @@ import AppLogo from "@/app/components/AppLogo";
 import AppButton from "@/app/components/AppButton";
 import AppInputText from "@/app/components/inputs/AppInputText";
 import AppDarkModeToggle from "@/app/components/AppDarkModeToggle";
+import AppLanguageSelect from "@/app/components/AppLanguageSelect";
 import Link from "next/link";
 import AppCard from "@/app/components/AppCard";
-import { getLabel } from "@/app/utils/i18n";
+import { useTranslation } from "@/app/utils/i18n";
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { token, setTokenData } = useTokenStore();
   const { openDialog } = useDialogStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (token) {
@@ -42,21 +49,22 @@ export default function LoginPage() {
     } catch (err: any) {
       openDialog({
         variant: "error",
-        message: getLabel(`errors.auth.${err.response.data.detail.error}`),
+        message: t(`errors.auth.${err.response.data.detail.error}`),
       });
     } finally {
       setLoading(false);
     }
   };
 
-  if (token) {
+  if (!mounted || token) {
     return null;
   }
 
   return (
     <div className="w-full max-w-md mx-auto px-4">
-      <div className="flex justify-end mb-6">
+      <div className="flex items-center justify-between gap-4 mb-2">
         <AppDarkModeToggle />
+        <AppLanguageSelect />
       </div>
 
       <AppCard className="p-8">
@@ -66,10 +74,10 @@ export default function LoginPage() {
           </div>
           <div className="text-center">
             <h1 className="text-2xl font-bold tracking-tight">
-              Bem-vindo de volta!
+              {t("labels.login.title")}
             </h1>
             <p className="text-label text-sm mt-1.5">
-              Entre com suas credenciais para acessar o sistema
+              {t("labels.login.subtitle")}
             </p>
           </div>
         </div>
@@ -78,7 +86,7 @@ export default function LoginPage() {
           <AppInputText
             label="Email"
             type="email"
-            placeholder="seu@email.com"
+            placeholder={t("labels.all.email")}
             value={username}
             onChange={(e) => setUsername((e.target as HTMLInputElement).value)}
             required
@@ -86,7 +94,7 @@ export default function LoginPage() {
 
           <div className="flex flex-col gap-1">
             <AppInputText
-              label="Senha"
+              label={t("labels.all.password")}
               type="password"
               placeholder="••••••••"
               value={password}
@@ -103,23 +111,23 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full h-12 mt-4 text-sm"
           >
-            {loading ? "Entrando..." : "Entrar"}
+            {loading ? t("labels.login.logging") : t("labels.login.button")}
           </AppButton>
         </form>
 
         <p className="text-center text-sm text-label mt-6">
-          Não tem uma conta?{" "}
+          {t("labels.login.no_account")}{" "}
           <Link
             href="/register"
-            className="text-primary hover:text-primary-2 hover:underline font-semibold transition-colors"
+            className="text-primary dark:text-amber-300 hover:underline font-semibold"
           >
-            Criar conta
+            {t("labels.login.create_account")}
           </Link>
         </p>
       </AppCard>
 
       <p className="text-center text-xs text-label mt-8">
-        © {new Date().getFullYear()} Sales App. Todos os direitos reservados.
+        © {new Date().getFullYear()} Sales App. {t("labels.all.all_rights")}.
       </p>
     </div>
   );

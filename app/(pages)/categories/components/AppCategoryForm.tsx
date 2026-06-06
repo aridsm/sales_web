@@ -13,7 +13,7 @@ import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/Categories";
 import { useDialogStore } from "@/stores/dialogStore";
 import { CategoryForm } from "@/api/schemas/Category";
-import { getLabel } from "@/app/utils/i18n";
+import { useTranslation } from "@/app/utils/i18n";
 
 const categorySchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
@@ -34,6 +34,7 @@ export default function AppCategoryForm({
   model,
   onSave,
 }: AppCategoryFormProps) {
+  const { t: getLabel } = useTranslation();
   const { openDialog } = useDialogStore();
   const {
     register,
