@@ -3,36 +3,40 @@ import { axiosClient } from "@/api/axiosClient";
 export default class BaseService<TEntity = unknown, TFormDto = TEntity> {
   constructor(protected readonly resource: string) {}
 
-  getById(id: string | number): Promise<TEntity> {
-    return axiosClient.get(`/${this.resource}/${id}`).then((res) => res.data);
+  async getById(id: string | number): Promise<TEntity> {
+    return await axiosClient
+      .get(`/${this.resource}/${id}`)
+      .then((res) => res.data);
   }
 
-  getAll<TResponse = TEntity[]>(
+  async getAll<TResponse = TEntity[]>(
     params?: Record<string, unknown>,
   ): Promise<TResponse> {
-    return axiosClient
+    return await axiosClient
       .get(`/${this.resource}`, { params })
       .then((res) => res.data);
   }
 
-  delete(id: string | number): Promise<void> {
-    return axiosClient
+  async delete(id: string | number): Promise<void> {
+    return await axiosClient
       .delete(`/${this.resource}/${id}`)
       .then((res) => res.data);
   }
 
-  bulkDelete(ids: (string | number)[]): Promise<void> {
-    return axiosClient
+  async bulkDelete(ids: (string | number)[]): Promise<void> {
+    return await axiosClient
       .delete(`/${this.resource}/bulk`, { data: { ids } })
       .then((res) => res.data);
   }
 
-  post(data: TFormDto): Promise<TEntity> {
-    return axiosClient.post(`/${this.resource}`, data).then((res) => res.data);
+  async post(data: TFormDto): Promise<TEntity> {
+    return await axiosClient
+      .post(`/${this.resource}`, data)
+      .then((res) => res.data);
   }
 
-  patch(id: string | number, data: Partial<TFormDto>): Promise<TEntity> {
-    return axiosClient
+  async patch(id: string | number, data: Partial<TFormDto>): Promise<TEntity> {
+    return await axiosClient
       .patch(`/${this.resource}/${id}`, data)
       .then((res) => res.data);
   }

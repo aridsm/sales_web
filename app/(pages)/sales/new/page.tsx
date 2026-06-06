@@ -38,6 +38,7 @@ import {
   ArrowBackOutlined,
 } from "@mui/icons-material";
 import { salesService } from "@/api/services/SaleService";
+import { getLabel } from "@/app/utils/i18n";
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
@@ -127,11 +128,12 @@ export default function NewSalePage() {
             message: "Venda registrada com sucesso!",
           });
           router.push("/sales");
-        } catch (error) {
-          console.error(error);
+        } catch (error: any) {
           openDialog({
             variant: "error",
-            message: "Erro ao finalizar a venda. Tente novamente.",
+            message: getLabel(
+              `errors.sales.${error.response.data.detail.error}`,
+            ),
           });
         } finally {
           setIsFinishing(false);

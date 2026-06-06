@@ -11,6 +11,7 @@ import AppInputText from "@/app/components/inputs/AppInputText";
 import AppDarkModeToggle from "@/app/components/AppDarkModeToggle";
 import Link from "next/link";
 import AppCard from "@/app/components/AppCard";
+import { getLabel } from "@/app/utils/i18n";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -41,9 +42,7 @@ export default function LoginPage() {
     } catch (err: any) {
       openDialog({
         variant: "error",
-        message:
-          err.response?.data?.message ||
-          "Falha ao realizar login. Verifique suas credenciais.",
+        message: getLabel(`errors.auth.${err.detail.error}`),
       });
     } finally {
       setLoading(false);

@@ -61,10 +61,10 @@ export default function AppDialog() {
   const isConfirm = variant === "confirm";
 
   async function handleConfirm() {
+    closeDialog();
     if (options.onConfirm) {
       await options.onConfirm();
     }
-    closeDialog();
   }
 
   function handleCancel() {

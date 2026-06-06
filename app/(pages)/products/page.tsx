@@ -20,6 +20,7 @@ import AppProductForm, { type ProductFormValues } from "./AppProductForm";
 import { Edit } from "@mui/icons-material";
 import AppModal from "@/app/components/AppModal";
 import AppGrid from "@/app/components/AppGrid";
+import { getLabel } from "@/app/utils/i18n";
 
 interface Category {
   id: string;
@@ -80,11 +81,15 @@ export default function ProductsPage() {
             params: { ...params, type: CategoryType.PRODUCT },
           });
           setRowsSelected([]);
-        } catch (error) {
-          console.error(error);
+        } catch (error: any) {
           openDialog({
             variant: "error",
-            message: "Ocorreu um erro ao excluir os itens. Tente novamente.",
+            message: getLabel(
+              `errors.products.${error.response.data.detail.error}`,
+              {
+                name: error.response.data.detail?.name,
+              },
+            ),
           });
         }
       },

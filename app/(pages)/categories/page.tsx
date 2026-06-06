@@ -18,13 +18,13 @@ import AppFilter from "../../components/AppFilter";
 import AppSelect from "../../components/inputs/AppSelect";
 import { useSearchParams } from "next/navigation";
 import { Category } from "@/api/schemas/Category";
-
+import { getLabel } from "@/app/utils/i18n";
 
 export default function CategoriesPage() {
   const [rowsSelected, setRowsSelected] = useState<Category[]>([]);
   const [form, setForm] = useState({
     open: false,
-    item: {} as Category | undefined
+    item: {} as Category | undefined,
   });
 
   const pagination = usePagination<Category>(
@@ -88,7 +88,7 @@ export default function CategoriesPage() {
       click: (category) => {
         setForm({
           open: true,
-          item: category
+          item: category,
         });
       },
     },
@@ -97,9 +97,9 @@ export default function CategoriesPage() {
   function handleNew() {
     setForm({
       open: true,
-      item: undefined
+      item: undefined,
     });
-  };
+  }
 
   async function onSave() {
     await pagination.load();
@@ -119,11 +119,15 @@ export default function CategoriesPage() {
           await categoriesService.bulkDelete(ids);
           await pagination.load();
           setRowsSelected([]);
-        } catch (error) {
-          console.error(error);
+        } catch (error: any) {
           openDialog({
             variant: "error",
-            message: "Ocorreu um erro ao excluir os itens. Tente novamente.",
+            message: getLabel(
+              `errors.categories.${error.response.data.detail.error}`,
+              {
+                name: error.response.data.detail.name?.join(", "),
+              },
+            ),
           });
         }
       },

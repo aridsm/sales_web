@@ -1,0 +1,22 @@
+{
+  "labels": {},
+  "errors": {
+    "products": {
+      "errorHasDoneSales": "The following products have linked sales: {{name}}"
+    },
+    "categories": {
+      "errorHasProducts": "The following categories cannot be deleted because they have linked products: {{name}}",
+      "errorHasExpenses": "The following categories cannot be deleted because they have linked expenses: {{name}}"
+    },
+    "sales": {
+      "errorInsufficientStock": "Insufficient stock for {{name}}.",
+      "errorSaleAlreadyCanceled": "This sale has already been canceled."
+    },
+    "other_expenses": {},
+    "auth": {
+      "errorInvalidCredentials": "Invalid email or password.",
+      "errorEmailAlreadyExists": "This email is already registered."
+    },
+    "fallback": "An unexpected error occurred. Please try again."
+  }
+}

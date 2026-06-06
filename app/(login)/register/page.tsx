@@ -11,6 +11,7 @@ import AppInputText from "@/app/components/inputs/AppInputText";
 import AppDarkModeToggle from "@/app/components/AppDarkModeToggle";
 import Link from "next/link";
 import AppCard from "@/app/components/AppCard";
+import { getLabel } from "@/app/utils/i18n";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -55,9 +56,7 @@ export default function RegisterPage() {
     } catch (err: any) {
       openDialog({
         variant: "error",
-        message:
-          err.response?.data?.message ||
-          "Falha ao criar conta. Tente novamente.",
+        message: getLabel(`errors.auth.${err.detail.error}`),
       });
     } finally {
       setLoading(false);

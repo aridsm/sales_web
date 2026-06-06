@@ -10,6 +10,7 @@ import { PaginationResult } from "@/app/utils/usePagination";
 import { productsService } from "@/api/services/ProductService";
 import { useDialogStore } from "@/stores/dialogStore";
 import { CategoryType } from "@/enums/CategoryType";
+import { getLabel } from "@/app/utils/i18n";
 
 interface ProductFormData {
   name: string;
@@ -103,12 +104,15 @@ export default function AppProductForm({
       reset();
       onSaved?.();
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       openDialog({
         variant: "error",
-        message: isEditing
-          ? "Ocorreu um erro ao atualizar o produto. Tente novamente."
-          : "Ocorreu um erro ao criar o produto. Tente novamente.",
+        message: getLabel(
+          `errors.products.${error.response.data.detail.error}`,
+          {
+            name: error.response.data.detail?.name,
+          },
+        ),
       });
     }
   }

@@ -26,6 +26,7 @@ import {
 } from "@mui/icons-material";
 
 import { formatDateTime } from "@/app/utils/formatters/date";
+import { getLabel } from "@/app/utils/i18n";
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
@@ -68,12 +69,12 @@ export default function SaleDetailPage() {
       try {
         setLoading(true);
         const data = await salesService.getById(id);
+        await productsPagination.load({ params: { sale_id: id, page: 1 } });
         setSale(data);
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
         openDialog({
           variant: "error",
-          message: "Erro ao carregar a venda.",
+          message: getLabel(`errors.sales.${error.response.data.detail.error}`),
         });
       } finally {
         setLoading(false);
@@ -81,7 +82,6 @@ export default function SaleDetailPage() {
     }
 
     fetchSale();
-    productsPagination.load({ params: { sale_id: id, page: 1 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -99,11 +99,12 @@ export default function SaleDetailPage() {
           await salesService.cancel(sale.id);
           const updated = await salesService.getById(sale.id);
           setSale(updated);
-        } catch (error) {
-          console.error(error);
+        } catch (error: any) {
           openDialog({
             variant: "error",
-            message: "Erro ao cancelar a venda. Tente novamente.",
+            message: getLabel(
+              `errors.sales.${error.response.data.detail.error}`,
+            ),
           });
         }
       },

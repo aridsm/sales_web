@@ -13,6 +13,7 @@ import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/Categories";
 import { useDialogStore } from "@/stores/dialogStore";
 import { CategoryForm } from "@/api/schemas/Category";
+import { getLabel } from "@/app/utils/i18n";
 
 const categorySchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
@@ -68,11 +69,13 @@ export default function AppCategoryForm({
       }
       await onSave();
       handleClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       openDialog({
         variant: "error",
-        message: "Ocorreu um erro ao salvar a categoria. Tente novamente.",
+        message: getLabel(
+          `errors.categories.${error.response.data.detail.error}`,
+        ),
       });
     }
   }

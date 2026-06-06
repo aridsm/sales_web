@@ -15,6 +15,7 @@ import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/Categories";
 import { Category } from "@/api/schemas/Category";
 import { OtherExpenseForm } from "@/api/schemas/OtherExpense";
+import { getLabel } from "@/app/utils/i18n";
 
 interface AppOtherExpenseFormProps {
   isOpen: boolean;
@@ -93,12 +94,12 @@ export default function AppOtherExpenseForm({
       reset();
       onSaved?.();
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       openDialog({
         variant: "error",
-        message: isEditing
-          ? "Ocorreu um erro ao atualizar a despesa. Tente novamente."
-          : "Ocorreu um erro ao criar a despesa. Tente novamente.",
+        message: getLabel(
+          `errors.other_expenses.${error.response.data.detail.error}`,
+        ),
       });
     }
   }
@@ -140,11 +141,7 @@ export default function AppOtherExpenseForm({
           control={control}
           rules={{ required: "A data é obrigatória" }}
           render={({ field }) => (
-            <AppDate
-              label="Data"
-              {...field}
-              error={errors.date?.message}
-            />
+            <AppDate label="Data" {...field} error={errors.date?.message} />
           )}
         />
 

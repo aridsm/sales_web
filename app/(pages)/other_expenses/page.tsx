@@ -19,7 +19,7 @@ import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { OtherExpense, OtherExpenseForm } from "@/api/schemas/OtherExpense";
-
+import { getLabel } from "@/app/utils/i18n";
 
 export default function OtherExpensesPage() {
   const [rowsSelected, setRowsSelected] = useState<OtherExpense[]>([]);
@@ -54,36 +54,36 @@ export default function OtherExpensesPage() {
       },
       {
         column: "Categoria",
-        cell: ({ row }: { row: OtherExpense }) => <div className="flex items-center gap-2">
-          <div
-            className="w-4 h-4 rounded-sm"
-            style={{
-              backgroundColor: row.category_color,
-            }}
-          ></div>
-          {row.category_name}
-        </div>,
+        cell: ({ row }: { row: OtherExpense }) => (
+          <div className="flex items-center gap-2">
+            <div
+              className="w-4 h-4 rounded-sm"
+              style={{
+                backgroundColor: row.category_color,
+              }}
+            ></div>
+            {row.category_name}
+          </div>
+        ),
         size: 250,
       },
       {
         column: "Valor",
-        cell: ({ row }: { row: OtherExpense }) => (
+        cell: ({ row }: { row: OtherExpense }) =>
           new Intl.NumberFormat("pt-BR", {
             style: "currency",
             currency: "BRL",
-          }).format(row.value)
-        ),
+          }).format(row.value),
         size: 150,
       },
       {
         column: "Data",
-        cell: ({ row }: { row: OtherExpense }) => (
+        cell: ({ row }: { row: OtherExpense }) =>
           new Intl.DateTimeFormat("pt-BR", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
-          }).format(new Date(row.date))
-        ),
+          }).format(new Date(row.date)),
         size: 150,
       },
       {
@@ -133,11 +133,12 @@ export default function OtherExpensesPage() {
           await otherExpensesService.bulkDelete(ids);
           await pagination.load();
           setRowsSelected([]);
-        } catch (error) {
-          console.error(error);
+        } catch (error: any) {
           openDialog({
             variant: "error",
-            message: "Ocorreu um erro ao excluir os itens. Tente novamente.",
+            message: getLabel(
+              `errors.other_expenses.${error.response.data.detail.error}`,
+            ),
           });
         }
       },

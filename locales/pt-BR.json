@@ -1,0 +1,22 @@
+{
+  "labels": {},
+  "errors": {
+    "products": {
+      "errorHasDoneSales": "Os seguintes produtos possuem vendas vinculadas: {{name}}"
+    },
+    "categories": {
+      "errorHasProducts": "As seguintes categorias não podem ser excluídas porque possuem produtos vinculados: {{name}}",
+      "errorHasExpenses": "As seguintes categorias não podem ser excluídas porque possuem despesas vinculadas: {{name}}"
+    },
+    "sales": {
+      "errorInsufficientStock": "Estoque insuficiente para {{name}}.",
+      "errorSaleAlreadyCanceled": "Esta venda já foi cancelada."
+    },
+    "other_expenses": {},
+    "auth": {
+      "errorInvalidCredentials": "E-mail ou senha incorretos.",
+      "errorEmailAlreadyExists": "Este e-mail já está cadastrado."
+    },
+    "fallback": "Ocorreu um erro inesperado. Tente novamente."
+  }
+}
