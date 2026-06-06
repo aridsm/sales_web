@@ -10,16 +10,16 @@ const locales: Record<string, LocaleMessages> = {
 
 const DEFAULT_LOCALE = "pt-BR";
 
-let currentLocale = DEFAULT_LOCALE;
+import { useLocaleStore } from "@/stores/localeStore";
 
 export function setLocale(locale: string) {
   if (locales[locale]) {
-    currentLocale = locale;
+    useLocaleStore.getState().setLocale(locale);
   }
 }
 
 export function getLocale(): string {
-  return currentLocale;
+  return useLocaleStore.getState().locale;
 }
 
 function resolve(obj: unknown, path: string): string | undefined {
@@ -58,9 +58,19 @@ function interpolate(
 export function getLabel(
   route: string,
   params?: Record<string, unknown>,
+  forceLocale?: string,
 ): string {
-  const messages = locales[currentLocale] ?? locales[DEFAULT_LOCALE];
+  const targetLocale = forceLocale || getLocale();
+  const messages = locales[targetLocale] ?? locales[DEFAULT_LOCALE];
   const value = resolve(messages, route);
   if (!value) return route;
   return params ? interpolate(value, params) : value;
+}
+
+export function useTranslation() {
+  const locale = useLocaleStore((state) => state.locale);
+  return {
+    t: (route: string, params?: Record<string, unknown>) => getLabel(route, params, locale),
+    locale
+  };
 }

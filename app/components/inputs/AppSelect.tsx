@@ -30,6 +30,7 @@ export interface AppSelectProps {
   onChange?: (value: any) => void;
   className?: string;
   size?: "default" | "small";
+  triggerTemplate?: (selectedOption: any) => React.ReactNode;
 }
 
 const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
@@ -46,6 +47,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
       onChange,
       className = "",
       size = "default",
+      triggerTemplate,
     },
     ref,
   ) => {
@@ -120,6 +122,19 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
       }
     };
 
+    const getSelectedOptionsForTemplate = () => {
+      if (multiple) {
+        const currentValues = Array.isArray(value)
+          ? value
+          : value !== undefined && value !== null
+            ? [value]
+            : [];
+        return options.filter((opt) => currentValues.includes(opt.id));
+      } else {
+        return options.find((opt) => opt.id === value) || null;
+      }
+    };
+
     const removeValue = (e: React.MouseEvent, id: any) => {
       e.stopPropagation();
       if (multiple) {
@@ -139,8 +154,16 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
       >
         {label && <AppLabel htmlFor={label}>{label}</AppLabel>}
         <div className="relative">
-          <div
-            onClick={toggleDropdown}
+          {triggerTemplate ? (
+            <div
+              onClick={toggleDropdown}
+              className={`cursor-pointer transition-all duration-200 ${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
+            >
+              {triggerTemplate(getSelectedOptionsForTemplate())}
+            </div>
+          ) : (
+            <div
+              onClick={toggleDropdown}
             className={`
                              input-field cursor-pointer flex items-center justify-between transition-all duration-200
                             ${size === "small" ? "h-8! px-1.5! text-xs! gap-1" : "gap-2"}
@@ -183,9 +206,10 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
               className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"} ${size === "small" ? "w-4! h-4!" : ""}`}
             />
           </div>
+          )}
 
           {isOpen && (
-            <div className="absolute z-50 w-full mt-1 bg-background-2 border border-border rounded-md shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+            <div className="absolute z-50 w-full min-w-max mt-1 bg-background-2 border border-border rounded-md shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
               {search && (
                 <div className="px-3 border-b border-slate-100 flex items-center gap-2 sticky top-0 bg-background-2 z-10">
                   <SearchIcon
@@ -216,9 +240,9 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                       <div
                         key={option.id}
                         onClick={() => handleSelect(option)}
-                        className={` px-3 py-3 cursor-pointer flex items-center justify-between transition-colors ${isSelected ? "bg-primary/6 text-primary dark:text-foreground dark:bg-foreground/5" : "text-label hover:bg-primary/6 dark:hover:bg-foreground/5"}`}
+                        className={` cursor-pointer flex items-center justify-between transition-colors ${size === "small" ? "text-sm px-2 py-2" : "px-3 py-3"} ${isSelected ? "bg-primary/6 text-primary dark:text-foreground dark:bg-foreground/5" : "text-label hover:bg-primary/6 dark:hover:bg-foreground/5"}`}
                       >
-                        <span className="truncate">{option.name}</span>
+                        <span className="truncate pr-4">{option.name}</span>
                       </div>
                     );
                   })

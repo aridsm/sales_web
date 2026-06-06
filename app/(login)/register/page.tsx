@@ -56,7 +56,7 @@ export default function RegisterPage() {
     } catch (err: any) {
       openDialog({
         variant: "error",
-        message: getLabel(`errors.auth.${err.detail.error}`),
+        message: getLabel(`errors.auth.${err.response.data.detail.error}`),
       });
     } finally {
       setLoading(false);
