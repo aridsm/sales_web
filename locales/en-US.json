@@ -160,6 +160,31 @@
         "items": "Items"
       }
     },
+    "history": {
+      "title": "History",
+      "delete_title": "Delete history",
+      "delete_single": "Are you sure you want to delete the selected record? This action cannot be undone.",
+      "delete_multiple": "Are you sure you want to delete the {{count}} selected records? This action cannot be undone.",
+      "filter_action": "Filter by action",
+      "filter_entity_type": "Filter by entity type",
+      "date": "Date and Time",
+      "description": "Description",
+      "action": "Action",
+      "entity_type": "Entity Type",
+      "entity_id": "Entity ID",
+      "actions": {
+        "CREATE": "Creation",
+        "UPDATE": "Update",
+        "DELETE": "Deletion",
+        "CANCEL": "Cancellation"
+      },
+      "entities": {
+        "PRODUCT": "Product",
+        "CATEGORY": "Category",
+        "SALE": "Sale",
+        "OTHER_EXPENSE": "Other Expenses"
+      }
+    },
     "categories": {
       "title": "Categories",
       "color": "Color",

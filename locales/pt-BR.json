@@ -160,6 +160,31 @@
         "items": "Itens"
       }
     },
+    "history": {
+      "title": "Histórico",
+      "delete_title": "Excluir histórico",
+      "delete_single": "Tem certeza que deseja excluir o registro selecionado? Esta ação não pode ser desfeita.",
+      "delete_multiple": "Tem certeza que deseja excluir os {{count}} registros selecionados? Esta ação não pode ser desfeita.",
+      "filter_action": "Filtrar por ação",
+      "filter_entity_type": "Filtrar por tipo de entidade",
+      "date": "Data e Hora",
+      "description": "Descrição",
+      "action": "Ação",
+      "entity_type": "Tipo de Entidade",
+      "entity_id": "ID da Entidade",
+      "actions": {
+        "CREATE": "Criação",
+        "UPDATE": "Atualização",
+        "DELETE": "Exclusão",
+        "CANCEL": "Cancelamento"
+      },
+      "entities": {
+        "PRODUCT": "Produto",
+        "CATEGORY": "Categoria",
+        "SALE": "Venda",
+        "OTHER_EXPENSE": "Outras Despesas"
+      }
+    },
     "categories": {
       "title": "Categorias",
       "color": "Cor",

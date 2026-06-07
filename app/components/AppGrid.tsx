@@ -298,7 +298,7 @@ export default function AppGrid<T>({
                   {columns.map((col, index) => (
                     <th
                       key={index}
-                      className={`border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary" : ""}`}
+                      className={`border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary dark:text-yellow-300" : ""}`}
                       style={{ width: colWidths[index] || col.size || 140 }}
                     >
                       {col.column}
