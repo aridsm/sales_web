@@ -10,6 +10,7 @@ import {
   NewReleasesOutlined,
   WarningAmberOutlined,
 } from "@mui/icons-material";
+import { useTranslation } from "@/app/utils/i18n";
 
 const variantConfig: Record<
   DialogVariant,
@@ -17,36 +18,37 @@ const variantConfig: Record<
     icon: React.ReactNode;
     iconColor: string;
     iconBg: string;
-    defaultTitle: string;
+    titleKey: string;
   }
 > = {
   success: {
     icon: <CheckCircleOutlined fontSize="large" />,
     iconColor: "text-emerald-500",
     iconBg: "bg-emerald-500/10",
-    defaultTitle: "Sucesso",
+    titleKey: "labels.dialog.success",
   },
   error: {
     icon: <CancelOutlined fontSize="large" />,
     iconColor: "text-red-500",
     iconBg: "bg-red-500/10",
-    defaultTitle: "Erro",
+    titleKey: "labels.dialog.error",
   },
   alert: {
     icon: <WarningAmberOutlined fontSize="large" />,
     iconColor: "text-amber-500",
     iconBg: "bg-amber-500/10",
-    defaultTitle: "Atenção",
+    titleKey: "labels.dialog.alert",
   },
   confirm: {
     icon: <NewReleasesOutlined fontSize="large" />,
     iconColor: "text-primary",
     iconBg: "bg-primary/10",
-    defaultTitle: "Confirmação",
+    titleKey: "labels.dialog.confirm",
   },
 };
 
 export default function AppDialog() {
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const { open, options, closeDialog } = useDialogStore();
 
@@ -57,7 +59,7 @@ export default function AppDialog() {
   if (!mounted) return null;
 
   const variant: DialogVariant = options.variant ?? "alert";
-  const { icon, iconColor, iconBg, defaultTitle } = variantConfig[variant];
+  const { icon, iconColor, iconBg, titleKey } = variantConfig[variant];
   const isConfirm = variant === "confirm";
 
   async function handleConfirm() {
@@ -91,7 +93,7 @@ export default function AppDialog() {
         </div>
 
         <h2 className="text-lg font-semibold text-foreground text-center">
-          {options.title ?? defaultTitle}
+          {options.title ?? t(titleKey)}
         </h2>
 
         <p className="text-label text-center leading-relaxed">
@@ -106,7 +108,7 @@ export default function AppDialog() {
               className="flex-1 px-4"
               onClick={handleCancel}
             >
-              {options.cancelLabel ?? "Cancelar"}
+              {options.cancelLabel ?? t("labels.all.cancel")}
             </AppButton>
           )}
           <AppButton
@@ -115,7 +117,7 @@ export default function AppDialog() {
             className="flex-1 px-5"
             onClick={isConfirm ? handleConfirm : handleCancel}
           >
-            {options.confirmLabel ?? (isConfirm ? "Confirmar" : "OK")}
+            {options.confirmLabel ?? (isConfirm ? t("labels.all.confirm") : t("labels.dialog.ok"))}
           </AppButton>
         </div>
       </div>

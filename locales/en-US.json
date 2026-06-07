@@ -35,6 +35,13 @@
       "confirm": "Confirm",
       "close": "Close"
     },
+    "dialog": {
+      "success": "Success",
+      "error": "Error",
+      "alert": "Warning",
+      "confirm": "Confirmation",
+      "ok": "OK"
+    },
     "header": {
       "notifications": "Notifications",
       "account": "Your Account"
