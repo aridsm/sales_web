@@ -13,22 +13,23 @@ import {
   ReceiptOutlined,
   AccountCircleOutlined,
   CategoryOutlined,
-  Menu,
-  ExitToAppOutlined,
 } from "@mui/icons-material";
+import { Menu as MenuIcon, ExitToAppOutlined } from "@mui/icons-material";
 import AppButton from "./AppButton";
+import { useTranslation } from "@/app/utils/i18n";
 
 const menuItems = [
-  { name: "Dashboard", href: "/", icon: DashboardOutlined },
-  { name: "Categorias", href: "/categories", icon: CategoryOutlined },
-  { name: "Produtos", href: "/products", icon: Inventory2Outlined },
-  { name: "Vendas", href: "/sales", icon: ShoppingCartOutlined },
-  { name: "Histórico", href: "/history", icon: History },
-  { name: "Outras Despesas", href: "/other_expenses", icon: ReceiptOutlined },
-  { name: "Sua conta", href: "/account", icon: AccountCircleOutlined },
+  { key: "dashboard", href: "/", icon: DashboardOutlined },
+  { key: "categories", href: "/categories", icon: CategoryOutlined },
+  { key: "products", href: "/products", icon: Inventory2Outlined },
+  { key: "sales", href: "/sales", icon: ShoppingCartOutlined },
+  { key: "history", href: "/history", icon: History },
+  { key: "other_expenses", href: "/other_expenses", icon: ReceiptOutlined },
+  { key: "account", href: "/account", icon: AccountCircleOutlined },
 ];
 
 export default function AppMenu() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
@@ -74,7 +75,7 @@ export default function AppMenu() {
           onClick={() => setIsOpen(!isOpen)}
           className="min-w-10 w-10 h-10"
         >
-          <Menu fontSize="small" />
+          <MenuIcon fontSize="small" />
         </AppButton>
       </div>
 
@@ -87,7 +88,7 @@ export default function AppMenu() {
                 : pathname === item.href ||
                   pathname.startsWith(item.href + "/");
             return (
-              <li key={item.name} className="w-full">
+              <li key={item.key} className="w-full">
                 <Link
                   href={item.href}
                   className={`flex items-center gap-3 h-12 rounded-md transition-all duration-200 ${
@@ -104,7 +105,7 @@ export default function AppMenu() {
 
                   {isOpen && (
                     <span className="whitespace-nowrap text-sm">
-                      {item.name}
+                      {t(`labels.menu.${item.key}`)}
                     </span>
                   )}
                 </Link>
@@ -128,7 +129,9 @@ export default function AppMenu() {
           </div>
 
           {isOpen && (
-            <span className="whitespace-nowrap text-sm mt-0.5 ml-1">Sair</span>
+            <span className="whitespace-nowrap text-sm mt-0.5 ml-1">
+              {t("labels.menu.logout")}
+            </span>
           )}
         </AppButton>
       </div>

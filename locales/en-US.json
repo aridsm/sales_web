@@ -35,6 +35,20 @@
       "confirm": "Confirm",
       "close": "Close"
     },
+    "header": {
+      "notifications": "Notifications",
+      "account": "Your Account"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "categories": "Categories",
+      "products": "Products",
+      "sales": "Sales",
+      "history": "History",
+      "other_expenses": "Other Expenses",
+      "account": "Your Account",
+      "logout": "Logout"
+    },
     "grid": {
       "search_error": "An error occurred while searching. Please try again.",
       "search_placeholder": "Search...",

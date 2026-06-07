@@ -7,12 +7,14 @@ import {
 import AppButton from "./AppButton";
 import AppDarkModeToggle from "./AppDarkModeToggle";
 import AppLanguageSelect from "./AppLanguageSelect";
+import { useTranslation } from "@/app/utils/i18n";
 
 interface AppHeaderProps {
   title: string;
 }
 
 export default function AppHeader({ title }: AppHeaderProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between border-b border-border py-3 transition-colors bg-background-2 dark:bg-background">
       <div className="max-w-400 w-full flex items-center justify-between mx-auto px-6">
@@ -29,6 +31,7 @@ export default function AppHeader({ title }: AppHeaderProps) {
             rounded
             flat
             color="transparent"
+            title={t("labels.header.notifications")}
             className="w-9 h-9 text-foreground hover:text-foreground"
           >
             <NotificationsOutlined fontSize="small" />
@@ -37,6 +40,7 @@ export default function AppHeader({ title }: AppHeaderProps) {
             rounded
             flat
             color="transparent"
+            title={t("labels.header.account")}
             className="w-9 h-9 text-foreground hover:text-foreground"
           >
             <AccountCircleOutlined fontSize="small" />

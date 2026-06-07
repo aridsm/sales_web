@@ -35,6 +35,20 @@
       "confirm": "Confirmar",
       "close": "Fechar"
     },
+    "header": {
+      "notifications": "Notificações",
+      "account": "Sua conta"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "categories": "Categorias",
+      "products": "Produtos",
+      "sales": "Vendas",
+      "history": "Histórico",
+      "other_expenses": "Outras Despesas",
+      "account": "Sua conta",
+      "logout": "Sair"
+    },
     "grid": {
       "search_error": "Ocorreu um erro ao realizar a busca. Tente novamente.",
       "search_placeholder": "Buscar...",
