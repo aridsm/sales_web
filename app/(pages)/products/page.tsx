@@ -70,9 +70,11 @@ export default function ProductsPage() {
   function onDeleteSelected() {
     openDialog({
       variant: "confirm",
-      title: "Excluir itens",
-      message: `Tem certeza que deseja excluir ${rowsSelected.length === 1 ? "o item selecionado" : `os ${rowsSelected.length} itens selecionados`}? Esta ação não pode ser desfeita.`,
-      confirmLabel: "Excluir",
+      title: t("labels.products.delete_title"),
+      message: rowsSelected.length === 1 
+        ? t("labels.products.delete_single") 
+        : t("labels.products.delete_multiple", { count: rowsSelected.length }),
+      confirmLabel: t("labels.all.delete"),
       onConfirm: async () => {
         try {
           const ids = rowsSelected.map((item) => item.id);
@@ -85,7 +87,7 @@ export default function ProductsPage() {
         } catch (error: any) {
           openDialog({
             variant: "error",
-            message: getLabel(
+            message: t(
               `errors.products.${error.response.data.detail.error}`,
               {
                 name: error.response.data.detail?.name,
@@ -109,7 +111,7 @@ export default function ProductsPage() {
   }
 
   return (
-    <AppPage title="Produtos">
+    <AppPage title={t("labels.products.title")}>
       <AppGroup
         groups={categories}
         selectedItems={rowsSelected}
@@ -162,7 +164,7 @@ export default function ProductsPage() {
       <AppModal
         isOpen={form.open}
         onClose={onCloseForm}
-        title={form.item.id ? "Editar Produto" : "Novo Produto"}
+        title={form.item.id ? t("labels.products.form.edit_title") : t("labels.products.form.add_title")}
       >
         <AppProductForm
           onSaved={onSaveItem}
@@ -188,6 +190,7 @@ function AppProductsGrid({
   rowsSelected: Product[];
   setRowsSelected: React.Dispatch<React.SetStateAction<Product[]>>;
 }) {
+  const { t } = useTranslation();
   const products = usePagination<Product>(
     productsService as unknown as PaginationService<Product>,
     { category_id: group.id },
@@ -200,12 +203,12 @@ function AppProductsGrid({
   const columns = useMemo(
     () => [
       {
-        column: "Nome",
+        column: t("labels.all.name"),
         cell: ({ row }: { row: Product }) => row.name,
         size: 300,
       },
       {
-        column: "Preço",
+        column: t("labels.products.price"),
         cell: ({ row }: { row: Product }) => {
           return row.price !== undefined
             ? new Intl.NumberFormat("pt-BR", {
@@ -217,17 +220,17 @@ function AppProductsGrid({
         size: 150,
       },
       {
-        column: "Itens em estoque",
+        column: t("labels.products.stock_amount"),
         cell: ({ row }: { row: Product }) => <p>{row.stock_amount}</p>,
         size: 150,
       },
       {
-        column: "Vendidos",
+        column: t("labels.products.sold_amount"),
         cell: ({ row }: { row: Product }) => <p>{row.sold_amount}</p>,
         size: 150,
       },
       {
-        column: "Criado em",
+        column: t("labels.products.created_at"),
         cell: ({ row }: { row: Product }) => formatDateTime(row.created_at),
         size: 200,
       },
@@ -237,13 +240,13 @@ function AppProductsGrid({
         size: 400,
       },
     ],
-    [],
+    [t],
   );
 
   const actions = useMemo(
     () => [
       {
-        text: "Editar",
+        text: t("labels.all.edit"),
         preText: <Edit fontSize="small" />,
         click: (product: Product) => {
           setForm({
@@ -253,7 +256,7 @@ function AppProductsGrid({
         },
       },
     ],
-    [],
+    [t],
   );
 
   return (
@@ -270,6 +273,7 @@ function AppProductsGrid({
 }
 
 function ProductFilterFields() {
+  const { t } = useTranslation();
   const { control } = useFormContext();
 
   const categories = usePagination<Category>(
@@ -288,8 +292,8 @@ function ProductFilterFields() {
       name="id"
       render={({ field }) => (
         <AppSelectPaginated
-          label="Categoria"
-          placeholder="Filtrar por categoria"
+          label={t("labels.products.category")}
+          placeholder={t("labels.products.filter_category")}
           pagination={categories}
           search
           multiple

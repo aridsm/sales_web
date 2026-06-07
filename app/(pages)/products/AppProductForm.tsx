@@ -41,7 +41,7 @@ export default function AppProductForm({
   categoriesPagination,
   product,
 }: AppProductFormProps) {
-  const { t: getLabel } = useTranslation();
+  const { t } = useTranslation();
   const { openDialog } = useDialogStore();
 
   const isEditing = !!product?.id;
@@ -98,8 +98,8 @@ export default function AppProductForm({
       openDialog({
         variant: "success",
         message: isEditing
-          ? "Produto atualizado com sucesso!"
-          : "Produto criado com sucesso!",
+          ? t("labels.products.form.updated_success")
+          : t("labels.products.form.created_success"),
       });
 
       reset();
@@ -108,7 +108,7 @@ export default function AppProductForm({
     } catch (error: any) {
       openDialog({
         variant: "error",
-        message: getLabel(
+        message: t(
           `errors.products.${error.response.data.detail.error}`,
           {
             name: error.response.data.detail?.name,
@@ -121,20 +121,20 @@ export default function AppProductForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <AppInputText
-        label="Nome"
-        placeholder="Nome do produto"
-        {...register("name", { required: "O nome é obrigatório" })}
+        label={t("labels.all.name")}
+        placeholder={t("labels.products.form.name_placeholder")}
+        {...register("name", { required: t("labels.products.form.name_required") })}
         error={errors.name?.message}
       />
 
       <Controller
         name="category_id"
         control={control}
-        rules={{ required: "A categoria é obrigatória" }}
+        rules={{ required: t("labels.products.form.category_required") }}
         render={({ field }) => (
           <AppSelectPaginated
-            label="Categoria"
-            placeholder="Selecione uma categoria"
+            label={t("labels.products.category")}
+            placeholder={t("labels.products.form.category_placeholder")}
             pagination={categoriesPagination}
             search
             value={field.value}
@@ -148,12 +148,12 @@ export default function AppProductForm({
         name="price"
         control={control}
         rules={{
-          required: "O preço é obrigatório",
-          min: { value: 0, message: "O preço deve ser positivo" },
+          required: t("labels.products.form.price_required"),
+          min: { value: 0, message: t("labels.products.form.price_positive") },
         }}
         render={({ field }) => (
           <AppInputText
-            label="Preço"
+            label={t("labels.products.price")}
             placeholder="R$ 0,00"
             mask={currencyFormatter}
             {...field}
@@ -163,14 +163,14 @@ export default function AppProductForm({
       />
 
       <AppInputText
-        label="Quantidade em estoque"
+        label={t("labels.products.stock_amount")}
         type="number"
         placeholder="0"
         min="0"
         step="1"
         {...register("stock_amount", {
-          required: "A quantidade é obrigatória",
-          min: { value: 0, message: "A quantidade deve ser positiva" },
+          required: t("labels.products.form.stock_required"),
+          min: { value: 0, message: t("labels.products.form.stock_positive") },
         })}
         error={errors.stock_amount?.message}
       />
@@ -182,7 +182,7 @@ export default function AppProductForm({
           className="px-4"
           onClick={onClose}
         >
-          Cancelar
+          {t("labels.all.cancel")}
         </AppButton>
         <AppButton
           type="submit"
@@ -190,7 +190,7 @@ export default function AppProductForm({
           className="px-4"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Salvando..." : "Salvar"}
+          {isSubmitting ? t("labels.all.saving") : t("labels.all.save")}
         </AppButton>
       </div>
     </form>

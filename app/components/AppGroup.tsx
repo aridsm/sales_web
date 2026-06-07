@@ -15,6 +15,7 @@ import AppInputText from "./inputs/AppInputText";
 import AppButton from "./AppButton";
 import AppLoading from "./AppLoading";
 import { useDialogStore } from "@/stores/dialogStore";
+import { useTranslation } from "@/app/utils/i18n";
 
 interface AppGroupProps<G extends { id: string | number }, T> {
   groups: PaginationResult<G>;
@@ -54,6 +55,7 @@ function GroupRow<G extends { id: string | number }>({
     search?: string;
   }) => React.ReactNode;
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState(false);
 
@@ -93,7 +95,7 @@ function GroupRow<G extends { id: string | number }>({
                 e.stopPropagation();
                 onNewRow?.({ group });
               }}
-              title="Adicionar item"
+              title={t("labels.grid.add_item")}
             >
               <Add fontSize="small" />
             </AppButton>
@@ -130,6 +132,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
   hideSelectionCount,
   children,
 }: AppGroupProps<G, T>) {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -179,7 +182,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
     } catch (error) {
       openDialog({
         variant: "error",
-        message: "Ocorreu um erro ao realizar a busca. Tente novamente.",
+        message: t("labels.grid.search_error"),
       });
     }
   }
@@ -195,7 +198,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
             <AppInputText
               type="text"
               className="pl-10!"
-              placeholder="Buscar..."
+              placeholder={t("labels.grid.search_placeholder")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onBlur={handleSearch}
@@ -215,8 +218,8 @@ export default function AppGroup<G extends { id: string | number }, T>({
               <span className="font-medium text-sm whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
                 {selectedItems.length}{" "}
                 {selectedItems.length === 1
-                  ? "item selecionado"
-                  : "itens selecionados"}
+                  ? t("labels.grid.item_selected_singular")
+                  : t("labels.grid.item_selected_plural")}
               </span>
             )}
           <div className="flex gap-3 w-full sm:w-auto">
@@ -230,7 +233,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
                   className="px-4 shrink-0 w-full sm:w-auto"
                 >
                   <DeleteOutlined fontSize="small" />
-                  Excluir
+                  {t("labels.all.delete")}
                 </AppButton>
               )}
             {filter}
@@ -242,7 +245,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
                 className="px-4 py-2 shrink-0 w-full sm:w-auto"
               >
                 <Add fontSize="small" />
-                Adicionar item
+                {t("labels.grid.add_item")}
               </AppButton>
             )}
           </div>
@@ -266,10 +269,10 @@ export default function AppGroup<G extends { id: string | number }, T>({
                 <SearchOffOutlined fontSize="medium" />
               </div>
               <p className="text-base font-medium text-foreground">
-                Nenhum resultado encontrado
+                {t("labels.grid.no_result_title")}
               </p>
               <p className="text-sm text-center mt-1 max-w-xs">
-                Não foi encontrado nenhum item correspondente a busca.
+                {t("labels.grid.no_result_subtitle")}
               </p>
             </div>
           )

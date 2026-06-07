@@ -25,7 +25,8 @@
       "edit": "Editar",
       "delete": "Excluir",
       "cancel": "Cancelar",
-      "save": "Salvar"
+      "save": "Salvar",
+      "saving": "Salvando..."
     },
     "grid": {
       "search_error": "Ocorreu um erro ao realizar a busca. Tente novamente.",
@@ -34,7 +35,9 @@
       "item_selected_plural": "itens selecionados",
       "add_item": "Adicionar item",
       "empty_title": "Nada por aqui!",
-      "empty_subtitle": "Nenhum item encontrado para exibir"
+      "empty_subtitle": "Nenhum item encontrado para exibir",
+      "no_result_title": "Nenhum resultado encontrado",
+      "no_result_subtitle": "Não foi encontrado nenhum item correspondente a busca."
     },
     "pagination": {
       "first_page": "Primeira página",
@@ -49,6 +52,32 @@
       "button": "Filtros",
       "clear": "Limpar filtros",
       "apply": "Aplicar"
+    },
+    "products": {
+      "title": "Produtos",
+      "delete_title": "Excluir itens",
+      "delete_single": "Tem certeza que deseja excluir o item selecionado? Esta ação não pode ser desfeita.",
+      "delete_multiple": "Tem certeza que deseja excluir os {{count}} itens selecionados? Esta ação não pode ser desfeita.",
+      "price": "Preço",
+      "stock_amount": "Itens em estoque",
+      "sold_amount": "Vendidos",
+      "created_at": "Criado em",
+      "category": "Categoria",
+      "filter_category": "Filtrar por categoria",
+      "form": {
+        "edit_title": "Editar Produto",
+        "add_title": "Novo Produto",
+        "updated_success": "Produto atualizado com sucesso!",
+        "created_success": "Produto criado com sucesso!",
+        "name_placeholder": "Nome do produto",
+        "name_required": "O nome é obrigatório",
+        "category_placeholder": "Selecione uma categoria",
+        "category_required": "A categoria é obrigatória",
+        "price_required": "O preço é obrigatório",
+        "price_positive": "O preço deve ser positivo",
+        "stock_required": "A quantidade é obrigatória",
+        "stock_positive": "A quantidade deve ser positiva"
+      }
     },
     "categories": {
       "title": "Categorias",
