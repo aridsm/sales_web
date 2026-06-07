@@ -48,7 +48,7 @@ function formatCurrency(value: number): string {
 }
 
 export default function NewSalePage() {
-  const { t: getLabel } = useTranslation();
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -96,9 +96,9 @@ export default function NewSalePage() {
     if (cart.length === 0) return;
     openDialog({
       variant: "confirm",
-      title: "Limpar carrinho",
-      message: "Tem certeza que deseja remover todos os itens do carrinho?",
-      confirmLabel: "Limpar",
+      title: t("labels.sales.new.clear_cart_title"),
+      message: t("labels.sales.new.clear_cart_message"),
+      confirmLabel: t("labels.all.clear"),
       onConfirm: () => setCart([]),
     });
   }
@@ -111,9 +111,12 @@ export default function NewSalePage() {
 
     openDialog({
       variant: "confirm",
-      title: "Finalizar venda",
-      message: `Confirmar venda de ${totalItems} ${totalItems === 1 ? "item" : "itens"} no valor de ${formatCurrency(totalPrice)}?`,
-      confirmLabel: "Finalizar",
+      title: t("labels.sales.new.finish_sale_title"),
+      message: t("labels.sales.new.finish_sale_message", {
+        items: `${totalItems} ${totalItems === 1 ? t("labels.sales.new.item_singular") : t("labels.sales.new.item_plural")}`,
+        total: formatCurrency(totalPrice),
+      }),
+      confirmLabel: t("labels.all.finish"),
       onConfirm: async () => {
         setIsFinishing(true);
         try {
@@ -127,15 +130,13 @@ export default function NewSalePage() {
           setSearch("");
           openDialog({
             variant: "success",
-            message: "Venda registrada com sucesso!",
+            message: t("labels.sales.new.success"),
           });
           router.push("/sales");
         } catch (error: any) {
           openDialog({
             variant: "error",
-            message: getLabel(
-              `errors.sales.${error.response.data.detail.error}`,
-            ),
+            message: t(`errors.sales.${error.response.data.detail.error}`),
           });
         } finally {
           setIsFinishing(false);
@@ -152,9 +153,9 @@ export default function NewSalePage() {
     if (cart.length > 0) {
       openDialog({
         variant: "confirm",
-        title: "Sair da venda",
-        message: "Você tem itens no carrinho. Deseja sair e descartar a venda?",
-        confirmLabel: "Sair",
+        title: t("labels.sales.new.exit_title"),
+        message: t("labels.sales.new.exit_message"),
+        confirmLabel: t("labels.all.exit"),
         onConfirm: () => router.push("/sales"),
       });
     } else {
@@ -163,7 +164,7 @@ export default function NewSalePage() {
   }
 
   return (
-    <AppPage title="Nova Venda">
+    <AppPage title={t("labels.sales.new.title")}>
       <div className="mb-4">
         <AppButton
           color="transparent"
@@ -172,7 +173,7 @@ export default function NewSalePage() {
           className="gap-1.5! px-2! -ml-2"
         >
           <ArrowBackOutlined style={{ fontSize: 18 }} />
-          <span className="text-sm">Voltar para vendas</span>
+          <span className="text-sm">{t("labels.sales.new.back")}</span>
         </AppButton>
       </div>
 
@@ -189,7 +190,7 @@ export default function NewSalePage() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar produto por nome ou categoria..."
+                placeholder={t("labels.sales.new.search_placeholder")}
                 className="input-field w-full pl-11!"
               />
             </div>
@@ -202,7 +203,7 @@ export default function NewSalePage() {
             <AppInfinity
               pagination={productsPagination}
               initialLoaded={initialLoaded}
-              emptyMessage="Nenhum produto encontrado"
+              emptyMessage={t("labels.sales.new.no_products")}
             >
               <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
                 {productsPagination.items.map((product) => {
@@ -246,7 +247,7 @@ export default function NewSalePage() {
                           }}
                           color="background"
                           className={`px-2! text-red-500 ${!inCart ? "opacity-0 pointer-events-none" : "hover:bg-red-500/10"}`}
-                          title="Remover do carrinho"
+                          title={t("labels.sales.new.remove_from_cart")}
                         >
                           <DeleteOutlined style={{ fontSize: 16 }} />
                         </AppButton>
@@ -262,7 +263,7 @@ export default function NewSalePage() {
                             {formatCurrency(product.price)}
                           </span>
                           <span className="text-xs text-label">
-                            {product.stock_amount} em estoque
+                            {product.stock_amount} {t("labels.sales.new.in_stock")}
                           </span>
                         </div>
 
@@ -299,7 +300,7 @@ export default function NewSalePage() {
                               }}
                               className="py-1! px-3! opacity-0 group-hover:opacity-100 transition-opacity "
                             >
-                              Adicionar
+                              {t("labels.all.add")}
                             </AppButton>
                           )
                         )}
@@ -346,6 +347,7 @@ function SaleCart({
   onUpdateQuantity: (productId: string, delta: number) => void;
   onFinishSale: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="w-96 shrink-0 flex flex-col min-h-0">
       <AppCard className="flex-1 flex flex-col min-h-0 overflow-hidden">
@@ -358,11 +360,11 @@ function SaleCart({
               />
             </div>
             <div>
-              <h2 className="font-semibold text-foreground">Carrinho</h2>
+              <h2 className="font-semibold text-foreground">{t("labels.sales.new.cart")}</h2>
               <span className=" text-label">
                 {totalItems === 0
-                  ? "Nenhum item"
-                  : `${totalItems} ${totalItems === 1 ? "item" : "itens"}`}
+                  ? t("labels.sales.new.no_items")
+                  : `${totalItems} ${totalItems === 1 ? t("labels.sales.new.item_singular") : t("labels.sales.new.item_plural")}`}
               </span>
             </div>
           </div>
@@ -373,7 +375,7 @@ function SaleCart({
               onClick={onClearCart}
               className="! px-2! py-1!"
             >
-              Limpar
+              {t("labels.all.clear")}
             </AppButton>
           )}
         </div>
@@ -382,7 +384,7 @@ function SaleCart({
           {cart.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-label gap-2 py-12">
               <ReceiptOutlined style={{ fontSize: 40, opacity: 0.2 }} />
-              <span className="text-sm">Adicione produtos à venda</span>
+              <span className="text-sm">{t("labels.sales.new.add_products_to_cart")}</span>
             </div>
           ) : (
             <ul className="divide-y divide-border">
@@ -397,7 +399,7 @@ function SaleCart({
                         {item.product.name}
                       </p>
                       <p className=" text-label mt-0.5">
-                        {formatCurrency(item.product.price)} un.
+                        {formatCurrency(item.product.price)} {t("labels.sales.new.unit")}
                       </p>
                     </div>
                     <AppButton
@@ -441,16 +443,16 @@ function SaleCart({
         <div className="border-t border-border p-4 flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between text-label">
-              <span>Subtotal</span>
+              <span>{t("labels.sales.new.subtotal")}</span>
               <span>{formatCurrency(totalPrice)}</span>
             </div>
             <div className="flex justify-between text-label">
-              <span>Itens</span>
+              <span>{t("labels.sales.new.items_label")}</span>
               <span>{totalItems}</span>
             </div>
             <div className="h-px bg-border my-1" />
             <div className="flex justify-between text-base font-semibold text-foreground">
-              <span>Total</span>
+              <span>{t("labels.sales.new.total")}</span>
               <span>{formatCurrency(totalPrice)}</span>
             </div>
           </div>
@@ -462,7 +464,7 @@ function SaleCart({
             className="w-full h-12 text-base! font-semibold gap-2!"
           >
             <CheckCircleOutlined style={{ fontSize: 20 }} />
-            {isFinishing ? "Processando..." : "Finalizar Venda"}
+            {isFinishing ? t("labels.all.processing") : t("labels.sales.new.finish_button")}
           </AppButton>
         </div>
       </AppCard>
@@ -471,6 +473,7 @@ function SaleCart({
 }
 
 function SaleNewFilterFields() {
+  const { t } = useTranslation();
   const { control, register } = useFormContext();
 
   const categories = usePagination<any>(
@@ -490,8 +493,8 @@ function SaleNewFilterFields() {
         name="category_id"
         render={({ field }) => (
           <AppSelectPaginated
-            label="Categoria"
-            placeholder="Filtrar por categoria"
+            label={t("labels.sales.category")}
+            placeholder={t("labels.sales.filter_category")}
             pagination={categories}
             search
             multiple
@@ -501,8 +504,8 @@ function SaleNewFilterFields() {
         )}
       />
       <AppInputText
-        label="Código"
-        placeholder="Buscar por código"
+        label={t("labels.sales.code")}
+        placeholder={t("labels.sales.search_code")}
         {...register("code")}
       />
     </>

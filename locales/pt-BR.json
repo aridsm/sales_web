@@ -26,7 +26,14 @@
       "delete": "Excluir",
       "cancel": "Cancelar",
       "save": "Salvar",
-      "saving": "Salvando..."
+      "saving": "Salvando...",
+      "clear": "Limpar",
+      "finish": "Finalizar",
+      "exit": "Sair",
+      "add": "Adicionar",
+      "processing": "Processando...",
+      "confirm": "Confirmar",
+      "close": "Fechar"
     },
     "grid": {
       "search_error": "Ocorreu um erro ao realizar a busca. Tente novamente.",
@@ -77,6 +84,59 @@
         "price_positive": "O preço deve ser positivo",
         "stock_required": "A quantidade é obrigatória",
         "stock_positive": "A quantidade deve ser positiva"
+      }
+    },
+    "sales": {
+      "title": "Vendas",
+      "sales_today": "Vendas hoje",
+      "revenue_today": "Faturamento hoje",
+      "total_revenue": "Total de vendas",
+      "items": "itens",
+      "product": "Produto",
+      "category": "Categoria",
+      "unit_price": "Preço un.",
+      "quantity": "Quantidade",
+      "qty": "Qtd.",
+      "subtotal": "Subtotal",
+      "filter_category": "Filtrar por categoria",
+      "code": "Código",
+      "search_code": "Buscar por código",
+      "status": {
+        "done": "Concluída",
+        "canceled": "Cancelada"
+      },
+      "new": {
+        "title": "Nova Venda",
+        "clear_cart_title": "Limpar carrinho",
+        "clear_cart_message": "Tem certeza que deseja remover todos os itens do carrinho?",
+        "finish_sale_title": "Finalizar venda",
+        "finish_sale_message": "Confirmar venda de {{items}} no valor de {{total}}?",
+        "success": "Venda registrada com sucesso!",
+        "exit_title": "Sair da venda",
+        "exit_message": "Você tem itens no carrinho. Deseja sair e descartar a venda?",
+        "back": "Voltar para vendas",
+        "search_placeholder": "Buscar produto por nome ou categoria...",
+        "no_products": "Nenhum produto encontrado",
+        "remove_from_cart": "Remover do carrinho",
+        "in_stock": "em estoque",
+        "cart": "Carrinho",
+        "no_items": "Nenhum item",
+        "item_singular": "item",
+        "item_plural": "itens",
+        "add_products_to_cart": "Adicione produtos à venda",
+        "unit": "un.",
+        "subtotal": "Subtotal",
+        "items_label": "Itens",
+        "total": "Total",
+        "finish_button": "Finalizar Venda"
+      },
+      "detail": {
+        "title": "Venda",
+        "cancel_title": "Cancelar venda",
+        "cancel_message": "Tem certeza que deseja cancelar a venda #{{code}}? Esta ação não pode ser desfeita.",
+        "not_found": "Venda não encontrada.",
+        "date": "Data",
+        "items": "Itens"
       }
     },
     "categories": {

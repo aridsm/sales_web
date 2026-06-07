@@ -29,6 +29,7 @@ import { salesService } from "@/api/services/SaleService";
 import { SaleProduct } from "@/api/schemas/SaleProduct";
 import { saleProductsService } from "@/api/services/SaleProductsService";
 import { formatDateTime } from "@/app/utils/formatters/date";
+import { useTranslation } from "@/app/utils/i18n";
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
@@ -42,18 +43,19 @@ const statusConfig: Record<
   { label: string; color: string; bg: string }
 > = {
   [SaleStatus.DONE]: {
-    label: "Concluída",
+    label: "labels.sales.status.done",
     color: "text-emerald-600 dark:text-emerald-400",
     bg: "bg-emerald-500/10",
   },
   [SaleStatus.CANCELED]: {
-    label: "Cancelada",
+    label: "labels.sales.status.canceled",
     color: "text-red-500 dark:text-red-400",
     bg: "bg-red-500/10",
   },
 };
 
 export default function SalePage() {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const salesPagination = usePagination<Sale>(salesService);
@@ -64,7 +66,7 @@ export default function SalePage() {
   }, []);
 
   return (
-    <AppPage title="Vendas">
+    <AppPage title={t("labels.sales.title")}>
       <div className="flex gap-4 mb-5">
         <AppCard className="flex-1 p-4 flex-row! items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-sky-500/10 flex items-center justify-center shrink-0">
@@ -74,7 +76,7 @@ export default function SalePage() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-label">Vendas hoje</span>
+            <span className="text-label">{t("labels.sales.sales_today")}</span>
             <span className="text-lg font-bold text-foreground">0</span>
           </div>
         </AppCard>
@@ -87,7 +89,7 @@ export default function SalePage() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-label">Faturamento hoje</span>
+            <span className="text-label">{t("labels.sales.revenue_today")}</span>
             <span className="text-lg font-bold text-foreground">
               {formatCurrency(0)}
             </span>
@@ -102,7 +104,7 @@ export default function SalePage() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-label">Total de vendas</span>
+            <span className="text-label">{t("labels.sales.total_revenue")}</span>
             <span className="text-lg font-bold text-foreground">
               {formatCurrency(0)}
             </span>
@@ -134,13 +136,13 @@ export default function SalePage() {
               <span
                 className={`text-sm font-medium px-2 py-0.5 rounded-full ${status.bg} ${status.color}`}
               >
-                {status.label}
+                {t(status.label)}
               </span>
               <span className="text-sm text-label">
                 {formatDateTime(sale.created_at)}
               </span>
               <span className="text-sm text-label">
-                {sale.items_count} itens
+                {sale.items_count} {t("labels.sales.items")}
               </span>{" "}
               <span className="font-semibold ml-auto">
                 {formatCurrency(sale.total)}
@@ -156,6 +158,7 @@ export default function SalePage() {
 }
 
 function SaleProductsGrid({ sale }: { sale: Sale }) {
+  const { t } = useTranslation();
   const pagination = usePagination<SaleProduct>(saleProductsService);
 
   useEffect(() => {
@@ -166,12 +169,12 @@ function SaleProductsGrid({ sale }: { sale: Sale }) {
   const columns = useMemo(
     () => [
       {
-        column: "Produto",
+        column: t("labels.sales.product"),
         cell: ({ row }: { row: SaleProduct }) => row.product_name,
         size: 300,
       },
       {
-        column: "Categoria",
+        column: t("labels.sales.category"),
         cell: ({ row }: { row: SaleProduct }) => (
           <div className="flex items-center gap-2">
             <div
@@ -186,17 +189,17 @@ function SaleProductsGrid({ sale }: { sale: Sale }) {
         size: 250,
       },
       {
-        column: "Preço un.",
+        column: t("labels.sales.unit_price"),
         cell: ({ row }: { row: SaleProduct }) => formatCurrency(row.unit_price),
         size: 130,
       },
       {
-        column: "Quantidade",
+        column: t("labels.sales.quantity"),
         cell: ({ row }: { row: SaleProduct }) => row.quantity,
         size: 100,
       },
       {
-        column: "Subtotal",
+        column: t("labels.sales.subtotal"),
         cell: ({ row }: { row: SaleProduct }) => (
           <span className="font-semibold">
             {formatCurrency(row.unit_price * row.quantity)}
@@ -205,13 +208,14 @@ function SaleProductsGrid({ sale }: { sale: Sale }) {
         size: 130,
       },
     ],
-    [],
+    [t],
   );
 
   return <AppGrid columns={columns} pagination={pagination} />;
 }
 
 function SaleFilterFields() {
+  const { t } = useTranslation();
   const { control, register } = useFormContext();
 
   const categories = usePagination<any>(
@@ -231,8 +235,8 @@ function SaleFilterFields() {
         name="category_id"
         render={({ field }) => (
           <AppSelectPaginated
-            label="Categoria"
-            placeholder="Filtrar por categoria"
+            label={t("labels.sales.category")}
+            placeholder={t("labels.sales.filter_category")}
             pagination={categories}
             search
             multiple
@@ -242,8 +246,8 @@ function SaleFilterFields() {
         )}
       />
       <AppInputText
-        label="Código"
-        placeholder="Buscar por código"
+        label={t("labels.sales.code")}
+        placeholder={t("labels.sales.search_code")}
         {...register("code")}
       />
     </>

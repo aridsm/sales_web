@@ -26,7 +26,14 @@
       "delete": "Delete",
       "cancel": "Cancel",
       "save": "Save",
-      "saving": "Saving..."
+      "saving": "Saving...",
+      "clear": "Clear",
+      "finish": "Finish",
+      "exit": "Exit",
+      "add": "Add",
+      "processing": "Processing...",
+      "confirm": "Confirm",
+      "close": "Close"
     },
     "grid": {
       "search_error": "An error occurred while searching. Please try again.",
@@ -77,6 +84,59 @@
         "price_positive": "Price must be positive",
         "stock_required": "Quantity is required",
         "stock_positive": "Quantity must be positive"
+      }
+    },
+    "sales": {
+      "title": "Sales",
+      "sales_today": "Sales today",
+      "revenue_today": "Revenue today",
+      "total_revenue": "Total revenue",
+      "items": "items",
+      "product": "Product",
+      "category": "Category",
+      "unit_price": "Unit price",
+      "quantity": "Quantity",
+      "qty": "Qty",
+      "subtotal": "Subtotal",
+      "filter_category": "Filter by category",
+      "code": "Code",
+      "search_code": "Search by code",
+      "status": {
+        "done": "Done",
+        "canceled": "Canceled"
+      },
+      "new": {
+        "title": "New Sale",
+        "clear_cart_title": "Clear cart",
+        "clear_cart_message": "Are you sure you want to remove all items from the cart?",
+        "finish_sale_title": "Finish sale",
+        "finish_sale_message": "Confirm sale of {{items}} for {{total}}?",
+        "success": "Sale registered successfully!",
+        "exit_title": "Exit sale",
+        "exit_message": "You have items in your cart. Do you want to exit and discard the sale?",
+        "back": "Back to sales",
+        "search_placeholder": "Search product by name or category...",
+        "no_products": "No products found",
+        "remove_from_cart": "Remove from cart",
+        "in_stock": "in stock",
+        "cart": "Cart",
+        "no_items": "No items",
+        "item_singular": "item",
+        "item_plural": "items",
+        "add_products_to_cart": "Add products to the cart",
+        "unit": "ea.",
+        "subtotal": "Subtotal",
+        "items_label": "Items",
+        "total": "Total",
+        "finish_button": "Finish Sale"
+      },
+      "detail": {
+        "title": "Sale",
+        "cancel_title": "Cancel sale",
+        "cancel_message": "Are you sure you want to cancel sale #{{code}}? This action cannot be undone.",
+        "not_found": "Sale not found.",
+        "date": "Date",
+        "items": "Items"
       }
     },
     "categories": {

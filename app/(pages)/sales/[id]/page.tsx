@@ -52,7 +52,7 @@ const statusConfig: Record<
 };
 
 export default function SaleDetailPage() {
-  const { t: getLabel } = useTranslation();
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { openDialog } = useDialogStore();
@@ -75,7 +75,7 @@ export default function SaleDetailPage() {
       } catch (error: any) {
         openDialog({
           variant: "error",
-          message: getLabel(`errors.sales.${error.response.data.detail.error}`),
+          message: t(`errors.sales.${error.response.data.detail.error}`),
         });
       } finally {
         setLoading(false);
@@ -91,10 +91,12 @@ export default function SaleDetailPage() {
 
     openDialog({
       variant: "confirm",
-      title: "Cancelar venda",
-      message: `Tem certeza que deseja cancelar a venda #${sale.code.toString().padStart(6, "0")}? Esta ação não pode ser desfeita.`,
-      confirmLabel: "Confirmar",
-      cancelLabel: "Fechar",
+      title: t("labels.sales.detail.cancel_title"),
+      message: t("labels.sales.detail.cancel_message", {
+        code: sale.code.toString().padStart(6, "0"),
+      }),
+      confirmLabel: t("labels.all.confirm"),
+      cancelLabel: t("labels.all.close"),
       onConfirm: async () => {
         try {
           await salesService.cancel(sale.id);
@@ -103,9 +105,7 @@ export default function SaleDetailPage() {
         } catch (error: any) {
           openDialog({
             variant: "error",
-            message: getLabel(
-              `errors.sales.${error.response.data.detail.error}`,
-            ),
+            message: t(`errors.sales.${error.response.data.detail.error}`),
           });
         }
       },
@@ -115,14 +115,14 @@ export default function SaleDetailPage() {
   const columns = useMemo(
     () => [
       {
-        column: "Produto",
+        column: t("labels.sales.product"),
         cell: ({ row }: { row: SaleProduct }) => (
           <span className="font-medium">{row.product_name}</span>
         ),
         size: 300,
       },
       {
-        column: "Categoria",
+        column: t("labels.sales.category"),
         cell: ({ row }: { row: SaleProduct }) => (
           <div className="flex items-center gap-2">
             <div
@@ -135,21 +135,21 @@ export default function SaleDetailPage() {
         size: 220,
       },
       {
-        column: "Preço un.",
+        column: t("labels.sales.unit_price"),
         cell: ({ row }: { row: SaleProduct }) => (
           <span className="tabular-nums">{formatCurrency(row.unit_price)}</span>
         ),
         size: 130,
       },
       {
-        column: "Qtd.",
+        column: t("labels.sales.qty"),
         cell: ({ row }: { row: SaleProduct }) => (
           <span className="tabular-nums font-medium">{row.quantity}</span>
         ),
         size: 80,
       },
       {
-        column: "Subtotal",
+        column: t("labels.sales.subtotal"),
         cell: ({ row }: { row: SaleProduct }) => (
           <span className="font-semibold tabular-nums text-foreground">
             {formatCurrency(row.unit_price * row.quantity)}
@@ -158,12 +158,12 @@ export default function SaleDetailPage() {
         size: 140,
       },
     ],
-    [],
+    [t],
   );
 
   if (loading) {
     return (
-      <AppPage title="Venda">
+      <AppPage title={t("labels.sales.detail.title")}>
         <AppLoading className="py-20" />
       </AppPage>
     );
@@ -171,12 +171,12 @@ export default function SaleDetailPage() {
 
   if (!sale) {
     return (
-      <AppPage title="Venda">
+      <AppPage title={t("labels.sales.detail.title")}>
         <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <p className="text-label">Venda não encontrada.</p>
+          <p className="text-label">{t("labels.sales.detail.not_found")}</p>
           <AppButton color="primary" flat onClick={() => router.push("/sales")}>
             <ArrowBack fontSize="small" />
-            Voltar para vendas
+            {t("labels.sales.new.back")}
           </AppButton>
         </div>
       </AppPage>
@@ -187,7 +187,7 @@ export default function SaleDetailPage() {
   const isCanceled = sale.status === SaleStatus.CANCELED;
 
   return (
-    <AppPage title="Venda">
+    <AppPage title={t("labels.sales.detail.title")}>
       <AppButton
         color="transparent"
         flat
@@ -195,7 +195,7 @@ export default function SaleDetailPage() {
         className="gap-1.5! px-2! -ml-2 mr-auto mb-2"
       >
         <ArrowBackOutlined style={{ fontSize: 18 }} />
-        <span className="text-sm">Voltar para vendas</span>
+        <span className="text-sm">{t("labels.sales.new.back")}</span>
       </AppButton>
       <div className="flex flex-col gap-6">
         <div className="flex items-center  gap-4">
@@ -208,14 +208,14 @@ export default function SaleDetailPage() {
               <span
                 className={`text-sm font-medium px-2 py-0.5 rounded-full ${status.bg} ${status.color}`}
               >
-                {status.label}
+                {t(status.label)}
               </span>
             </div>
           </div>
           <span className="text-label truncate text-sm mr-auto">{sale.id}</span>
           {!isCanceled && (
             <AppButton color="red" onClick={handleCancel}>
-              Cancelar venda
+              {t("labels.sales.detail.cancel_title")}
             </AppButton>
           )}
         </div>
@@ -228,7 +228,7 @@ export default function SaleDetailPage() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-label">Data</span>
+              <span className="text-label">{t("labels.sales.detail.date")}</span>
               <span className="font-semibold">
                 {formatDateTime(sale.created_at)}
               </span>
@@ -243,10 +243,10 @@ export default function SaleDetailPage() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-label">Itens</span>
+              <span className="text-label">{t("labels.sales.detail.items")}</span>
               <span className="font-semibold">
                 {sale.items_count}{" "}
-                {sale.items_count === 1 ? "produto" : "produtos"}
+                {sale.items_count === 1 ? t("labels.sales.new.item_singular") : t("labels.sales.new.item_plural")}
               </span>
             </div>
           </AppCard>
@@ -259,7 +259,7 @@ export default function SaleDetailPage() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-label">Total</span>
+              <span className="text-label">{t("labels.sales.new.total")}</span>
               <span className="font-semibold">
                 {formatCurrency(sale.total)}
               </span>
@@ -269,7 +269,7 @@ export default function SaleDetailPage() {
         <div className="flex flex-col">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-semibold text-foreground">
-              Produtos
+              {t("labels.products.title")}
             </h3>
           </div>
           <AppGrid columns={columns} pagination={productsPagination} />
