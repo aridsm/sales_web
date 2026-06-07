@@ -119,7 +119,7 @@ export default function LoginPage() {
           {t("labels.login.no_account")}{" "}
           <Link
             href="/register"
-            className="text-primary dark:text-amber-300 hover:underline font-semibold"
+            className="text-primary dark:text-yellow-300 hover:underline font-semibold"
           >
             {t("labels.login.create_account")}
           </Link>

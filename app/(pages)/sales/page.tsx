@@ -89,7 +89,9 @@ export default function SalePage() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-label">{t("labels.sales.revenue_today")}</span>
+            <span className="text-label">
+              {t("labels.sales.revenue_today")}
+            </span>
             <span className="text-lg font-bold text-foreground">
               {formatCurrency(0)}
             </span>
@@ -104,7 +106,9 @@ export default function SalePage() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-label">{t("labels.sales.total_revenue")}</span>
+            <span className="text-label">
+              {t("labels.sales.total_revenue")}
+            </span>
             <span className="text-lg font-bold text-foreground">
               {formatCurrency(0)}
             </span>
@@ -129,7 +133,7 @@ export default function SalePage() {
               <Link
                 href={`/sales/${sale.id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="font-semibold hover:text-primary dark:hover:text-primary-2 hover:underline transition-all duration-200"
+                className="font-semibold hover:text-primary dark:hover:text-yellow-300 hover:underline transition-all duration-200"
               >
                 {sale.code.toString().padStart(6, "0")}
               </Link>

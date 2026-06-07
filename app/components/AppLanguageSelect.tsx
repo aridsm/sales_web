@@ -26,7 +26,7 @@ export default function AppLanguageSelect() {
       value={currentLocale}
       onChange={(val) => setLocale(val)}
       triggerTemplate={(selected: any) => (
-        <div className="flex items-center gap-1.5 pr-3 pl-2 py-1 bg-amber-300 hover:bg-amber-200 text-amber-950 rounded-full transition-colors text-sm font-medium">
+        <div className="flex items-center gap-1.5 pr-3 pl-2 py-1 bg-yellow-300 hover:bg-yellow-400 text-black rounded-full transition-colors text-sm font-medium">
           <LanguageOutlined fontSize="small" />
           <span>{selected?.name || "Idioma"}</span>
         </div>

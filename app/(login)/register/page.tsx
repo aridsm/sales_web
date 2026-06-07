@@ -76,7 +76,7 @@ export default function RegisterPage() {
 
   return (
     <div className="w-full max-w-md mx-auto px-4">
-      <div className="flex items-center justify-end gap-4 mb-2">
+      <div className="flex items-center justify-between gap-4 mb-2">
         <AppDarkModeToggle />
         <AppLanguageSelect />
       </div>
@@ -151,7 +151,7 @@ export default function RegisterPage() {
           {t("labels.register.have_account")}{" "}
           <Link
             href="/login"
-            className="text-primary hover:text-primary-2 hover:underline font-semibold transition-colors"
+            className="text-primary dark:text-yellow-300 hover:underline font-semibold transition-colors"
           >
             {t("labels.all.enter")}
           </Link>
