@@ -21,7 +21,56 @@
       "name": "Nome",
       "password": "Senha",
       "email": "exemplo@email.com",
-      "enter": "Entrar"
+      "enter": "Entrar",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "cancel": "Cancelar",
+      "save": "Salvar"
+    },
+    "grid": {
+      "search_error": "Ocorreu um erro ao realizar a busca. Tente novamente.",
+      "search_placeholder": "Buscar...",
+      "item_selected_singular": "item selecionado",
+      "item_selected_plural": "itens selecionados",
+      "add_item": "Adicionar item",
+      "empty_title": "Nada por aqui!",
+      "empty_subtitle": "Nenhum item encontrado para exibir"
+    },
+    "pagination": {
+      "first_page": "Primeira página",
+      "prev": "Anterior",
+      "next": "Próxima",
+      "last_page": "Última página",
+      "page": "Página",
+      "info": "de {{total_pages}} ({{total_items}} itens)"
+    },
+    "filter": {
+      "title": "Filtros",
+      "button": "Filtros",
+      "clear": "Limpar filtros",
+      "apply": "Aplicar"
+    },
+    "categories": {
+      "title": "Categorias",
+      "color": "Cor",
+      "type": "Tipo",
+      "delete_title": "Excluir itens",
+      "delete_single": "Tem certeza que deseja excluir o item selecionado? Esta ação não pode ser desfeita.",
+      "delete_multiple": "Tem certeza que deseja excluir os {{count}} itens selecionados? Esta ação não pode ser desfeita.",
+      "filter_type": "Filtrar por tipo",
+      "types": {
+        "product": "Produtos",
+        "product_singular": "Produto",
+        "other_expense": "Outras Despesas"
+      },
+      "form": {
+        "name_required": "O nome é obrigatório",
+        "edit_title": "Editar Categoria",
+        "add_title": "Adicionar Categoria",
+        "name_placeholder": "Nome da categoria",
+        "type_placeholder": "Selecione o tipo",
+        "color_placeholder": "Selecione a cor"
+      }
     }
   },
   "errors": {

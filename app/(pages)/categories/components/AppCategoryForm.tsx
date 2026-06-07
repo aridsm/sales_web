@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,13 +13,8 @@ import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/Categories";
 import { useDialogStore } from "@/stores/dialogStore";
 import { CategoryForm } from "@/api/schemas/Category";
-import { useTranslation } from "@/app/utils/i18n";
+import { getLabel, useTranslation } from "@/app/utils/i18n";
 
-const categorySchema = z.object({
-  name: z.string().min(1, { message: "O nome é obrigatório" }),
-  type: z.number(),
-  color: z.string(),
-});
 
 interface AppCategoryFormProps {
   isOpen: boolean;
@@ -34,8 +29,14 @@ export default function AppCategoryForm({
   model,
   onSave,
 }: AppCategoryFormProps) {
-  const { t: getLabel } = useTranslation();
+  const { t } = useTranslation();
   const { openDialog } = useDialogStore();
+  const categorySchema = useMemo(() => z.object({
+    name: z.string().min(1, { message: t("labels.categories.form.name_required") }),
+    type: z.number(),
+    color: z.string(),
+  }), [t]);
+
   const {
     register,
     handleSubmit,
@@ -74,7 +75,7 @@ export default function AppCategoryForm({
       console.error(error);
       openDialog({
         variant: "error",
-        message: getLabel(
+        message: t(
           `errors.categories.${error.response.data.detail.error}`,
         ),
       });
@@ -87,21 +88,21 @@ export default function AppCategoryForm({
   }
 
   const categoryTypeOptions = [
-    { id: CategoryType.PRODUCT, name: "Produto" },
-    { id: CategoryType.OTHER_EXPENSE, name: "Outras Despesas" },
+    { id: CategoryType.PRODUCT, name: t("labels.categories.types.product_singular") },
+    { id: CategoryType.OTHER_EXPENSE, name: t("labels.categories.types.other_expense") },
   ];
 
   return (
     <AppModal
       isOpen={isOpen}
       onClose={handleClose}
-      title={model ? "Editar Categoria" : "Adicionar Categoria"}
+      title={model ? t("labels.categories.form.edit_title") : t("labels.categories.form.add_title")}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <AppInputText
-          label="Nome"
+          label={t("labels.all.name")}
           type="text"
-          placeholder="Nome da categoria"
+          placeholder={t("labels.categories.form.name_placeholder")}
           {...register("name")}
           error={errors.name?.message}
         />
@@ -111,8 +112,8 @@ export default function AppCategoryForm({
           control={control}
           render={({ field }) => (
             <AppSelect
-              label="Tipo"
-              placeholder="Selecione o tipo"
+              label={t("labels.categories.type")}
+              placeholder={t("labels.categories.form.type_placeholder")}
               options={categoryTypeOptions}
               value={field.value}
               onChange={field.onChange}
@@ -126,8 +127,8 @@ export default function AppCategoryForm({
           control={control}
           render={({ field }) => (
             <AppColor
-              label="Cor"
-              placeholder="Selecione a cor"
+              label={t("labels.categories.color")}
+              placeholder={t("labels.categories.form.color_placeholder")}
               value={field.value}
               onChange={field.onChange}
               error={errors.color?.message}
@@ -142,7 +143,7 @@ export default function AppCategoryForm({
             color="background"
             className="px-4"
           >
-            Cancelar
+            {t("labels.all.cancel")}
           </AppButton>
           <AppButton
             type="submit"
@@ -150,7 +151,7 @@ export default function AppCategoryForm({
             color="primary"
             className="px-4"
           >
-            Salvar
+            {t("labels.all.save")}
           </AppButton>
         </div>
       </form>

@@ -10,6 +10,7 @@ import {
 } from "@mui/icons-material";
 import AppButton from "./AppButton";
 import AppInputText from "./inputs/AppInputText";
+import { useTranslation } from "@/app/utils/i18n";
 
 interface AppPaginationProps<T> {
   pagination: PaginationResult<T>;
@@ -18,6 +19,7 @@ interface AppPaginationProps<T> {
 export default function AppPagination<T>({
   pagination,
 }: AppPaginationProps<T>) {
+  const { t } = useTranslation();
   const { pageData, load } = pagination;
 
   const [pageInput, setPageInput] = React.useState<string>(
@@ -80,7 +82,7 @@ export default function AppPagination<T>({
               fontSize="small"
               className="text-label/50"
             />{" "}
-            Primeira página
+            {t("labels.pagination.first_page")}
           </AppButton>
         )}
         <AppButton
@@ -90,7 +92,7 @@ export default function AppPagination<T>({
           className="px-3"
         >
           <KeyboardArrowLeft fontSize="small" className="text-label/50" />{" "}
-          Anterior
+          {t("labels.pagination.prev")}
         </AppButton>
 
         <div className="flex gap-1 mx-2">
@@ -120,7 +122,7 @@ export default function AppPagination<T>({
           disabled={pageData.page >= pageData.total_pages}
           className="px-3"
         >
-          Próximo{" "}
+          {t("labels.pagination.next")}{" "}
           <KeyboardArrowRight fontSize="small" className="text-label/50" />
         </AppButton>
         {pageData.total_pages > 2 && (
@@ -130,7 +132,7 @@ export default function AppPagination<T>({
             disabled={pageData.page >= pageData.total_pages}
             className="px-3"
           >
-            Última página{" "}
+            {t("labels.pagination.last_page")}{" "}
             <KeyboardDoubleArrowRight
               fontSize="small"
               className="text-label/50"
@@ -140,7 +142,7 @@ export default function AppPagination<T>({
       </div>
 
       <div className="flex items-center gap-2 whitespace-nowrap">
-        <span>Página</span>
+        <span>{t("labels.pagination.page")}</span>
         <div className="w-18">
           <AppInputText
             type="number"
@@ -156,7 +158,7 @@ export default function AppPagination<T>({
           />
         </div>
         <span>
-          de {pageData.total_pages} ({pageData.total_items} itens)
+          {t("labels.pagination.info", { total_pages: pageData.total_pages, total_items: pageData.total_items })}
         </span>
       </div>
     </div>

@@ -11,6 +11,7 @@ import AppInputText from "./inputs/AppInputText";
 import AppActions, { ActionItem } from "./AppActions";
 import AppLoading from "./AppLoading";
 import { useDialogStore } from "@/stores/dialogStore";
+import { useTranslation } from "@/app/utils/i18n";
 
 interface Column<T> {
   column: React.ReactNode | string;
@@ -45,6 +46,7 @@ export default function AppGrid<T>({
   hideSelectionCount,
   className,
 }: AppGridProps<T>) {
+  const { t } = useTranslation();
   const { items, loading, load } = pagination;
   const router = useRouter();
   const pathname = usePathname();
@@ -145,7 +147,7 @@ export default function AppGrid<T>({
       console.error(error);
       openDialog({
         variant: "error",
-        message: "Ocorreu um erro ao realizar a busca. Tente novamente.",
+        message: t("labels.grid.search_error"),
       });
     }
   }
@@ -209,7 +211,7 @@ export default function AppGrid<T>({
             <AppInputText
               type="text"
               className="pl-10!"
-              placeholder="Buscar..."
+              placeholder={t("labels.grid.search_placeholder")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onBlur={handleSearch}
@@ -229,8 +231,8 @@ export default function AppGrid<T>({
               <span className="font-medium text-sm whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
                 {selectedRows.length}{" "}
                 {selectedRows.length === 1
-                  ? "item selecionado"
-                  : "itens selecionados"}
+                  ? t("labels.grid.item_selected_singular")
+                  : t("labels.grid.item_selected_plural")}
               </span>
             )}
           <div className="flex gap-3 w-full sm:w-auto">
@@ -244,7 +246,7 @@ export default function AppGrid<T>({
                   className="px-4 shrink-0 w-full sm:w-auto"
                 >
                   <DeleteOutlined fontSize="small" />
-                  Excluir
+                  {t("labels.all.delete")}
                 </AppButton>
               )}
             {filter}
@@ -256,7 +258,7 @@ export default function AppGrid<T>({
                 className="px-4 py-2 shrink-0 w-full sm:w-auto"
               >
                 <Add fontSize="small" />
-                Adicionar item
+                {t("labels.grid.add_item")}
               </AppButton>
             )}
           </div>
@@ -412,10 +414,10 @@ export default function AppGrid<T>({
                   <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
                 </svg>
                 <span className=" font-medium text-foreground-2">
-                  Nada por aqui!
+                  {t("labels.grid.empty_title")}
                 </span>
                 <span className="text-sm text-label">
-                  Nenhum item encontrado para exibir
+                  {t("labels.grid.empty_subtitle")}
                 </span>
               </div>
             )}

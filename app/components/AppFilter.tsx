@@ -7,6 +7,7 @@ import { FilterList, DeleteSweepOutlined } from "@mui/icons-material";
 import AppModal from "./AppModal";
 import AppButton from "./AppButton";
 import { PaginationResult } from "../utils/usePagination";
+import { useTranslation } from "@/app/utils/i18n";
 
 interface AppFilterProps {
   pagination: PaginationResult<any>;
@@ -30,8 +31,10 @@ const getParamsFromUrl = (params: URLSearchParams) => {
 export default function AppFilter({
   pagination,
   children,
-  title = "Filtros",
+  title,
 }: AppFilterProps) {
+  const { t } = useTranslation();
+  const modalTitle = title || t("labels.filter.title");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -95,13 +98,13 @@ export default function AppFilter({
         className={`px-4 shrink-0 relative ${hasActiveFilters ? "text-primary dark:text-foreground border-primary! dark:border-foreground!" : ""}`}
       >
         <FilterList fontSize="small" />
-        Filtros
+        {t("labels.filter.button")}
         {hasActiveFilters && (
           <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-primary dark:bg-foreground rounded-full border-2 border-background" />
         )}
       </AppButton>
 
-      <AppModal isOpen={isOpen} onClose={handleClose} title={title}>
+      <AppModal isOpen={isOpen} onClose={handleClose} title={modalTitle}>
         <FormProvider {...methods}>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -117,11 +120,11 @@ export default function AppFilter({
                 className="px-4"
               >
                 <DeleteSweepOutlined fontSize="small" />
-                Limpar filtros
+                {t("labels.filter.clear")}
               </AppButton>
 
               <AppButton type="submit" color="primary" className="px-6">
-                Aplicar
+                {t("labels.filter.apply")}
               </AppButton>
             </div>
           </form>

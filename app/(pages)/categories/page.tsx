@@ -21,7 +21,7 @@ import { Category } from "@/api/schemas/Category";
 import { useTranslation } from "@/app/utils/i18n";
 
 export default function CategoriesPage() {
-  const { t: getLabel } = useTranslation();
+  const { t } = useTranslation();
   const [rowsSelected, setRowsSelected] = useState<Category[]>([]);
   const [form, setForm] = useState({
     open: false,
@@ -41,20 +41,20 @@ export default function CategoriesPage() {
   }, []);
 
   const CategoryTypes = {
-    [CategoryType.PRODUCT]: "Produtos",
-    [CategoryType.OTHER_EXPENSE]: "Outras Despesas",
+    [CategoryType.PRODUCT]: t("labels.categories.types.product"),
+    [CategoryType.OTHER_EXPENSE]: t("labels.categories.types.other_expense"),
   };
 
   const columns = useMemo(
     () => [
       {
-        column: "Nome",
+        column: t("labels.all.name"),
         cell: ({ row }: { row: Category }) => row.name,
         size: 280,
       },
 
       {
-        column: "Cor",
+        column: t("labels.categories.color"),
         size: 150,
         cell: ({ row }: { row: Category }) => (
           <div className="flex gap-2 items-center">
@@ -67,7 +67,7 @@ export default function CategoriesPage() {
         ),
       },
       {
-        column: "Tipo",
+        column: t("labels.categories.type"),
         cell: ({ row }: { row: Category }) => (
           <p>{CategoryTypes[row.type as CategoryType]} </p>
         ),
@@ -79,12 +79,12 @@ export default function CategoriesPage() {
         size: 400,
       },
     ],
-    [],
+    [t],
   );
 
   const actions: ActionItem<Category>[] = [
     {
-      text: "Editar",
+      text: t("labels.all.edit"),
       preText: <Edit fontSize="small" />,
       click: (category) => {
         setForm({
@@ -111,9 +111,14 @@ export default function CategoriesPage() {
   function onDeleteSelected() {
     openDialog({
       variant: "confirm",
-      title: "Excluir itens",
-      message: `Tem certeza que deseja excluir ${rowsSelected.length === 1 ? "o item selecionado" : `os ${rowsSelected.length} itens selecionados`}? Esta ação não pode ser desfeita.`,
-      confirmLabel: "Excluir",
+      title: t("labels.categories.delete_title"),
+      message:
+        rowsSelected.length === 1
+          ? t("labels.categories.delete_single")
+          : t("labels.categories.delete_multiple", {
+              count: rowsSelected.length,
+            }),
+      confirmLabel: t("labels.all.delete"),
       onConfirm: async () => {
         try {
           const ids = rowsSelected.map((item) => item.id);
@@ -123,7 +128,7 @@ export default function CategoriesPage() {
         } catch (error: any) {
           openDialog({
             variant: "error",
-            message: getLabel(
+            message: t(
               `errors.categories.${error.response.data.detail.error}`,
               {
                 name: error.response.data.detail.name?.join(", "),
@@ -136,7 +141,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <AppPage title="Categorias">
+    <AppPage title={t("labels.categories.title")}>
       <AppGrid
         columns={columns}
         pagination={pagination}
@@ -164,11 +169,18 @@ export default function CategoriesPage() {
 }
 
 function CategoryFilterFields() {
+  const { t } = useTranslation();
   const { control } = useFormContext();
 
   const categoryTypeOptions = [
-    { id: CategoryType.PRODUCT, name: "Produto" },
-    { id: CategoryType.OTHER_EXPENSE, name: "Outras Despesas" },
+    {
+      id: CategoryType.PRODUCT,
+      name: t("labels.categories.types.product_singular"),
+    },
+    {
+      id: CategoryType.OTHER_EXPENSE,
+      name: t("labels.categories.types.other_expense"),
+    },
   ];
 
   return (
@@ -177,8 +189,8 @@ function CategoryFilterFields() {
       control={control}
       render={({ field }) => (
         <AppSelect
-          label="Tipo"
-          placeholder="Filtrar por tipo"
+          label={t("labels.categories.type")}
+          placeholder={t("labels.categories.filter_type")}
           options={categoryTypeOptions}
           value={field.value}
           multiple

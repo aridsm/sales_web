@@ -21,7 +21,56 @@
       "name": "Name",
       "password": "Password",
       "email": "example@email.com",
-      "enter": "Enter"
+      "enter": "Enter",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "grid": {
+      "search_error": "An error occurred while searching. Please try again.",
+      "search_placeholder": "Search...",
+      "item_selected_singular": "item selected",
+      "item_selected_plural": "items selected",
+      "add_item": "Add item",
+      "empty_title": "Nothing here!",
+      "empty_subtitle": "No items found to display"
+    },
+    "pagination": {
+      "first_page": "First page",
+      "prev": "Previous",
+      "next": "Next",
+      "last_page": "Last page",
+      "page": "Page",
+      "info": "of {{total_pages}} ({{total_items}} items)"
+    },
+    "filter": {
+      "title": "Filters",
+      "button": "Filters",
+      "clear": "Clear filters",
+      "apply": "Apply"
+    },
+    "categories": {
+      "title": "Categories",
+      "color": "Color",
+      "type": "Type",
+      "delete_title": "Delete items",
+      "delete_single": "Are you sure you want to delete the selected item? This action cannot be undone.",
+      "delete_multiple": "Are you sure you want to delete the {{count}} selected items? This action cannot be undone.",
+      "filter_type": "Filter by type",
+      "types": {
+        "product": "Products",
+        "product_singular": "Product",
+        "other_expense": "Other Expenses"
+      },
+      "form": {
+        "name_required": "Name is required",
+        "edit_title": "Edit Category",
+        "add_title": "Add Category",
+        "name_placeholder": "Category name",
+        "type_placeholder": "Select the type",
+        "color_placeholder": "Select the color"
+      }
     }
   },
   "errors": {
