@@ -69,33 +69,40 @@ export default function AppPagination<T>({
   }
 
   return (
-    <div className="flex flex-col xl:flex-row justify-between items-center py-4 border-t border-border gap-4 text-sm text-foreground">
+    <div className="@container flex flex-col xl:flex-row justify-between items-center pt-4 border-t border-border gap-4 text-sm text-foreground">
       <div className="flex flex-wrap items-center justify-center gap-1">
         {pageData.total_pages > 2 && (
           <AppButton
             color="background"
             onClick={() => handlePageChange(1)}
             disabled={pageData.page <= 1}
-            className="px-3"
+            className=" @max-[1000px]:px-2 px-3"
           >
             <KeyboardDoubleArrowLeft
               fontSize="small"
-              className="text-label/50"
+              className="@min-[1000px]:text-label/50"
             />{" "}
-            {t("labels.pagination.first_page")}
+            <span className="@max-[1000px]:hidden">
+              {t("labels.pagination.first_page")}
+            </span>
           </AppButton>
         )}
         <AppButton
           color="background"
           onClick={() => handlePageChange(pageData.page - 1)}
           disabled={pageData.page <= 1}
-          className="px-3"
+          className=" @max-[1000px]:px-2 px-3"
         >
-          <KeyboardArrowLeft fontSize="small" className="text-label/50" />{" "}
-          {t("labels.pagination.prev")}
+          <KeyboardArrowLeft
+            fontSize="small"
+            className="@min-[1000px]:text-label/50"
+          />{" "}
+          <span className="@max-[1000px]:hidden">
+            {t("labels.pagination.prev")}
+          </span>
         </AppButton>
 
-        <div className="flex gap-1 mx-2">
+        <div className="flex gap-1 mx-2 @max-[1000px]:hidden">
           {pages.map((p, idx) => {
             const isDots = p === "...";
             return (
@@ -120,22 +127,29 @@ export default function AppPagination<T>({
           color="background"
           onClick={() => handlePageChange(pageData.page + 1)}
           disabled={pageData.page >= pageData.total_pages}
-          className="px-3"
+          className=" @max-[1000px]:px-2 px-3"
         >
-          {t("labels.pagination.next")}{" "}
-          <KeyboardArrowRight fontSize="small" className="text-label/50" />
+          <span className="@max-[1000px]:hidden">
+            {t("labels.pagination.next")}
+          </span>{" "}
+          <KeyboardArrowRight
+            fontSize="small"
+            className="@min-[1000px]:text-label/50"
+          />
         </AppButton>
         {pageData.total_pages > 2 && (
           <AppButton
             color="background"
             onClick={() => handlePageChange(pageData.total_pages)}
             disabled={pageData.page >= pageData.total_pages}
-            className="px-3"
+            className=" @max-[1000px]:px-2 px-3"
           >
-            {t("labels.pagination.last_page")}{" "}
+            <span className="@max-[1000px]:hidden">
+              {t("labels.pagination.last_page")}
+            </span>{" "}
             <KeyboardDoubleArrowRight
               fontSize="small"
-              className="text-label/50"
+              className="@min-[1000px]:text-label/50"
             />
           </AppButton>
         )}
@@ -158,7 +172,10 @@ export default function AppPagination<T>({
           />
         </div>
         <span>
-          {t("labels.pagination.info", { total_pages: pageData.total_pages, total_items: pageData.total_items })}
+          {t("labels.pagination.info", {
+            total_pages: pageData.total_pages,
+            total_items: pageData.total_items,
+          })}
         </span>
       </div>
     </div>

@@ -16,7 +16,7 @@ interface AppHeaderProps {
 export default function AppHeader({ title }: AppHeaderProps) {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center justify-between border-b border-border py-3 transition-colors bg-background-2 dark:bg-background">
+    <div className="flex items-center sticky top-0 z-50 justify-between border-b border-border py-3 transition-colors bg-background-2 dark:bg-background">
       <div className="max-w-400 w-full flex items-center justify-between mx-auto px-6">
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-semibold text-foreground transition-colors">

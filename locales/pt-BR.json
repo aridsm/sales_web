@@ -1,5 +1,40 @@
 {
   "labels": {
+    "dashboard": {
+      "title": "Dashboard",
+      "periods": {
+        "today": "Hoje",
+        "this_week": "Esta semana",
+        "this_month": "Este mês",
+        "this_year": "Este ano"
+      },
+      "kpi": {
+        "current_balance": "Saldo atual",
+        "net_profit": "Lucro líquido",
+        "revenue": "Receitas",
+        "expenses": "Despesas"
+      },
+      "charts": {
+        "revenue_vs_expenses": "Receitas vs Despesas",
+        "profit_by_category": "Lucro por Categoria",
+        "expenses_by_category": "Gastos por Categoria",
+        "revenue": "Receitas",
+        "expenses": "Despesas",
+        "lines_tab": "Linhas",
+        "bars_tab": "Barras",
+        "profit_tab": "Lucro",
+        "expenses_tab": "Gastos",
+        "total": "Total",
+        "system_categories": "Categorias do Sistema",
+        "view_all": "Ver tudo",
+        "no_category": "Nenhuma categoria encontrada",
+        "no_data": "Nenhum dado para o período"
+      },
+      "history": {
+        "title": "Histórico de Atividade",
+        "view_all": "Ver tudo"
+      }
+    },
     "login": {
       "title": "Bem-vindo de volta!",
       "subtitle": "Entre com suas credenciais para acessar o sistema",
@@ -52,7 +87,7 @@
       "products": "Produtos",
       "sales": "Vendas",
       "history": "Histórico",
-      "other_expenses": "Outras Despesas",
+      "other_expenses": "Despesas",
       "account": "Sua conta",
       "logout": "Sair"
     },
@@ -62,7 +97,7 @@
       "item_selected_singular": "item selecionado",
       "item_selected_plural": "itens selecionados",
       "add_item": "Adicionar item",
-      "empty_title": "Nada por aqui!",
+      "empty_title": "Nenhum registro",
       "empty_subtitle": "Nenhum item encontrado para exibir",
       "no_result_title": "Nenhum resultado encontrado",
       "no_result_subtitle": "Não foi encontrado nenhum item correspondente a busca."
@@ -182,7 +217,7 @@
         "PRODUCT": "Produto",
         "CATEGORY": "Categoria",
         "SALE": "Venda",
-        "OTHER_EXPENSE": "Outras Despesas"
+        "OTHER_EXPENSE": "Despesas"
       }
     },
     "categories": {
@@ -196,7 +231,7 @@
       "types": {
         "product": "Produtos",
         "product_singular": "Produto",
-        "other_expense": "Outras Despesas"
+        "other_expense": "Despesas"
       },
       "form": {
         "name_required": "O nome é obrigatório",

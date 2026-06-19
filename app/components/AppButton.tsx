@@ -36,7 +36,7 @@ export default function AppButton({
   } else if (color === "red") {
     colorClasses = flat
       ? "bg-transparent text-red-500 hover:bg-red-500/10 active:bg-red-500/20 border border-transparent"
-      : "bg-red-600/80 hover:bg-red-600/90 dark:bg-red-500/70 dark:hover:bg-red-500/80 text-white active:bg-red-500/10";
+      : "bg-red-600/80 hover:bg-red-600/90 dark:bg-red-500/80 dark:hover:bg-red-500/90 text-white active:bg-red-500/10";
   } else if (color === "transparent") {
     colorClasses = flat
       ? "bg-transparent text-foreground-2 hover:bg-background-3 hover:text-foreground border border-transparent"

@@ -147,7 +147,7 @@ export default function OtherExpensesPage() {
   }
 
   return (
-    <AppPage title="Outras Despesas">
+    <AppPage title="Despesas">
       <AppGrid
         columns={columns}
         pagination={pagination}

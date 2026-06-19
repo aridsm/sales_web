@@ -1,5 +1,40 @@
 {
   "labels": {
+    "dashboard": {
+      "title": "Dashboard",
+      "periods": {
+        "today": "Today",
+        "this_week": "This week",
+        "this_month": "This month",
+        "this_year": "This year"
+      },
+      "kpi": {
+        "current_balance": "Current balance",
+        "net_profit": "Net profit",
+        "revenue": "Revenue",
+        "expenses": "Expenses"
+      },
+      "charts": {
+        "revenue_vs_expenses": "Revenue vs Expenses",
+        "profit_by_category": "Profit by Category",
+        "expenses_by_category": "Expenses by Category",
+        "revenue": "Revenue",
+        "expenses": "Expenses",
+        "lines_tab": "Lines",
+        "bars_tab": "Bars",
+        "profit_tab": "Profit",
+        "expenses_tab": "Expenses",
+        "total": "Total",
+        "system_categories": "System Categories",
+        "view_all": "View all",
+        "no_category": "No category found...",
+        "no_data": "No data for this period"
+      },
+      "history": {
+        "title": "Activity History",
+        "view_all": "View all"
+      }
+    },
     "login": {
       "title": "Welcome back!",
       "subtitle": "Enter your credentials to access the system",
@@ -62,7 +97,7 @@
       "item_selected_singular": "item selected",
       "item_selected_plural": "items selected",
       "add_item": "Add item",
-      "empty_title": "Nothing here!",
+      "empty_title": "No records",
       "empty_subtitle": "No items found to display",
       "no_result_title": "No results found",
       "no_result_subtitle": "No items matched your search."

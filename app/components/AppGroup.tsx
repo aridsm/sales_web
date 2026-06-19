@@ -16,6 +16,7 @@ import AppButton from "./AppButton";
 import AppLoading from "./AppLoading";
 import { useDialogStore } from "@/stores/dialogStore";
 import { useTranslation } from "@/app/utils/i18n";
+import AppEmptyState from "./AppEmptyState";
 
 interface AppGroupProps<G extends { id: string | number }, T> {
   groups: PaginationResult<G>;
@@ -264,17 +265,18 @@ export default function AppGroup<G extends { id: string | number }, T>({
               <div className="py-10" />
             )
           ) : (
-            <div className="flex flex-col rounded-md items-center justify-center py-12 px-4 text-label">
-              <div className="w-10 h-10 text-primary dark:text-primary-2 mb-4 rounded-full bg-primary-light flex items-center justify-center">
-                <SearchOffOutlined fontSize="medium" />
-              </div>
-              <p className="text-base font-medium text-foreground">
-                {t("labels.grid.no_result_title")}
-              </p>
-              <p className="text-sm text-center mt-1 max-w-xs">
-                {t("labels.grid.no_result_subtitle")}
-              </p>
-            </div>
+            <AppEmptyState
+              className="flex-1 py-12 px-4"
+              title={searchInput ? t("labels.grid.no_result_title") : undefined}
+              subtitle={
+                searchInput ? t("labels.grid.no_result_subtitle") : undefined
+              }
+              icon={
+                searchInput ? (
+                  <SearchOffOutlined fontSize="medium" />
+                ) : undefined
+              }
+            />
           )
         ) : (
           groups.items.map((group) => {

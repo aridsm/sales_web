@@ -3,7 +3,7 @@
 import React from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { PaginationResult } from "../utils/usePagination";
-import { Search, Add, DeleteOutlined } from "@mui/icons-material";
+import { Search, Add, DeleteOutlined, InboxOutlined, SearchOffOutlined } from "@mui/icons-material";
 import AppPagination from "./AppPagination";
 import AppButton from "./AppButton";
 import AppCheckbox from "./inputs/AppCheckbox";
@@ -12,6 +12,7 @@ import AppActions, { ActionItem } from "./AppActions";
 import AppLoading from "./AppLoading";
 import { useDialogStore } from "@/stores/dialogStore";
 import { useTranslation } from "@/app/utils/i18n";
+import AppEmptyState from "./AppEmptyState";
 
 interface Column<T> {
   column: React.ReactNode | string;
@@ -200,7 +201,7 @@ export default function AppGrid<T>({
 
   return (
     <div
-      className={`flex flex-col h-full min-h-0  min-w-0 flex-1 w-full ${className || ""}`}
+      className={`flex flex-col h-full min-h-0 min-w-0 flex-1 w-full ${className || ""}`}
     >
       <div className="flex flex-col sm:flex-row justify-between items-center pb-3 gap-4">
         {search && (
@@ -264,7 +265,7 @@ export default function AppGrid<T>({
           </div>
         </div>
       </div>
-      <div className="overflow-auto flex-1 min-w-0 w-full flex flex-col">
+      <div className="overflow-auto flex-1 min-h-0 min-w-0 w-full flex flex-col">
         {!hasStartedLoading || (loading && items.length === 0) ? (
           delayedLoading ? (
             <div className="flex justify-center items-center h-full flex-1">
@@ -397,29 +398,12 @@ export default function AppGrid<T>({
               )}
             </table>
             {items.length === 0 && (
-              <div className="flex-1 flex flex-col items-center justify-center p-14 text-label border-x border-b border-border bg-background rounded-b-md gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-border-2 mb-1"
-                >
-                  <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
-                  <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
-                </svg>
-                <span className=" font-medium text-foreground-2">
-                  {t("labels.grid.empty_title")}
-                </span>
-                <span className="text-sm text-label">
-                  {t("labels.grid.empty_subtitle")}
-                </span>
-              </div>
+              <AppEmptyState
+                className="flex-1 p-14 border-x border-b border-border rounded-t-none bg-background-2"
+                title={searchInput ? t("labels.grid.no_result_title") : undefined}
+                subtitle={searchInput ? t("labels.grid.no_result_subtitle") : undefined}
+                icon={searchInput ? <SearchOffOutlined fontSize="medium" /> : undefined}
+              />
             )}
           </div>
         )}
