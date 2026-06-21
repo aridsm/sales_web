@@ -1,3 +1,12 @@
+import { getLocale } from "../i18n";
+
+export function formatCurrency(value: number): string {
+  return new Intl.NumberFormat(getLocale(), {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+}
+
 export const currencyFormatter = {
   prefixLength: 3,
   mask: (value: number | string | undefined | null): string => {
@@ -10,7 +19,7 @@ export const currencyFormatter = {
 
     if (isNaN(numberValue)) return "";
 
-    return new Intl.NumberFormat("pt-BR", {
+    return new Intl.NumberFormat(getLocale(), {
       style: "currency",
       currency: "BRL",
     }).format(numberValue);

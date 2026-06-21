@@ -8,9 +8,8 @@ import React, {
   useImperativeHandle,
 } from "react";
 import AppLabel from "../AppLabel";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { CalendarMonthOutlined, ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { useClickOutside } from "../../utils/useClickOutside";
 import AppSelect from "./AppSelect";
 import AppButton from "../AppButton";
 
@@ -84,21 +83,12 @@ const AppDateInner = (
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        if (isOpen) {
-          setIsOpen(false);
-          onBlur?.();
-        }
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen, onBlur]);
+  useClickOutside(containerRef, () => {
+    if (isOpen) {
+      setIsOpen(false);
+      onBlur?.();
+    }
+  });
 
   const handleSelectDay = (day: number) => {
     const selectedDate = new Date(
@@ -232,7 +222,7 @@ const AppDateInner = (
         <span className={!value ? "text-label" : ""}>
           {formatDisplayValue() || "DD/MM/AAAA"}
         </span>
-        <CalendarTodayIcon className="text-label" fontSize="small" />
+        <CalendarMonthOutlined className="text-label" fontSize="small" />
       </div>
 
       {error && <span className="text-xs text-red-500 mt-1">{error}</span>}
@@ -247,7 +237,7 @@ const AppDateInner = (
               onClick={prevMonth}
               className="min-w-7! min-h-7! h-7 w-7 px-0!"
             >
-              <ChevronLeftIcon fontSize="small" />
+              <ChevronLeft fontSize="small" />
             </AppButton>
 
             <div className="flex gap-2 flex-1 mx-2">
@@ -273,7 +263,7 @@ const AppDateInner = (
               onClick={nextMonth}
               className="min-w-7! min-h-7! h-7 w-7 px-0!"
             >
-              <ChevronRightIcon fontSize="small" />
+              <ChevronRight fontSize="small" />
             </AppButton>
           </div>
 

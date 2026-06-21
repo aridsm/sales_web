@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { ACTION_CONFIG } from "@/app/utils/constants";
 import AppPage from "../../components/AppPage";
 import AppGrid from "../../components/AppGrid";
 import {
@@ -19,31 +20,6 @@ import AppFilter from "../../components/AppFilter";
 import AppSelect from "../../components/inputs/AppSelect";
 import { Controller, useFormContext } from "react-hook-form";
 
-const actionConfig: Record<
-  ActionType,
-  { labelKey: string; color: string; bg: string }
-> = {
-  [ActionType.CREATE]: {
-    labelKey: "labels.history.actions.CREATE",
-    color: "text-emerald-600 dark:text-emerald-400",
-    bg: "bg-emerald-500/10",
-  },
-  [ActionType.UPDATE]: {
-    labelKey: "labels.history.actions.UPDATE",
-    color: "text-amber-600 dark:text-amber-400",
-    bg: "bg-amber-500/10",
-  },
-  [ActionType.DELETE]: {
-    labelKey: "labels.history.actions.DELETE",
-    color: "text-red-500 dark:text-red-400",
-    bg: "bg-red-500/10",
-  },
-  [ActionType.CANCEL]: {
-    labelKey: "labels.history.actions.CANCEL",
-    color: "text-blue-600 dark:text-blue-400",
-    bg: "bg-blue-500/10",
-  },
-};
 
 export default function HistoryPage() {
   const { t } = useTranslation();
@@ -74,7 +50,7 @@ export default function HistoryPage() {
       {
         column: t("labels.history.action"),
         cell: ({ row }: { row: History }) => {
-          const config = actionConfig[Number(row.action_type) as ActionType];
+          const config = ACTION_CONFIG[Number(row.action_type) as ActionType];
           if (!config) return <span>{row.action_type}</span>;
 
           return (
@@ -129,7 +105,7 @@ export default function HistoryPage() {
           await historyService.bulkDelete(ids);
           await pagination.load();
           setRowsSelected([]);
-        } catch (error: any) {
+        } catch (error: unknown) {
           openDialog({
             variant: "error",
             message: t("errors.fallback"),

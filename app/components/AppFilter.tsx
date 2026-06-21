@@ -9,14 +9,14 @@ import AppButton from "./AppButton";
 import { PaginationResult } from "../utils/usePagination";
 import { useTranslation } from "@/app/utils/i18n";
 
-interface AppFilterProps {
-  pagination: PaginationResult<any>;
+interface AppFilterProps<T = unknown> {
+  pagination: PaginationResult<T>;
   children: React.ReactNode;
   title?: string;
 }
 
 const getParamsFromUrl = (params: URLSearchParams) => {
-  const obj: Record<string, any> = {};
+  const obj: Record<string, unknown> = {};
   const keys = Array.from(new Set(params.keys()));
   keys.forEach((key) => {
     const values = params.getAll(key).map((v) => {
@@ -28,11 +28,11 @@ const getParamsFromUrl = (params: URLSearchParams) => {
   return obj;
 };
 
-export default function AppFilter({
+export default function AppFilter<T = unknown>({
   pagination,
   children,
   title,
-}: AppFilterProps) {
+}: AppFilterProps<T>) {
   const { t } = useTranslation();
   const modalTitle = title || t("labels.filter.title");
   const router = useRouter();
@@ -56,7 +56,7 @@ export default function AppFilter({
     setIsOpen(false);
   }
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Record<string, unknown>) => {
     const newParams = new URLSearchParams(searchParams.toString());
 
     Object.entries(data).forEach(([key, value]) => {

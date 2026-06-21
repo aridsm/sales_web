@@ -8,7 +8,7 @@ export interface User extends UserBase {
   created_at: string | Date;
 }
 
-export interface UserForm extends UserBase {}
+export type UserForm = UserBase;
 
 export interface SignUp extends UserBase {
   password: string;

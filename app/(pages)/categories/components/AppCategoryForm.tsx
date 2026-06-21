@@ -10,16 +10,15 @@ import AppButton from "@/app/components/AppButton";
 import AppSelect from "@/app/components/inputs/AppSelect";
 import AppColor from "@/app/components/inputs/AppColor";
 import { CategoryType } from "@/enums/CategoryType";
-import { categoriesService } from "@/api/services/Categories";
+import { categoriesService } from "@/api/services/CategoryService";
 import { useDialogStore } from "@/stores/dialogStore";
-import { CategoryForm } from "@/api/schemas/Category";
-import { getLabel, useTranslation } from "@/app/utils/i18n";
-
+import { Category, CategoryForm } from "@/api/schemas/Category";
+import { useTranslation } from "@/app/utils/i18n";
 
 interface AppCategoryFormProps {
   isOpen: boolean;
   onClose: () => void;
-  model?: any;
+  model?: Category;
   onSave: () => Promise<void>;
 }
 
@@ -31,11 +30,17 @@ export default function AppCategoryForm({
 }: AppCategoryFormProps) {
   const { t } = useTranslation();
   const { openDialog } = useDialogStore();
-  const categorySchema = useMemo(() => z.object({
-    name: z.string().min(1, { message: t("labels.categories.form.name_required") }),
-    type: z.number(),
-    color: z.string(),
-  }), [t]);
+  const categorySchema = useMemo(
+    () =>
+      z.object({
+        name: z
+          .string()
+          .min(1, { message: t("labels.categories.form.name_required") }),
+        type: z.number(),
+        color: z.string(),
+      }),
+    [t],
+  );
 
   const {
     register,
@@ -71,12 +76,17 @@ export default function AppCategoryForm({
       }
       await onSave();
       handleClose();
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const error = err as {
+        response?: { data?: { detail?: { error?: string } } };
+      };
       console.error(error);
       openDialog({
         variant: "error",
         message: t(
-          `errors.categories.${error.response.data.detail.error}`,
+          error.response?.data?.detail?.error
+            ? `errors.categories.${error.response.data.detail.error}`
+            : "errors.all.generic",
         ),
       });
     }
@@ -88,15 +98,25 @@ export default function AppCategoryForm({
   }
 
   const categoryTypeOptions = [
-    { id: CategoryType.PRODUCT, name: t("labels.categories.types.product_singular") },
-    { id: CategoryType.OTHER_EXPENSE, name: t("labels.categories.types.other_expense") },
+    {
+      id: CategoryType.PRODUCT,
+      name: t("labels.categories.types.product_singular"),
+    },
+    {
+      id: CategoryType.OTHER_EXPENSE,
+      name: t("labels.categories.types.other_expense"),
+    },
   ];
 
   return (
     <AppModal
       isOpen={isOpen}
       onClose={handleClose}
-      title={model ? t("labels.categories.form.edit_title") : t("labels.categories.form.add_title")}
+      title={
+        model
+          ? t("labels.categories.form.edit_title")
+          : t("labels.categories.form.add_title")
+      }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <AppInputText

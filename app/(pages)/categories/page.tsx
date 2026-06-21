@@ -9,7 +9,7 @@ import {
   usePagination,
   type PaginationService,
 } from "../../utils/usePagination";
-import { categoriesService } from "@/api/services/Categories";
+import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";
@@ -125,13 +125,14 @@ export default function CategoriesPage() {
           await categoriesService.bulkDelete(ids);
           await pagination.load();
           setRowsSelected([]);
-        } catch (error: any) {
+        } catch (err: unknown) {
+          const error = err as { response?: { data?: { detail?: { error?: string; name?: string[] } } } };
           openDialog({
             variant: "error",
             message: t(
-              `errors.categories.${error.response.data.detail.error}`,
+              error.response?.data?.detail?.error ? `errors.categories.${error.response.data.detail.error}` : "errors.all.generic",
               {
-                name: error.response.data.detail.name?.join(", "),
+                name: error.response?.data?.detail?.name?.join(", "),
               },
             ),
           });

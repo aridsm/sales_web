@@ -13,4 +13,4 @@ export interface Product extends ProductBase {
   category_name: string;
 }
 
-export interface ProductForm extends Omit<ProductBase, "sold_amount"> {}
+export type ProductForm = Omit<ProductBase, "sold_amount">;

@@ -163,7 +163,7 @@ export default function AppPagination<T>({
             min={1}
             max={pageData.total_pages}
             value={pageInput}
-            onChange={(e) => setPageInput(e.target.value)}
+            onChange={(e: any) => setPageInput(e.target.value as string)}
             onBlur={handlePageInputSubmit}
             onKeyDown={(e) => {
               if (e.key === "Enter") handlePageInputSubmit();

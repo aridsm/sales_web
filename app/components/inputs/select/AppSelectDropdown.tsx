@@ -1,3 +1,5 @@
+"use client";
+
 import { CircularProgress } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useCallback } from "react";
@@ -35,7 +37,7 @@ export default function AppSelectDropdown<T extends SelectOption>() {
       const currentValues = Array.isArray(value) ? value : [];
       const isSelected = currentValues.includes(option.id as T["id"]);
       const newValues = isSelected
-        ? currentValues.filter((v: any) => v !== option.id)
+        ? currentValues.filter((v: T["id"]) => v !== option.id)
         : [...currentValues, option.id];
       onChange?.(newValues);
     } else {
@@ -89,7 +91,7 @@ export default function AppSelectDropdown<T extends SelectOption>() {
               );
             })}
             {loading && (
-              <div className="p-4 flex justify-center sticky bottom-0 bg-white/80 backdrop-blur-sm">
+              <div className="p-4 flex justify-center sticky bottom-0 bg-background/80 backdrop-blur-sm">
                 <CircularProgress size={24} />
               </div>
             )}

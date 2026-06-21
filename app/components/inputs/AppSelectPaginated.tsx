@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, forwardRef, useImperativeHandle, ReactElement } from "react";
 import AppLabel from "../AppLabel";
+import { useClickOutside } from "../../utils/useClickOutside";
 import { PaginationResult } from "@/app/utils/usePagination";
 import AppSelectTrigger from "./select/AppSelectTrigger";
 import AppSelectDropdown from "./select/AppSelectDropdown";
@@ -16,7 +17,7 @@ export interface AppSelectPaginatedProps<T extends SelectOption> {
     placeholder?: string;
     disabled?: boolean;
     value?: T["id"] | T["id"][];
-    onChange?: (value: any) => void;
+    onChange?: (value: T["id"] | T["id"][]) => void;
     className?: string;
 }
 
@@ -51,15 +52,7 @@ function AppSelectPaginatedInner<T extends SelectOption>(
         }
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    useClickOutside(containerRef, () => setIsOpen(false));
 
     useEffect(() => {
         if (isOpen && search && searchInputRef.current) {

@@ -8,8 +8,8 @@ import {
   useImperativeHandle,
 } from "react";
 import AppLabel from "../AppLabel";
+import { useClickOutside } from "../../utils/useClickOutside";
 import { ChevronLeft } from "@mui/icons-material";
-import CheckIcon from "@mui/icons-material/Check";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -26,11 +26,11 @@ export interface AppSelectProps {
   multiple?: boolean;
   placeholder?: string;
   disabled?: boolean;
-  value?: any;
-  onChange?: (value: any) => void;
+  value?: AppSelectOption["id"] | AppSelectOption["id"][];
+  onChange?: (value: AppSelectOption["id"] | AppSelectOption["id"][]) => void;
   className?: string;
   size?: "default" | "small";
-  triggerTemplate?: (selectedOption: any) => React.ReactNode;
+  triggerTemplate?: (selectedOption: AppSelectOption | AppSelectOption[] | null) => React.ReactNode;
 }
 
 const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
@@ -62,19 +62,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
       if (!disabled) setIsOpen(!isOpen);
     };
 
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          containerRef.current &&
-          !containerRef.current.contains(event.target as Node)
-        ) {
-          setIsOpen(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    useClickOutside(containerRef, () => setIsOpen(false));
 
     useEffect(() => {
       if (isOpen && search && searchInputRef.current) {
@@ -95,7 +83,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
             : [];
         const isSelected = currentValues.includes(option.id);
         const newValues = isSelected
-          ? currentValues.filter((v: any) => v !== option.id)
+          ? currentValues.filter((v: AppSelectOption["id"]) => v !== option.id)
           : [...currentValues, option.id];
         onChange?.(newValues);
       } else {
@@ -135,7 +123,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
       }
     };
 
-    const removeValue = (e: React.MouseEvent, id: any) => {
+    const removeValue = (e: React.MouseEvent, id: AppSelectOption["id"]) => {
       e.stopPropagation();
       if (multiple) {
         const currentValues = Array.isArray(value)
@@ -185,7 +173,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                         {opt.name}
                         <CloseIcon
                           className="w-3 h-3 cursor-pointer hover:text-primary-dark"
-                          onClick={(e) => removeValue(e, v)}
+                          onClick={(e) => removeValue(e, v as string | number)}
                           style={{ fontSize: "14px" }}
                         />
                       </span>

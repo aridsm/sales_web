@@ -9,10 +9,10 @@ import { currencyFormatter } from "@/app/utils/formatters/currency";
 import AppButton from "@/app/components/AppButton";
 import AppModal from "@/app/components/AppModal";
 import { usePagination } from "@/app/utils/usePagination";
-import { otherExpensesService } from "@/api/services/OtherExpenses";
+import { otherExpensesService } from "@/api/services/OtherExpenseService";
 import { useDialogStore } from "@/stores/dialogStore";
 import { CategoryType } from "@/enums/CategoryType";
-import { categoriesService } from "@/api/services/Categories";
+import { categoriesService } from "@/api/services/CategoryService";
 import { Category } from "@/api/schemas/Category";
 import { OtherExpenseForm } from "@/api/schemas/OtherExpense";
 import { useTranslation } from "@/app/utils/i18n";
@@ -88,18 +88,19 @@ export default function AppOtherExpenseForm({
       openDialog({
         variant: "success",
         message: isEditing
-          ? "Despesa atualizada com sucesso!"
-          : "Despesa criada com sucesso!",
+          ? getLabel("labels.other_expenses.form.updated_success")
+          : getLabel("labels.other_expenses.form.created_success"),
       });
 
       reset();
       onSaved?.();
       onClose();
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { detail?: { error?: string } } } };
       openDialog({
         variant: "error",
         message: getLabel(
-          `errors.other_expenses.${error.response.data.detail.error}`,
+          error.response?.data?.detail?.error ? `errors.other_expenses.${error.response.data.detail.error}` : "errors.all.generic"
         ),
       });
     }
@@ -109,13 +110,13 @@ export default function AppOtherExpenseForm({
     <AppModal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEditing ? "Editar Despesa" : "Nova Despesa"}
+      title={isEditing ? getLabel("labels.other_expenses.form.edit_title") : getLabel("labels.other_expenses.form.add_title")}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <AppInputText
-          label="Nome"
-          placeholder="Nome da despesa"
-          {...register("name", { required: "O nome é obrigatório" })}
+          label={getLabel("labels.all.name")}
+          placeholder={getLabel("labels.other_expenses.form.name_placeholder")}
+          {...register("name", { required: getLabel("labels.other_expenses.form.name_required") })}
           error={errors.name?.message}
         />
 
@@ -123,12 +124,12 @@ export default function AppOtherExpenseForm({
           name="value"
           control={control}
           rules={{
-            required: "O valor é obrigatório",
+            required: getLabel("labels.other_expenses.form.value_required"),
             min: { value: 0.01, message: "O valor deve ser maior que zero" },
           }}
           render={({ field }) => (
             <AppInputText
-              label="Valor"
+              label={getLabel("labels.other_expenses.value")}
               placeholder="R$ 0,00"
               mask={currencyFormatter}
               {...field}
@@ -140,23 +141,23 @@ export default function AppOtherExpenseForm({
         <Controller
           name="date"
           control={control}
-          rules={{ required: "A data é obrigatória" }}
+          rules={{ required: getLabel("labels.other_expenses.form.date_required") }}
           render={({ field }) => (
-            <AppDate label="Data" {...field} error={errors.date?.message} />
+            <AppDate label={getLabel("labels.other_expenses.date")} {...field} error={errors.date?.message} />
           )}
         />
 
         <Controller
           name="category_id"
           control={control}
-          rules={{ required: "A categoria é obrigatória" }}
+          rules={{ required: getLabel("labels.other_expenses.form.category_required") }}
           render={({ field }) => (
             <AppSelectPaginated
-              label="Categoria"
-              placeholder="Selecione uma categoria"
+              label={getLabel("labels.other_expenses.category")}
+              placeholder={getLabel("labels.other_expenses.form.category_placeholder")}
               pagination={categoriesPagination}
               search
-              value={field.value}
+              value={field.value ?? undefined}
               onChange={field.onChange}
               error={errors.category_id?.message}
             />
@@ -164,8 +165,8 @@ export default function AppOtherExpenseForm({
         />
 
         <AppInputText
-          label="Descrição"
-          placeholder="Descrição"
+          label={getLabel("labels.other_expenses.description")}
+          placeholder={getLabel("labels.other_expenses.form.description_placeholder")}
           {...register("description")}
           error={errors.description?.message}
         />
@@ -177,7 +178,7 @@ export default function AppOtherExpenseForm({
             className="px-4"
             onClick={onClose}
           >
-            Cancelar
+            {getLabel("labels.all.cancel")}
           </AppButton>
           <AppButton
             type="submit"
@@ -185,7 +186,7 @@ export default function AppOtherExpenseForm({
             className="px-4"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Salvando..." : "Salvar"}
+            {isSubmitting ? getLabel("labels.all.saving") : getLabel("labels.all.save")}
           </AppButton>
         </div>
       </form>

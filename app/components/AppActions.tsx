@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect, ReactNode } from "react";
+import { useState, useRef, ReactNode } from "react";
 import { MoreVert } from "@mui/icons-material";
+import { useClickOutside } from "../utils/useClickOutside";
 
 export interface ActionItem<T> {
   text: string;
@@ -29,18 +30,7 @@ export default function AppActions<T>({
     setIsOpen(!isOpen);
   }
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useClickOutside(containerRef, () => setIsOpen(false));
 
   return (
     <div

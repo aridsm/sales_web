@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
+import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useRouter, useSearchParams } from "next/navigation";
 import AppPage from "../../../components/AppPage";
 import AppCard from "../../../components/AppCard";
@@ -21,35 +22,26 @@ import {
   getTotalPrice,
   type CartItem,
 } from "@/app/utils/cart";
+import { SaleCart } from "../components/SaleCart";
 import type { Product } from "@/api/schemas/Product";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../../components/inputs/AppSelectPaginated";
 import AppInputText from "../../../components/inputs/AppInputText";
-import { categoriesService } from "@/api/services/Categories";
+import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import {
   SearchOutlined,
   AddOutlined,
   RemoveOutlined,
   DeleteOutlined,
-  ShoppingCartOutlined,
-  CheckCircleOutlined,
-  ReceiptOutlined,
   ArrowBackOutlined,
 } from "@mui/icons-material";
 import { salesService } from "@/api/services/SaleService";
 import { useTranslation } from "@/app/utils/i18n";
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value);
-}
+import { Category } from "@/api/schemas/Category";
 
 export default function NewSalePage() {
   const { t } = useTranslation();
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
@@ -133,10 +125,17 @@ export default function NewSalePage() {
             message: t("labels.sales.new.success"),
           });
           router.push("/sales");
-        } catch (error: any) {
+        } catch (err: unknown) {
+          const error = err as {
+            response?: { data?: { detail?: { error?: string } } };
+          };
           openDialog({
             variant: "error",
-            message: t(`errors.sales.${error.response.data.detail.error}`),
+            message: t(
+              error.response?.data?.detail?.error
+                ? `errors.sales.${error.response.data.detail.error}`
+                : "errors.all.generic",
+            ),
           });
         } finally {
           setIsFinishing(false);
@@ -263,7 +262,8 @@ export default function NewSalePage() {
                             {formatCurrency(product.price)}
                           </span>
                           <span className="text-xs text-label">
-                            {product.stock_amount} {t("labels.sales.new.in_stock")}
+                            {product.stock_amount}{" "}
+                            {t("labels.sales.new.in_stock")}
                           </span>
                         </div>
 
@@ -328,156 +328,12 @@ export default function NewSalePage() {
   );
 }
 
-function SaleCart({
-  cart,
-  totalItems,
-  totalPrice,
-  isFinishing,
-  onClearCart,
-  onRemoveFromCart,
-  onUpdateQuantity,
-  onFinishSale,
-}: {
-  cart: CartItem<Product>[];
-  totalItems: number;
-  totalPrice: number;
-  isFinishing: boolean;
-  onClearCart: () => void;
-  onRemoveFromCart: (productId: string) => void;
-  onUpdateQuantity: (productId: string, delta: number) => void;
-  onFinishSale: () => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className="w-96 shrink-0 flex flex-col min-h-0">
-      <AppCard className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        <div className="flex items-center justify-between p-4 border-b border-border">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-              <ShoppingCartOutlined
-                className="text-primary"
-                style={{ fontSize: 20 }}
-              />
-            </div>
-            <div>
-              <h2 className="font-semibold text-foreground">{t("labels.sales.new.cart")}</h2>
-              <span className=" text-label">
-                {totalItems === 0
-                  ? t("labels.sales.new.no_items")
-                  : `${totalItems} ${totalItems === 1 ? t("labels.sales.new.item_singular") : t("labels.sales.new.item_plural")}`}
-              </span>
-            </div>
-          </div>
-          {cart.length > 0 && (
-            <AppButton
-              color="red"
-              flat
-              onClick={onClearCart}
-              className="! px-2! py-1!"
-            >
-              {t("labels.all.clear")}
-            </AppButton>
-          )}
-        </div>
-
-        <div className="flex-1 overflow-y-auto min-h-0">
-          {cart.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-label gap-2 py-12">
-              <ReceiptOutlined style={{ fontSize: 40, opacity: 0.2 }} />
-              <span className="text-sm">{t("labels.sales.new.add_products_to_cart")}</span>
-            </div>
-          ) : (
-            <ul className="divide-y divide-border">
-              {cart.map((item) => (
-                <li
-                  key={item.product.id}
-                  className="px-4 py-3 flex flex-col gap-2"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="text-sm text-foreground truncate">
-                        {item.product.name}
-                      </p>
-                      <p className=" text-label mt-0.5">
-                        {formatCurrency(item.product.price)} {t("labels.sales.new.unit")}
-                      </p>
-                    </div>
-                    <AppButton
-                      onClick={() => onRemoveFromCart(item.product.id)}
-                      className="text-label hover:text-red-500 transition-colors shrink-0 cursor-pointer p-0.5"
-                    >
-                      <DeleteOutlined style={{ fontSize: 16 }} />
-                    </AppButton>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => onUpdateQuantity(item.product.id, -1)}
-                        className="w-7 h-7 rounded-md border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3"
-                      >
-                        <RemoveOutlined style={{ fontSize: 14 }} />
-                      </button>
-                      <span className="w-9 text-center font-semibold text-foreground">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => onUpdateQuantity(item.product.id, 1)}
-                        disabled={item.quantity >= item.product.stock_amount}
-                        className="w-7 h-7 rounded-md border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3 disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        <AddOutlined style={{ fontSize: 14 }} />
-                      </button>
-                    </div>
-
-                    <span className="text-sm font-semibold text-foreground">
-                      {formatCurrency(item.product.price * item.quantity)}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="border-t border-border p-4 flex flex-col gap-3">
-          <div className="flex flex-col gap-1.5">
-            <div className="flex justify-between text-label">
-              <span>{t("labels.sales.new.subtotal")}</span>
-              <span>{formatCurrency(totalPrice)}</span>
-            </div>
-            <div className="flex justify-between text-label">
-              <span>{t("labels.sales.new.items_label")}</span>
-              <span>{totalItems}</span>
-            </div>
-            <div className="h-px bg-border my-1" />
-            <div className="flex justify-between text-base font-semibold text-foreground">
-              <span>{t("labels.sales.new.total")}</span>
-              <span>{formatCurrency(totalPrice)}</span>
-            </div>
-          </div>
-
-          <AppButton
-            color="primary"
-            disabled={cart.length === 0 || isFinishing}
-            onClick={onFinishSale}
-            className="w-full h-12 text-base! font-semibold gap-2!"
-          >
-            <CheckCircleOutlined style={{ fontSize: 20 }} />
-            {isFinishing ? t("labels.all.processing") : t("labels.sales.new.finish_button")}
-          </AppButton>
-        </div>
-      </AppCard>
-    </div>
-  );
-}
-
 function SaleNewFilterFields() {
   const { t } = useTranslation();
   const { control, register } = useFormContext();
 
-  const categories = usePagination<any>(
-    categoriesService as unknown as PaginationService<any>,
+  const categories = usePagination<Category>(
+    categoriesService as unknown as PaginationService<Category>,
     { type: CategoryType.PRODUCT, page_size: 20 },
   );
 

@@ -36,7 +36,7 @@ export default function RegisterPage() {
     if (password !== confirmPassword) {
       openDialog({
         variant: "error",
-        message: "As senhas não coincidem.",
+        message: t("errors.auth.errorPasswordsNotMatch"),
       });
       return;
     }
@@ -44,7 +44,7 @@ export default function RegisterPage() {
     if (password.length < 6) {
       openDialog({
         variant: "error",
-        message: "A senha deve ter pelo menos 6 caracteres.",
+        message: t("errors.auth.errorPasswordMinLength"),
       });
       return;
     }
@@ -60,10 +60,11 @@ export default function RegisterPage() {
         expires_at || null,
       );
       router.push("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { detail?: { error?: string } } } };
       openDialog({
         variant: "error",
-        message: t(`errors.auth.${err.response.data.detail.error}`),
+        message: t(error.response?.data?.detail?.error ? `errors.auth.${error.response.data.detail.error}` : "errors.all.generic"),
       });
     } finally {
       setLoading(false);

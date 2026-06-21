@@ -1,5 +1,5 @@
 import BaseService from "@/api/services/BaseService";
-import { axiosClient } from "../axiosClient";
+import { axiosClient } from "@/api/axiosClient";
 import {
   DashboardChart,
   DashboardChartParams,

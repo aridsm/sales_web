@@ -11,6 +11,7 @@ import {
   WarningAmberOutlined,
 } from "@mui/icons-material";
 import { useTranslation } from "@/app/utils/i18n";
+import { useFocusTrap } from "../utils/useFocusTrap";
 
 const variantConfig: Record<
   DialogVariant,
@@ -51,6 +52,7 @@ export default function AppDialog() {
   const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const { open, options, closeDialog } = useDialogStore();
+  const trapRef = useFocusTrap(open);
 
   useEffect(() => {
     setMounted(true);
@@ -85,18 +87,25 @@ export default function AppDialog() {
         onClick={isConfirm ? undefined : handleCancel}
       />
 
-      <div className="relative w-full max-w-sm bg-background-2 dark:bg-background rounded-lg border border-border shadow-2xl shadow-black/15 p-6 flex flex-col items-center gap-4 animate-in fade-in zoom-in-95 duration-200">
+      <div
+        ref={trapRef as React.RefObject<HTMLDivElement>}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-description"
+        className="relative w-full max-w-sm bg-background-2 dark:bg-background rounded-lg border border-border shadow-2xl shadow-black/15 p-6 flex flex-col items-center gap-4 animate-in fade-in zoom-in-95 duration-200"
+      >
         <div
           className={`w-12 h-12 rounded-full flex items-center justify-center ${iconBg} ${iconColor} mt-1`}
         >
           {icon}
         </div>
 
-        <h2 className="text-lg font-semibold text-foreground text-center">
+        <h2 id="dialog-title" className="text-lg font-semibold text-foreground text-center">
           {options.title ?? t(titleKey)}
         </h2>
 
-        <p className="text-label text-center leading-relaxed">
+        <p id="dialog-description" className="text-label text-center leading-relaxed">
           {options.message}
         </p>
 

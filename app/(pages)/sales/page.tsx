@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
+import { STATUS_CONFIG } from "@/app/utils/constants";
+import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useRouter } from "next/navigation";
 import AppPage from "../../components/AppPage";
 import AppCard from "../../components/AppCard";
@@ -15,44 +17,20 @@ import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import AppInputText from "../../components/inputs/AppInputText";
-import { categoriesService } from "@/api/services/Categories";
+import { categoriesService } from "@/api/services/CategoryService";
+import { Category } from "@/api/schemas/Category";
 import { CategoryType } from "@/enums/CategoryType";
 import {
   TrendingUpOutlined,
   ReceiptOutlined,
   ShoppingCartOutlined,
-  VisibilityOutlined,
 } from "@mui/icons-material";
-import { SaleStatus } from "@/enums/SaleStatus";
 import { Sale } from "@/api/schemas/Sale";
 import { salesService } from "@/api/services/SaleService";
 import { SaleProduct } from "@/api/schemas/SaleProduct";
 import { saleProductsService } from "@/api/services/SaleProductsService";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import { useTranslation } from "@/app/utils/i18n";
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value);
-}
-
-const statusConfig: Record<
-  SaleStatus,
-  { label: string; color: string; bg: string }
-> = {
-  [SaleStatus.DONE]: {
-    label: "labels.sales.status.done",
-    color: "text-emerald-600 dark:text-emerald-400",
-    bg: "bg-emerald-500/10",
-  },
-  [SaleStatus.CANCELED]: {
-    label: "labels.sales.status.canceled",
-    color: "text-red-500 dark:text-red-400",
-    bg: "bg-red-500/10",
-  },
-};
 
 export default function SalePage() {
   const { t } = useTranslation();
@@ -126,7 +104,7 @@ export default function SalePage() {
         }
         onNew={() => router.push("/sales/new")}
         renderGroupName={(sale) => {
-          const status = statusConfig[sale.status];
+          const status = STATUS_CONFIG[sale.status];
 
           return (
             <div className="flex items-center gap-5 w-full flex-1">
@@ -140,7 +118,7 @@ export default function SalePage() {
               <span
                 className={`text-sm font-medium px-2 py-0.5 rounded-full ${status.bg} ${status.color}`}
               >
-                {t(status.label)}
+                {t(status.labelKey)}
               </span>
               <span className="text-sm text-label">
                 {formatDateTime(sale.created_at)}
@@ -222,8 +200,8 @@ function SaleFilterFields() {
   const { t } = useTranslation();
   const { control, register } = useFormContext();
 
-  const categories = usePagination<any>(
-    categoriesService as unknown as PaginationService<any>,
+  const categories = usePagination<Category>(
+    categoriesService as unknown as PaginationService<Category>,
     { type: CategoryType.PRODUCT, page_size: 20 },
   );
 

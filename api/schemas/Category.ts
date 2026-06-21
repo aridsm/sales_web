@@ -5,6 +5,7 @@ export interface Category {
   name: string;
   color: string;
   type: CategoryType;
+  products?: number;
 }
 
 export interface CategoryAmount {
@@ -19,4 +20,4 @@ export interface CategoryAmountItem {
   value: number;
 }
 
-export interface CategoryForm extends Omit<Category, "id"> {}
+export type CategoryForm = Omit<Category, "id">;

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   forwardRef,
   InputHTMLAttributes,
@@ -9,8 +11,8 @@ import {
 import AppLabel from "../AppLabel";
 
 export interface Formatter {
-  mask: (value: any) => string;
-  unmask: (value: string) => any;
+  mask: (value: string | number | undefined) => string;
+  unmask: (value: string) => string | number | undefined;
   prefixLength?: number;
 }
 
@@ -25,7 +27,7 @@ export interface AppInputTextProps extends Omit<
   onChange?: (
     e:
       | React.ChangeEvent<HTMLInputElement>
-      | { target: { name?: string; value: any } },
+      | { target: { name?: string; value: string | number | undefined } },
   ) => void;
 }
 
@@ -88,7 +90,7 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
 
     const displayValue =
       mask && !isFocused
-        ? mask.mask(props.value)
+        ? mask.mask(props.value as string | number | undefined)
         : mask
           ? localValue
           : props.value;

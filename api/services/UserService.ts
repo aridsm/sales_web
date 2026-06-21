@@ -5,7 +5,7 @@ import {
   Login,
   RefreshToken,
 } from "@/api/schemas/User";
-import { axiosClient } from "@/api/axiosClient";
+import { axiosClient, CustomAxiosConfig } from "@/api/axiosClient";
 
 export class UserService {
   private readonly resource = "users";
@@ -23,27 +23,35 @@ export class UserService {
   }
 
   async signup(data: SignUp) {
-    return (await axiosClient.post(`/${this.resource}/signup`, data, {
-      skipAuth: true,
-    } as any)).data;
+    return (
+      await axiosClient.post(`/${this.resource}/signup`, data, {
+        skipAuth: true,
+      } as CustomAxiosConfig)
+    ).data;
   }
 
   async login(data: Login): Promise<TokenResponse> {
     const response = await axiosClient.post(`/${this.resource}/login`, data, {
       skipAuth: true,
       formEncoded: true,
-    } as any);
+    } as CustomAxiosConfig);
     return response.data;
   }
 
-  async refreshToken(data: RefreshToken) {
-    return await axiosClient.post(`/${this.resource}/refresh_token`, data, {
-      skipAuth: true,
-    } as any);
+  async refreshToken(data: RefreshToken): Promise<TokenResponse> {
+    const response = await axiosClient.post(
+      `/${this.resource}/refresh_token`,
+      data,
+      {
+        skipAuth: true,
+      } as CustomAxiosConfig
+    );
+    return response.data;
   }
 
-  async logout() {
-    return await axiosClient.post(`/${this.resource}/logout`);
+  async logout(): Promise<void> {
+    const response = await axiosClient.post(`/${this.resource}/logout`);
+    return response.data;
   }
 }
 

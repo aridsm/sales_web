@@ -12,6 +12,8 @@ import { useDialogStore } from "@/stores/dialogStore";
 import { CategoryType } from "@/enums/CategoryType";
 import { useTranslation } from "@/app/utils/i18n";
 
+import { Category } from "@/api/schemas/Category";
+
 interface ProductFormData {
   name: string;
   category_id: string | null;
@@ -25,13 +27,12 @@ export interface ProductFormValues {
   category_id?: string | null;
   price?: number;
   stock_amount?: number;
-  [key: string]: any;
 }
 
 interface AppProductFormProps {
   onClose: () => void;
   onSaved?: () => void;
-  categoriesPagination: PaginationResult<any>;
+  categoriesPagination: PaginationResult<Category>;
   product: ProductFormValues;
 }
 
@@ -105,13 +106,14 @@ export default function AppProductForm({
       reset();
       onSaved?.();
       onClose();
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { detail?: { error?: string; name?: string } } } };
       openDialog({
         variant: "error",
         message: t(
-          `errors.products.${error.response.data.detail.error}`,
+          error.response?.data?.detail?.error ? `errors.products.${error.response.data.detail.error}` : "errors.all.generic",
           {
-            name: error.response.data.detail?.name,
+            name: error.response?.data?.detail?.name,
           },
         ),
       });
@@ -137,7 +139,7 @@ export default function AppProductForm({
             placeholder={t("labels.products.form.category_placeholder")}
             pagination={categoriesPagination}
             search
-            value={field.value}
+            value={field.value ?? undefined}
             onChange={field.onChange}
             error={errors.category_id?.message}
           />

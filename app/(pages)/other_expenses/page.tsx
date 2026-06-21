@@ -8,8 +8,8 @@ import {
   usePagination,
   type PaginationService,
 } from "../../utils/usePagination";
-import { otherExpensesService } from "@/api/services/OtherExpenses";
-import { categoriesService } from "@/api/services/Categories";
+import { otherExpensesService } from "@/api/services/OtherExpenseService";
+import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";
@@ -19,6 +19,7 @@ import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { OtherExpense, OtherExpenseForm } from "@/api/schemas/OtherExpense";
+import { Category } from "@/api/schemas/Category";
 import { useTranslation } from "@/app/utils/i18n";
 
 export default function OtherExpensesPage() {
@@ -34,8 +35,8 @@ export default function OtherExpensesPage() {
     {},
   );
 
-  const categoriesFormPagination = usePagination<any>(
-    categoriesService as unknown as PaginationService<any>,
+  const categoriesFormPagination = usePagination<Category>(
+    categoriesService as unknown as PaginationService<Category>,
     { type: CategoryType.OTHER_EXPENSE, page_size: 20 },
   );
 
@@ -49,12 +50,12 @@ export default function OtherExpensesPage() {
   const columns = useMemo(
     () => [
       {
-        column: "Nome",
+        column: getLabel("labels.all.name"),
         cell: ({ row }: { row: OtherExpense }) => row.name,
         size: 250,
       },
       {
-        column: "Categoria",
+        column: getLabel("labels.other_expenses.category"),
         cell: ({ row }: { row: OtherExpense }) => (
           <div className="flex items-center gap-2">
             <div
@@ -69,7 +70,7 @@ export default function OtherExpensesPage() {
         size: 250,
       },
       {
-        column: "Valor",
+        column: getLabel("labels.other_expenses.value"),
         cell: ({ row }: { row: OtherExpense }) =>
           new Intl.NumberFormat("pt-BR", {
             style: "currency",
@@ -78,7 +79,7 @@ export default function OtherExpensesPage() {
         size: 150,
       },
       {
-        column: "Data",
+        column: getLabel("labels.other_expenses.date"),
         cell: ({ row }: { row: OtherExpense }) =>
           new Intl.DateTimeFormat("pt-BR", {
             day: "2-digit",
@@ -88,7 +89,7 @@ export default function OtherExpensesPage() {
         size: 150,
       },
       {
-        column: "Descrição",
+        column: getLabel("labels.other_expenses.description"),
         cell: ({ row }: { row: OtherExpense }) => row.description || "-",
         size: 250,
       },
@@ -98,7 +99,7 @@ export default function OtherExpensesPage() {
 
   const actions: ActionItem<OtherExpense>[] = [
     {
-      text: "Editar",
+      text: getLabel("labels.all.edit"),
       preText: <Edit fontSize="small" />,
       click: (expense) => {
         setForm({
@@ -125,20 +126,23 @@ export default function OtherExpensesPage() {
   function onDeleteSelected() {
     openDialog({
       variant: "confirm",
-      title: "Excluir itens",
-      message: `Tem certeza que deseja excluir ${rowsSelected.length === 1 ? "o item selecionado" : `os ${rowsSelected.length} itens selecionados`}? Esta ação não pode ser desfeita.`,
-      confirmLabel: "Excluir",
+      title: getLabel("labels.other_expenses.delete_title"),
+      message: rowsSelected.length === 1 
+        ? getLabel("labels.other_expenses.delete_single") 
+        : getLabel("labels.other_expenses.delete_multiple").replace("{{count}}", rowsSelected.length.toString()),
+      confirmLabel: getLabel("labels.all.delete"),
       onConfirm: async () => {
         try {
           const ids = rowsSelected.map((item) => item.id);
           await otherExpensesService.bulkDelete(ids);
           await pagination.load();
           setRowsSelected([]);
-        } catch (error: any) {
+        } catch (err: unknown) {
+          const error = err as { response?: { data?: { detail?: { error?: string } } } };
           openDialog({
             variant: "error",
             message: getLabel(
-              `errors.other_expenses.${error.response.data.detail.error}`,
+              error.response?.data?.detail?.error ? `errors.other_expenses.${error.response.data.detail.error}` : "errors.all.generic"
             ),
           });
         }
@@ -147,7 +151,7 @@ export default function OtherExpensesPage() {
   }
 
   return (
-    <AppPage title="Despesas">
+    <AppPage title={getLabel("labels.other_expenses.title")}>
       <AppGrid
         columns={columns}
         pagination={pagination}
@@ -176,6 +180,7 @@ export default function OtherExpensesPage() {
 
 function OtherExpenseFilterFields() {
   const { control } = useFormContext();
+  const { t: getLabel } = useTranslation();
 
   const categories = usePagination<any>(
     categoriesService as unknown as PaginationService<any>,
@@ -193,8 +198,8 @@ function OtherExpenseFilterFields() {
       name="category_id"
       render={({ field }) => (
         <AppSelectPaginated
-          label="Categoria"
-          placeholder="Filtrar por categoria"
+          label={getLabel("labels.other_expenses.category")}
+          placeholder={getLabel("labels.other_expenses.filter_category")}
           pagination={categories}
           search
           multiple

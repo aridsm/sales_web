@@ -1,9 +1,10 @@
+"use client";
+
 import React, { createContext, useContext } from 'react';
 
 export interface SelectOption {
     id: string | number;
     name: string;
-    [key: string]: any;
 }
 
 export interface AppSelectContextValue<T extends SelectOption> {
@@ -12,11 +13,11 @@ export interface AppSelectContextValue<T extends SelectOption> {
     toggleDropdown: () => void;
     multiple: boolean;
     value?: T["id"] | T["id"][];
-    onChange?: (value: any) => void;
+    onChange?: (value: T["id"] | T["id"][]) => void;
     items: T[];
     loading: boolean;
     pageData: { page: number; total_pages: number };
-    load: (options: any) => void;
+    load: (options: { params?: Record<string, unknown> | { [key: string]: string | number | boolean }, append?: boolean }) => void;
     search: boolean;
     searchTerm: string;
     setSearchTerm: (term: string) => void;
@@ -28,7 +29,7 @@ export interface AppSelectContextValue<T extends SelectOption> {
     getSelectedNames: () => string;
 }
 
-const AppSelectContext = createContext<AppSelectContextValue<any> | undefined>(undefined);
+const AppSelectContext = createContext<AppSelectContextValue<SelectOption> | undefined>(undefined);
 
 export function AppSelectProvider<T extends SelectOption>({ 
     value, 
@@ -38,7 +39,7 @@ export function AppSelectProvider<T extends SelectOption>({
     children: React.ReactNode 
 }) {
     return (
-        <AppSelectContext.Provider value={value}>
+        <AppSelectContext.Provider value={value as any}>
             {children}
         </AppSelectContext.Provider>
     );
@@ -49,5 +50,5 @@ export function useAppSelect<T extends SelectOption>() {
     if (!context) {
         throw new Error("useAppSelect must be used within an AppSelectProvider");
     }
-    return context as AppSelectContextValue<T>;
+    return context as unknown as AppSelectContextValue<T>;
 }

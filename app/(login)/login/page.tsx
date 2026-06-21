@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usersService } from "@/api/services/UserService";
+import { Login } from "@/api/schemas/User";
 import { useTokenStore } from "@/stores/tokenStore";
 import { useDialogStore } from "@/stores/dialogStore";
 import AppLogo from "@/app/components/AppLogo";
@@ -43,13 +44,14 @@ export default function LoginPage() {
       formData.append("username", username);
       formData.append("password", password);
       const { access_token, refresh_token, expires_at } =
-        await usersService.login(formData.toString() as any);
+        await usersService.login(formData.toString() as unknown as Login);
       setTokenData(access_token, refresh_token, expires_at);
       router.push("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { detail?: string } } };
       openDialog({
         variant: "error",
-        message: t(`errors.auth.${err.response.data.detail.error}`),
+        message: t(error.response?.data?.detail ? `errors.auth.${error.response.data.detail}` : "errors.all.generic"),
       });
     } finally {
       setLoading(false);

@@ -1,3 +1,5 @@
+"use client";
+
 import { ChevronLeft, Close as CloseIcon } from "@mui/icons-material";
 import React from "react";
 import { useAppSelect, SelectOption } from "./AppSelectContext";

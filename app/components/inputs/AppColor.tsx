@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  useState,
-  useRef,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import { useState, useRef, forwardRef, useImperativeHandle } from "react";
 import AppLabel from "../AppLabel";
 import { ChevronLeft } from "@mui/icons-material";
+import { useClickOutside } from "../../utils/useClickOutside";
 import { HexColorPicker } from "react-colorful";
 
 export interface AppColorProps {
@@ -43,19 +38,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
       if (!disabled) setIsOpen(!isOpen);
     };
 
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          containerRef.current &&
-          !containerRef.current.contains(event.target as Node)
-        ) {
-          setIsOpen(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    useClickOutside(containerRef, () => setIsOpen(false));
 
     return (
       <div

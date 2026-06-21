@@ -1,10 +1,3 @@
-import { Figtree } from "next/font/google";
-
-const figtree = Figtree({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
 export default function LoginLayout({
   children,
 }: {
@@ -12,7 +5,7 @@ export default function LoginLayout({
 }) {
   return (
     <div
-      className={`${figtree.className} min-h-screen flex bg-background transition-colors`}
+      className={`min-h-screen flex bg-background transition-colors`}
     >
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-72 h-72 bg-primary/5 rounded-full filter blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2 dark:bg-primary/10"></div>

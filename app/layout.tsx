@@ -3,6 +3,7 @@ import { Figtree } from "next/font/google";
 import "./globals.css";
 import AppDialog from "./components/AppDialog";
 import ColorModeScript from "./components/ColorModeScript";
+import LocaleScript from "./components/LocaleScript";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -21,12 +22,13 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="pt-BR"
       className={`${figtree.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
         <ColorModeScript />
+        <LocaleScript />
       </head>
       <body className="min-h-full flex flex-col">
         {children}

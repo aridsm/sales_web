@@ -3,7 +3,7 @@ import { useTokenStore } from "@/stores/tokenStore";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_API;
 
-interface CustomAxiosConfig extends InternalAxiosRequestConfig {
+export interface CustomAxiosConfig extends InternalAxiosRequestConfig {
   skipAuth?: boolean;
   formEncoded?: boolean;
   _retry?: boolean;
@@ -113,7 +113,7 @@ axiosClient.interceptors.response.use(
     }
 
     const status = error.response?.status;
-    const isUnauthorized = status === 401 || status === 403;
+    const isUnauthorized = status === 401;
 
     if (!isUnauthorized) {
       return Promise.reject(error);

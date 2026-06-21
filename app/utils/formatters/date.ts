@@ -1,10 +1,10 @@
-/**
- * Parses a date string that is known to be in UTC from the server.
- * If the string contains a time component (contains 'T') and lacks a timezone offset,
- * we append 'Z' to force JavaScript to parse it as UTC rather than local time.
- */
-export function parseUTCDate(dateStr: string | null | undefined): Date | null {
+import { getLocale } from "../i18n";
+
+export function parseUTCDate(
+  dateStr: string | Date | null | undefined,
+): Date | null {
   if (!dateStr) return null;
+  if (dateStr instanceof Date) return dateStr;
 
   if (
     dateStr.includes("T") &&
@@ -17,15 +17,13 @@ export function parseUTCDate(dateStr: string | null | undefined): Date | null {
   return new Date(dateStr);
 }
 
-/**
- * Formats a UTC date string to pt-BR format (dd/mm/yyyy hh:mm).
- */
-export function formatDateTime(dateStr: string | null | undefined): string {
-  if (!dateStr) return "-";
+export function formatDateTime(
+  dateStr: string | Date | null | undefined,
+): string {
   const date = parseUTCDate(dateStr);
   if (!date || isNaN(date.getTime())) return "-";
 
-  return new Intl.DateTimeFormat("pt-BR", {
+  return new Intl.DateTimeFormat(getLocale(), {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",

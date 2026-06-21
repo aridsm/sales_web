@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { STATUS_CONFIG } from "@/app/utils/constants";
+import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useParams, useRouter } from "next/navigation";
 import AppPage from "@/app/components/AppPage";
 import AppCard from "@/app/components/AppCard";
@@ -28,35 +30,11 @@ import {
 import { formatDateTime } from "@/app/utils/formatters/date";
 import { useTranslation } from "@/app/utils/i18n";
 
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value);
-}
-
-const statusConfig: Record<
-  SaleStatus,
-  { label: string; color: string; bg: string }
-> = {
-  [SaleStatus.DONE]: {
-    label: "Concluída",
-    color: "text-emerald-600 dark:text-emerald-400",
-    bg: "bg-emerald-600/10",
-  },
-  [SaleStatus.CANCELED]: {
-    label: "Cancelada",
-    color: "text-red-500 dark:text-red-400",
-    bg: "bg-red-500/10",
-  },
-};
-
 export default function SaleDetailPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { openDialog } = useDialogStore();
-
   const [sale, setSale] = useState<Sale | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -72,10 +50,17 @@ export default function SaleDetailPage() {
         const data = await salesService.getById(id);
         await productsPagination.load({ params: { sale_id: id, page: 1 } });
         setSale(data);
-      } catch (error: any) {
+      } catch (err: unknown) {
+        const error = err as {
+          response?: { data?: { detail?: { error?: string } } };
+        };
         openDialog({
           variant: "error",
-          message: t(`errors.sales.${error.response.data.detail.error}`),
+          message: t(
+            error.response?.data?.detail?.error
+              ? `errors.sales.${error.response.data.detail.error}`
+              : "errors.all.generic",
+          ),
         });
       } finally {
         setLoading(false);
@@ -102,10 +87,17 @@ export default function SaleDetailPage() {
           await salesService.cancel(sale.id);
           const updated = await salesService.getById(sale.id);
           setSale(updated);
-        } catch (error: any) {
+        } catch (err: unknown) {
+          const error = err as {
+            response?: { data?: { detail?: { error?: string } } };
+          };
           openDialog({
             variant: "error",
-            message: t(`errors.sales.${error.response.data.detail.error}`),
+            message: t(
+              error.response?.data?.detail?.error
+                ? `errors.sales.${error.response.data.detail.error}`
+                : "errors.all.generic",
+            ),
           });
         }
       },
@@ -183,7 +175,6 @@ export default function SaleDetailPage() {
     );
   }
 
-  const status = statusConfig[sale.status];
   const isCanceled = sale.status === SaleStatus.CANCELED;
 
   return (
@@ -204,12 +195,16 @@ export default function SaleDetailPage() {
               <h2 className=" font-bold text-foreground tracking-tight">
                 #{sale.code.toString().padStart(6, "0")}
               </h2>
-
-              <span
-                className={`text-sm font-medium px-2 py-0.5 rounded-full ${status.bg} ${status.color}`}
-              >
-                {t(status.label)}
-              </span>
+              {(() => {
+                const config = STATUS_CONFIG[sale.status];
+                return (
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${config.bg} ${config.color}`}
+                  >
+                    {t(config.labelKey)}
+                  </span>
+                );
+              })()}
             </div>
           </div>
           <span className="text-label truncate text-sm mr-auto">{sale.id}</span>
@@ -228,7 +223,9 @@ export default function SaleDetailPage() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-label">{t("labels.sales.detail.date")}</span>
+              <span className="text-label">
+                {t("labels.sales.detail.date")}
+              </span>
               <span className="font-semibold">
                 {formatDateTime(sale.created_at)}
               </span>
@@ -243,10 +240,14 @@ export default function SaleDetailPage() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-label">{t("labels.sales.detail.items")}</span>
+              <span className="text-label">
+                {t("labels.sales.detail.items")}
+              </span>
               <span className="font-semibold">
                 {sale.items_count}{" "}
-                {sale.items_count === 1 ? t("labels.sales.new.item_singular") : t("labels.sales.new.item_plural")}
+                {sale.items_count === 1
+                  ? t("labels.sales.new.item_singular")
+                  : t("labels.sales.new.item_plural")}
               </span>
             </div>
           </AppCard>

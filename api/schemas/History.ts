@@ -4,6 +4,6 @@ export interface History {
   entity_type: string;
   entity_id: string;
   description: string;
-  details: any;
+  details: Record<string, unknown> | null;
   created_at: string;
 }

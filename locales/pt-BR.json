@@ -241,6 +241,30 @@
         "type_placeholder": "Selecione o tipo",
         "color_placeholder": "Selecione a cor"
       }
+    },
+    "other_expenses": {
+      "title": "Despesas",
+      "delete_title": "Excluir itens",
+      "delete_single": "Tem certeza que deseja excluir o item selecionado? Esta ação não pode ser desfeita.",
+      "delete_multiple": "Tem certeza que deseja excluir os {{count}} itens selecionados? Esta ação não pode ser desfeita.",
+      "value": "Valor",
+      "date": "Data",
+      "description": "Descrição",
+      "category": "Categoria",
+      "filter_category": "Filtrar por categoria",
+      "form": {
+        "edit_title": "Editar Despesa",
+        "add_title": "Nova Despesa",
+        "updated_success": "Despesa atualizada com sucesso!",
+        "created_success": "Despesa criada com sucesso!",
+        "name_placeholder": "Nome da despesa",
+        "name_required": "O nome é obrigatório",
+        "category_placeholder": "Selecione uma categoria",
+        "category_required": "A categoria é obrigatória",
+        "value_required": "O valor é obrigatório",
+        "date_required": "A data é obrigatória",
+        "description_placeholder": "Descrição da despesa"
+      }
     }
   },
   "errors": {
@@ -258,7 +282,9 @@
     "other_expenses": {},
     "auth": {
       "errorInvalidCredentials": "E-mail ou senha incorretos.",
-      "errorEmailAlreadyExists": "Este e-mail já está cadastrado."
+      "errorEmailAlreadyExists": "Este e-mail já está cadastrado.",
+      "errorPasswordsNotMatch": "As senhas não coincidem.",
+      "errorPasswordMinLength": "A senha deve ter pelo menos 6 caracteres."
     },
     "fallback": "Ocorreu um erro inesperado. Tente novamente."
   }

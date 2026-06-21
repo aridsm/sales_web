@@ -1,6 +1,6 @@
 import BaseService from "@/api/services/BaseService";
 import { Category, CategoryForm, CategoryAmount } from "@/api/schemas/Category";
-import { axiosClient } from "../axiosClient";
+import { axiosClient } from "@/api/axiosClient";
 import { CategoryType } from "@/enums/CategoryType";
 
 export class CategoryService extends BaseService<Category, CategoryForm> {

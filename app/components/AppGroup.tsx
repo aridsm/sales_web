@@ -201,7 +201,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
               className="pl-10!"
               placeholder={t("labels.grid.search_placeholder")}
               value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              onChange={(e: any) => setSearchInput(e.target.value as string)}
               onBlur={handleSearch}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {

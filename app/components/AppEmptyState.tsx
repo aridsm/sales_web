@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { InboxOutlined } from "@mui/icons-material";
 import { useTranslation } from "@/app/utils/i18n";

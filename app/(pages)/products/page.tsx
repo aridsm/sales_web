@@ -8,7 +8,7 @@ import {
   usePagination,
   type PaginationService,
 } from "../../utils/usePagination";
-import { categoriesService } from "@/api/services/Categories";
+import { categoriesService } from "@/api/services/CategoryService";
 import { productsService } from "@/api/services/ProductService";
 import { CategoryType } from "@/enums/CategoryType";
 import { useDialogStore } from "@/stores/dialogStore";
@@ -16,29 +16,15 @@ import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { useSearchParams } from "next/navigation";
-import AppProductForm, { type ProductFormValues } from "./AppProductForm";
+import AppProductForm, {
+  type ProductFormValues,
+} from "./components/AppProductForm";
 import { Edit } from "@mui/icons-material";
 import AppModal from "@/app/components/AppModal";
 import AppGrid from "@/app/components/AppGrid";
-import { getLabel, useTranslation } from "@/app/utils/i18n";
-
-interface Category {
-  id: string;
-  name: string;
-  color?: string;
-  type?: CategoryType;
-  products: number;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  category_id: string | null;
-  price?: number;
-  stock_amount?: number;
-  sold_amount?: number;
-  created_at?: string;
-}
+import { useTranslation } from "@/app/utils/i18n";
+import { Category } from "@/api/schemas/Category";
+import { Product } from "@/api/schemas/Product";
 
 export default function ProductsPage() {
   const { t } = useTranslation();
@@ -71,9 +57,12 @@ export default function ProductsPage() {
     openDialog({
       variant: "confirm",
       title: t("labels.products.delete_title"),
-      message: rowsSelected.length === 1 
-        ? t("labels.products.delete_single") 
-        : t("labels.products.delete_multiple", { count: rowsSelected.length }),
+      message:
+        rowsSelected.length === 1
+          ? t("labels.products.delete_single")
+          : t("labels.products.delete_multiple", {
+              count: rowsSelected.length,
+            }),
       confirmLabel: t("labels.all.delete"),
       onConfirm: async () => {
         try {
@@ -84,13 +73,20 @@ export default function ProductsPage() {
             params: { ...params, type: CategoryType.PRODUCT },
           });
           setRowsSelected([]);
-        } catch (error: any) {
+        } catch (err: unknown) {
+          const error = err as {
+            response?: {
+              data?: { detail?: { error?: string; name?: string[] } };
+            };
+          };
           openDialog({
             variant: "error",
             message: t(
-              `errors.products.${error.response.data.detail.error}`,
+              error.response?.data?.detail?.error
+                ? `errors.products.${error.response.data.detail.error}`
+                : "errors.all.generic",
               {
-                name: error.response.data.detail?.name,
+                name: error.response?.data?.detail?.name?.join(", "),
               },
             ),
           });
@@ -164,7 +160,11 @@ export default function ProductsPage() {
       <AppModal
         isOpen={form.open}
         onClose={onCloseForm}
-        title={form.item.id ? t("labels.products.form.edit_title") : t("labels.products.form.add_title")}
+        title={
+          form.item.id
+            ? t("labels.products.form.edit_title")
+            : t("labels.products.form.add_title")
+        }
       >
         <AppProductForm
           onSaved={onSaveItem}

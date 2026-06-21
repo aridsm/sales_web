@@ -241,6 +241,30 @@
         "type_placeholder": "Select the type",
         "color_placeholder": "Select the color"
       }
+    },
+    "other_expenses": {
+      "title": "Other Expenses",
+      "delete_title": "Delete items",
+      "delete_single": "Are you sure you want to delete the selected item? This action cannot be undone.",
+      "delete_multiple": "Are you sure you want to delete the {{count}} selected items? This action cannot be undone.",
+      "value": "Amount",
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "filter_category": "Filter by category",
+      "form": {
+        "edit_title": "Edit Expense",
+        "add_title": "New Expense",
+        "updated_success": "Expense updated successfully!",
+        "created_success": "Expense created successfully!",
+        "name_placeholder": "Expense name",
+        "name_required": "Name is required",
+        "category_placeholder": "Select a category",
+        "category_required": "Category is required",
+        "value_required": "Amount is required",
+        "date_required": "Date is required",
+        "description_placeholder": "Expense description"
+      }
     }
   },
   "errors": {
@@ -258,7 +282,9 @@
     "other_expenses": {},
     "auth": {
       "errorInvalidCredentials": "Invalid email or password.",
-      "errorEmailAlreadyExists": "This email is already registered."
+      "errorEmailAlreadyExists": "This email is already registered.",
+      "errorPasswordsNotMatch": "Passwords do not match.",
+      "errorPasswordMinLength": "Password must be at least 6 characters long."
     },
     "fallback": "An unexpected error occurred. Please try again."
   }
