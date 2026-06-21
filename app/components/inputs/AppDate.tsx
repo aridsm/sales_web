@@ -2,13 +2,16 @@
 
 import React, {
   useState,
-  useEffect,
   useRef,
   forwardRef,
   useImperativeHandle,
 } from "react";
 import AppLabel from "../AppLabel";
-import { CalendarMonthOutlined, ChevronLeft, ChevronRight } from "@mui/icons-material";
+import {
+  CalendarMonthOutlined,
+  ChevronLeft,
+  ChevronRight,
+} from "@mui/icons-material";
 import { useClickOutside } from "../../utils/useClickOutside";
 import AppSelect from "./AppSelect";
 import AppButton from "../AppButton";
@@ -43,7 +46,7 @@ const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 100 }, (_, i) => currentYear - 50 + i);
 
 const monthOptions = months.map((m, i) => ({ id: i, name: m }));
-const yearOptions = years.map(y => ({ id: y, name: y.toString() }));
+const yearOptions = years.map((y) => ({ id: y, name: y.toString() }));
 
 const AppDateInner = (
   {
@@ -91,15 +94,39 @@ const AppDateInner = (
   });
 
   const handleSelectDay = (day: number) => {
+    let hours = 0;
+    let minutes = 0;
+    let seconds = 0;
+
+    if (value && value.includes("T")) {
+      const parsedDate = new Date(value);
+      if (!isNaN(parsedDate.getTime())) {
+        hours = parsedDate.getHours();
+        minutes = parsedDate.getMinutes();
+        seconds = parsedDate.getSeconds();
+      } else {
+        const now = new Date();
+        hours = now.getHours();
+        minutes = now.getMinutes();
+        seconds = now.getSeconds();
+      }
+    } else {
+      const now = new Date();
+      hours = now.getHours();
+      minutes = now.getMinutes();
+      seconds = now.getSeconds();
+    }
+
     const selectedDate = new Date(
       viewDate.getFullYear(),
       viewDate.getMonth(),
       day,
+      hours,
+      minutes,
+      seconds,
     );
-    const yyyy = selectedDate.getFullYear();
-    const mm = String(selectedDate.getMonth() + 1).padStart(2, "0");
-    const dd = String(selectedDate.getDate()).padStart(2, "0");
-    onChange?.(`${yyyy}-${mm}-${dd}`);
+
+    onChange?.(selectedDate.toISOString());
     setIsOpen(false);
     triggerRef.current?.focus();
   };
@@ -111,8 +138,6 @@ const AppDateInner = (
   const prevMonth = () => {
     setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
   };
-
-
 
   const formatDisplayValue = () => {
     if (!value) return "";
@@ -243,14 +268,18 @@ const AppDateInner = (
             <div className="flex gap-2 flex-1 mx-2">
               <AppSelect
                 value={viewDate.getMonth()}
-                onChange={(val) => setViewDate(new Date(viewDate.getFullYear(), Number(val), 1))}
+                onChange={(val) =>
+                  setViewDate(new Date(viewDate.getFullYear(), Number(val), 1))
+                }
                 options={monthOptions}
                 size="small"
               />
-              
+
               <AppSelect
                 value={viewDate.getFullYear()}
-                onChange={(val) => setViewDate(new Date(Number(val), viewDate.getMonth(), 1))}
+                onChange={(val) =>
+                  setViewDate(new Date(Number(val), viewDate.getMonth(), 1))
+                }
                 options={yearOptions}
                 size="small"
               />

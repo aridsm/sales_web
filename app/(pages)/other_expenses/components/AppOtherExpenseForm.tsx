@@ -63,7 +63,7 @@ export default function AppOtherExpenseForm({
         name: model?.name || "",
         description: model?.description || "",
         value: model?.value ?? 0,
-        date: model?.date ? model.date : new Date().toISOString(),
+        date: model?.date ? model.date : "",
         category_id: model?.category_id ?? undefined,
       });
     }
@@ -75,9 +75,10 @@ export default function AppOtherExpenseForm({
         name: data.name,
         description: data.description || undefined,
         value: Number(data.value),
-        date: `${data.date}T00:00:00`,
+        date: data.date,
         category_id: data.category_id,
       };
+
 
       if (isEditing) {
         await otherExpensesService.patch(model!.id!, payload);
@@ -96,11 +97,15 @@ export default function AppOtherExpenseForm({
       onSaved?.();
       onClose();
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { detail?: { error?: string } } } };
+      const error = err as {
+        response?: { data?: { detail?: { error?: string } } };
+      };
       openDialog({
         variant: "error",
         message: getLabel(
-          error.response?.data?.detail?.error ? `errors.other_expenses.${error.response.data.detail.error}` : "errors.all.generic"
+          error.response?.data?.detail?.error
+            ? `errors.other_expenses.${error.response.data.detail.error}`
+            : "errors.all.generic",
         ),
       });
     }
@@ -110,13 +115,19 @@ export default function AppOtherExpenseForm({
     <AppModal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEditing ? getLabel("labels.other_expenses.form.edit_title") : getLabel("labels.other_expenses.form.add_title")}
+      title={
+        isEditing
+          ? getLabel("labels.other_expenses.form.edit_title")
+          : getLabel("labels.other_expenses.form.add_title")
+      }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <AppInputText
           label={getLabel("labels.all.name")}
           placeholder={getLabel("labels.other_expenses.form.name_placeholder")}
-          {...register("name", { required: getLabel("labels.other_expenses.form.name_required") })}
+          {...register("name", {
+            required: getLabel("labels.other_expenses.form.name_required"),
+          })}
           error={errors.name?.message}
         />
 
@@ -141,20 +152,30 @@ export default function AppOtherExpenseForm({
         <Controller
           name="date"
           control={control}
-          rules={{ required: getLabel("labels.other_expenses.form.date_required") }}
+          rules={{
+            required: getLabel("labels.other_expenses.form.date_required"),
+          }}
           render={({ field }) => (
-            <AppDate label={getLabel("labels.other_expenses.date")} {...field} error={errors.date?.message} />
+            <AppDate
+              label={getLabel("labels.other_expenses.date")}
+              {...field}
+              error={errors.date?.message}
+            />
           )}
         />
 
         <Controller
           name="category_id"
           control={control}
-          rules={{ required: getLabel("labels.other_expenses.form.category_required") }}
+          rules={{
+            required: getLabel("labels.other_expenses.form.category_required"),
+          }}
           render={({ field }) => (
             <AppSelectPaginated
               label={getLabel("labels.other_expenses.category")}
-              placeholder={getLabel("labels.other_expenses.form.category_placeholder")}
+              placeholder={getLabel(
+                "labels.other_expenses.form.category_placeholder",
+              )}
               pagination={categoriesPagination}
               search
               value={field.value ?? undefined}
@@ -166,7 +187,9 @@ export default function AppOtherExpenseForm({
 
         <AppInputText
           label={getLabel("labels.other_expenses.description")}
-          placeholder={getLabel("labels.other_expenses.form.description_placeholder")}
+          placeholder={getLabel(
+            "labels.other_expenses.form.description_placeholder",
+          )}
           {...register("description")}
           error={errors.description?.message}
         />
@@ -186,7 +209,9 @@ export default function AppOtherExpenseForm({
             className="px-4"
             disabled={isSubmitting}
           >
-            {isSubmitting ? getLabel("labels.all.saving") : getLabel("labels.all.save")}
+            {isSubmitting
+              ? getLabel("labels.all.saving")
+              : getLabel("labels.all.save")}
           </AppButton>
         </div>
       </form>

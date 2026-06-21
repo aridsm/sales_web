@@ -19,7 +19,6 @@ import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { OtherExpense, OtherExpenseForm } from "@/api/schemas/OtherExpense";
-import { Category } from "@/api/schemas/Category";
 import { useTranslation } from "@/app/utils/i18n";
 
 export default function OtherExpensesPage() {
@@ -33,11 +32,6 @@ export default function OtherExpensesPage() {
   const pagination = usePagination<OtherExpense>(
     otherExpensesService as unknown as PaginationService<OtherExpense>,
     {},
-  );
-
-  const categoriesFormPagination = usePagination<Category>(
-    categoriesService as unknown as PaginationService<Category>,
-    { type: CategoryType.OTHER_EXPENSE, page_size: 20 },
   );
 
   const searchParams = useSearchParams();
@@ -127,9 +121,13 @@ export default function OtherExpensesPage() {
     openDialog({
       variant: "confirm",
       title: getLabel("labels.other_expenses.delete_title"),
-      message: rowsSelected.length === 1 
-        ? getLabel("labels.other_expenses.delete_single") 
-        : getLabel("labels.other_expenses.delete_multiple").replace("{{count}}", rowsSelected.length.toString()),
+      message:
+        rowsSelected.length === 1
+          ? getLabel("labels.other_expenses.delete_single")
+          : getLabel("labels.other_expenses.delete_multiple").replace(
+              "{{count}}",
+              rowsSelected.length.toString(),
+            ),
       confirmLabel: getLabel("labels.all.delete"),
       onConfirm: async () => {
         try {
@@ -138,11 +136,15 @@ export default function OtherExpensesPage() {
           await pagination.load();
           setRowsSelected([]);
         } catch (err: unknown) {
-          const error = err as { response?: { data?: { detail?: { error?: string } } } };
+          const error = err as {
+            response?: { data?: { detail?: { error?: string } } };
+          };
           openDialog({
             variant: "error",
             message: getLabel(
-              error.response?.data?.detail?.error ? `errors.other_expenses.${error.response.data.detail.error}` : "errors.all.generic"
+              error.response?.data?.detail?.error
+                ? `errors.other_expenses.${error.response.data.detail.error}`
+                : "errors.all.generic",
             ),
           });
         }
