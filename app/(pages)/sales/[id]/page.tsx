@@ -39,7 +39,7 @@ export default function SaleDetailPage() {
   const [loading, setLoading] = useState(true);
 
   const productsPagination = usePagination<SaleProduct>(
-    saleProductsService as unknown as PaginationService<SaleProduct>,
+    saleProductsService,
     { sale_id: id },
   );
 

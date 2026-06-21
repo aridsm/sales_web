@@ -22,6 +22,7 @@ export interface PaginationService<T> {
 export interface PaginationResult<T> {
   items: T[];
   loading: boolean;
+  loaded: boolean;
   load: (options?: {
     params?: Record<string, unknown>;
     append?: boolean;
@@ -39,6 +40,7 @@ export function usePagination<T>(
 ): PaginationResult<T> {
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [pageData, setPageData] = useState<PageData>({
     page: 1,
     page_size: 20,
@@ -82,6 +84,7 @@ export function usePagination<T>(
           total_items: response.total_items,
           total_pages: response.total_pages,
         });
+        setLoaded(true);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -102,5 +105,5 @@ export function usePagination<T>(
     }));
   }, []);
 
-  return { items, setItems, loading, load, pageData, next, previous };
+  return { items, setItems, loading, loaded, load, pageData, next, previous };
 }

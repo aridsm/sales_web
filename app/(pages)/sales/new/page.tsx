@@ -222,8 +222,8 @@ export default function NewSalePage() {
                           group relative text-left p-4 rounded-lg border transition-all duration-200 flex flex-col h-full
                           ${
                             inCart > 0
-                              ? "border-primary bg-primary/5 dark:bg-primary/10"
-                              : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2"
+                              ? "border-primary bg-primary/5 dark:bg-primary/10 "
+                              : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-2!"
                           }
                           ${outOfStock ? "opacity-50" : ""}
                           ${inCart === 0 && !outOfStock ? "cursor-pointer" : ""}

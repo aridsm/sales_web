@@ -26,7 +26,7 @@ export default function AppEmptyState({
       <div className="w-10 h-10 text-primary dark:text-primary-2 mb-2 rounded-full bg-primary-light flex items-center justify-center shrink-0">
         {icon || <InboxOutlined fontSize="medium" />}
       </div>
-      <span className="font-medium text-foreground">
+      <span className="font-normal text-foreground">
         {title || t("labels.grid.empty_title")}
       </span>
       {subtitle !== null && (

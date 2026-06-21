@@ -48,7 +48,7 @@ export default function AppGrid<T>({
   className,
 }: AppGridProps<T>) {
   const { t } = useTranslation();
-  const { items, loading, load } = pagination;
+  const { items, loading, loaded, load } = pagination;
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -110,7 +110,7 @@ export default function AppGrid<T>({
   );
 
   const [delayedLoading, setDelayedLoading] = React.useState(false);
-  const [hasStartedLoading, setHasStartedLoading] = React.useState(false);
+  const [hasStartedLoading, setHasStartedLoading] = React.useState(loaded || items.length > 0);
 
   React.useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -122,12 +122,15 @@ export default function AppGrid<T>({
       }, 300);
     } else {
       setDelayedLoading(false);
+      if (loaded) {
+        setHasStartedLoading(true);
+      }
     }
 
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [loading]);
+  }, [loading, loaded]);
 
   React.useEffect(() => {
     setSearchInput(searchParams.get("search") || "");
@@ -284,10 +287,10 @@ export default function AppGrid<T>({
                   items.length > 0 && tableWidth > 0 ? tableWidth : "100%",
               }}
             >
-              <thead className="uppercase text-xs tracking-wide sticky top-0 z-20 text-foreground">
+              <thead className="text-sm font-semibold sticky top-0 z-20 text-foreground">
                 <tr>
                   {hasSelection && (
-                    <th className="border-border border-y border-r first:border-l first:rounded-tl-md! p-2 text-center sticky left-0 z-30 bg-background-3 w-12">
+                    <th className="font-semibold border-border border-y border-r first:border-l first:rounded-tl-md! p-2 text-center sticky left-0 z-30 bg-background-3 w-12">
                       {items.length > 0 && (
                         <AppCheckbox
                           checked={isAllSelected}
@@ -299,7 +302,7 @@ export default function AppGrid<T>({
                   {columns.map((col, index) => (
                     <th
                       key={index}
-                      className={`border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary dark:text-yellow-300" : ""}`}
+                      className={`font-semibold border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary dark:text-yellow-300" : ""}`}
                       style={{ width: colWidths[index] || col.size || 140 }}
                     >
                       {col.column}
@@ -312,10 +315,10 @@ export default function AppGrid<T>({
                     </th>
                   ))}
                   <th
-                    className={`bg-background-3 border-y border-border ${!actions || items.length === 0 ? "rounded-tr-md! border-r" : ""}`}
+                    className={`font-semibold bg-background-3 border-y border-border ${!actions || items.length === 0 ? "rounded-tr-md! border-r" : ""}`}
                   ></th>
                   {actions && items.length > 0 && (
-                    <th className="border-border border-y border-l border-r p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!"></th>
+                    <th className="font-semibold border-border border-y border-l border-r p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!"></th>
                   )}
                 </tr>
               </thead>

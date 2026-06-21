@@ -1,5 +1,6 @@
 import AppCard from "../../../components/AppCard";
 import AppButton from "../../../components/AppButton";
+import AppEmptyState from "../../../components/AppEmptyState";
 import { useTranslation } from "@/app/utils/i18n";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import type { CartItem } from "@/app/utils/cart";
@@ -67,9 +68,13 @@ export function SaleCart({
 
         <div className="flex-1 overflow-y-auto min-h-0">
           {cart.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-label gap-2 py-12">
-              <ReceiptOutlined style={{ fontSize: 40, opacity: 0.2 }} />
-              <span className="text-sm">{t("labels.sales.new.add_products_to_cart")}</span>
+            <div className="flex flex-col items-center justify-center h-full py-12 px-4">
+              <AppEmptyState
+                icon={<ShoppingCartOutlined fontSize="medium" />}
+                title={t("labels.sales.new.add_products_to_cart")}
+                subtitle={null as any}
+                className="bg-transparent! dark:bg-transparent! border-none!"
+              />
             </div>
           ) : (
             <ul className="divide-y divide-border">

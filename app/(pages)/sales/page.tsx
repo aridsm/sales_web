@@ -39,7 +39,7 @@ export default function SalePage() {
   const salesPagination = usePagination<Sale>(salesService);
 
   useEffect(() => {
-    salesPagination.load({ params: { page: 1 } });
+    salesPagination.load({ params: { page: 1, sort: "-code" } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
