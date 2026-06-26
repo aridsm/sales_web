@@ -112,7 +112,7 @@ export default function AppFilter<T = unknown>({
           >
             <div className="grid grid-cols-1 gap-4">{children}</div>
 
-            <div className="mt-2 flex justify-between gap-2 ">
+            <div className="flex justify-between gap-2 ">
               <AppButton
                 type="button"
                 onClick={handleClear}

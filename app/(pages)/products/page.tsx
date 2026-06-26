@@ -128,6 +128,7 @@ export default function ProductsPage() {
           </div>
         )}
         search={true}
+        searchKey="product_search"
         onDelete={onDeleteSelected}
         onNew={() => {
           setForm({
@@ -147,9 +148,10 @@ export default function ProductsPage() {
           </AppFilter>
         }
       >
-        {({ group }) => (
+        {({ group, search }) => (
           <AppProductsGrid
             group={group}
+            search={search}
             setForm={setForm}
             rowsSelected={rowsSelected}
             setRowsSelected={setRowsSelected}
@@ -179,11 +181,13 @@ export default function ProductsPage() {
 
 function AppProductsGrid({
   group,
+  search,
   setForm,
   rowsSelected,
   setRowsSelected,
 }: {
   group: Category;
+  search?: string;
   setForm: React.Dispatch<
     React.SetStateAction<{ open: boolean; item: ProductFormValues }>
   >;
@@ -193,12 +197,12 @@ function AppProductsGrid({
   const { t } = useTranslation();
   const products = usePagination<Product>(
     productsService as unknown as PaginationService<Product>,
-    { category_id: group.id },
+    { category_id: group.id, search },
   );
 
   useEffect(() => {
-    products.load();
-  }, [group.products]);
+    products.load({ params: { search } });
+  }, [group.products, search]);
 
   const columns = useMemo(
     () => [

@@ -123,10 +123,10 @@ export default function SalePage() {
               <span className="text-sm text-label">
                 {formatDateTime(sale.created_at)}
               </span>
-              <span className="text-sm text-label">
+              <span className=" ml-auto text-sm rounded-full px-2  bg-white/10">
                 {sale.items_count} {t("labels.sales.items")}
               </span>{" "}
-              <span className="font-semibold ml-auto">
+              <span className="font-semibold">
                 {formatCurrency(sale.total)}
               </span>
             </div>

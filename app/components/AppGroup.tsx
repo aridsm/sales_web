@@ -26,6 +26,7 @@ interface AppGroupProps<G extends { id: string | number }, T> {
   onDelete?: () => void;
   filter?: React.ReactNode;
   search?: boolean;
+  searchKey?: string;
   hideSelectionCount?: boolean;
   selectedItems?: T[];
   children: ({
@@ -129,6 +130,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
   onDelete,
   filter,
   search,
+  searchKey = "search",
   selectedItems,
   hideSelectionCount,
   children,
@@ -142,7 +144,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
   const hasSelection = selectedItems !== undefined && !!selectedItems.length;
 
   const [searchInput, setSearchInput] = React.useState(
-    () => searchParams.get("search") || "",
+    () => searchParams.get(searchKey) || "",
   );
 
   const [delayedLoading, setDelayedLoading] = React.useState(false);
@@ -166,20 +168,20 @@ export default function AppGroup<G extends { id: string | number }, T>({
   }, [groups.loading]);
 
   React.useEffect(() => {
-    setSearchInput(searchParams.get("search") || "");
-  }, [searchParams]);
+    setSearchInput(searchParams.get(searchKey) || "");
+  }, [searchParams, searchKey]);
 
   function handleSearch() {
     try {
       const newParams = new URLSearchParams(searchParams.toString());
       if (searchInput) {
-        newParams.set("search", searchInput);
+        newParams.set(searchKey, searchInput);
       } else {
-        newParams.delete("search");
+        newParams.delete(searchKey);
       }
       newParams.set("page", "1");
       router.push(`${pathname}?${newParams.toString()}`);
-      groups.load({ params: { search: searchInput, page: 1 } });
+      groups.load({ params: { [searchKey]: searchInput, page: 1 } });
     } catch (error) {
       openDialog({
         variant: "error",
@@ -286,7 +288,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
                 group={group}
                 renderGroupName={renderGroupName}
                 onNewRow={onNewRow}
-                search={searchInput}
+                search={searchParams.get(searchKey) || ""}
               >
                 {children}
               </GroupRow>

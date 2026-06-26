@@ -30,6 +30,7 @@ interface AppGridProps<T> {
   actions?: ActionItem<T>[];
   filter?: React.ReactNode;
   search?: boolean;
+  searchKey?: string;
   hideSelectionCount?: boolean;
   className?: string;
 }
@@ -44,6 +45,7 @@ export default function AppGrid<T>({
   actions,
   filter,
   search,
+  searchKey = "search",
   hideSelectionCount,
   className,
 }: AppGridProps<T>) {
@@ -106,7 +108,7 @@ export default function AppGrid<T>({
   }
 
   const [searchInput, setSearchInput] = React.useState(
-    () => searchParams.get("search") || "",
+    () => searchParams.get(searchKey) || "",
   );
 
   const [delayedLoading, setDelayedLoading] = React.useState(false);
@@ -133,20 +135,20 @@ export default function AppGrid<T>({
   }, [loading, loaded]);
 
   React.useEffect(() => {
-    setSearchInput(searchParams.get("search") || "");
-  }, [searchParams]);
+    setSearchInput(searchParams.get(searchKey) || "");
+  }, [searchParams, searchKey]);
 
   function handleSearch() {
     try {
       const newParams = new URLSearchParams(searchParams.toString());
       if (searchInput) {
-        newParams.set("search", searchInput);
+        newParams.set(searchKey, searchInput);
       } else {
-        newParams.delete("search");
+        newParams.delete(searchKey);
       }
       newParams.set("page", "1");
       router.push(`${pathname}?${newParams.toString()}`);
-      load({ params: { search: searchInput, page: 1 } });
+      load({ params: { [searchKey]: searchInput, page: 1 } });
     } catch (error) {
       console.error(error);
       openDialog({

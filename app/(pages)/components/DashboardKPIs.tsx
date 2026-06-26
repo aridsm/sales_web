@@ -30,14 +30,21 @@ export const DashboardKPIs = ({
         start_date: startDate,
         end_date: endDate,
       })
-      .then((res: { current_balance: number; net_profit: number; revenue: number; expenses: number }) => {
-        setBudget({
-          current_balance: res.current_balance,
-          net_profit: res.net_profit,
-          revenue: res.revenue,
-          expenses: res.expenses,
-        });
-      })
+      .then(
+        (res: {
+          current_balance: number;
+          net_profit: number;
+          revenue: number;
+          expenses: number;
+        }) => {
+          setBudget({
+            current_balance: res.current_balance,
+            net_profit: res.net_profit,
+            revenue: res.revenue,
+            expenses: res.expenses,
+          });
+        },
+      )
       .catch(console.error);
   }, [startDate, endDate]);
 
