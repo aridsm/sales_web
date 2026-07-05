@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { STATUS_CONFIG } from "@/app/utils/constants";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useRouter } from "next/navigation";
+import { useFilterParams } from "../../utils/useFilterParams";
 import AppPage from "../../components/AppPage";
 import AppCard from "../../components/AppCard";
 import Link from "next/link";
@@ -16,7 +17,7 @@ import {
 import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
-import AppInputText from "../../components/inputs/AppInputText";
+import AppSelect from "../../components/inputs/AppSelect";
 import { categoriesService } from "@/api/services/CategoryService";
 import { Category } from "@/api/schemas/Category";
 import { CategoryType } from "@/enums/CategoryType";
@@ -31,15 +32,29 @@ import { SaleProduct } from "@/api/schemas/SaleProduct";
 import { saleProductsService } from "@/api/services/SaleProductsService";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import { useTranslation } from "@/app/utils/i18n";
+import AppDateRange from "../../components/inputs/AppDateRange";
+import { Product } from "@/api/schemas/Product";
+import { productsService } from "@/api/services/ProductService";
+import AppAmountRange from "../../components/inputs/AppAmountRange";
+import { SaleStatus } from "@/enums/SaleStatus";
 
 export default function SalePage() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const salesPagination = usePagination<Sale>(salesService);
+  const filterParams = useFilterParams([
+    "category_id",
+    "status",
+    "product_id",
+    "start_created_at",
+    "end_created_at",
+    "start_total",
+    "end_total",
+  ]);
+  const salesPagination = usePagination<Sale>(salesService, { sort: "-code" });
 
   useEffect(() => {
-    salesPagination.load({ params: { page: 1, sort: "-code" } });
+    salesPagination.load({ params: filterParams });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -198,15 +213,26 @@ function SaleProductsGrid({ sale }: { sale: Sale }) {
 
 function SaleFilterFields() {
   const { t } = useTranslation();
-  const { control, register } = useFormContext();
+  const { control } = useFormContext();
 
   const categories = usePagination<Category>(
     categoriesService as unknown as PaginationService<Category>,
     { type: CategoryType.PRODUCT, page_size: 20 },
   );
 
+  const products = usePagination<Product>(
+    productsService as unknown as PaginationService<Product>,
+    { page_size: 20 },
+  );
+
+  const statusOptions = [
+    { id: SaleStatus.DONE, name: t("labels.sales.status.done") },
+    { id: SaleStatus.CANCELED, name: t("labels.sales.status.canceled") },
+  ];
+
   useEffect(() => {
     categories.load({ params: { page: 1 } });
+    products.load({ params: { page: 1 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -227,10 +253,51 @@ function SaleFilterFields() {
           />
         )}
       />
-      <AppInputText
-        label={t("labels.sales.code")}
-        placeholder={t("labels.sales.search_code")}
-        {...register("code")}
+
+      <Controller
+        control={control}
+        name="status"
+        render={({ field }) => (
+          <AppSelect
+            label="Status"
+            placeholder="Filtrar por status"
+            options={statusOptions}
+            multiple
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="product_id"
+        render={({ field }) => (
+          <AppSelectPaginated
+            label={t("labels.sales.product")}
+            placeholder={t("labels.grid.search_placeholder")}
+            pagination={products}
+            search
+            multiple
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="created_at"
+        render={({ field }) => (
+          <AppDateRange label={t("labels.sales.detail.date")} {...field} />
+        )}
+      />
+      <Controller
+        control={control}
+        name="total"
+        render={({ field }) => (
+          <AppAmountRange label={t("labels.sales.total")} {...field} />
+        )}
       />
     </>
   );

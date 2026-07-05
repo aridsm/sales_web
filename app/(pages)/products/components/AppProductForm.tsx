@@ -6,11 +6,12 @@ import AppInputText from "@/app/components/inputs/AppInputText";
 import AppSelectPaginated from "@/app/components/inputs/AppSelectPaginated";
 import { currencyFormatter } from "@/app/utils/formatters/currency";
 import AppButton from "@/app/components/AppButton";
-import { PaginationResult } from "@/app/utils/usePagination";
-import { productsService } from "@/api/services/ProductService";
 import { useDialogStore } from "@/stores/dialogStore";
 import { CategoryType } from "@/enums/CategoryType";
 import { useTranslation } from "@/app/utils/i18n";
+import { usePagination, type PaginationService } from "@/app/utils/usePagination";
+import { categoriesService } from "@/api/services/CategoryService";
+import { productsService } from "@/api/services/ProductService";
 
 import { Category } from "@/api/schemas/Category";
 
@@ -32,20 +33,23 @@ export interface ProductFormValues {
 interface AppProductFormProps {
   onClose: () => void;
   onSaved?: () => void;
-  categoriesPagination: PaginationResult<Category>;
   product: ProductFormValues;
 }
 
 export default function AppProductForm({
   onClose,
   onSaved,
-  categoriesPagination,
   product,
 }: AppProductFormProps) {
   const { t } = useTranslation();
   const { openDialog } = useDialogStore();
 
   const isEditing = !!product?.id;
+
+  const categoriesPagination = usePagination<Category>(
+    categoriesService as unknown as PaginationService<Category>,
+    { type: CategoryType.PRODUCT, page_size: 20 },
+  );
 
   useEffect(() => {
     categoriesPagination.load({

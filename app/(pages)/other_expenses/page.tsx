@@ -13,13 +13,15 @@ import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";
-import { useSearchParams } from "next/navigation";
+import { useFilterParams } from "../../utils/useFilterParams";
 import AppOtherExpenseForm from "./components/AppOtherExpenseForm";
 import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { OtherExpense, OtherExpenseForm } from "@/api/schemas/OtherExpense";
 import { useTranslation } from "@/app/utils/i18n";
+import AppDateRange from "../../components/inputs/AppDateRange";
+import AppAmountRange from "../../components/inputs/AppAmountRange";
 
 export default function OtherExpensesPage() {
   const { t: getLabel } = useTranslation();
@@ -29,16 +31,19 @@ export default function OtherExpensesPage() {
     item: undefined as OtherExpenseForm | undefined,
   });
 
+  const filterParams = useFilterParams([
+    "category_id",
+    "start_date", "end_date",
+    "start_value", "end_value",
+  ]);
+
   const pagination = usePagination<OtherExpense>(
     otherExpensesService as unknown as PaginationService<OtherExpense>,
     {},
   );
 
-  const searchParams = useSearchParams();
-
   useEffect(() => {
-    const params = Object.fromEntries(searchParams.entries());
-    pagination.load({ params });
+    pagination.load({ params: filterParams });
   }, []);
 
   const columns = useMemo(
@@ -165,7 +170,7 @@ export default function OtherExpensesPage() {
         search
         filter={
           <AppFilter pagination={pagination}>
-            <OtherExpenseFilterFields />
+            <OtherExpensesFilterFields />
           </AppFilter>
         }
       />
@@ -180,12 +185,12 @@ export default function OtherExpensesPage() {
   );
 }
 
-function OtherExpenseFilterFields() {
-  const { control } = useFormContext();
+function OtherExpensesFilterFields() {
   const { t: getLabel } = useTranslation();
+  const { control } = useFormContext();
 
-  const categories = usePagination<any>(
-    categoriesService as unknown as PaginationService<any>,
+  const categories = usePagination<Category>(
+    categoriesService as unknown as PaginationService<Category>,
     { type: CategoryType.OTHER_EXPENSE, page_size: 20 },
   );
 
@@ -195,20 +200,42 @@ function OtherExpenseFilterFields() {
   }, []);
 
   return (
-    <Controller
-      control={control}
-      name="category_id"
-      render={({ field }) => (
-        <AppSelectPaginated
-          label={getLabel("labels.other_expenses.category")}
-          placeholder={getLabel("labels.other_expenses.filter_category")}
-          pagination={categories}
-          search
-          multiple
-          value={field.value}
-          onChange={field.onChange}
-        />
-      )}
-    />
+    <>
+      <Controller
+        control={control}
+        name="category_id"
+        render={({ field }) => (
+          <AppSelectPaginated
+            label={getLabel("labels.other_expenses.category")}
+            placeholder={getLabel("labels.other_expenses.filter_category")}
+            pagination={categories}
+            search
+            multiple
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name="date"
+        render={({ field }) => (
+          <AppDateRange
+            label={getLabel("labels.other_expenses.date")}
+            {...field}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name="value"
+        render={({ field }) => (
+          <AppAmountRange
+            label={getLabel("labels.other_expenses.value")}
+            {...field}
+          />
+        )}
+      />
+    </>
   );
 }

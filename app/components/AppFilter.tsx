@@ -23,7 +23,19 @@ const getParamsFromUrl = (params: URLSearchParams) => {
       const num = Number(v);
       return !isNaN(num) && v.trim() !== "" ? num : v;
     });
-    obj[key] = values.length > 1 ? values : values[0];
+    const val = values.length > 1 ? values : values[0];
+
+    if (key.startsWith("start_")) {
+      const baseKey = key.replace("start_", "");
+      if (!obj[baseKey]) obj[baseKey] = {};
+      (obj[baseKey] as Record<string, unknown>).start = val;
+    } else if (key.startsWith("end_")) {
+      const baseKey = key.replace("end_", "");
+      if (!obj[baseKey]) obj[baseKey] = {};
+      (obj[baseKey] as Record<string, unknown>).end = val;
+    } else {
+      obj[key] = val;
+    }
   });
   return obj;
 };
@@ -61,12 +73,23 @@ export default function AppFilter<T = unknown>({
 
     Object.entries(data).forEach(([key, value]) => {
       newParams.delete(key);
+      newParams.delete(`start_${key}`);
+      newParams.delete(`end_${key}`);
+
       if (Array.isArray(value)) {
         value.forEach((v) => {
           if (v !== undefined && v !== null && v !== "") {
             newParams.append(key, String(v));
           }
         });
+      } else if (typeof value === "object" && value !== null) {
+        const range = value as Record<string, unknown>;
+        if (range.start !== undefined && range.start !== null && range.start !== "") {
+          newParams.set(`start_${key}`, String(range.start));
+        }
+        if (range.end !== undefined && range.end !== null && range.end !== "") {
+          newParams.set(`end_${key}`, String(range.end));
+        }
       } else if (value !== undefined && value !== null && value !== "") {
         newParams.set(key, String(value));
       }
@@ -74,8 +97,14 @@ export default function AppFilter<T = unknown>({
 
     newParams.set("page", "1");
 
+    const flatParams: Record<string, unknown> = {};
+    Array.from(new Set(newParams.keys())).forEach((key) => {
+      const values = newParams.getAll(key);
+      flatParams[key] = values.length > 1 ? values : values[0];
+    });
+
     router.push(`${pathname}?${newParams.toString()}`);
-    pagination.load({ params: getParamsFromUrl(newParams), replace: true });
+    pagination.load({ params: flatParams, replace: true });
     handleClose();
   };
 

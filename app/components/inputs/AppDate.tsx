@@ -244,7 +244,7 @@ const AppDateInner = (
           }
         }}
       >
-        <span className={!value ? "text-label" : ""}>
+        <span className={!value ? "text-foreground/40" : ""}>
           {formatDisplayValue() || "DD/MM/AAAA"}
         </span>
         <CalendarMonthOutlined className="text-label" fontSize="small" />

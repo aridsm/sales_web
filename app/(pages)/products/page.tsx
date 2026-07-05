@@ -15,7 +15,7 @@ import { useDialogStore } from "@/stores/dialogStore";
 import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
-import { useSearchParams } from "next/navigation";
+import { useFilterParams } from "../../utils/useFilterParams";
 import AppProductForm, {
   type ProductFormValues,
 } from "./components/AppProductForm";
@@ -25,6 +25,8 @@ import AppGrid from "@/app/components/AppGrid";
 import { useTranslation } from "@/app/utils/i18n";
 import { Category } from "@/api/schemas/Category";
 import { Product } from "@/api/schemas/Product";
+import AppDateRange from "../../components/inputs/AppDateRange";
+import AppAmountRange from "../../components/inputs/AppAmountRange";
 
 export default function ProductsPage() {
   const { t } = useTranslation();
@@ -35,21 +37,24 @@ export default function ProductsPage() {
     item: {} as ProductFormValues,
   });
   const { openDialog } = useDialogStore();
-  const searchParams = useSearchParams();
+  const filterParams = useFilterParams([
+    "id",
+    "start_product_created_at",
+    "end_product_created_at",
+    "start_price",
+    "end_price",
+    "product_search",
+  ]);
 
   const categories = usePagination<Category>(
     categoriesService as unknown as PaginationService<Category>,
     { type: CategoryType.PRODUCT },
   );
 
-  const categoriesForm = usePagination<Category>(
-    categoriesService as unknown as PaginationService<Category>,
-    { type: CategoryType.PRODUCT, page_size: 20 },
-  );
-
   useEffect(() => {
-    const params = Object.fromEntries(searchParams.entries());
-    categories.load({ params: { ...params, type: CategoryType.PRODUCT } });
+    categories.load({
+      params: { ...filterParams, type: CategoryType.PRODUCT },
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -68,9 +73,8 @@ export default function ProductsPage() {
         try {
           const ids = rowsSelected.map((item) => item.id);
           await productsService.bulkDelete(ids);
-          const params = Object.fromEntries(searchParams.entries());
           await categories.load({
-            params: { ...params, type: CategoryType.PRODUCT },
+            params: { ...filterParams, type: CategoryType.PRODUCT },
           });
           setRowsSelected([]);
         } catch (err: unknown) {
@@ -170,7 +174,6 @@ export default function ProductsPage() {
       >
         <AppProductForm
           onSaved={onSaveItem}
-          categoriesPagination={categoriesForm}
           product={form.item}
           onClose={onCloseForm}
         />
@@ -195,14 +198,27 @@ function AppProductsGrid({
   setRowsSelected: React.Dispatch<React.SetStateAction<Product[]>>;
 }) {
   const { t } = useTranslation();
+  const filterParams = useFilterParams(
+    [
+      "start_product_created_at",
+      "end_product_created_at",
+      "start_price",
+      "end_price",
+    ],
+    {
+      start_product_created_at: "start_created_at",
+      end_product_created_at: "end_created_at",
+    },
+  );
+
   const products = usePagination<Product>(
     productsService as unknown as PaginationService<Product>,
-    { category_id: group.id, search },
+    { category_id: group.id, search, ...filterParams },
   );
 
   useEffect(() => {
-    products.load({ params: { search } });
-  }, [group.products, search]);
+    products.load({ params: { search, ...filterParams } });
+  }, [group.products, search, filterParams]);
 
   const columns = useMemo(
     () => [
@@ -291,20 +307,36 @@ function ProductFilterFields() {
   }, []);
 
   return (
-    <Controller
-      control={control}
-      name="id"
-      render={({ field }) => (
-        <AppSelectPaginated
-          label={t("labels.products.category")}
-          placeholder={t("labels.products.filter_category")}
-          pagination={categories}
-          search
-          multiple
-          value={field.value}
-          onChange={field.onChange}
-        />
-      )}
-    />
+    <>
+      <Controller
+        control={control}
+        name="id"
+        render={({ field }) => (
+          <AppSelectPaginated
+            label={t("labels.products.category")}
+            placeholder={t("labels.products.filter_category")}
+            pagination={categories}
+            search
+            multiple
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name="product_created_at"
+        render={({ field }) => (
+          <AppDateRange label={t("labels.products.created_at")} {...field} />
+        )}
+      />
+      <Controller
+        control={control}
+        name="price"
+        render={({ field }) => (
+          <AppAmountRange label={t("labels.products.price")} {...field} />
+        )}
+      />
+    </>
   );
 }

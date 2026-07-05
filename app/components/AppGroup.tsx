@@ -8,7 +8,6 @@ import {
   Search,
   DeleteOutlined,
   Add,
-  SearchOffOutlined,
 } from "@mui/icons-material";
 import AppPagination from "./AppPagination";
 import AppInputText from "./inputs/AppInputText";
@@ -267,18 +266,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
               <div className="py-10" />
             )
           ) : (
-            <AppEmptyState
-              className="flex-1 py-12 px-4"
-              title={searchInput ? t("labels.grid.no_result_title") : undefined}
-              subtitle={
-                searchInput ? t("labels.grid.no_result_subtitle") : undefined
-              }
-              icon={
-                searchInput ? (
-                  <SearchOffOutlined fontSize="medium" />
-                ) : undefined
-              }
-            />
+            <AppEmptyState className="flex-1 py-12 px-4" />
           )
         ) : (
           groups.items.map((group) => {

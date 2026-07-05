@@ -157,6 +157,7 @@
       "filter_category": "Filtrar por categoria",
       "code": "Código",
       "search_code": "Buscar por código",
+      "total": "Total",
       "status": {
         "done": "Concluída",
         "canceled": "Cancelada"

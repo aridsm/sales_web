@@ -3,7 +3,7 @@
 import React from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { PaginationResult } from "../utils/usePagination";
-import { Search, Add, DeleteOutlined, SearchOffOutlined } from "@mui/icons-material";
+import { Search, Add, DeleteOutlined } from "@mui/icons-material";
 import AppPagination from "./AppPagination";
 import AppButton from "./AppButton";
 import AppCheckbox from "./inputs/AppCheckbox";
@@ -60,7 +60,12 @@ export default function AppGrid<T>({
     selectedRows !== undefined && onSelectedChange !== undefined;
 
   const isSelected = (row: T) =>
-    selectedRows?.some((r) => r === row || (r as Record<string, unknown>).id === (row as Record<string, unknown>).id);
+    selectedRows?.some(
+      (r) =>
+        r === row ||
+        (r as Record<string, unknown>).id ===
+          (row as Record<string, unknown>).id,
+    );
 
   function handleSelectRow(row: T, checked: boolean) {
     if (!hasSelection) return;
@@ -69,7 +74,12 @@ export default function AppGrid<T>({
     } else {
       onSelectedChange(
         (selectedRows || []).filter(
-          (r) => !(r === row || (r as Record<string, unknown>).id === (row as Record<string, unknown>).id),
+          (r) =>
+            !(
+              r === row ||
+              (r as Record<string, unknown>).id ===
+                (row as Record<string, unknown>).id
+            ),
         ),
       );
     }
@@ -86,7 +96,10 @@ export default function AppGrid<T>({
         items.forEach((item) => {
           if (
             !newSelected.some(
-              (r) => r === item || (r as Record<string, unknown>).id === (item as Record<string, unknown>).id,
+              (r) =>
+                r === item ||
+                (r as Record<string, unknown>).id ===
+                  (item as Record<string, unknown>).id,
             )
           ) {
             newSelected.push(item);
@@ -97,7 +110,10 @@ export default function AppGrid<T>({
         const newSelected = (selectedRows || []).filter(
           (r) =>
             !items.some(
-              (item) => item === r || (item as Record<string, unknown>).id === (r as Record<string, unknown>).id,
+              (item) =>
+                item === r ||
+                (item as Record<string, unknown>).id ===
+                  (r as Record<string, unknown>).id,
             ),
         );
         onSelectedChange(newSelected);
@@ -112,7 +128,9 @@ export default function AppGrid<T>({
   );
 
   const [delayedLoading, setDelayedLoading] = React.useState(false);
-  const [hasStartedLoading, setHasStartedLoading] = React.useState(loaded || items.length > 0);
+  const [hasStartedLoading, setHasStartedLoading] = React.useState(
+    loaded || items.length > 0,
+  );
 
   React.useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -403,12 +421,7 @@ export default function AppGrid<T>({
               )}
             </table>
             {items.length === 0 && (
-              <AppEmptyState
-                className="flex-1 p-14 border-x border-b border-border rounded-t-none bg-background-2 dark:bg-background"
-                title={searchInput ? t("labels.grid.no_result_title") : undefined}
-                subtitle={searchInput ? t("labels.grid.no_result_subtitle") : undefined}
-                icon={searchInput ? <SearchOffOutlined fontSize="medium" /> : undefined}
-              />
+              <AppEmptyState className="flex-1 p-14 border-x border-b border-border rounded-t-none bg-background-2 dark:bg-background" />
             )}
           </div>
         )}

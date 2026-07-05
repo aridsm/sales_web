@@ -11,7 +11,7 @@ import {
 import { historyService } from "@/api/services/HistoryService";
 import { History } from "@/api/schemas/History";
 import { useTranslation } from "@/app/utils/i18n";
-import { useSearchParams } from "next/navigation";
+import { useFilterParams } from "../../utils/useFilterParams";
 import { ActionType } from "@/enums/ActionType";
 import { EntityType } from "@/enums/EntityType";
 import { formatDateTime } from "@/app/utils/formatters/date";
@@ -19,23 +19,25 @@ import { useDialogStore } from "@/stores/dialogStore";
 import AppFilter from "../../components/AppFilter";
 import AppSelect from "../../components/inputs/AppSelect";
 import { Controller, useFormContext } from "react-hook-form";
-
+import AppDateRange from "../../components/inputs/AppDateRange";
 
 export default function HistoryPage() {
   const { t } = useTranslation();
   const { openDialog } = useDialogStore();
   const [rowsSelected, setRowsSelected] = useState<History[]>([]);
 
+  const filterParams = useFilterParams([
+    "action_type", "entity_type",
+    "start_created_at", "end_created_at",
+  ]);
+
   const pagination = usePagination<History>(
     historyService as unknown as PaginationService<History>,
     {},
   );
 
-  const searchParams = useSearchParams();
-
   useEffect(() => {
-    const params = Object.fromEntries(searchParams.entries());
-    pagination.load({ params });
+    pagination.load({ params: filterParams });
   }, []);
 
   const entityLabels: Record<number, string> = {
@@ -183,6 +185,13 @@ function HistoryFilterFields() {
             multiple
             onChange={field.onChange}
           />
+        )}
+      />
+      <Controller
+        control={control}
+        name="created_at"
+        render={({ field }) => (
+          <AppDateRange label={t("labels.history.date")} {...field} />
         )}
       />
     </>
