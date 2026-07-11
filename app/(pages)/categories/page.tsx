@@ -14,8 +14,7 @@ import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";
 import { Controller, useFormContext } from "react-hook-form";
-import AppFilter from "../../components/AppFilter";
-import AppSelect from "../../components/inputs/AppSelect";
+import AppTabs from "../../components/AppTabs";
 import { useSearchParams } from "next/navigation";
 import { Category } from "@/api/schemas/Category";
 import { useTranslation } from "@/app/utils/i18n";
@@ -23,6 +22,7 @@ import { useTranslation } from "@/app/utils/i18n";
 export default function CategoriesPage() {
   const { t } = useTranslation();
   const [rowsSelected, setRowsSelected] = useState<Category[]>([]);
+  const [activeTab, setActiveTab] = useState<CategoryType>(CategoryType.PRODUCT);
   const [form, setForm] = useState({
     open: false,
     item: {} as Category | undefined,
@@ -37,13 +37,9 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
-    pagination.load({ params });
-  }, []);
-
-  const CategoryTypes = {
-    [CategoryType.PRODUCT]: t("labels.categories.types.product"),
-    [CategoryType.OTHER_EXPENSE]: t("labels.categories.types.other_expense"),
-  };
+    pagination.load({ params: { ...params, type: activeTab } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   const columns = useMemo(
     () => [
@@ -66,13 +62,7 @@ export default function CategoriesPage() {
           </div>
         ),
       },
-      {
-        column: t("labels.categories.type"),
-        cell: ({ row }: { row: Category }) => (
-          <p>{CategoryTypes[row.type as CategoryType]} </p>
-        ),
-        size: 200,
-      },
+
       {
         column: "ID",
         cell: ({ row }: { row: Category }) => row.id,
@@ -98,7 +88,7 @@ export default function CategoriesPage() {
   function handleNew() {
     setForm({
       open: true,
-      item: undefined,
+      item: { type: activeTab } as Category,
     });
   }
 
@@ -143,6 +133,26 @@ export default function CategoriesPage() {
 
   return (
     <AppPage title={t("labels.categories.title")}>
+      <div className="mb-4">
+        <AppTabs
+          tabs={[
+            {
+              value: String(CategoryType.PRODUCT),
+              label: t("labels.categories.types.product"),
+            },
+            {
+              value: String(CategoryType.OTHER_EXPENSE),
+              label: t("labels.categories.types.other_expense"),
+            },
+          ]}
+          activeTab={String(activeTab)}
+          onChange={(val) => {
+            setActiveTab(Number(val) as CategoryType);
+            setRowsSelected([]);
+          }}
+        />
+      </div>
+
       <AppGrid
         columns={columns}
         pagination={pagination}
@@ -152,11 +162,6 @@ export default function CategoriesPage() {
         onSelectedChange={(rows) => setRowsSelected(rows)}
         actions={actions}
         search
-        filter={
-          <AppFilter pagination={pagination}>
-            <CategoryFilterFields />
-          </AppFilter>
-        }
       />
 
       <AppCategoryForm
@@ -169,35 +174,4 @@ export default function CategoriesPage() {
   );
 }
 
-function CategoryFilterFields() {
-  const { t } = useTranslation();
-  const { control } = useFormContext();
 
-  const categoryTypeOptions = [
-    {
-      id: CategoryType.PRODUCT,
-      name: t("labels.categories.types.product_singular"),
-    },
-    {
-      id: CategoryType.OTHER_EXPENSE,
-      name: t("labels.categories.types.other_expense"),
-    },
-  ];
-
-  return (
-    <Controller
-      name="type"
-      control={control}
-      render={({ field }) => (
-        <AppSelect
-          label={t("labels.categories.type")}
-          placeholder={t("labels.categories.filter_type")}
-          options={categoryTypeOptions}
-          value={field.value}
-          multiple
-          onChange={field.onChange}
-        />
-      )}
-    />
-  );
-}

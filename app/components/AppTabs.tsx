@@ -37,7 +37,7 @@ export default function AppTabs({
 
   return (
     <div
-      className={`flex items-center bg-transparent rounded-md p-1 border border-border w-fit shrink-0 ${className}`}
+      className={`flex items-center bg-background-2 dark:bg-background-3 rounded-md p-1 border border-border w-fit shrink-0 ${className}`}
     >
       {tabs.map((tab) => {
         const isActive = internalTab === tab.value;
@@ -47,7 +47,7 @@ export default function AppTabs({
             onClick={() => handleTabClick(tab.value)}
             className={`px-3 py-1 text-sm font-medium rounded-sm transition-all duration-200 cursor-pointer whitespace-nowrap ${
               isActive
-                ? "bg-foreground-2 text-background dark:bg-yellow-300 dark:text-black"
+                ? "bg-foreground-2 dark:bg-primary text-white"
                 : "text-label hover:text-foreground"
             }`}
           >

@@ -104,9 +104,7 @@ export const DashboardCategoryProfitChart = ({
 }) => {
   const { t } = useTranslation();
   const [activePieIndex, setActivePieIndex] = useState<number | undefined>();
-  const [activeTab, setActiveTab] = useState<CategoryType>(
-    CategoryType.PRODUCT,
-  );
+  const [activeTab, setActiveTab] = useState<string>("sales");
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesAmounts, setCategoriesAmounts] = useState<CategoryAmount>({
     items: [],
@@ -121,8 +119,14 @@ export const DashboardCategoryProfitChart = ({
         type: activeTab,
       })
       .then((res: CategoryAmount) => setCategoriesAmounts(res));
+
+    const categoryEnum =
+      activeTab === "other_expenses"
+        ? CategoryType.OTHER_EXPENSE
+        : CategoryType.PRODUCT;
+
     categoriesService
-      .getAll({ type: activeTab })
+      .getAll({ type: categoryEnum })
       .then((res: { items: Category[] } | Category[]) => {
         setCategories("items" in res ? res.items : res);
       })
@@ -131,28 +135,34 @@ export const DashboardCategoryProfitChart = ({
 
   return (
     <AppCard className="px-5 pt-4 pb-5 flex flex-col lg:col-span-1 lg:row-span-2 overflow-hidden">
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex flex-col gap-3 mb-4">
         <span className="font-semibold text-lg">
-          {activeTab === CategoryType.PRODUCT
+          {activeTab === "sales"
             ? t("labels.dashboard.charts.profit_by_category")
-            : t("labels.dashboard.charts.expenses_by_category")}
+            : activeTab === "stock_entries"
+              ? "Entradas de Estoque por categoria"
+              : t("labels.dashboard.charts.expenses_by_category")}
         </span>
         <AppTabs
           tabs={[
             {
-              value: String(CategoryType.PRODUCT),
-              label: t("labels.dashboard.charts.profit_tab"),
+              value: "sales",
+              label: "Vendas",
             },
             {
-              value: String(CategoryType.OTHER_EXPENSE),
-              label: t("labels.dashboard.charts.expenses_tab"),
+              value: "stock_entries",
+              label: "Entrada de Estoque",
+            },
+            {
+              value: "other_expenses",
+              label: "Outros Gastos",
             },
           ]}
-          activeTab={String(activeTab)}
-          onChange={(val) => setActiveTab(Number(val) as CategoryType)}
+          activeTab={activeTab}
+          onChange={(val) => setActiveTab(val)}
         />
       </div>
-      <div className="w-full relative shrink-0 h-52 mt-2">
+      <div className="w-full relative shrink-0 h-52">
         {categoriesAmounts.items.length > 0 ? (
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -237,7 +247,7 @@ export const DashboardCategoryProfitChart = ({
             title={t("labels.grid.empty_title")}
             subtitle={t("labels.dashboard.charts.no_category")}
             icon={
-              activeTab === CategoryType.PRODUCT ? (
+              activeTab === "sales" || activeTab === "stock_entries" ? (
                 <ShoppingCartOutlined fontSize="medium" />
               ) : (
                 <ReceiptOutlined fontSize="medium" />

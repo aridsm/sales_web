@@ -7,7 +7,6 @@ import * as z from "zod";
 import AppModal from "../../../components/AppModal";
 import AppInputText from "../../../components/inputs/AppInputText";
 import AppButton from "@/app/components/AppButton";
-import AppSelect from "@/app/components/inputs/AppSelect";
 import AppColor from "@/app/components/inputs/AppColor";
 import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/CategoryService";
@@ -60,7 +59,7 @@ export default function AppCategoryForm({
       } else {
         reset({
           name: "",
-          type: undefined,
+          type: model?.type,
           color: "",
         });
       }
@@ -125,21 +124,6 @@ export default function AppCategoryForm({
           placeholder={t("labels.categories.form.name_placeholder")}
           {...register("name")}
           error={errors.name?.message}
-        />
-
-        <Controller
-          name="type"
-          control={control}
-          render={({ field }) => (
-            <AppSelect
-              label={t("labels.categories.type")}
-              placeholder={t("labels.categories.form.type_placeholder")}
-              options={categoryTypeOptions}
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.type?.message}
-            />
-          )}
         />
 
         <Controller
