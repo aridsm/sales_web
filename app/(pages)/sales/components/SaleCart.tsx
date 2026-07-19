@@ -7,7 +7,6 @@ import type { CartItem } from "@/app/utils/cart";
 import type { Product } from "@/api/schemas/Product";
 import {
   ShoppingCartOutlined,
-  ReceiptOutlined,
   DeleteOutlined,
   RemoveOutlined,
   AddOutlined,
@@ -46,8 +45,10 @@ export function SaleCart({
               />
             </div>
             <div>
-              <h2 className="font-semibold text-foreground">{t("labels.sales.new.cart")}</h2>
-              <span className=" text-label">
+              <h2 className="font-semibold text-foreground">
+                {t("labels.sales.new.cart")}
+              </h2>
+              <span className="text-label">
                 {totalItems === 0
                   ? t("labels.sales.new.no_items")
                   : `${totalItems} ${totalItems === 1 ? t("labels.sales.new.item_singular") : t("labels.sales.new.item_plural")}`}
@@ -81,48 +82,50 @@ export function SaleCart({
               {cart.map((item) => (
                 <li
                   key={item.product.id}
-                  className="px-4 py-3 flex flex-col gap-2"
+                  className="px-4 py-3 flex flex-col gap-2.5"
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="text-sm text-foreground truncate">
-                        {item.product.name}
-                      </p>
-                      <p className=" text-label mt-0.5">
-                        {formatCurrency(item.product.price)} {t("labels.sales.new.unit")}
-                      </p>
-                    </div>
-                    <AppButton
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm font-medium text-foreground truncate flex-1">
+                      {item.product.name}
+                    </p>
+                    <button
                       onClick={() => onRemoveFromCart(item.product.id)}
                       className="text-label hover:text-red-500 transition-colors shrink-0 cursor-pointer p-0.5"
                     >
                       <DeleteOutlined style={{ fontSize: 16 }} />
-                    </AppButton>
+                    </button>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => onUpdateQuantity(item.product.id, -1)}
-                        className="w-7 h-7 rounded-md border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3"
-                      >
-                        <RemoveOutlined style={{ fontSize: 14 }} />
-                      </button>
-                      <span className="w-9 text-center font-semibold text-foreground">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => onUpdateQuantity(item.product.id, 1)}
-                        disabled={item.quantity >= item.product.stock_amount}
-                        className="w-7 h-7 rounded-md border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3 disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        <AddOutlined style={{ fontSize: 14 }} />
-                      </button>
-                    </div>
-
-                    <span className="text-sm font-semibold text-foreground">
-                      {formatCurrency(item.product.price * item.quantity)}
+                    <span className="text-sm text-label">
+                      {formatCurrency(item.product.price)}{" "}
+                      {t("labels.sales.new.unit")}
                     </span>
+
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => onUpdateQuantity(item.product.id, -1)}
+                          className="w-7 h-7 rounded-md border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3"
+                        >
+                          <RemoveOutlined style={{ fontSize: 14 }} />
+                        </button>
+                        <span className="w-8 text-center font-semibold text-foreground text-sm">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => onUpdateQuantity(item.product.id, 1)}
+                          disabled={item.quantity >= item.product.stock_amount}
+                          className="w-7 h-7 rounded-md border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          <AddOutlined style={{ fontSize: 14 }} />
+                        </button>
+                      </div>
+
+                      <span className="text-sm font-semibold text-foreground w-24 text-right">
+                        {formatCurrency(item.product.price * item.quantity)}
+                      </span>
+                    </div>
                   </div>
                 </li>
               ))}
@@ -132,10 +135,6 @@ export function SaleCart({
 
         <div className="border-t border-border p-4 flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <div className="flex justify-between text-label">
-              <span>{t("labels.sales.new.subtotal")}</span>
-              <span>{formatCurrency(totalPrice)}</span>
-            </div>
             <div className="flex justify-between text-label">
               <span>{t("labels.sales.new.items_label")}</span>
               <span>{totalItems}</span>
@@ -154,7 +153,9 @@ export function SaleCart({
             className="w-full h-12 text-base! font-semibold gap-2!"
           >
             <CheckCircleOutlined style={{ fontSize: 20 }} />
-            {isFinishing ? t("labels.all.processing") : t("labels.sales.new.finish_button")}
+            {isFinishing
+              ? t("labels.all.processing")
+              : t("labels.sales.new.finish_button")}
           </AppButton>
         </div>
       </AppCard>

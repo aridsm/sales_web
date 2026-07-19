@@ -13,6 +13,7 @@ import {
   ReceiptOutlined,
   AccountCircleOutlined,
   CategoryOutlined,
+  LocalShippingOutlined,
 } from "@mui/icons-material";
 import { Menu as MenuIcon, ExitToAppOutlined } from "@mui/icons-material";
 import AppButton from "./AppButton";
@@ -23,6 +24,7 @@ const menuItems = [
   { key: "categories", href: "/categories", icon: CategoryOutlined },
   { key: "products", href: "/products", icon: Inventory2Outlined },
   { key: "sales", href: "/sales", icon: ShoppingCartOutlined },
+  { key: "stock_entries", href: "/stock-entries", icon: LocalShippingOutlined },
   { key: "history", href: "/history", icon: History },
   { key: "other_expenses", href: "/other_expenses", icon: ReceiptOutlined },
   { key: "account", href: "/account", icon: AccountCircleOutlined },

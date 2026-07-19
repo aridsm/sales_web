@@ -13,7 +13,6 @@ import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";
-import { Controller, useFormContext } from "react-hook-form";
 import AppTabs from "../../components/AppTabs";
 import { useSearchParams } from "next/navigation";
 import { Category } from "@/api/schemas/Category";
@@ -22,7 +21,9 @@ import { useTranslation } from "@/app/utils/i18n";
 export default function CategoriesPage() {
   const { t } = useTranslation();
   const [rowsSelected, setRowsSelected] = useState<Category[]>([]);
-  const [activeTab, setActiveTab] = useState<CategoryType>(CategoryType.PRODUCT);
+  const [activeTab, setActiveTab] = useState<CategoryType>(
+    CategoryType.PRODUCT,
+  );
   const [form, setForm] = useState({
     open: false,
     item: {} as Category | undefined,
@@ -116,11 +117,17 @@ export default function CategoriesPage() {
           await pagination.load();
           setRowsSelected([]);
         } catch (err: unknown) {
-          const error = err as { response?: { data?: { detail?: { error?: string; name?: string[] } } } };
+          const error = err as {
+            response?: {
+              data?: { detail?: { error?: string; name?: string[] } };
+            };
+          };
           openDialog({
             variant: "error",
             message: t(
-              error.response?.data?.detail?.error ? `errors.categories.${error.response.data.detail.error}` : "errors.all.generic",
+              error.response?.data?.detail?.error
+                ? `errors.categories.${error.response.data.detail.error}`
+                : "errors.all.generic",
               {
                 name: error.response?.data?.detail?.name?.join(", "),
               },
@@ -173,5 +180,3 @@ export default function CategoriesPage() {
     </AppPage>
   );
 }
-
-

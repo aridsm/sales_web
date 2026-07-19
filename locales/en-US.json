@@ -68,7 +68,10 @@
       "add": "Add",
       "processing": "Processing...",
       "confirm": "Confirm",
-      "close": "Close"
+      "close": "Close",
+      "status": "Status",
+      "date": "Date",
+      "total_value": "Total Value"
     },
     "dialog": {
       "success": "Success",
@@ -86,6 +89,7 @@
       "categories": "Categories",
       "products": "Products",
       "sales": "Sales",
+      "stock_entries": "Stock Entries",
       "history": "History",
       "other_expenses": "Other Expenses",
       "account": "Your Account",
@@ -196,6 +200,28 @@
         "items": "Items"
       }
     },
+    "stock_entries": {
+      "title": "Stock Entry",
+      "status": {
+        "open": "Completed",
+        "canceled": "Canceled"
+      },
+      "detail": {
+        "title": "Stock Entry",
+        "cancel_title": "Cancel entry",
+        "cancel_message": "Are you sure you want to cancel stock entry #{{code}}? This action cannot be undone.",
+        "not_found": "Stock entry not found.",
+        "date": "Date",
+        "items": "Items",
+        "back": "Back to entries"
+      },
+      "list": {
+        "purchases_today": "Purchases Today",
+        "spent_today": "Spent Today",
+        "spent_total": "Total Spent",
+        "filter_status": "Filter by status"
+      }
+    },
     "history": {
       "title": "History",
       "delete_title": "Delete history",
@@ -279,6 +305,9 @@
     "sales": {
       "errorInsufficientStock": "Insufficient stock for {{name}}.",
       "errorSaleAlreadyCanceled": "This sale has already been canceled."
+    },
+    "stock_entries": {
+      "errorNoRemainingItems": "Insufficient stock to return the following products: {{products}}."
     },
     "other_expenses": {},
     "auth": {

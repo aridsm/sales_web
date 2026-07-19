@@ -38,10 +38,9 @@ export default function SaleDetailPage() {
   const [sale, setSale] = useState<Sale | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const productsPagination = usePagination<SaleProduct>(
-    saleProductsService,
-    { sale_id: id },
-  );
+  const productsPagination = usePagination<SaleProduct>(saleProductsService, {
+    sale_id: id,
+  });
 
   useEffect(() => {
     async function fetchSale() {
@@ -183,7 +182,7 @@ export default function SaleDetailPage() {
         color="transparent"
         flat
         onClick={() => router.push("/sales")}
-        className="gap-1.5! px-2! -ml-2 mr-auto mb-2"
+        className="gap-1.5! px-2! mr-auto mb-2"
       >
         <ArrowBackOutlined style={{ fontSize: 18 }} />
         <span className="text-sm">{t("labels.sales.new.back")}</span>

@@ -1,5 +1,6 @@
 import { ActionType } from "@/enums/ActionType";
 import { SaleStatus } from "@/enums/SaleStatus";
+import { StockEntryStatus } from "@/enums/StockEntryStatus";
 
 export const ACTION_CONFIG: Record<
   ActionType,
@@ -38,6 +39,22 @@ export const STATUS_CONFIG: Record<
   },
   [SaleStatus.CANCELED]: {
     labelKey: "labels.sales.status.canceled",
+    color: "text-red-500 dark:text-red-400",
+    bg: "bg-red-500/10",
+  },
+};
+
+export const STOCK_ENTRY_STATUS_CONFIG: Record<
+  StockEntryStatus,
+  { labelKey: string; color: string; bg: string }
+> = {
+  [StockEntryStatus.OPEN]: {
+    labelKey: "labels.stock_entries.status.open",
+    color: "text-emerald-600 dark:text-emerald-400",
+    bg: "bg-emerald-500/10",
+  },
+  [StockEntryStatus.CANCELED]: {
+    labelKey: "labels.stock_entries.status.canceled",
     color: "text-red-500 dark:text-red-400",
     bg: "bg-red-500/10",
   },

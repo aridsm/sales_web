@@ -68,7 +68,10 @@
       "add": "Adicionar",
       "processing": "Processando...",
       "confirm": "Confirmar",
-      "close": "Fechar"
+      "close": "Fechar",
+      "status": "Status",
+      "date": "Data",
+      "total_value": "Valor Total"
     },
     "dialog": {
       "success": "Sucesso",
@@ -86,6 +89,7 @@
       "categories": "Categorias",
       "products": "Produtos",
       "sales": "Vendas",
+      "stock_entries": "Entrada de Estoque",
       "history": "Histórico",
       "other_expenses": "Despesas",
       "account": "Sua conta",
@@ -196,6 +200,28 @@
         "items": "Itens"
       }
     },
+    "stock_entries": {
+      "title": "Entrada de Estoque",
+      "status": {
+        "open": "Concluída",
+        "canceled": "Cancelada"
+      },
+      "detail": {
+        "title": "Entrada de Estoque",
+        "cancel_title": "Cancelar entrada",
+        "cancel_message": "Tem certeza que deseja cancelar a entrada de estoque #{{code}}? Esta ação não pode ser desfeita.",
+        "not_found": "Entrada de estoque não encontrada.",
+        "date": "Data",
+        "items": "Itens",
+        "back": "Voltar para entradas"
+      },
+      "list": {
+        "purchases_today": "Compras Hoje",
+        "spent_today": "Gasto Hoje",
+        "spent_total": "Total Gasto",
+        "filter_status": "Filtrar por status"
+      }
+    },
     "history": {
       "title": "Histórico",
       "delete_title": "Excluir histórico",
@@ -279,6 +305,9 @@
     "sales": {
       "errorInsufficientStock": "Estoque insuficiente para {{name}}.",
       "errorSaleAlreadyCanceled": "Esta venda já foi cancelada."
+    },
+    "stock_entries": {
+      "errorNoRemainingItems": "Estoque insuficiente para a devolução dos seguintes produtos: {{products}}."
     },
     "other_expenses": {},
     "auth": {

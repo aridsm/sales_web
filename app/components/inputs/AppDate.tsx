@@ -5,12 +5,14 @@ import React, {
   useRef,
   forwardRef,
   useImperativeHandle,
+  useEffect,
 } from "react";
 import AppLabel from "../AppLabel";
 import {
   CalendarMonthOutlined,
   ChevronLeft,
   ChevronRight,
+  AccessTimeOutlined,
 } from "@mui/icons-material";
 import { useClickOutside } from "../../utils/useClickOutside";
 import AppSelect from "./AppSelect";
@@ -25,6 +27,7 @@ interface AppDateProps {
   disabled?: boolean;
   className?: string;
   name?: string;
+  showTime?: boolean;
 }
 
 const months = [
@@ -57,6 +60,7 @@ const AppDateInner = (
     onBlur,
     disabled,
     className = "",
+    showTime = false,
   }: AppDateProps,
   ref: React.Ref<HTMLDivElement>,
 ) => {
@@ -67,13 +71,44 @@ const AppDateInner = (
 
   const [isOpen, setIsOpen] = useState(false);
   const [viewDate, setViewDate] = useState(new Date());
+  const [draftValue, setDraftValue] = useState<string | undefined>(value);
+
+  const activeDraft = draftValue ? new Date(draftValue) : null;
+  const selectedHour =
+    activeDraft && !isNaN(activeDraft.getTime())
+      ? activeDraft.getHours()
+      : new Date().getHours();
+  const selectedMinute =
+    activeDraft && !isNaN(activeDraft.getTime())
+      ? activeDraft.getMinutes()
+      : new Date().getMinutes();
+
+  const hourInputRef = useRef<HTMLInputElement>(null);
+  const minuteInputRef = useRef<HTMLInputElement>(null);
+
+  const [hourText, setHourText] = useState(String(selectedHour).padStart(2, "0"));
+  const [minuteText, setMinuteText] = useState(String(selectedMinute).padStart(2, "0"));
+
+  useEffect(() => {
+    if (document.activeElement !== hourInputRef.current) {
+      setHourText(String(selectedHour).padStart(2, "0"));
+    }
+  }, [selectedHour]);
+
+  useEffect(() => {
+    if (document.activeElement !== minuteInputRef.current) {
+      setMinuteText(String(selectedMinute).padStart(2, "0"));
+    }
+  }, [selectedMinute]);
 
   const handleOpen = () => {
     if (disabled) return;
+    setDraftValue(value);
     setIsOpen(true);
-    if (value) {
+    const dateToParse = value || draftValue;
+    if (dateToParse) {
       const parsedDate = new Date(
-        value.includes("T") ? value : `${value}T12:00:00`,
+        dateToParse.includes("T") ? dateToParse : `${dateToParse}T12:00:00`,
       );
       if (!isNaN(parsedDate.getTime())) {
         setViewDate(
@@ -98,8 +133,9 @@ const AppDateInner = (
     let minutes = 0;
     let seconds = 0;
 
-    if (value && value.includes("T")) {
-      const parsedDate = new Date(value);
+    const baseValue = draftValue || value;
+    if (baseValue && baseValue.includes("T")) {
+      const parsedDate = new Date(baseValue);
       if (!isNaN(parsedDate.getTime())) {
         hours = parsedDate.getHours();
         minutes = parsedDate.getMinutes();
@@ -126,7 +162,48 @@ const AppDateInner = (
       seconds,
     );
 
-    onChange?.(selectedDate.toISOString());
+    setDraftValue(selectedDate.toISOString());
+  };
+
+  const buildDate = (
+    year: number,
+    month: number,
+    day: number,
+    hours: number,
+    minutes: number,
+  ) => {
+    const d = new Date(year, month, day, hours, minutes, 0);
+    return d.toISOString();
+  };
+
+  const handleHourChange = (hour: number) => {
+    if (!activeDraft || isNaN(activeDraft.getTime())) return;
+    const iso = buildDate(
+      activeDraft.getFullYear(),
+      activeDraft.getMonth(),
+      activeDraft.getDate(),
+      hour,
+      selectedMinute,
+    );
+    setDraftValue(iso);
+  };
+
+  const handleMinuteChange = (minute: number) => {
+    if (!activeDraft || isNaN(activeDraft.getTime())) return;
+    const iso = buildDate(
+      activeDraft.getFullYear(),
+      activeDraft.getMonth(),
+      activeDraft.getDate(),
+      selectedHour,
+      minute,
+    );
+    setDraftValue(iso);
+  };
+
+  const handleSave = () => {
+    if (draftValue) {
+      onChange?.(draftValue);
+    }
     setIsOpen(false);
     triggerRef.current?.focus();
   };
@@ -148,6 +225,13 @@ const AppDateInner = (
     const dd = String(parsedDate.getDate()).padStart(2, "0");
     const mm = String(parsedDate.getMonth() + 1).padStart(2, "0");
     const yyyy = parsedDate.getFullYear();
+
+    if (showTime) {
+      const hh = String(parsedDate.getHours()).padStart(2, "0");
+      const min = String(parsedDate.getMinutes()).padStart(2, "0");
+      return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+    }
+
     return `${dd}/${mm}/${yyyy}`;
   };
 
@@ -175,9 +259,9 @@ const AppDateInner = (
     let selectedMonth = -1;
     let selectedYear = -1;
 
-    if (value) {
+    if (draftValue) {
       const parsedDate = new Date(
-        value.includes("T") ? value : `${value}T12:00:00`,
+        draftValue.includes("T") ? draftValue : `${draftValue}T12:00:00`,
       );
       if (!isNaN(parsedDate.getTime())) {
         selectedDay = parsedDate.getDate();
@@ -265,7 +349,7 @@ const AppDateInner = (
               <ChevronLeft fontSize="small" />
             </AppButton>
 
-            <div className="flex gap-2 flex-1 mx-2">
+            <div className="flex gap-2 flex-1 mx-2 w-full ">
               <AppSelect
                 value={viewDate.getMonth()}
                 onChange={(val) =>
@@ -273,6 +357,7 @@ const AppDateInner = (
                 }
                 options={monthOptions}
                 size="small"
+                className="flex-1"
               />
 
               <AppSelect
@@ -308,6 +393,67 @@ const AppDateInner = (
           </div>
 
           <div className="grid grid-cols-7 gap-1">{renderDays()}</div>
+
+          {showTime && activeDraft && !isNaN(activeDraft.getTime()) && (
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border">
+              <AccessTimeOutlined
+                className="text-label"
+                style={{ fontSize: 18 }}
+              />
+              <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                <input
+                  ref={hourInputRef}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={2}
+                  value={hourText}
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(/\D/g, "").slice(0, 2);
+                    setHourText(raw);
+                    if (raw === "") return;
+                    const val = parseInt(raw, 10);
+                    if (!isNaN(val) && val >= 0 && val <= 23)
+                      handleHourChange(val);
+                  }}
+                  onBlur={() => {
+                    setHourText(String(selectedHour).padStart(2, "0"));
+                  }}
+                  onFocus={(e) => e.target.select()}
+                  className="flex-1 min-w-0 bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
+                />
+                <span className="text-foreground font-semibold text-lg">:</span>
+                <input
+                  ref={minuteInputRef}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={2}
+                  value={minuteText}
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(/\D/g, "").slice(0, 2);
+                    setMinuteText(raw);
+                    if (raw === "") return;
+                    const val = parseInt(raw, 10);
+                    if (!isNaN(val) && val >= 0 && val <= 59)
+                      handleMinuteChange(val);
+                  }}
+                  onBlur={() => {
+                    setMinuteText(String(selectedMinute).padStart(2, "0"));
+                  }}
+                  onFocus={(e) => e.target.select()}
+                  className="flex-1 min-w-0  bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
+                />
+              </div>
+            </div>
+          )}
+
+          <AppButton
+            color="primary"
+            onClick={handleSave}
+            disabled={!draftValue}
+            className="w-full mt-3 h-9 text-sm! font-semibold"
+          >
+            Salvar
+          </AppButton>
         </div>
       )}
     </div>
