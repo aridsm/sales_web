@@ -52,7 +52,28 @@ function AppSelectPaginatedInner<T extends SelectOption>(
         }
     };
 
-    useClickOutside(containerRef, () => setIsOpen(false));
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const listener = (event: MouseEvent | TouchEvent) => {
+            const target = event.target as HTMLElement;
+            if (
+                containerRef.current?.contains(target) ||
+                target.closest?.("[data-portal]")
+            ) {
+                return;
+            }
+            setIsOpen(false);
+        };
+
+        document.addEventListener("mousedown", listener);
+        document.addEventListener("touchstart", listener);
+
+        return () => {
+            document.removeEventListener("mousedown", listener);
+            document.removeEventListener("touchstart", listener);
+        };
+    }, [isOpen]);
 
     useEffect(() => {
         if (isOpen && search && searchInputRef.current) {
@@ -114,6 +135,7 @@ function AppSelectPaginatedInner<T extends SelectOption>(
         setSearchTerm,
         searchInputRef,
         listRef,
+        containerRef,
         disabled,
         error,
         removeValue,

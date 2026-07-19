@@ -2,8 +2,12 @@
 
 import { CircularProgress } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useCallback } from "react";
+import { useCallback, useState, useRef, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import { useAppSelect, SelectOption } from "./AppSelectContext";
+
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export default function AppSelectDropdown<T extends SelectOption>() {
   const {
@@ -20,7 +24,60 @@ export default function AppSelectDropdown<T extends SelectOption>() {
     searchTerm,
     setSearchTerm,
     items,
+    containerRef,
   } = useAppSelect<T>();
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState<{ top: number; left: number; width: number; isAbove: boolean } | null>(null);
+
+  const updateCoords = () => {
+    if (!containerRef?.current) return;
+    const parentRect = containerRef.current.getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = document.documentElement.clientHeight;
+
+    const menuWidth = parentRect.width;
+    let menuHeight = items.length * 40 + (search ? 48 : 0) + 8;
+    menuHeight = Math.min(menuHeight, 260);
+
+    if (dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      menuHeight = rect.height || menuHeight;
+    }
+
+    let left = parentRect.left;
+    if (left + menuWidth > viewportWidth - 12) {
+      left = viewportWidth - menuWidth - 12;
+    }
+    if (left < 12) {
+      left = 12;
+    }
+
+    let top = parentRect.bottom + 4;
+    let isAbove = false;
+    if (top + menuHeight > viewportHeight - 12) {
+      const topAbove = parentRect.top - menuHeight - 4;
+      if (topAbove >= 12) {
+        top = topAbove;
+        isAbove = true;
+      } else {
+        top = Math.max(12, viewportHeight - menuHeight - 12);
+        isAbove = top < parentRect.top;
+      }
+    }
+
+    setCoords({ top, left, width: menuWidth, isAbove });
+  };
+
+  useIsomorphicLayoutEffect(() => {
+    updateCoords();
+    window.addEventListener("resize", updateCoords);
+    window.addEventListener("scroll", updateCoords, { capture: true });
+    return () => {
+      window.removeEventListener("resize", updateCoords);
+      window.removeEventListener("scroll", updateCoords, { capture: true });
+    };
+  }, [items.length]);
 
   const handleScroll = useCallback(() => {
     if (!listRef.current || loading || pageData.page >= pageData.total_pages)
@@ -46,8 +103,23 @@ export default function AppSelectDropdown<T extends SelectOption>() {
     }
   };
 
-  return (
-    <div className="absolute z-50 w-full mt-1 bg-background-2 border border-border rounded-md shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+  if (!coords || typeof window === "undefined") return null;
+
+  return createPortal(
+    <div
+      ref={dropdownRef}
+      data-portal="true"
+      style={{
+        position: "fixed",
+        top: `${coords.top}px`,
+        left: `${coords.left}px`,
+        width: `${coords.width}px`,
+        zIndex: 9999,
+      }}
+      className={`bg-background-2 border border-border rounded-md shadow-dropdown overflow-hidden ${
+        coords.isAbove ? "animate-dropdown-open-above" : "animate-dropdown-open"
+      }`}
+    >
       {search && (
         <div className="px-3 border-b border-border flex items-center gap-2 sticky top-0 bg-background-2 z-10">
           <SearchIcon
@@ -106,6 +178,7 @@ export default function AppSelectDropdown<T extends SelectOption>() {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

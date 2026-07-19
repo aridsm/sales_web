@@ -23,6 +23,7 @@ export interface AppSelectContextValue<T extends SelectOption> {
     setSearchTerm: (term: string) => void;
     searchInputRef: React.RefObject<HTMLInputElement | null>;
     listRef: React.RefObject<HTMLDivElement | null>;
+    containerRef?: React.RefObject<HTMLDivElement | null>;
     disabled?: boolean;
     error?: string;
     removeValue: (e: React.MouseEvent, idToRemove: T["id"]) => void;

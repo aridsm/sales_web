@@ -4,11 +4,15 @@ import {
   useState,
   useRef,
   useEffect,
+  useLayoutEffect,
   forwardRef,
   useImperativeHandle,
 } from "react";
+import { createPortal } from "react-dom";
 import AppLabel from "../AppLabel";
-import { useClickOutside } from "../../utils/useClickOutside";
+
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 import { ChevronLeft } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
@@ -52,27 +56,113 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
     ref,
   ) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [coords, setCoords] = useState<{ top: number; left: number; width: number; isAbove: boolean } | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const containerRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const filteredOptions = options.filter((option) =>
+      option.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+
+    const updateCoords = () => {
+      if (!containerRef.current) return;
+      const parentRect = containerRef.current.getBoundingClientRect();
+      const viewportWidth = document.documentElement.clientWidth;
+      const viewportHeight = document.documentElement.clientHeight;
+
+      const menuWidth = parentRect.width;
+      let menuHeight = filteredOptions.length * 40 + (search ? 48 : 0) + 8;
+      menuHeight = Math.min(menuHeight, 260);
+
+      if (dropdownRef.current) {
+        const rect = dropdownRef.current.getBoundingClientRect();
+        menuHeight = rect.height || menuHeight;
+      }
+
+      let left = parentRect.left;
+      if (left + menuWidth > viewportWidth - 12) {
+        left = viewportWidth - menuWidth - 12;
+      }
+      if (left < 12) {
+        left = 12;
+      }
+
+      let top = parentRect.bottom + 4;
+      let isAbove = false;
+      if (top + menuHeight > viewportHeight - 12) {
+        const topAbove = parentRect.top - menuHeight - 4;
+        if (topAbove >= 12) {
+          top = topAbove;
+          isAbove = true;
+        } else {
+          top = Math.max(12, viewportHeight - menuHeight - 12);
+          isAbove = top < parentRect.top;
+        }
+      }
+
+      setCoords({ top, left, width: menuWidth, isAbove });
+    };
+
+    useIsomorphicLayoutEffect(() => {
+      if (isOpen) {
+        updateCoords();
+        window.addEventListener("resize", updateCoords);
+        window.addEventListener("scroll", updateCoords, { capture: true });
+      } else {
+        setCoords(null);
+      }
+      return () => {
+        window.removeEventListener("resize", updateCoords);
+        window.removeEventListener("scroll", updateCoords, { capture: true });
+      };
+    }, [isOpen, filteredOptions.length]);
 
     useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);
 
     const toggleDropdown = () => {
-      if (!disabled) setIsOpen(!isOpen);
+      if (!disabled) {
+        if (!isOpen) {
+          updateCoords();
+          setIsOpen(true);
+        } else {
+          setIsOpen(false);
+          setCoords(null);
+        }
+      }
     };
 
-    useClickOutside(containerRef, () => setIsOpen(false));
+    useEffect(() => {
+      if (!isOpen) return;
+
+      const listener = (event: MouseEvent | TouchEvent) => {
+        const target = event.target as HTMLElement;
+        if (
+          containerRef.current?.contains(target) ||
+          dropdownRef.current?.contains(target) ||
+          target.closest?.("[data-portal]")
+        ) {
+          return;
+        }
+        setIsOpen(false);
+        setCoords(null);
+      };
+
+      document.addEventListener("mousedown", listener);
+      document.addEventListener("touchstart", listener);
+
+      return () => {
+        document.removeEventListener("mousedown", listener);
+        document.removeEventListener("touchstart", listener);
+      };
+    }, [isOpen]);
 
     useEffect(() => {
       if (isOpen && search && searchInputRef.current) {
         searchInputRef.current.focus();
       }
     }, [isOpen, search]);
-
-    const filteredOptions = options.filter((option) =>
-      option.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
 
     const handleSelect = (option: AppSelectOption) => {
       if (multiple) {
@@ -89,6 +179,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
       } else {
         onChange?.(option.id);
         setIsOpen(false);
+        setCoords(null);
       }
     };
 
@@ -193,8 +284,22 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
             </div>
           )}
 
-          {isOpen && (
-            <div className="absolute z-50 w-full min-w-max mt-1 bg-background-2 border border-border rounded-md shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+          {isOpen && coords && typeof window !== "undefined" && createPortal(
+            <div
+              ref={dropdownRef}
+              data-portal="true"
+              style={{
+                position: "fixed",
+                top: `${coords.top}px`,
+                left: `${coords.left}px`,
+                width: `${coords.width}px`,
+                zIndex: 9999,
+              }}
+              className={`bg-background-2 border border-border rounded-md shadow-dropdown overflow-hidden ${
+                coords.isAbove ? "animate-dropdown-open-above" : "animate-dropdown-open"
+              }`}
+              role="menu"
+            >
               {search && (
                 <div className="px-3 border-b border-slate-100 flex items-center gap-2 sticky top-0 bg-background-2 z-10">
                   <SearchIcon
@@ -237,7 +342,8 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                   </div>
                 )}
               </div>
-            </div>
+            </div>,
+            document.body
           )}
         </div>
         {error && <span className="text-xs text-red-500 mt-1">{error}</span>}

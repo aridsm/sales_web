@@ -6,15 +6,19 @@ import React, {
   forwardRef,
   useImperativeHandle,
   useEffect,
+  useLayoutEffect,
 } from "react";
+import { createPortal } from "react-dom";
 import AppLabel from "../AppLabel";
+
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 import {
   CalendarMonthOutlined,
   ChevronLeft,
   ChevronRight,
   AccessTimeOutlined,
 } from "@mui/icons-material";
-import { useClickOutside } from "../../utils/useClickOutside";
 import AppSelect from "./AppSelect";
 import AppButton from "../AppButton";
 
@@ -70,6 +74,64 @@ const AppDateInner = (
   useImperativeHandle(ref, () => triggerRef.current as HTMLDivElement);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [coords, setCoords] = useState<{
+    top: number;
+    left: number;
+    isAbove: boolean;
+  } | null>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
+
+  const updateCoords = () => {
+    if (!triggerRef.current) return;
+    const triggerRect = triggerRef.current.getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = document.documentElement.clientHeight;
+
+    const menuWidth = 280;
+    let menuHeight = showTime ? 390 : 330;
+
+    if (calendarRef.current) {
+      const rect = calendarRef.current.getBoundingClientRect();
+      menuHeight = rect.height || menuHeight;
+    }
+
+    let left = triggerRect.left;
+    if (left + menuWidth > viewportWidth - 12) {
+      left = viewportWidth - menuWidth - 12;
+    }
+    if (left < 12) {
+      left = 12;
+    }
+
+    let top = triggerRect.bottom + 4;
+    let isAbove = false;
+    if (top + menuHeight > viewportHeight - 12) {
+      const topAbove = triggerRect.top - menuHeight - 4;
+      if (topAbove >= 12) {
+        top = topAbove;
+        isAbove = true;
+      } else {
+        top = Math.max(12, viewportHeight - menuHeight - 12);
+        isAbove = top < triggerRect.top;
+      }
+    }
+
+    setCoords({ top, left, isAbove });
+  };
+
+  useIsomorphicLayoutEffect(() => {
+    if (isOpen) {
+      updateCoords();
+      window.addEventListener("resize", updateCoords);
+      window.addEventListener("scroll", updateCoords, { capture: true });
+    } else {
+      setCoords(null);
+    }
+    return () => {
+      window.removeEventListener("resize", updateCoords);
+      window.removeEventListener("scroll", updateCoords, { capture: true });
+    };
+  }, [isOpen]);
   const [viewDate, setViewDate] = useState(new Date());
   const [draftValue, setDraftValue] = useState<string | undefined>(value);
 
@@ -86,8 +148,12 @@ const AppDateInner = (
   const hourInputRef = useRef<HTMLInputElement>(null);
   const minuteInputRef = useRef<HTMLInputElement>(null);
 
-  const [hourText, setHourText] = useState(String(selectedHour).padStart(2, "0"));
-  const [minuteText, setMinuteText] = useState(String(selectedMinute).padStart(2, "0"));
+  const [hourText, setHourText] = useState(
+    String(selectedHour).padStart(2, "0"),
+  );
+  const [minuteText, setMinuteText] = useState(
+    String(selectedMinute).padStart(2, "0"),
+  );
 
   useEffect(() => {
     if (document.activeElement !== hourInputRef.current) {
@@ -103,6 +169,7 @@ const AppDateInner = (
 
   const handleOpen = () => {
     if (disabled) return;
+    updateCoords();
     setDraftValue(value);
     setIsOpen(true);
     const dateToParse = value || draftValue;
@@ -121,12 +188,31 @@ const AppDateInner = (
     }
   };
 
-  useClickOutside(containerRef, () => {
-    if (isOpen) {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const listener = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement;
+      if (
+        containerRef.current?.contains(target) ||
+        calendarRef.current?.contains(target) ||
+        target.closest?.("[data-portal]")
+      ) {
+        return;
+      }
       setIsOpen(false);
+      setCoords(null);
       onBlur?.();
-    }
-  });
+    };
+
+    document.addEventListener("mousedown", listener);
+    document.addEventListener("touchstart", listener);
+
+    return () => {
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
+    };
+  }, [isOpen, onBlur]);
 
   const handleSelectDay = (day: number) => {
     let hours = 0;
@@ -205,6 +291,7 @@ const AppDateInner = (
       onChange?.(draftValue);
     }
     setIsOpen(false);
+    setCoords(null);
     triggerRef.current?.focus();
   };
 
@@ -336,126 +423,148 @@ const AppDateInner = (
 
       {error && <span className="text-xs text-red-500 mt-1">{error}</span>}
 
-      {isOpen && (
-        <div className="absolute top-[calc(100%+4px)] left-0 z-50 bg-background-2 dark:bg-background-3 border border-border rounded-md shadow-xl p-3 w-[280px]">
-          <div className="flex items-center justify-between mb-4 gap-1">
-            <AppButton
-              rounded
-              flat
-              color="foreground"
-              onClick={prevMonth}
-              className="min-w-7! min-h-7! h-7 w-7 px-0!"
-            >
-              <ChevronLeft fontSize="small" />
-            </AppButton>
-
-            <div className="flex gap-2 flex-1 mx-2 w-full ">
-              <AppSelect
-                value={viewDate.getMonth()}
-                onChange={(val) =>
-                  setViewDate(new Date(viewDate.getFullYear(), Number(val), 1))
-                }
-                options={monthOptions}
-                size="small"
-                className="flex-1"
-              />
-
-              <AppSelect
-                value={viewDate.getFullYear()}
-                onChange={(val) =>
-                  setViewDate(new Date(Number(val), viewDate.getMonth(), 1))
-                }
-                options={yearOptions}
-                size="small"
-              />
-            </div>
-
-            <AppButton
-              rounded
-              flat
-              color="foreground"
-              onClick={nextMonth}
-              className="min-w-7! min-h-7! h-7 w-7 px-0!"
-            >
-              <ChevronRight fontSize="small" />
-            </AppButton>
-          </div>
-
-          <div className="grid grid-cols-7 gap-1 mb-1">
-            {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((d) => (
-              <div
-                key={d}
-                className="w-8 h-8 flex items-center justify-center text-xs font-medium text-foreground"
-              >
-                {d}
-              </div>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-7 gap-1">{renderDays()}</div>
-
-          {showTime && activeDraft && !isNaN(activeDraft.getTime()) && (
-            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border">
-              <AccessTimeOutlined
-                className="text-label"
-                style={{ fontSize: 18 }}
-              />
-              <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                <input
-                  ref={hourInputRef}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={2}
-                  value={hourText}
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/\D/g, "").slice(0, 2);
-                    setHourText(raw);
-                    if (raw === "") return;
-                    const val = parseInt(raw, 10);
-                    if (!isNaN(val) && val >= 0 && val <= 23)
-                      handleHourChange(val);
-                  }}
-                  onBlur={() => {
-                    setHourText(String(selectedHour).padStart(2, "0"));
-                  }}
-                  onFocus={(e) => e.target.select()}
-                  className="flex-1 min-w-0 bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
-                />
-                <span className="text-foreground font-semibold text-lg">:</span>
-                <input
-                  ref={minuteInputRef}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={2}
-                  value={minuteText}
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/\D/g, "").slice(0, 2);
-                    setMinuteText(raw);
-                    if (raw === "") return;
-                    const val = parseInt(raw, 10);
-                    if (!isNaN(val) && val >= 0 && val <= 59)
-                      handleMinuteChange(val);
-                  }}
-                  onBlur={() => {
-                    setMinuteText(String(selectedMinute).padStart(2, "0"));
-                  }}
-                  onFocus={(e) => e.target.select()}
-                  className="flex-1 min-w-0  bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
-                />
-              </div>
-            </div>
-          )}
-
-          <AppButton
-            color="primary"
-            onClick={handleSave}
-            disabled={!draftValue}
-            className="w-full mt-3 h-9 text-sm! font-semibold"
+      {isOpen &&
+        coords &&
+        typeof window !== "undefined" &&
+        createPortal(
+          <div
+            ref={calendarRef}
+            data-portal="true"
+            style={{
+              position: "fixed",
+              top: `${coords.top}px`,
+              left: `${coords.left}px`,
+              zIndex: 9999,
+            }}
+            className={`bg-background-2 dark:bg-background-3 border border-border rounded-md shadow-dropdown p-3 w-[280px] ${
+              coords.isAbove
+                ? "animate-dropdown-open-above"
+                : "animate-dropdown-open"
+            }`}
           >
-            Salvar
-          </AppButton>
-        </div>
-      )}
+            <div className="flex items-center justify-between mb-4 gap-1">
+              <AppButton
+                rounded
+                flat
+                color="foreground"
+                onClick={prevMonth}
+                className="min-w-7! min-h-7! h-7 w-7 px-0!"
+              >
+                <ChevronLeft fontSize="small" />
+              </AppButton>
+
+              <div className="flex gap-2 flex-1 mx-2 w-full ">
+                <AppSelect
+                  value={viewDate.getMonth()}
+                  onChange={(val) =>
+                    setViewDate(
+                      new Date(viewDate.getFullYear(), Number(val), 1),
+                    )
+                  }
+                  options={monthOptions}
+                  size="small"
+                  className="flex-1"
+                />
+
+                <AppSelect
+                  value={viewDate.getFullYear()}
+                  onChange={(val) =>
+                    setViewDate(new Date(Number(val), viewDate.getMonth(), 1))
+                  }
+                  options={yearOptions}
+                  size="small"
+                />
+              </div>
+
+              <AppButton
+                rounded
+                flat
+                color="foreground"
+                onClick={nextMonth}
+                className="min-w-7! min-h-7! h-7 w-7 px-0!"
+              >
+                <ChevronRight fontSize="small" />
+              </AppButton>
+            </div>
+
+            <div className="grid grid-cols-7 gap-1 mb-1">
+              {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((d) => (
+                <div
+                  key={d}
+                  className="w-8 h-8 flex items-center justify-center text-xs font-medium text-foreground"
+                >
+                  {d}
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-7 gap-1">{renderDays()}</div>
+
+            {showTime && activeDraft && !isNaN(activeDraft.getTime()) && (
+              <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border">
+                <AccessTimeOutlined
+                  className="text-label"
+                  style={{ fontSize: 18 }}
+                />
+                <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                  <input
+                    ref={hourInputRef}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={2}
+                    value={hourText}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, "").slice(0, 2);
+                      setHourText(raw);
+                      if (raw === "") return;
+                      const val = parseInt(raw, 10);
+                      if (!isNaN(val) && val >= 0 && val <= 23)
+                        handleHourChange(val);
+                    }}
+                    onBlur={() => {
+                      setHourText(String(selectedHour).padStart(2, "0"));
+                    }}
+                    onFocus={(e) => e.target.select()}
+                    className="flex-1 min-w-0 bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
+                  />
+                  <span className="text-foreground font-semibold text-lg">
+                    :
+                  </span>
+                  <input
+                    ref={minuteInputRef}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={2}
+                    value={minuteText}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, "").slice(0, 2);
+                      setMinuteText(raw);
+                      if (raw === "") return;
+                      const val = parseInt(raw, 10);
+                      if (!isNaN(val) && val >= 0 && val <= 59)
+                        handleMinuteChange(val);
+                    }}
+                    onBlur={() => {
+                      setMinuteText(String(selectedMinute).padStart(2, "0"));
+                    }}
+                    onFocus={(e) => e.target.select()}
+                    className="flex-1 min-w-0  bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
+                  />
+                </div>
+              </div>
+            )}
+
+            <AppButton
+              color="primary"
+              onClick={handleSave}
+              disabled={!draftValue}
+              className="w-full mt-3 h-9 text-sm! font-semibold"
+            >
+              Salvar
+            </AppButton>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };
