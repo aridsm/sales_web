@@ -322,7 +322,7 @@ export default function AppGrid<T>({
                   {columns.map((col, index) => (
                     <th
                       key={index}
-                      className={`font-semibold border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary dark:text-yellow-300" : ""}`}
+                      className={`font-semibold border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary-3 dark:text-primary" : ""}`}
                       style={{ width: colWidths[index] || col.size || 140 }}
                     >
                       {col.column}
@@ -363,13 +363,13 @@ export default function AppGrid<T>({
                     return (
                       <tr
                         key={rowIndex}
-                        className={`group hover:bg-background-3 transition-colors ${selected ? "bg-primary-light hover:bg-primary-light" : ""}`}
+                        className={`group hover:bg-background-3 transition-colors ${selected ? "bg-primary-4 hover:bg-primary-4" : ""}`}
                       >
                         {hasSelection && (
                           <td
                             className={`p-2 w-12 border-r first:border-l border-b sticky left-0 z-10 text-center transition-colors ${
                               selected
-                                ? `bg-primary-light group-hover:bg-primary-light border-border ${isNextSelected ? "border-b-border" : "border-b-primary"} border-l-primary ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary)]" : ""}`
+                                ? `bg-primary-4 group-hover:bg-primary-4 border-border ${isNextSelected ? "border-b-border" : "border-b-primary-3"} border-l-primary-3 ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary-3)]" : ""}`
                                 : "bg-background group-hover:bg-background-3 border-border"
                             }`}
                           >
@@ -386,7 +386,7 @@ export default function AppGrid<T>({
                             key={colIndex}
                             className={`p-3 overflow-hidden border-r border-b ${!hasSelection ? "first:border-l" : ""} ${
                               selected
-                                ? `border-border ${isNextSelected ? "border-b-border" : "border-b-primary"} ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary)]" : ""} ${!hasSelection ? "first:border-l-primary" : ""}`
+                                ? `border-border ${isNextSelected ? "border-b-border" : "border-b-primary-3"} ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary-3)]" : ""} ${!hasSelection ? "first:border-l-primary-3" : ""}`
                                 : "border-border"
                             } ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
                             style={{
@@ -399,7 +399,7 @@ export default function AppGrid<T>({
                         <td
                           className={`border-b ${!actions ? "border-r" : ""} ${
                             selected
-                              ? `border-border ${isNextSelected ? "border-b-border" : "border-b-primary"} ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary)]" : ""} ${!actions ? "border-r-primary" : ""}`
+                              ? `border-border ${isNextSelected ? "border-b-border" : "border-b-primary-3"} ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary-3)]" : ""} ${!actions ? "border-r-primary-3" : ""}`
                               : "border-border"
                           }`}
                         ></td>
@@ -407,7 +407,7 @@ export default function AppGrid<T>({
                           <td
                             className={`p-2 border-l border-r border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${
                               selected
-                                ? `bg-primary-light group-hover:bg-primary-light border-border ${isNextSelected ? "border-b-border" : "border-b-primary"} border-r-primary ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary)]" : ""}`
+                                ? `bg-primary-4 group-hover:bg-primary-4 border-border ${isNextSelected ? "border-b-border" : "border-b-primary-3"} border-r-primary-3 ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary-3)]" : ""}`
                                 : "bg-background group-hover:bg-background-3 border-border"
                             }`}
                           >

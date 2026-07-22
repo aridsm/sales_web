@@ -51,7 +51,11 @@ export default function LoginPage() {
       const error = err as { response?: { data?: { detail?: string } } };
       openDialog({
         variant: "error",
-        message: t(error.response?.data?.detail ? `errors.auth.${error.response.data.detail}` : "errors.all.generic"),
+        message: t(
+          error.response?.data?.detail
+            ? `errors.auth.${error.response.data.detail}`
+            : "errors.all.generic",
+        ),
       });
     } finally {
       setLoading(false);
@@ -111,7 +115,7 @@ export default function LoginPage() {
             type="submit"
             color="primary"
             disabled={loading}
-            className="w-full h-12 mt-4 text-sm"
+            className="w-full h-11 mt-4 text-sm"
           >
             {loading ? t("labels.login.logging") : t("labels.login.button")}
           </AppButton>
@@ -121,7 +125,7 @@ export default function LoginPage() {
           {t("labels.login.no_account")}{" "}
           <Link
             href="/register"
-            className="text-primary dark:text-yellow-300 hover:underline font-semibold"
+            className="text-indigo-400 hover:text-primary-3 underline font-semibold transition-colors"
           >
             {t("labels.login.create_account")}
           </Link>

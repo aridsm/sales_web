@@ -84,7 +84,11 @@ export default function AppFilter<T = unknown>({
         });
       } else if (typeof value === "object" && value !== null) {
         const range = value as Record<string, unknown>;
-        if (range.start !== undefined && range.start !== null && range.start !== "") {
+        if (
+          range.start !== undefined &&
+          range.start !== null &&
+          range.start !== ""
+        ) {
           newParams.set(`start_${key}`, String(range.start));
         }
         if (range.end !== undefined && range.end !== null && range.end !== "") {
@@ -124,12 +128,12 @@ export default function AppFilter<T = unknown>({
       <AppButton
         color="background"
         onClick={handleOpen}
-        className={`px-4 shrink-0 relative ${hasActiveFilters ? "text-primary dark:text-foreground border-primary! dark:border-foreground!" : ""}`}
+        className={`px-4 shrink-0 relative ${hasActiveFilters ? "text-primary-3 dark:text-primary border-primary-3 hover:border-primary-3 dark:border-primary/60" : ""}`}
       >
         <FilterList fontSize="small" />
         {t("labels.filter.button")}
         {hasActiveFilters && (
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-primary dark:bg-foreground rounded-full border-2 border-background" />
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-primary-3 dark:bg-primary rounded-full border-2 border-background" />
         )}
       </AppButton>
 

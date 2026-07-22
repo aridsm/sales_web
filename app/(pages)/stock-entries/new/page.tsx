@@ -92,8 +92,8 @@ export default function NewStockEntryPage() {
     if (cart.length === 0) return;
     openDialog({
       variant: "confirm",
-      title: "Limpar itens",
-      message: "Tem certeza que deseja remover todos os itens da compra?",
+      title: t("labels.stock_entries.new.clear_cart_title"),
+      message: t("labels.stock_entries.new.clear_cart_message"),
       confirmLabel: t("labels.all.clear"),
       onConfirm: () => setCart([]),
     });
@@ -152,8 +152,11 @@ export default function NewStockEntryPage() {
           // After confirming the warning, show the final confirmation
           openDialog({
             variant: "confirm",
-            title: "Finalizar Compra",
-            message: `Confirmar registro de compra de ${totalItems} ${totalItems === 1 ? "item" : "itens"} no valor total de ${formatCurrency(totalPrice)}?`,
+            title: t("labels.stock_entries.new.finish_entry_title"),
+            message: t("labels.stock_entries.new.finish_entry_message", {
+              items: `${totalItems} ${totalItems === 1 ? t("labels.stock_entries.new.item_singular") : t("labels.stock_entries.new.item_plural")}`,
+              total: formatCurrency(totalPrice),
+            }),
             confirmLabel: t("labels.all.finish"),
             onConfirm: submitEntry,
           });
@@ -164,8 +167,11 @@ export default function NewStockEntryPage() {
 
     openDialog({
       variant: "confirm",
-      title: "Finalizar Compra",
-      message: `Confirmar registro de compra de ${totalItems} ${totalItems === 1 ? "item" : "itens"} no valor total de ${formatCurrency(totalPrice)}?`,
+      title: t("labels.stock_entries.new.finish_entry_title"),
+      message: t("labels.stock_entries.new.finish_entry_message", {
+        items: `${totalItems} ${totalItems === 1 ? t("labels.stock_entries.new.item_singular") : t("labels.stock_entries.new.item_plural")}`,
+        total: formatCurrency(totalPrice),
+      }),
       confirmLabel: t("labels.all.finish"),
       onConfirm: submitEntry,
     });
@@ -179,9 +185,8 @@ export default function NewStockEntryPage() {
     if (cart.length > 0) {
       openDialog({
         variant: "confirm",
-        title: "Sair da compra",
-        message:
-          "Você tem itens pendentes. Deseja sair e descartar a operação?",
+        title: t("labels.stock_entries.new.exit_title"),
+        message: t("labels.stock_entries.new.exit_message"),
         confirmLabel: t("labels.all.exit"),
         onConfirm: () => router.push("/stock-entries"),
       });
@@ -191,21 +196,20 @@ export default function NewStockEntryPage() {
   }
 
   return (
-    <AppPage title="Nova Entrada de Estoque">
-      <div className="mb-4">
+    <AppPage title={t("labels.stock_entries.new.title")}>
+      <div className="mb-2">
         <AppButton
           color="transparent"
           flat
           onClick={handleGoBack}
-          className="gap-1.5! px-2! -ml-2"
+          className="gap-1.5! px-2!"
         >
           <ArrowBackOutlined style={{ fontSize: 18 }} />
-          <span className="text-sm">Voltar para Entradas</span>
+          <span className="text-sm">{t("labels.stock_entries.new.back")}</span>
         </AppButton>
       </div>
 
       <div className="flex gap-5 flex-1 min-h-0">
-        {/* Product listing */}
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <div className="flex gap-4 mb-4">
             <div className="relative flex-1">
@@ -218,7 +222,7 @@ export default function NewStockEntryPage() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar produto por nome ou categoria..."
+                placeholder={t("labels.stock_entries.new.search_placeholder")}
                 className="input-field w-full pl-11!"
               />
             </div>
@@ -231,7 +235,7 @@ export default function NewStockEntryPage() {
             <AppInfinity
               pagination={productsPagination}
               initialLoaded={initialLoaded}
-              emptyMessage="Nenhum produto encontrado"
+              emptyMessage={t("labels.stock_entries.new.no_products")}
             >
               <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
                 {productsPagination.items.map((product) => {
@@ -247,7 +251,7 @@ export default function NewStockEntryPage() {
                         group relative text-left p-4 rounded-lg border transition-all duration-200 flex flex-col h-full
                         ${
                           inCart > 0
-                            ? "border-primary bg-primary/5 dark:bg-primary/10 cursor-default"
+                            ? "border-primary-3 bg-primary-3/5 dark:bg-primary-3/10 cursor-default"
                             : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-2! cursor-pointer"
                         }
                       `}
@@ -271,11 +275,13 @@ export default function NewStockEntryPage() {
                       {/* Footer */}
                       <div className="flex items-center justify-between mt-auto h-8">
                         <span className="text-xs text-label">
-                          {product.stock_amount} em estoque
+                          {product.stock_amount}{" "}
+                          {t("labels.stock_entries.new.in_stock")}
                         </span>
 
                         {inCart === 0 ? (
                           <AppButton
+                            color="primary-3"
                             onClick={(e) => {
                               e.stopPropagation();
                               addToCart(product);
@@ -283,7 +289,7 @@ export default function NewStockEntryPage() {
                             className="py-1! px-3! opacity-0 group-hover:opacity-100 transition-opacity"
                           >
                             <AddOutlined style={{ fontSize: 16 }} />
-                            Adicionar
+                            {t("labels.all.add")}
                           </AppButton>
                         ) : (
                           <AppButton
@@ -293,10 +299,10 @@ export default function NewStockEntryPage() {
                             }}
                             color="red"
                             flat
-                            className="py-1! px-3! bg-red-500/10! hover:bg-red-500/20!"
+                            className="py-1! px-3! bg-transparent! hover:bg-red-500/10!"
                           >
                             <DeleteOutlined style={{ fontSize: 16 }} />
-                            Remover
+                            {t("labels.all.remove")}
                           </AppButton>
                         )}
                       </div>

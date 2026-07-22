@@ -47,7 +47,7 @@ export default function AppTabs({
             onClick={() => handleTabClick(tab.value)}
             className={`px-3 py-1 text-sm font-medium rounded-sm transition-all duration-200 cursor-pointer whitespace-nowrap ${
               isActive
-                ? "bg-foreground-2 dark:bg-primary text-white"
+                ? "bg-foreground-2 dark:bg-indigo-500 text-white dark:text-white"
                 : "text-label hover:text-foreground"
             }`}
           >

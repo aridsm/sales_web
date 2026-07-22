@@ -126,7 +126,7 @@ export default function SalePage() {
               <Link
                 href={`/sales/${sale.id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="font-semibold hover:text-primary dark:hover:text-yellow-300 hover:underline transition-all duration-200"
+                className="font-semibold hover:text-primary-3 dark:hover:text-primary hover:underline transition-all duration-200"
               >
                 {sale.code.toString().padStart(6, "0")}
               </Link>

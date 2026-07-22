@@ -124,7 +124,7 @@ export default function ProductsPage() {
             <span className="mt-0.5">{category.name}</span>
             {!!category.products && (
               <span
-                className={`rounded-full w-6 h-6 flex items-center justify-center text-xs font-semibold text-primary dark:text-white bg-primary/15 dark:bg-primary`}
+                className={`rounded-full w-6 h-6 flex items-center justify-center text-xs font-semibold text-white bg-indigo-500`}
               >
                 {category.products}
               </span>

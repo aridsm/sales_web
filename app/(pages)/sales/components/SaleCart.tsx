@@ -12,6 +12,7 @@ import {
   AddOutlined,
   CheckCircleOutlined,
 } from "@mui/icons-material";
+import AppDate from "../../../components/inputs/AppDate";
 
 export function SaleCart({
   cart,
@@ -22,6 +23,8 @@ export function SaleCart({
   onRemoveFromCart,
   onUpdateQuantity,
   onFinishSale,
+  saleDate,
+  onDateChange,
 }: {
   cart: CartItem<Product>[];
   totalItems: number;
@@ -31,6 +34,8 @@ export function SaleCart({
   onRemoveFromCart: (productId: string) => void;
   onUpdateQuantity: (productId: string, delta: number) => void;
   onFinishSale: () => void;
+  saleDate: string;
+  onDateChange: (value: string) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -38,9 +43,9 @@ export function SaleCart({
       <AppCard className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-lg bg-primary-3/10 dark:bg-primary/10 flex items-center justify-center">
               <ShoppingCartOutlined
-                className="text-primary"
+                className="text-primary-3 dark:text-primary"
                 style={{ fontSize: 20 }}
               />
             </div>
@@ -65,6 +70,16 @@ export function SaleCart({
               {t("labels.all.clear")}
             </AppButton>
           )}
+        </div>
+
+        {/* Date picker */}
+        <div className="px-4 py-3 border-b border-border">
+          <AppDate
+            label={t("labels.sales.new.sale_date")}
+            value={saleDate}
+            onChange={onDateChange}
+            showTime
+          />
         </div>
 
         <div className="flex-1 overflow-y-auto min-h-0">

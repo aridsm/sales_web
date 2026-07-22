@@ -4,12 +4,10 @@ export default function LoginLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={`min-h-screen flex bg-background transition-colors`}
-    >
+    <div className={`min-h-screen flex bg-background transition-colors`}>
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-72 h-72 bg-primary/5 rounded-full filter blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2 dark:bg-primary/10"></div>
-        <div className="absolute bottom-0 right-0 w-72 h-72 bg-primary-2/5 rounded-full filter blur-3xl pointer-events-none translate-x-1/2 translate-y-1/2 dark:bg-primary-2/10"></div>
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-primary/5 rounded-full filter blur-3xl pointer-events-none translate-x-1/2 translate-y-1/2 dark:bg-primary/10"></div>
 
         <div className="w-full max-w-md relative z-10">{children}</div>
       </div>
@@ -27,7 +25,7 @@ export default function LoginLayout({
         ></div>
 
         <div className="relative z-10 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-md bg-gradient-to-tr from-primary to-primary-2 flex items-center justify-center ">
+          <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center ">
             <svg
               className="w-4 h-4 text-white font-bold"
               viewBox="0 0 200 200"
@@ -45,12 +43,12 @@ export default function LoginLayout({
         <div className="relative z-10 my-auto max-w-lg mx-auto w-full">
           <div className="space-y-12">
             <div className="space-y-3">
-              <span className="px-3 py-1 text-xs font-semibold text-primary-2 bg-primary/10 border border-primary/20 rounded-full inline-block">
+              <span className="px-3 py-1 text-xs font-semibold text-primary bg-primary/10 border border-primary/20 rounded-full inline-block">
                 Nova versão 2.0
               </span>
               <h2 className="text-4xl font-extrabold text-white tracking-tight leading-tight">
                 Controle suas vendas com{" "}
-                <span className="bg-gradient-to-r from-primary-2 to-blue-400 bg-clip-text text-transparent">
+                <span className=" to-blue-400 bg-clip-text text-transparent">
                   simplicidade
                 </span>
               </h2>
@@ -112,10 +110,10 @@ export default function LoginLayout({
 
                 <div className="absolute -top-12 left-4 w-[260px] bg-[#2d2e35]/85 backdrop-blur-md border border-primary/30 rounded-md p-5 translate-z-[60px] transition-all duration-500 group-hover:translate-z-[80px] group-hover:translate-y-[-6px]">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] uppercase font-semibold tracking-wider text-primary-2">
+                    <span className="text-[10px] uppercase font-semibold tracking-wider text-primary">
                       Faturamento Mensal
                     </span>
-                    <span className="text-[10px] bg-primary/20 text-primary-2 px-2 py-0.5 rounded-full font-bold">
+                    <span className="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold">
                       +18.2%
                     </span>
                   </div>

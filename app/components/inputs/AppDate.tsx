@@ -370,10 +370,10 @@ const AppDateInner = (
       let dayClass =
         "w-8 h-8 flex items-center justify-center rounded-md text-sm cursor-pointer transition-colors";
       if (isSelected) {
-        dayClass += " bg-primary text-white font-medium";
+        dayClass += " bg-primary-3 text-white font-medium";
       } else if (isToday) {
         dayClass +=
-          " bg-primary/10 text-primary font-medium hover:bg-primary/20";
+          " bg-primary-3/10 text-primary-3 dark:bg-primary/10 dark:text-primary font-medium hover:bg-primary-3/20 dark:hover:bg-primary/20";
       } else {
         dayClass += " hover:bg-background dark:hover:bg-background-2";
       }
@@ -436,7 +436,7 @@ const AppDateInner = (
               left: `${coords.left}px`,
               zIndex: 9999,
             }}
-            className={`bg-background-2 dark:bg-background-3 border border-border rounded-md shadow-dropdown p-3 w-[280px] ${
+            className={`bg-background-2 dark:bg-background-3 border border-border rounded-md shadow-dropdown p-3 w-[320px] ${
               coords.isAbove
                 ? "animate-dropdown-open-above"
                 : "animate-dropdown-open"
@@ -473,6 +473,7 @@ const AppDateInner = (
                   }
                   options={yearOptions}
                   size="small"
+                  className="w-20"
                 />
               </div>
 

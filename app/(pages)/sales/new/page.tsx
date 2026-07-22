@@ -46,6 +46,7 @@ export default function NewSalePage() {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<CartItem<Product>[]>([]);
+  const [saleDate, setSaleDate] = useState(() => new Date().toISOString());
   const [isFinishing, setIsFinishing] = useState(false);
   const { openDialog } = useDialogStore();
   const searchRef = useRef<HTMLInputElement>(null);
@@ -113,6 +114,7 @@ export default function NewSalePage() {
         setIsFinishing(true);
         try {
           await salesService.post({
+            date: saleDate,
             products: cart.map((i) => ({
               product_id: i.product.id,
               quantity: i.quantity,
@@ -164,12 +166,12 @@ export default function NewSalePage() {
 
   return (
     <AppPage title={t("labels.sales.new.title")}>
-      <div className="mb-4">
+      <div className="mb-2">
         <AppButton
           color="transparent"
           flat
           onClick={handleGoBack}
-          className="gap-1.5! px-2! -ml-2"
+          className="gap-1.5! px-2!"
         >
           <ArrowBackOutlined style={{ fontSize: 18 }} />
           <span className="text-sm">{t("labels.sales.new.back")}</span>
@@ -208,7 +210,6 @@ export default function NewSalePage() {
                 {productsPagination.items.map((product) => {
                   const inCart = getCartQuantity(product.id);
                   const outOfStock = product.stock_amount <= 0;
-                  const maxedOut = inCart >= product.stock_amount;
 
                   return (
                     <AppCard
@@ -222,7 +223,7 @@ export default function NewSalePage() {
                           group relative text-left p-4 rounded-lg border transition-all duration-200 flex flex-col h-full
                           ${
                             inCart > 0
-                              ? "border-primary bg-primary/5 dark:bg-primary/10 "
+                              ? "border-primary-3 bg-primary-3/5 dark:bg-primary-3/10 "
                               : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-2!"
                           }
                           ${outOfStock ? "opacity-50" : ""}
@@ -239,17 +240,6 @@ export default function NewSalePage() {
                             {product.category_name}
                           </span>
                         </div>
-                        <AppButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeFromCart(product.id);
-                          }}
-                          color="background"
-                          className={`px-2! text-red-500 ${!inCart ? "opacity-0 pointer-events-none" : "hover:bg-red-500/10"}`}
-                          title={t("labels.sales.new.remove_from_cart")}
-                        >
-                          <DeleteOutlined style={{ fontSize: 16 }} />
-                        </AppButton>
                       </div>
 
                       <p className="text-foreground leading-snug mb-3 line-clamp-2 font-medium">
@@ -268,32 +258,22 @@ export default function NewSalePage() {
                         </div>
 
                         {inCart > 0 ? (
-                          <div
-                            className="flex items-center gap-1.5"
-                            onClick={(e) => e.stopPropagation()}
+                          <AppButton
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeFromCart(product.id);
+                            }}
+                            color="red"
+                            flat
+                            className="py-1! px-3! bg-transparent! hover:bg-red-500/10!"
                           >
-                            <AppButton
-                              color="background"
-                              className="px-2!"
-                              onClick={() => updateQuantity(product.id, -1)}
-                            >
-                              <RemoveOutlined style={{ fontSize: 14 }} />
-                            </AppButton>
-                            <span className="w-6 text-center text-sm font-semibold text-foreground">
-                              {inCart}
-                            </span>
-                            <AppButton
-                              className="px-2!"
-                              color="background"
-                              onClick={() => updateQuantity(product.id, 1)}
-                              disabled={maxedOut}
-                            >
-                              <AddOutlined style={{ fontSize: 14 }} />
-                            </AppButton>
-                          </div>
+                            <DeleteOutlined style={{ fontSize: 16 }} />
+                            {t("labels.all.remove")}
+                          </AppButton>
                         ) : (
                           !outOfStock && (
                             <AppButton
+                              color="primary-3"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 addToCart(product);
@@ -322,6 +302,8 @@ export default function NewSalePage() {
           onRemoveFromCart={removeFromCart}
           onUpdateQuantity={updateQuantity}
           onFinishSale={finishSale}
+          saleDate={saleDate}
+          onDateChange={setSaleDate}
         />
       </div>
     </AppPage>

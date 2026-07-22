@@ -48,14 +48,14 @@ export default function AppMenu() {
 
   return (
     <div
-      className={`bg-foreground dark:bg-background-3 border-r border-r-border py-4 text-white transition-all duration-300 flex flex-col ${isOpen ? "w-64" : "w-18"} min-h-screen`}
+      className={`bg-zinc-900 dark:bg-background-3 border-r border-r-border py-4 text-white transition-all duration-300 flex flex-col ${isOpen ? "w-64" : "w-18"} min-h-screen`}
     >
       <div
         className={`flex items-center ${isOpen ? "justify-between" : "justify-center"} px-3 mb-2`}
       >
         {isOpen && (
           <div className="flex items-center gap-2.5 pl-1">
-            <div className="w-7 h-7 rounded-md bg-gradient-to-tr from-primary to-primary-2 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center shrink-0">
               <svg
                 className="w-3.5 h-3.5 text-white"
                 viewBox="0 0 200 200"
@@ -97,8 +97,8 @@ export default function AppMenu() {
                     isOpen ? "px-3" : "justify-center"
                   } ${
                     isActive
-                      ? "bg-primary text-white shadow-sm shadow-primary/20"
-                      : "text-white/70 hover:bg-slate-500/15 dark:hover:bg-background-2 hover:text-white"
+                      ? "bg-primary text-black shadow-sm shadow-primary/20"
+                      : "text-white/70 hover:bg-zinc-500/15 dark:hover:bg-background-2 hover:text-white"
                   }`}
                 >
                   <div className="w-5 min-w-5 flex items-center justify-center">

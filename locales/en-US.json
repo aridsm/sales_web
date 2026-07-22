@@ -71,7 +71,8 @@
       "close": "Close",
       "status": "Status",
       "date": "Date",
-      "total_value": "Total Value"
+      "total_value": "Total Value",
+      "remove": "Remove"
     },
     "dialog": {
       "success": "Success",
@@ -189,7 +190,8 @@
         "subtotal": "Subtotal",
         "items_label": "Items",
         "total": "Total",
-        "finish_button": "Finish Sale"
+        "finish_button": "Finish Sale",
+        "sale_date": "Sale Date"
       },
       "detail": {
         "title": "Sale",
@@ -220,6 +222,33 @@
         "spent_today": "Spent Today",
         "spent_total": "Total Spent",
         "filter_status": "Filter by status"
+      },
+      "new": {
+        "title": "Nova Entrada de Estoque",
+        "clear_cart_title": "Limpar carrinho",
+        "clear_cart_message": "Tem certeza que deseja remover todos os itens?",
+        "finish_entry_title": "Finalizar Compra",
+        "finish_entry_message": "Confirmar registro de compra de {{items}} no valor total de {{total}}?",
+        "success": "Entrada registrada com sucesso!",
+        "exit_title": "Sair da compra",
+        "exit_message": "Você tem itens pendentes. Deseja sair e descartar a operação?",
+        "back": "Voltar para Entradas",
+        "search_placeholder": "Buscar produto por nome ou categoria...",
+        "no_products": "Nenhum produto encontrado",
+        "in_stock": "em estoque",
+        "cart": "Itens da Compra",
+        "no_items": "Nenhum item",
+        "item_singular": "item",
+        "item_plural": "itens",
+        "add_products_to_cart": "Adicione produtos à compra",
+        "purchase_date": "Data da Compra",
+        "finish_button": "Finalizar Compra",
+        "proceed": "Prosseguir",
+        "qty": "Qty.",
+        "unit_price": "Unit Price",
+        "subtotal": "Subtotal",
+        "total": "Total",
+        "items": "Items"
       }
     },
     "history": {

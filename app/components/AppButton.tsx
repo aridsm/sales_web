@@ -3,6 +3,7 @@ import React from "react";
 export interface AppButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?:
     | "primary"
+    | "primary-3"
     | "background"
     | "red"
     | "transparent"
@@ -27,8 +28,12 @@ export default function AppButton({
   let colorClasses = "";
   if (color === "primary") {
     colorClasses = flat
-      ? "bg-transparent text-primary hover:bg-primary-light active:bg-primary-light/80 border border-transparent"
-      : "bg-primary text-white hover:bg-primary-3 active:bg-primary-3/90 shadow-xs border border-transparent";
+      ? "bg-transparent text-primary hover:bg-primary-light active:bg-primary-light/80 border "
+      : "bg-primary text-black active:bg-primary-2/90 shadow-xs border border-primary-2";
+  } else if (color === "primary-3") {
+    colorClasses = flat
+      ? "bg-transparent text-primary-3 hover:bg-primary-3/10 active:bg-primary-3/20 border border-transparent"
+      : "bg-primary-3 text-white active:bg-primary-3/90 shadow-xs border border-primary-3 hover:brightness-110";
   } else if (color === "background") {
     colorClasses = flat
       ? "bg-transparent text-foreground bg-background-3/50 border border-transparent"
@@ -51,7 +56,8 @@ export default function AppButton({
       : "bg-foreground dark:bg-background-3 text-white border border-transparent hover:bg-slate-800 dark:hover:bg-background-2 hover:text-white";
   }
 
-  const finalClass = `${baseClasses} ${colorClasses} ${className}`.trim();
+  const finalClass =
+    `${baseClasses} ${colorClasses} ${className} transition-all hover:shadow-md hover:shadow-black/5 dark:hover:shadow-black/40`.trim();
 
   return (
     <button className={finalClass} {...props}>

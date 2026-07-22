@@ -10,7 +10,10 @@ import AppPage from "../../components/AppPage";
 import AppCard from "../../components/AppCard";
 import AppGroup from "../../components/AppGroup";
 import AppGrid from "../../components/AppGrid";
-import { usePagination, type PaginationService } from "../../utils/usePagination";
+import {
+  usePagination,
+  type PaginationService,
+} from "../../utils/usePagination";
 import AppFilter from "../../components/AppFilter";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import AppSelect from "../../components/inputs/AppSelect";
@@ -68,7 +71,9 @@ export default function StockEntriesPage() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-label">{t("labels.stock_entries.list.purchases_today")}</span>
+            <span className="text-label">
+              {t("labels.stock_entries.list.purchases_today")}
+            </span>
             <span className="text-lg font-bold text-foreground">0</span>
           </div>
         </AppCard>
@@ -81,7 +86,9 @@ export default function StockEntriesPage() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-label">{t("labels.stock_entries.list.spent_today")}</span>
+            <span className="text-label">
+              {t("labels.stock_entries.list.spent_today")}
+            </span>
             <span className="text-lg font-bold text-foreground">
               {formatCurrency(0)}
             </span>
@@ -96,7 +103,9 @@ export default function StockEntriesPage() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-label">{t("labels.stock_entries.list.spent_total")}</span>
+            <span className="text-label">
+              {t("labels.stock_entries.list.spent_total")}
+            </span>
             <span className="text-lg font-bold text-foreground">
               {formatCurrency(0)}
             </span>
@@ -125,7 +134,7 @@ export default function StockEntriesPage() {
               <Link
                 href={`/stock-entries/${entry.id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="font-semibold hover:text-primary dark:hover:text-yellow-300 hover:underline transition-all duration-200"
+                className="font-semibold hover:text-primary-3 dark:hover:text-primary hover:underline transition-all duration-200"
               >
                 #{entry.code.toString().padStart(6, "0")}
               </Link>
@@ -138,7 +147,10 @@ export default function StockEntriesPage() {
                 {formatDateTime(entry.date)}
               </span>
               <span className="ml-auto text-sm rounded-full px-2 bg-white/10">
-                {entry.items_count || 0} {(entry.items_count || 0) === 1 ? t("labels.sales.new.item_singular") : t("labels.sales.new.item_plural")}
+                {entry.items_count || 0}{" "}
+                {(entry.items_count || 0) === 1
+                  ? t("labels.sales.new.item_singular")
+                  : t("labels.sales.new.item_plural")}
               </span>
               <span className="font-semibold">
                 {formatCurrency(entry.total)}
@@ -230,7 +242,10 @@ function StockEntryFilterFields() {
 
   const statusOptions = [
     { id: StockEntryStatus.OPEN, name: t("labels.stock_entries.status.open") },
-    { id: StockEntryStatus.CANCELED, name: t("labels.stock_entries.status.canceled") },
+    {
+      id: StockEntryStatus.CANCELED,
+      name: t("labels.stock_entries.status.canceled"),
+    },
   ];
 
   useEffect(() => {
@@ -291,7 +306,9 @@ function StockEntryFilterFields() {
       <Controller
         control={control}
         name="date"
-        render={({ field }) => <AppDateRange label={t("labels.all.date")} {...field} />}
+        render={({ field }) => (
+          <AppDateRange label={t("labels.all.date")} {...field} />
+        )}
       />
       <Controller
         control={control}

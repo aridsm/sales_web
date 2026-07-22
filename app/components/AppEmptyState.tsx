@@ -23,7 +23,7 @@ export default function AppEmptyState({
     <div
       className={`flex flex-col items-center justify-center text-label gap-2 bg-transparent rounded-md ${className}`}
     >
-      <div className="w-10 h-10 text-primary dark:text-primary-2 mb-2 rounded-full bg-primary-light flex items-center justify-center shrink-0">
+      <div className="w-10 h-10 text-primary mb-2 rounded-full bg-primary-light flex items-center justify-center shrink-0">
         {icon || <InboxOutlined fontSize="medium" />}
       </div>
       <span className="font-normal text-foreground">

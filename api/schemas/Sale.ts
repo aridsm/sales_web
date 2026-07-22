@@ -12,6 +12,7 @@ export interface Sale {
 }
 
 export interface SaleCreate {
+  date: string;
   products: {
     product_id: string;
     quantity: number;

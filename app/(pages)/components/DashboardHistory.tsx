@@ -4,7 +4,10 @@ import AppGrid from "../../components/AppGrid";
 import { useTranslation } from "@/app/utils/i18n";
 import { historyService } from "@/api/services/HistoryService";
 import { History } from "@/api/schemas/History";
-import { usePagination, type PaginationService } from "../../utils/usePagination";
+import {
+  usePagination,
+  type PaginationService,
+} from "../../utils/usePagination";
 import { ACTION_CONFIG } from "@/app/utils/constants";
 import { ActionType } from "@/enums/ActionType";
 import { formatDateTime } from "@/app/utils/formatters/date";
@@ -80,10 +83,9 @@ export const DashboardHistory = ({
 
         <Link
           href="/history"
-          className="text-label hover:text-primary text-sm dark:hover:text-yellow-300 hover:underline"
+          className="text-sm text-primary-3 dark:text-primary hover:underline"
         >
-          {t("labels.dashboard.history.view_all")}{" "}
-          <ChevronRight fontSize="small" />
+          {t("labels.dashboard.history.view_all")}
         </Link>
       </div>
 

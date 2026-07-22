@@ -55,12 +55,12 @@ export const DashboardKPIs = ({
           key={key}
           className={`p-4 flex flex-col justify-center gap-1 ${
             key === "current_balance"
-              ? "bg-primary! text-white border-transparent"
+              ? "bg-indigo-500! text-white border-transparent"
               : ""
           }`}
         >
           <span
-            className={`text-sm ${key === "current_balance" ? "text-white/80" : "text-label"}`}
+            className={`text-sm ${key === "current_balance" ? "text-white" : "text-label"}`}
           >
             {t(`labels.dashboard.kpi.${key}`)}
           </span>

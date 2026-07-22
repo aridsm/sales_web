@@ -61,10 +61,16 @@ export default function RegisterPage() {
       );
       router.push("/");
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { detail?: { error?: string } } } };
+      const error = err as {
+        response?: { data?: { detail?: { error?: string } } };
+      };
       openDialog({
         variant: "error",
-        message: t(error.response?.data?.detail?.error ? `errors.auth.${error.response.data.detail.error}` : "errors.all.generic"),
+        message: t(
+          error.response?.data?.detail?.error
+            ? `errors.auth.${error.response.data.detail.error}`
+            : "errors.all.generic",
+        ),
       });
     } finally {
       setLoading(false);
@@ -140,7 +146,7 @@ export default function RegisterPage() {
             type="submit"
             color="primary"
             disabled={loading}
-            className="w-full h-12 mt-4 text-sm"
+            className="w-full h-11 mt-4 text-sm font-semibold "
           >
             {loading
               ? t("labels.register.creating")
@@ -152,7 +158,7 @@ export default function RegisterPage() {
           {t("labels.register.have_account")}{" "}
           <Link
             href="/login"
-            className="text-primary dark:text-yellow-300 hover:underline font-semibold transition-colors"
+            className="text-indigo-400 hover:text-primary-3 underline font-semibold transition-colors"
           >
             {t("labels.all.enter")}
           </Link>
