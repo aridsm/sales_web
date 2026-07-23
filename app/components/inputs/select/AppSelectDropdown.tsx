@@ -155,7 +155,7 @@ export default function AppSelectDropdown<T extends SelectOption>() {
                   onClick={() => handleSelect(option)}
                   className={`
                                                         px-3 py-3 cursor-pointer flex items-center justify-between transition-colors
-                                                        ${isSelected ? "bg-primary/6 text-primary dark:text-foreground dark:bg-foreground/5" : "text-label hover:bg-primary/6 dark:hover:bg-foreground/5"}
+                                                        ${isSelected ? "bg-foreground/5 text-foreground" : "text-label hover:bg-foreground/5"}
                                                     `}
                 >
                   <span className="truncate">{option.name}</span>

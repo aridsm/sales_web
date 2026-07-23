@@ -50,7 +50,9 @@ const months = [
 ];
 
 const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 100 }, (_, i) => currentYear - 50 + i);
+const minYear = 2020;
+const maxYear = currentYear + 1;
+const years = Array.from({ length: maxYear - minYear + 1 }, (_, i) => maxYear - i);
 
 const monthOptions = months.map((m, i) => ({ id: i, name: m }));
 const yearOptions = years.map((y) => ({ id: y, name: y.toString() }));
@@ -448,6 +450,7 @@ const AppDateInner = (
                 flat
                 color="foreground"
                 onClick={prevMonth}
+                disabled={viewDate.getFullYear() <= minYear && viewDate.getMonth() === 0}
                 className="min-w-7! min-h-7! h-7 w-7 px-0!"
               >
                 <ChevronLeft fontSize="small" />
@@ -482,6 +485,7 @@ const AppDateInner = (
                 flat
                 color="foreground"
                 onClick={nextMonth}
+                disabled={viewDate.getFullYear() >= maxYear && viewDate.getMonth() === 11}
                 className="min-w-7! min-h-7! h-7 w-7 px-0!"
               >
                 <ChevronRight fontSize="small" />
@@ -554,6 +558,16 @@ const AppDateInner = (
                 </div>
               </div>
             )}
+
+            {activeDraft &&
+              !isNaN(activeDraft.getTime()) &&
+              activeDraft.getTime() > new Date().setHours(23, 59, 59, 999) && (
+                <div className="mt-3 p-2 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-md">
+                  <p className="text-xs text-amber-700 dark:text-amber-400 text-center font-medium">
+                    A data selecionada é uma data futura
+                  </p>
+                </div>
+              )}
 
             <AppButton
               color="primary"

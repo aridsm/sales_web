@@ -330,7 +330,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                       <div
                         key={option.id}
                         onClick={() => handleSelect(option)}
-                        className={` cursor-pointer flex items-center justify-between transition-colors ${size === "small" ? "text-sm px-2 py-2" : "px-3 py-3"} ${isSelected ? "bg-primary/6 text-primary dark:text-foreground dark:bg-foreground/5" : "text-label hover:bg-primary/6 dark:hover:bg-foreground/5"}`}
+                        className={` cursor-pointer flex items-center justify-between transition-colors ${size === "small" ? "text-sm px-2 py-2" : "px-3 py-3"} ${isSelected ? "bg-foreground/5 text-foreground" : "text-label hover:bg-foreground/5"}`}
                       >
                         <span className="truncate pr-4">{option.name}</span>
                       </div>
