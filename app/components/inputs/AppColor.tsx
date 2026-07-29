@@ -52,7 +52,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
             className={`
                              input-field cursor-pointer flex items-center justify-between gap-2 transition-all duration-200
                             ${disabled ? "bg-slate-100 cursor-not-allowed opacity-60" : ""}
-                            ${error ? "border-red-500 ring-1 ring-red-500" : "border-slate-300 hover:border-primary/50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"}
+                            ${error ? "border-red-500 ring-1 ring-red-500" : "border-slate-300 hover:border-primary-3/50 dark:hover:border-primary/50 focus-within:border-primary-3 dark:focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-3/20 dark:focus-within:ring-primary/20"}
                             ${isOpen && !error ? "active" : ""}
                         `}
           >
@@ -95,7 +95,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
                   value={value || ""}
                   onChange={(e) => onChange?.(e.target.value)}
                   placeholder="#000000"
-                  className="w-full text-xs uppercase outline-none border-b border-border focus:border-primary py-1 bg-transparent text-foreground"
+                  className="w-full text-xs uppercase outline-none border-b border-border focus:border-primary-3 dark:focus:border-primary py-1 bg-transparent text-foreground"
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>

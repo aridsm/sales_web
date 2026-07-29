@@ -29,7 +29,7 @@ export default function AppButton({
   if (color === "primary") {
     colorClasses = flat
       ? "bg-transparent text-primary hover:bg-primary-light active:bg-primary-light/80 border "
-      : "bg-primary text-black active:bg-primary-2/90 shadow-xs border border-primary-2";
+      : "bg-primary text-black active:bg-primary-2/90 shadow-xs border border-primary-2 hover:bg-primary-hover";
   } else if (color === "primary-3") {
     colorClasses = flat
       ? "bg-transparent text-primary-3 hover:bg-primary-3/10 active:bg-primary-3/20 border border-transparent"

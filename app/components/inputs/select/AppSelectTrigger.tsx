@@ -23,7 +23,7 @@ export default function AppSelectTrigger<T extends SelectOption>() {
       className={`
         input-field min-h-12! h-auto! py-2 cursor-pointer flex items-center justify-between gap-2 transition-all duration-200
         ${disabled ? "bg-background-2 cursor-not-allowed opacity-60" : ""}
-        ${error ? "border-red-500 ring-1 ring-red-500" : "border-border hover:border-primary/50"}
+        ${error ? "border-red-500 ring-1 ring-red-500" : isOpen ? "border-primary-3 dark:border-primary" : "border-border hover:border-primary-3/50 dark:hover:border-primary/50"}
         ${isOpen && !error ? "active" : ""}
       `}
     >

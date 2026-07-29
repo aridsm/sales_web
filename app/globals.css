@@ -5,6 +5,7 @@
 :root {
   --primary: #aeec1c;
   --primary-2: #96c723;
+  --primary-hover: #baf041;
   --primary-3: #6366f1;
   --primary-4: #ebebff;
   --background: #f8fafc;
@@ -34,6 +35,7 @@
 @theme inline {
   --color-primary: var(--primary);
   --color-primary-2: var(--primary-2);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-3: var(--primary-3);
   --color-primary-4: var(--primary-4);
   --color-primary-light: var(--primary-light);
@@ -100,7 +102,7 @@ body {
 .input-field:focus,
 .input-field:focus-visible,
 .input-field.active {
-  @apply border-primary outline-none!;
+  @apply border-primary-3 dark:border-primary outline-none!;
 }
 
 @keyframes dropdownOpen {

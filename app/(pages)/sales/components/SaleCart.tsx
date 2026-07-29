@@ -90,6 +90,7 @@ export function SaleCart({
                 title={t("labels.sales.new.add_products_to_cart")}
                 subtitle={null as any}
                 className="bg-transparent! dark:bg-transparent! border-none!"
+                iconClassName="text-primary-3 bg-primary-3/10 dark:text-primary dark:bg-primary/20"
               />
             </div>
           ) : (

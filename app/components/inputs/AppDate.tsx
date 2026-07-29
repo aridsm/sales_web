@@ -530,7 +530,7 @@ const AppDateInner = (
                       setHourText(String(selectedHour).padStart(2, "0"));
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="flex-1 min-w-0 bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
+                    className="flex-1 min-w-0 bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary-3 dark:focus:border-primary font-medium text-center"
                   />
                   <span className="text-foreground font-semibold text-lg">
                     :
@@ -553,7 +553,7 @@ const AppDateInner = (
                       setMinuteText(String(selectedMinute).padStart(2, "0"));
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="flex-1 min-w-0  bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
+                    className="flex-1 min-w-0  bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary-3 dark:focus:border-primary font-medium text-center"
                   />
                 </div>
               </div>
