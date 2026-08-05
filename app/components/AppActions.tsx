@@ -131,8 +131,8 @@ export default function AppActions<T>({
         onClick={toggleDropdown}
         className={`
           flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 cursor-pointer
-          hover:bg-primary/10 hover:text-primary dark:hover:bg-foreground/10 dark:hover:text-foreground
-          ${isOpen ? "bg-primary/10 text-primary dark:bg-foreground/10 dark:text-foreground" : ""}
+          hover:bg-foreground/10 hover:text-foreground
+          ${isOpen ? "bg-foreground/10 text-foreground" : ""}
         `}
         aria-label="Ações"
         aria-haspopup="true"
