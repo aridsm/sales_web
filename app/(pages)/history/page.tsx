@@ -127,7 +127,10 @@ export default function HistoryPage() {
         onDeleteSelected={onDeleteSelected}
         search
         filter={
-          <AppFilter pagination={pagination}>
+          <AppFilter
+            pagination={pagination}
+            validKeys={["action_type", "entity_type", "created_at"]}
+          >
             <HistoryFilterFields />
           </AppFilter>
         }

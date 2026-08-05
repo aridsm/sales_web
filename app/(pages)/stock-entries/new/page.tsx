@@ -226,7 +226,10 @@ export default function NewStockEntryPage() {
                 className="input-field w-full pl-11!"
               />
             </div>
-            <AppFilter pagination={productsPagination}>
+            <AppFilter
+              pagination={productsPagination}
+              validKeys={["category_id", "code"]}
+            >
               <StockNewFilterFields />
             </AppFilter>
           </div>

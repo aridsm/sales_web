@@ -13,6 +13,8 @@ interface AppFilterProps<T = unknown> {
   pagination: PaginationResult<T>;
   children: React.ReactNode;
   title?: string;
+  excludeKeys?: string[];
+  validKeys?: string[];
 }
 
 const getParamsFromUrl = (params: URLSearchParams) => {
@@ -44,6 +46,8 @@ export default function AppFilter<T = unknown>({
   pagination,
   children,
   title,
+  excludeKeys = ["page", "page_size", "search"],
+  validKeys,
 }: AppFilterProps<T>) {
   const { t } = useTranslation();
   const modalTitle = title || t("labels.filter.title");
@@ -57,8 +61,18 @@ export default function AppFilter<T = unknown>({
 
   useEffect(() => {
     const params = getParamsFromUrl(searchParams);
-    reset(params);
-  }, [reset, searchParams]);
+    if (validKeys) {
+      const filteredParams: Record<string, unknown> = {};
+      validKeys.forEach((key) => {
+        if (params[key] !== undefined) {
+          filteredParams[key] = params[key];
+        }
+      });
+      reset(filteredParams);
+    } else {
+      reset(params);
+    }
+  }, [reset, searchParams, validKeys]);
 
   function handleOpen() {
     setIsOpen(true);
@@ -119,9 +133,16 @@ export default function AppFilter<T = unknown>({
     handleClose();
   }
 
-  const hasActiveFilters = Object.keys(getParamsFromUrl(searchParams)).some(
-    (key) => !["page", "page_size", "search"].includes(key),
-  );
+  const hasActiveFilters = validKeys
+    ? validKeys.some(
+        (key) =>
+          searchParams.has(key) ||
+          searchParams.has(`start_${key}`) ||
+          searchParams.has(`end_${key}`),
+      )
+    : Object.keys(getParamsFromUrl(searchParams)).some(
+        (key) => !excludeKeys.includes(key),
+      );
 
   return (
     <>

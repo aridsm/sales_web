@@ -117,7 +117,10 @@ export default function StockEntriesPage() {
         groups={stockPagination}
         search
         filter={
-          <AppFilter pagination={stockPagination}>
+          <AppFilter
+            pagination={stockPagination}
+            validKeys={["date", "total", "category_id", "product_id", "status"]}
+          >
             <StockEntryFilterFields />
           </AppFilter>
         }

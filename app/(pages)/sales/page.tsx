@@ -113,7 +113,16 @@ export default function SalePage() {
         groups={salesPagination}
         search
         filter={
-          <AppFilter pagination={salesPagination}>
+          <AppFilter
+            pagination={salesPagination}
+            validKeys={[
+              "category_id",
+              "status",
+              "product_id",
+              "created_at",
+              "total",
+            ]}
+          >
             <SaleFilterFields />
           </AppFilter>
         }

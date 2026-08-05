@@ -169,7 +169,10 @@ export default function OtherExpensesPage() {
         actions={actions}
         search
         filter={
-          <AppFilter pagination={pagination}>
+          <AppFilter
+            pagination={pagination}
+            validKeys={["category_id", "date", "value"]}
+          >
             <OtherExpensesFilterFields />
           </AppFilter>
         }

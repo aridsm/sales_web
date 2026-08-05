@@ -147,7 +147,10 @@ export default function ProductsPage() {
           });
         }}
         filter={
-          <AppFilter pagination={categories}>
+          <AppFilter
+            pagination={categories}
+            validKeys={["id", "product_created_at", "price"]}
+          >
             <ProductFilterFields />
           </AppFilter>
         }
