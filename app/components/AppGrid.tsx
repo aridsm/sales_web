@@ -388,7 +388,7 @@ export default function AppGrid<T>({
                               selected
                                 ? `border-border ${isNextSelected ? "border-b-border" : "border-b-primary-3"} ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary-3)]" : ""} ${!hasSelection ? "first:border-l-primary-3" : ""}`
                                 : "border-border"
-                            } ${resizingIndex === colIndex ? "bg-background-3" : ""}`}
+                            } ${resizingIndex === colIndex && !selected ? "bg-background-3" : ""}`}
                             style={{
                               width: colWidths[colIndex] || col.size || 140,
                             }}
