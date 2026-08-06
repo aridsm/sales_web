@@ -321,6 +321,7 @@ function ProductFilterFields() {
             pagination={categories}
             search
             multiple
+            clearable
             value={field.value}
             onChange={field.onChange}
           />

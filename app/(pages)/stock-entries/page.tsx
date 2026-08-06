@@ -269,6 +269,7 @@ function StockEntryFilterFields() {
             pagination={categories}
             search
             multiple
+            clearable
             value={field.value}
             onChange={field.onChange}
           />
@@ -284,6 +285,7 @@ function StockEntryFilterFields() {
             placeholder={t("labels.stock_entries.list.filter_status")}
             options={statusOptions}
             multiple
+            clearable
             value={field.value}
             onChange={field.onChange}
           />
@@ -300,6 +302,7 @@ function StockEntryFilterFields() {
             pagination={products}
             search
             multiple
+            clearable
             value={field.value}
             onChange={field.onChange}
           />

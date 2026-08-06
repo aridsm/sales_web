@@ -46,8 +46,8 @@ export default function SalePage() {
     "category_id",
     "status",
     "product_id",
-    "start_created_at",
-    "end_created_at",
+    "start_date",
+    "end_date",
     "start_total",
     "end_total",
   ]);
@@ -115,13 +115,7 @@ export default function SalePage() {
         filter={
           <AppFilter
             pagination={salesPagination}
-            validKeys={[
-              "category_id",
-              "status",
-              "product_id",
-              "created_at",
-              "total",
-            ]}
+            validKeys={["category_id", "status", "product_id", "date", "total"]}
           >
             <SaleFilterFields />
           </AppFilter>
@@ -145,7 +139,7 @@ export default function SalePage() {
                 {t(status.labelKey)}
               </span>
               <span className="text-sm text-label">
-                {formatDateTime(sale.created_at)}
+                {formatDateTime(sale.date)}
               </span>
               <span className=" ml-auto text-sm rounded-full px-2  bg-white/10">
                 {sale.items_count} {t("labels.sales.items")}
@@ -257,6 +251,7 @@ function SaleFilterFields() {
             pagination={categories}
             search
             multiple
+            clearable
             value={field.value}
             onChange={field.onChange}
           />
@@ -272,6 +267,7 @@ function SaleFilterFields() {
             placeholder="Filtrar por status"
             options={statusOptions}
             multiple
+            clearable
             value={field.value}
             onChange={field.onChange}
           />
@@ -288,6 +284,7 @@ function SaleFilterFields() {
             pagination={products}
             search
             multiple
+            clearable
             value={field.value}
             onChange={field.onChange}
           />
@@ -296,7 +293,7 @@ function SaleFilterFields() {
 
       <Controller
         control={control}
-        name="created_at"
+        name="date"
         render={({ field }) => (
           <AppDateRange label={t("labels.sales.detail.date")} {...field} />
         )}

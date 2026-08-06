@@ -72,7 +72,6 @@ export function SaleCart({
           )}
         </div>
 
-        {/* Date picker */}
         <div className="px-4 py-3 border-b border-border">
           <AppDate
             label={t("labels.sales.new.sale_date")}

@@ -339,6 +339,7 @@ function SaleNewFilterFields() {
             pagination={categories}
             search
             multiple
+            clearable
             value={field.value}
             onChange={field.onChange}
           />
@@ -347,6 +348,7 @@ function SaleNewFilterFields() {
       <AppInputText
         label={t("labels.sales.code")}
         placeholder={t("labels.sales.search_code")}
+        clearable
         {...register("code")}
       />
     </>

@@ -17,6 +17,7 @@ export interface AppSelectPaginatedProps<T extends SelectOption> {
     placeholder?: string;
     disabled?: boolean;
     value?: T["id"] | T["id"][];
+    clearable?: boolean;
     onChange?: (value: T["id"] | T["id"][]) => void;
     className?: string;
 }
@@ -31,6 +32,7 @@ function AppSelectPaginatedInner<T extends SelectOption>(
         placeholder = "Selecione...",
         disabled = false,
         value,
+        clearable = false,
         onChange,
         className = "",
     }: AppSelectPaginatedProps<T>,
@@ -138,6 +140,7 @@ function AppSelectPaginatedInner<T extends SelectOption>(
         containerRef,
         disabled,
         error,
+        clearable,
         removeValue,
         getSelectedNames,
     };

@@ -9,6 +9,7 @@ import {
   useEffect,
 } from "react";
 import AppLabel from "../AppLabel";
+import CloseIcon from "@mui/icons-material/Close";
 
 export interface Formatter {
   mask: (value: string | number | undefined) => string;
@@ -24,6 +25,7 @@ export interface AppInputTextProps extends Omit<
   type?: "text" | "number" | "email" | "password";
   label?: string;
   mask?: Formatter;
+  clearable?: boolean;
   onChange?: (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -38,6 +40,7 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
       error,
       label,
       mask,
+      clearable = false,
       className = "",
       onFocus,
       onBlur,
@@ -88,6 +91,17 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
       onBlur?.(e);
     };
 
+    const handleClear = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      setLocalValue("");
+      if (props.onChange) {
+        props.onChange({
+          target: { name: props.name, value: mask ? undefined : "" },
+        } as any);
+      }
+    };
+
     const displayValue =
       mask && !isFocused
         ? mask.mask(props.value as string | number | undefined)
@@ -98,17 +112,29 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
     return (
       <div className="flex flex-col gap-1 w-full">
         {label && <AppLabel htmlFor={label}>{label}</AppLabel>}
-        <input
-          ref={inputRef}
-          id={label}
-          type={type}
-          className={`input-field ${error ? "border-red-500!" : ""} ${className}`}
-          {...props}
-          value={displayValue}
-          onChange={handleChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
+        <div className="relative flex items-center w-full">
+          <input
+            ref={inputRef}
+            id={label}
+            type={type}
+            className={`input-field pr-9 w-full ${error ? "border-red-500!" : ""} ${className}`}
+            {...props}
+            value={displayValue}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+          {clearable && displayValue !== "" && displayValue !== undefined && displayValue !== null && !props.disabled && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+              tabIndex={-1}
+            >
+              <CloseIcon style={{ fontSize: 16 }} />
+            </button>
+          )}
+        </div>
         {error && <span className="text-xs text-red-500 mt-1">{error}</span>}
       </div>
     );

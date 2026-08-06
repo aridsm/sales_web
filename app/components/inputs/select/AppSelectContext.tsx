@@ -26,6 +26,7 @@ export interface AppSelectContextValue<T extends SelectOption> {
     containerRef?: React.RefObject<HTMLDivElement | null>;
     disabled?: boolean;
     error?: string;
+    clearable?: boolean;
     removeValue: (e: React.MouseEvent, idToRemove: T["id"]) => void;
     getSelectedNames: () => string;
 }

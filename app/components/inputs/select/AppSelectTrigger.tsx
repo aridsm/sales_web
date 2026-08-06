@@ -13,8 +13,10 @@ export default function AppSelectTrigger<T extends SelectOption>() {
     multiple,
     value,
     items,
+    clearable,
     removeValue,
     getSelectedNames,
+    onChange,
   } = useAppSelect<T>();
 
   return (
@@ -56,9 +58,24 @@ export default function AppSelectTrigger<T extends SelectOption>() {
           </span>
         )}
       </div>
-      <ChevronLeft
-        className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"}`}
-      />
+      <div className="flex items-center gap-1">
+        {clearable && (value !== undefined && value !== null && value !== "") && (!Array.isArray(value) || value.length > 0) && !disabled && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange?.(multiple ? ([] as any) : (undefined as any));
+            }}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+            tabIndex={-1}
+          >
+            <CloseIcon style={{ fontSize: 16 }} />
+          </button>
+        )}
+        <ChevronLeft
+          className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"}`}
+        />
+      </div>
     </div>
   );
 }

@@ -31,6 +31,7 @@ export interface AppSelectProps {
   placeholder?: string;
   disabled?: boolean;
   value?: AppSelectOption["id"] | AppSelectOption["id"][];
+  clearable?: boolean;
   onChange?: (value: AppSelectOption["id"] | AppSelectOption["id"][]) => void;
   className?: string;
   size?: "default" | "small";
@@ -48,6 +49,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
       placeholder = "Selecione...",
       disabled = false,
       value,
+      clearable = false,
       onChange,
       className = "",
       size = "default",
@@ -278,9 +280,24 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                   </span>
                 )}
               </div>
-              <ChevronLeft
-                className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"} ${size === "small" ? "w-4! h-4!" : ""}`}
-              />
+              <div className="flex items-center gap-1">
+                {clearable && (value !== undefined && value !== null && value !== "") && (!Array.isArray(value) || value.length > 0) && !disabled && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onChange?.(multiple ? [] : undefined as any);
+                    }}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                    tabIndex={-1}
+                  >
+                    <CloseIcon style={{ fontSize: size === "small" ? 14 : 16 }} />
+                  </button>
+                )}
+                <ChevronLeft
+                  className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"} ${size === "small" ? "w-4! h-4!" : ""}`}
+                />
+              </div>
             </div>
           )}
 

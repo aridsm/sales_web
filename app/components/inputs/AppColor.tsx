@@ -3,6 +3,7 @@
 import { useState, useRef, forwardRef, useImperativeHandle } from "react";
 import AppLabel from "../AppLabel";
 import { ChevronLeft } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import { useClickOutside } from "../../utils/useClickOutside";
 import { HexColorPicker } from "react-colorful";
 
@@ -12,6 +13,7 @@ export interface AppColorProps {
   placeholder?: string;
   disabled?: boolean;
   value?: string;
+  clearable?: boolean;
   onChange?: (value: string) => void;
   className?: string;
 }
@@ -24,6 +26,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
       placeholder = "Selecione uma cor...",
       disabled = false,
       value,
+      clearable = false,
       onChange,
       className = "",
     },
@@ -73,9 +76,24 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
                 </span>
               )}
             </div>
-            <ChevronLeft
-              className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"}`}
-            />
+            <div className="flex items-center gap-1">
+              {clearable && value && !disabled && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onChange?.("");
+                  }}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                  tabIndex={-1}
+                >
+                  <CloseIcon style={{ fontSize: 16 }} />
+                </button>
+              )}
+              <ChevronLeft
+                className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"}`}
+              />
+            </div>
           </div>
 
           {isOpen && (

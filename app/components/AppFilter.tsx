@@ -64,9 +64,7 @@ export default function AppFilter<T = unknown>({
     if (validKeys) {
       const filteredParams: Record<string, unknown> = {};
       validKeys.forEach((key) => {
-        if (params[key] !== undefined) {
-          filteredParams[key] = params[key];
-        }
+        filteredParams[key] = params[key] !== undefined ? params[key] : undefined;
       });
       reset(filteredParams);
     } else {
@@ -127,7 +125,18 @@ export default function AppFilter<T = unknown>({
   };
 
   function handleClear() {
-    reset({});
+    const emptyValues: Record<string, unknown> = {};
+    if (validKeys) {
+      validKeys.forEach((key) => {
+        emptyValues[key] = undefined;
+      });
+    } else {
+      const currentValues = methods.getValues();
+      Object.keys(currentValues).forEach((key) => {
+        emptyValues[key] = undefined;
+      });
+    }
+    reset(emptyValues);
     router.push(pathname);
     pagination.load({ params: { page: 1 }, replace: true });
     handleClose();

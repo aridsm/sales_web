@@ -172,6 +172,7 @@ function HistoryFilterFields() {
             options={actionTypeOptions}
             value={field.value}
             multiple
+            clearable
             onChange={field.onChange}
           />
         )}
@@ -186,6 +187,7 @@ function HistoryFilterFields() {
             options={entityTypeOptions}
             value={field.value}
             multiple
+            clearable
             onChange={field.onChange}
           />
         )}
