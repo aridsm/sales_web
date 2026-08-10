@@ -26,12 +26,6 @@ export default function DashboardPage() {
 
   const [activePeriod, setActivePeriod] = useState("this_week");
 
-  useEffect(() => {
-    if (!token) {
-      router.push("/login");
-    }
-  }, [token, router]);
-
   const entityLabels: Record<number, string> = useMemo(
     () => ({
       [EntityType.PRODUCT]: t("labels.history.entities.PRODUCT"),
@@ -79,9 +73,6 @@ export default function DashboardPage() {
     };
   }, [activePeriod]);
 
-  if (!token) {
-    return null;
-  }
   return (
     <AppPage title="Dashboard">
       <div className="flex flex-col flex-1 gap-5 min-h-0">
