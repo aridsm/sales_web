@@ -164,7 +164,6 @@ export default function CategoriesPage() {
         columns={columns}
         pagination={pagination}
         onNew={handleNew}
-        onDeleteSelected={onDeleteSelected}
         selectedRows={rowsSelected}
         onSelectedChange={(rows) => setRowsSelected(rows)}
         actions={actions}

@@ -33,8 +33,10 @@ export default function OtherExpensesPage() {
 
   const filterParams = useFilterParams([
     "category_id",
-    "start_date", "end_date",
-    "start_value", "end_value",
+    "start_date",
+    "end_date",
+    "start_value",
+    "end_value",
   ]);
 
   const pagination = usePagination<OtherExpense>(
@@ -163,7 +165,6 @@ export default function OtherExpensesPage() {
         columns={columns}
         pagination={pagination}
         onNew={handleNew}
-        onDeleteSelected={onDeleteSelected}
         selectedRows={rowsSelected}
         onSelectedChange={(rows) => setRowsSelected(rows)}
         actions={actions}

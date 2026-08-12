@@ -3,7 +3,7 @@
 import React from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { PaginationResult } from "../utils/usePagination";
-import { Search, Add, DeleteOutlined } from "@mui/icons-material";
+import { Search, Add, DeleteOutlined, Close } from "@mui/icons-material";
 import AppPagination from "./AppPagination";
 import AppButton from "./AppButton";
 import AppCheckbox from "./inputs/AppCheckbox";
@@ -26,7 +26,6 @@ interface AppGridProps<T> {
   onNew?: () => void;
   selectedRows?: T[];
   onSelectedChange?: (rows: T[]) => void;
-  onDeleteSelected?: () => void;
   actions?: ActionItem<T>[];
   filter?: React.ReactNode;
   search?: boolean;
@@ -41,7 +40,6 @@ export default function AppGrid<T>({
   onNew,
   selectedRows,
   onSelectedChange,
-  onDeleteSelected,
   actions,
   filter,
   search,
@@ -208,16 +206,16 @@ export default function AppGrid<T>({
 
     function handleMouseUp() {
       setResizingIndex(null);
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
       document.body.style.cursor = "";
       document.body.style.userSelect = "";
     }
 
-    document.body.style.cursor = "e-resize";
+    document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
   }
 
   const tableWidth = colWidths.reduce((acc, w) => acc + w, 0);
@@ -248,31 +246,7 @@ export default function AppGrid<T>({
           </div>
         )}
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto ml-auto">
-          {hasSelection &&
-            selectedRows &&
-            selectedRows.length > 0 &&
-            !hideSelectionCount && (
-              <span className="font-medium text-sm whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
-                {selectedRows.length}{" "}
-                {selectedRows.length === 1
-                  ? t("labels.grid.item_selected_singular")
-                  : t("labels.grid.item_selected_plural")}
-              </span>
-            )}
           <div className="flex gap-3 w-full sm:w-auto">
-            {hasSelection &&
-              selectedRows &&
-              selectedRows.length > 0 &&
-              onDeleteSelected && (
-                <AppButton
-                  color="red"
-                  onClick={onDeleteSelected}
-                  className="px-4 shrink-0 w-full sm:w-auto"
-                >
-                  <DeleteOutlined fontSize="small" />
-                  {t("labels.all.delete")}
-                </AppButton>
-              )}
             {filter}
 
             {onNew && (
@@ -288,7 +262,35 @@ export default function AppGrid<T>({
           </div>
         </div>
       </div>
-      <div className="overflow-auto flex-1 min-h-0 min-w-0 w-full flex flex-col">
+
+      {hasSelection && selectedRows && selectedRows.length > 0 && (
+        <div className="flex flex-col border-l-3 border-l-emerald-400 sm:flex-row items-center justify-between bg-emerald-500/5 dark:bg-emerald-500/10 rounded-r-lg p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200 gap-3">
+          <div className="flex items-center gap-3 w-full">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center bg-emerald-400 text-white dark:text-emerald-950 font-bold text-sm">
+              {selectedRows.length}
+            </div>
+            <span className="font-medium text-emerald-700 dark:text-emerald-400">
+              {!hideSelectionCount && (
+                <>
+                  {selectedRows.length === 1
+                    ? t("labels.grid.item_selected_singular")
+                    : t("labels.grid.item_selected_plural")}
+                </>
+              )}
+            </span>
+            {onSelectedChange && (
+              <button
+                onClick={() => onSelectedChange([])}
+                className="w-6 h-6 text-emerald-700 dark:text-emerald-400 ml-auto cursor-pointer"
+                title={t("labels.all.clear") || "Limpar"}
+              >
+                <Close style={{ fontSize: 16 }} />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+      <div className="flex-1 min-h-0 min-w-0 w-full flex flex-col">
         {!hasStartedLoading || (loading && items.length === 0) ? (
           delayedLoading ? (
             <div className="flex justify-center items-center h-full flex-1">
@@ -298,7 +300,7 @@ export default function AppGrid<T>({
             <div className="h-full w-full flex-1" />
           )
         ) : (
-          <div className="flex flex-col flex-1">
+          <div className="overflow-auto min-h-0 border border-border rounded-lg bg-white dark:bg-background shadow-sm">
             <table
               className="table-fixed max-w-none border-separate border-spacing-0"
               style={{
@@ -307,10 +309,10 @@ export default function AppGrid<T>({
                   items.length > 0 && tableWidth > 0 ? tableWidth : "100%",
               }}
             >
-              <thead className="text-sm font-semibold sticky top-0 z-20 text-foreground">
+              <thead className="text-sm font-medium sticky top-0 z-20 text-foreground/80 bg-background-3 dark:bg-background-3">
                 <tr>
                   {hasSelection && (
-                    <th className="font-semibold border-border border-y border-r first:border-l first:rounded-tl-md! p-2 text-center sticky left-0 z-30 bg-background-3 w-12">
+                    <th className="p-3 text-center sticky left-0 z-30 w-12 border-b border-border font-medium">
                       {items.length > 0 && (
                         <AppCheckbox
                           checked={isAllSelected}
@@ -322,23 +324,23 @@ export default function AppGrid<T>({
                   {columns.map((col, index) => (
                     <th
                       key={index}
-                      className={`font-semibold border-border border-y border-r ${!hasSelection ? "first:border-l first:rounded-tl-md!" : ""} p-2 text-left relative overflow-hidden bg-background-3 ${resizingIndex === index ? "text-primary-3 dark:text-primary" : ""}`}
+                      className={`py-3 px-4 text-left relative border-b border-border font-medium ${resizingIndex === index ? "text-primary-3 dark:text-primary" : ""}`}
                       style={{ width: colWidths[index] || col.size || 140 }}
                     >
                       {col.column}
                       {items.length > 0 && (
                         <div
                           onMouseDown={(e) => handleMouseDown(e, index)}
-                          className="absolute right-0 top-0 bottom-0 w-2 cursor-e-resize z-10"
-                        />
+                          className="absolute right-0 top-0 bottom-0 w-5 cursor-col-resize z-10 flex items-center justify-center group/resize"
+                        >
+                          <div className="w-[2px] h-6 rounded-full bg-border/50 group-hover/resize:bg-primary transition-colors" />
+                        </div>
                       )}
                     </th>
                   ))}
-                  <th
-                    className={`font-semibold bg-background-3 border-y border-border ${!actions || items.length === 0 ? "rounded-tr-md! border-r" : ""}`}
-                  ></th>
+                  <th className="border-b border-border"></th>
                   {actions && items.length > 0 && (
-                    <th className="font-semibold border-border border-y border-l border-r p-2 text-center bg-background-3 sticky right-0 z-30 w-12 rounded-tr-md!"></th>
+                    <th className="p-3 text-center sticky right-0 z-30 w-12 border-b border-border"></th>
                   )}
                 </tr>
               </thead>
@@ -352,25 +354,29 @@ export default function AppGrid<T>({
                 >
                   {items.map((row: T, rowIndex: number) => {
                     const selected = isSelected(row);
-                    const isPrevSelected =
-                      selected &&
-                      rowIndex > 0 &&
-                      isSelected(items[rowIndex - 1]);
-                    const isNextSelected =
-                      selected &&
-                      rowIndex < items.length - 1 &&
-                      isSelected(items[rowIndex + 1]);
+                    const rowBgClass = "bg-white dark:bg-background";
+                    const hoverBgClass =
+                      "hover:bg-background dark:hover:bg-background-3";
+                    const groupHoverBgClass =
+                      "group-hover:bg-background dark:group-hover:bg-background-3";
+                    const borderBClass =
+                      rowIndex === items.length - 1 ? "" : "border-b";
+
                     return (
                       <tr
                         key={rowIndex}
-                        className={`group hover:bg-background-3 transition-colors ${selected ? "bg-primary-4 hover:bg-primary-4" : ""}`}
+                        className={`group transition-colors duration-100 ${
+                          selected
+                            ? "bg-primary-4 dark:bg-background-3 hover:bg-primary-4 dark:hover:bg-background-3"
+                            : `${rowBgClass} ${hoverBgClass}`
+                        }`}
                       >
                         {hasSelection && (
                           <td
-                            className={`p-2 w-12 border-r first:border-l border-b sticky left-0 z-10 text-center transition-colors ${
+                            className={`p-3 w-12 sticky left-0 z-10 text-center ${borderBClass} transition-colors ${
                               selected
-                                ? `bg-primary-4 group-hover:bg-primary-4 border-border ${isNextSelected ? "border-b-border" : "border-b-primary-3"} border-l-primary-3 ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary-3)]" : ""}`
-                                : "bg-background group-hover:bg-background-3 border-border"
+                                ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3 border-primary-3/20 dark:border-border"
+                                : `${rowBgClass} ${groupHoverBgClass} border-border`
                             }`}
                           >
                             <AppCheckbox
@@ -384,11 +390,11 @@ export default function AppGrid<T>({
                         {columns.map((col, colIndex) => (
                           <td
                             key={colIndex}
-                            className={`p-3 overflow-hidden border-r border-b ${!hasSelection ? "first:border-l" : ""} ${
+                            className={`py-3.5 px-4 overflow-hidden ${borderBClass} text-foreground transition-colors ${
                               selected
-                                ? `border-border ${isNextSelected ? "border-b-border" : "border-b-primary-3"} ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary-3)]" : ""} ${!hasSelection ? "first:border-l-primary-3" : ""}`
+                                ? "border-primary-3/20 dark:border-border text-foreground"
                                 : "border-border"
-                            } ${resizingIndex === colIndex && !selected ? "bg-background-3" : ""}`}
+                            }`}
                             style={{
                               width: colWidths[colIndex] || col.size || 140,
                             }}
@@ -397,21 +403,23 @@ export default function AppGrid<T>({
                           </td>
                         ))}
                         <td
-                          className={`border-b ${!actions ? "border-r" : ""} ${
+                          className={`${borderBClass} transition-colors ${
                             selected
-                              ? `border-border ${isNextSelected ? "border-b-border" : "border-b-primary-3"} ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary-3)]" : ""} ${!actions ? "border-r-primary-3" : ""}`
+                              ? "border-primary-3/20 dark:border-border"
                               : "border-border"
                           }`}
                         ></td>
                         {actions && (
                           <td
-                            className={`p-2 border-l border-r border-b text-center w-12 sticky right-0 z-10 has-[button[aria-expanded="true"]]:z-50 transition-colors ${
+                            className={`p-3 ${borderBClass} text-center w-12 sticky right-0 z-10 transition-colors ${
                               selected
-                                ? `bg-primary-4 group-hover:bg-primary-4 border-border ${isNextSelected ? "border-b-border" : "border-b-primary-3"} border-r-primary-3 ${!isPrevSelected ? "shadow-[inset_0_1px_0_0_var(--primary-3)]" : ""}`
-                                : "bg-background group-hover:bg-background-3 border-border"
+                                ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3 border-primary-3/20 dark:border-border"
+                                : `${rowBgClass} ${groupHoverBgClass} border-border`
                             }`}
                           >
-                            <AppActions item={row} actions={actions} />
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                              <AppActions item={row} actions={actions} />
+                            </div>
                           </td>
                         )}
                       </tr>
@@ -421,7 +429,7 @@ export default function AppGrid<T>({
               )}
             </table>
             {items.length === 0 && (
-              <AppEmptyState className="flex-1 p-14 border-x border-b border-border rounded-t-none bg-background-2 dark:bg-background" />
+              <AppEmptyState className="flex-1 p-14 border-b border-border bg-white dark:bg-background" />
             )}
           </div>
         )}

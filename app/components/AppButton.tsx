@@ -21,7 +21,7 @@ export default function AppButton({
   children,
   ...props
 }: AppButtonProps) {
-  const baseClasses = `py-2 px-4 text-sm flex justify-center items-center gap-1.5 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+  const baseClasses = `py-2 px-4 flex justify-center items-center gap-1.5 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
     rounded ? "rounded-full" : "rounded-md"
   }`;
 

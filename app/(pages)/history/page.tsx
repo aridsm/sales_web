@@ -27,8 +27,10 @@ export default function HistoryPage() {
   const [rowsSelected, setRowsSelected] = useState<History[]>([]);
 
   const filterParams = useFilterParams([
-    "action_type", "entity_type",
-    "start_created_at", "end_created_at",
+    "action_type",
+    "entity_type",
+    "start_created_at",
+    "end_created_at",
   ]);
 
   const pagination = usePagination<History>(
@@ -124,7 +126,6 @@ export default function HistoryPage() {
         pagination={pagination}
         selectedRows={rowsSelected}
         onSelectedChange={(rows) => setRowsSelected(rows)}
-        onDeleteSelected={onDeleteSelected}
         search
         filter={
           <AppFilter

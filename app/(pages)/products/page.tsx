@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import AppGroup from "@/app/components/AppGroup";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import AppPage from "../../components/AppPage";
 import {
@@ -19,9 +18,12 @@ import { useFilterParams } from "../../utils/useFilterParams";
 import AppProductForm, {
   type ProductFormValues,
 } from "./components/AppProductForm";
-import { Edit } from "@mui/icons-material";
+import { Edit, Add, DeleteOutlined, ErrorTwoTone } from "@mui/icons-material";
 import AppModal from "@/app/components/AppModal";
 import AppGrid from "@/app/components/AppGrid";
+import AppButton from "@/app/components/AppButton";
+import AppInputText from "@/app/components/inputs/AppInputText";
+import AppLoading from "@/app/components/AppLoading";
 import { useTranslation } from "@/app/utils/i18n";
 import { Category } from "@/api/schemas/Category";
 import { Product } from "@/api/schemas/Product";
@@ -31,32 +33,64 @@ import AppAmountRange from "../../components/inputs/AppAmountRange";
 export default function ProductsPage() {
   const { t } = useTranslation();
   const [rowsSelected, setRowsSelected] = useState<Product[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    string | number | null
+  >(null);
+  const [searchInput, setSearchInput] = useState("");
 
   const [form, setForm] = useState({
     open: false,
     item: {} as ProductFormValues,
   });
   const { openDialog } = useDialogStore();
-  const filterParams = useFilterParams([
-    "id",
-    "start_product_created_at",
-    "end_product_created_at",
-    "start_price",
-    "end_price",
-    "product_search",
-  ]);
 
+  const filterParams = useFilterParams(
+    [
+      "id",
+      "start_product_created_at",
+      "end_product_created_at",
+      "start_price",
+      "end_price",
+    ],
+    {
+      start_product_created_at: "start_created_at",
+      end_product_created_at: "end_created_at",
+    },
+  );
+
+  // Fetch categories for sidebar
   const categories = usePagination<Category>(
     categoriesService as unknown as PaginationService<Category>,
-    { type: CategoryType.PRODUCT },
+    { type: CategoryType.PRODUCT, page_size: 50 },
+  );
+
+  // Fetch products with selected category filter
+  const products = usePagination<Product>(
+    productsService as unknown as PaginationService<Product>,
+    {
+      category_id: selectedCategoryId || undefined,
+      search: searchInput,
+      ...filterParams,
+    },
   );
 
   useEffect(() => {
     categories.load({
-      params: { ...filterParams, type: CategoryType.PRODUCT },
+      params: { type: CategoryType.PRODUCT, page_size: 50 },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    products.load({
+      params: {
+        category_id: selectedCategoryId || undefined,
+        search: searchInput,
+        ...filterParams,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategoryId, searchInput, filterParams]);
 
   function onDeleteSelected() {
     openDialog({
@@ -73,9 +107,7 @@ export default function ProductsPage() {
         try {
           const ids = rowsSelected.map((item) => item.id);
           await productsService.bulkDelete(ids);
-          await categories.load({
-            params: { ...filterParams, type: CategoryType.PRODUCT },
-          });
+          await Promise.all([products.load(), categories.load()]);
           setRowsSelected([]);
         } catch (err: unknown) {
           const error = err as {
@@ -100,7 +132,7 @@ export default function ProductsPage() {
   }
 
   async function onSaveItem() {
-    await categories.load();
+    await Promise.all([products.load(), categories.load()]);
   }
 
   function onCloseForm() {
@@ -110,125 +142,31 @@ export default function ProductsPage() {
     }));
   }
 
-  return (
-    <AppPage title={t("labels.products.title")}>
-      <AppGroup
-        groups={categories}
-        selectedItems={rowsSelected}
-        renderGroupName={(category) => (
-          <div className="flex items-center gap-3">
-            <div
-              className="w-4 h-4 rounded-sm"
-              style={{ backgroundColor: category.color }}
-            />
-            <span className="mt-0.5">{category.name}</span>
-            {!!category.products && (
-              <span
-                className={`rounded-full w-6 h-6 flex items-center justify-center text-xs font-semibold text-white bg-indigo-500`}
-              >
-                {category.products}
-              </span>
-            )}
-          </div>
-        )}
-        search={true}
-        searchKey="product_search"
-        onDelete={onDeleteSelected}
-        onNew={() => {
-          setForm({
-            open: true,
-            item: { category_id: null },
-          });
-        }}
-        onNewRow={({ group }) => {
-          setForm({
-            open: true,
-            item: { category_id: group.id },
-          });
-        }}
-        filter={
-          <AppFilter
-            pagination={categories}
-            validKeys={["id", "product_created_at", "price"]}
-          >
-            <ProductFilterFields />
-          </AppFilter>
-        }
-      >
-        {({ group, search }) => (
-          <AppProductsGrid
-            group={group}
-            search={search}
-            setForm={setForm}
-            rowsSelected={rowsSelected}
-            setRowsSelected={setRowsSelected}
-          />
-        )}
-      </AppGroup>
-
-      <AppModal
-        isOpen={form.open}
-        onClose={onCloseForm}
-        title={
-          form.item.id
-            ? t("labels.products.form.edit_title")
-            : t("labels.products.form.add_title")
-        }
-      >
-        <AppProductForm
-          onSaved={onSaveItem}
-          product={form.item}
-          onClose={onCloseForm}
-        />
-      </AppModal>
-    </AppPage>
-  );
-}
-
-function AppProductsGrid({
-  group,
-  search,
-  setForm,
-  rowsSelected,
-  setRowsSelected,
-}: {
-  group: Category;
-  search?: string;
-  setForm: React.Dispatch<
-    React.SetStateAction<{ open: boolean; item: ProductFormValues }>
-  >;
-  rowsSelected: Product[];
-  setRowsSelected: React.Dispatch<React.SetStateAction<Product[]>>;
-}) {
-  const { t } = useTranslation();
-  const filterParams = useFilterParams(
-    [
-      "start_product_created_at",
-      "end_product_created_at",
-      "start_price",
-      "end_price",
-    ],
-    {
-      start_product_created_at: "start_created_at",
-      end_product_created_at: "end_created_at",
-    },
-  );
-
-  const products = usePagination<Product>(
-    productsService as unknown as PaginationService<Product>,
-    { category_id: group.id, search, ...filterParams },
-  );
-
-  useEffect(() => {
-    products.load({ params: { search, ...filterParams } });
-  }, [group.products, search, filterParams]);
-
   const columns = useMemo(
     () => [
       {
         column: t("labels.all.name"),
-        cell: ({ row }: { row: Product }) => row.name,
-        size: 300,
+        cell: ({ row }: { row: Product }) => (
+          <span className="font-medium text-foreground">{row.name}</span>
+        ),
+        size: 250,
+      },
+      {
+        column: t("labels.products.category"),
+        cell: ({ row }: { row: Product }) => (
+          <div className="flex items-center gap-2 whitespace-nowrap">
+            {row.category_color && (
+              <div
+                className="w-3 h-3 rounded-full shrink-0"
+                style={{ backgroundColor: row.category_color }}
+              />
+            )}
+            <span className=" px-2 py-0.5 rounded-full bg-background-3 text-foreground/80 border border-border">
+              {row.category_name || "-"}
+            </span>
+          </div>
+        ),
+        size: 220,
       },
       {
         column: t("labels.products.price"),
@@ -240,27 +178,34 @@ function AppProductsGrid({
               }).format(row.price)
             : "-";
         },
-        size: 150,
+        size: 140,
       },
       {
         column: t("labels.products.stock_amount"),
-        cell: ({ row }: { row: Product }) => <p>{row.stock_amount}</p>,
-        size: 150,
+        cell: ({ row }: { row: Product }) => (
+          <span
+            className={`${row.stock_amount <= 5 ? "text-amber-500 font-semibold" : ""} flex items-center gap-1`}
+          >
+            {row.stock_amount <= 5 && <ErrorTwoTone fontSize="small" />}
+            {row.stock_amount}
+          </span>
+        ),
+        size: 160,
       },
       {
         column: t("labels.products.sold_amount"),
-        cell: ({ row }: { row: Product }) => <p>{row.sold_amount}</p>,
-        size: 150,
+        cell: ({ row }: { row: Product }) => row.sold_amount,
+        size: 130,
       },
       {
         column: t("labels.products.created_at"),
         cell: ({ row }: { row: Product }) => formatDateTime(row.created_at),
-        size: 200,
+        size: 180,
       },
       {
         column: "ID",
         cell: ({ row }: { row: Product }) => row.id,
-        size: 400,
+        size: 360,
       },
     ],
     [t],
@@ -282,16 +227,185 @@ function AppProductsGrid({
     [t],
   );
 
+  const totalProductsCount = useMemo(() => {
+    return categories.items.reduce((acc, cat) => acc + (cat.products || 0), 0);
+  }, [categories.items]);
+
   return (
-    <AppGrid
-      columns={columns}
-      pagination={products}
-      actions={actions}
-      selectedRows={rowsSelected}
-      hideSelectionCount
-      className="max-h-100"
-      onSelectedChange={setRowsSelected}
-    />
+    <AppPage title={t("labels.products.title")}>
+      <div className="flex flex-col flex-1 gap-4 min-h-0">
+        <div className="flex flex-1 gap-4 min-h-0 overflow-hidden">
+          <div className="w-70 shrink-0 bg-background-2 dark:bg-background-3 border border-border rounded-lg flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+              <span className="font-semibold">
+                {t("labels.products.category") || "Categorias"}
+              </span>
+              <span className="text-sm bg-foreground/8 text-foreground/60 px-1.5 py-0.5 rounded-md font-medium tabular-nums">
+                {categories.items.length}
+              </span>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-2 flex flex-col gap-0.5">
+              <button
+                type="button"
+                onClick={() => setSelectedCategoryId(null)}
+                className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-150 cursor-pointer group ${
+                  selectedCategoryId === null
+                    ? "bg-primary-4 dark:bg-primary-3 text-primary-3 dark:text-white font-semibold"
+                    : "text-foreground/70 hover:bg-background dark:hover:bg-foreground/5 hover:text-foreground"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 truncate">
+                  <div
+                    className={`w-2.5 h-4.5 rounded-xs  shrink-0 transition-colors ${
+                      selectedCategoryId === null
+                        ? "bg-primary-3 dark:bg-white"
+                        : "bg-foreground/25"
+                    }`}
+                  />
+                  <span className="truncate">Todas</span>
+                </div>
+                <span
+                  className={`text-sm tabular-nums px-1.5 py-0.5 rounded-md transition-colors ${
+                    selectedCategoryId === null
+                      ? "bg-primary-3/20 text-primary-3 dark:bg-white/20 dark:text-white font-semibold"
+                      : "text-foreground/40 group-hover:text-foreground/60"
+                  }`}
+                >
+                  {totalProductsCount}
+                </span>
+              </button>
+
+              <div className="h-px bg-border mx-2 my-1" />
+
+              {categories.loading && !categories.items.length ? (
+                <div className="p-6 text-center">
+                  <AppLoading />
+                </div>
+              ) : categories.items.length === 0 ? (
+                <div className="p-6 text-center text-sm text-foreground/40">
+                  Nenhuma categoria
+                </div>
+              ) : (
+                categories.items.map((cat) => {
+                  const isSelected = selectedCategoryId === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setSelectedCategoryId(cat.id)}
+                      className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-150 cursor-pointer group ${
+                        isSelected
+                          ? "bg-primary-4 dark:bg-primary-3 text-primary-3 dark:text-white font-semibold"
+                          : "text-foreground/70 hover:bg-background dark:hover:bg-foreground/5 hover:text-foreground border-transparent"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0 ">
+                        <div
+                          className="w-2.5 h-4 rounded-xs shrink-0 "
+                          style={{ backgroundColor: cat.color }}
+                        />
+                        <span className="text-start">{cat.name}</span>
+                      </div>
+                      {cat.products !== undefined && (
+                        <span
+                          className={`text-sm tabular-nums px-1.5 py-0.5 rounded-md shrink-0 ml-2 transition-colors ${
+                            isSelected
+                              ? "bg-primary-3/20 text-primary-3 dark:bg-white/20 dark:text-white font-semibold"
+                              : "text-foreground/40 group-hover:text-foreground/60"
+                          }`}
+                        >
+                          {cat.products}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          </div>
+
+          <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between flex-wrap">
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <AppInputText
+                  placeholder={
+                    t("labels.grid.search_placeholder") ||
+                    "Pesquisar produtos..."
+                  }
+                  value={searchInput}
+                  clearable
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="w-full max-w-xs"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                {rowsSelected.length > 0 && (
+                  <AppButton
+                    color="red"
+                    flat
+                    onClick={onDeleteSelected}
+                    className="flex items-center gap-1.5"
+                  >
+                    <DeleteOutlined style={{ fontSize: 18 }} />
+                    <span>
+                      {t("labels.all.delete")} ({rowsSelected.length})
+                    </span>
+                  </AppButton>
+                )}
+
+                <AppFilter
+                  pagination={products}
+                  validKeys={["id", "product_created_at", "price"]}
+                >
+                  <ProductFilterFields />
+                </AppFilter>
+
+                <AppButton
+                  color="primary"
+                  onClick={() => {
+                    setForm({
+                      open: true,
+                      item: { category_id: selectedCategoryId || null },
+                    });
+                  }}
+                  className="flex items-center gap-1.5"
+                >
+                  <Add style={{ fontSize: 18 }} />
+                  <span>{t("labels.grid.add_item")}</span>
+                </AppButton>
+              </div>
+            </div>
+
+            <AppGrid
+              columns={columns}
+              pagination={products}
+              actions={actions}
+              selectedRows={rowsSelected}
+              onSelectedChange={setRowsSelected}
+              className="flex-1"
+            />
+          </div>
+        </div>
+      </div>
+
+      <AppModal
+        isOpen={form.open}
+        onClose={onCloseForm}
+        title={
+          form.item.id
+            ? t("labels.products.form.edit_title")
+            : t("labels.products.form.add_title")
+        }
+      >
+        <AppProductForm
+          onSaved={onSaveItem}
+          product={form.item}
+          onClose={onCloseForm}
+        />
+      </AppModal>
+    </AppPage>
   );
 }
 
