@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { formatCurrency } from "@/app/utils/formatters/currency";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import AppPage from "../../../components/AppPage";
 import AppCard from "../../../components/AppCard";
 import AppButton from "../../../components/AppButton";
@@ -27,6 +27,7 @@ import { StockEntryCart } from "../components/StockEntryCart";
 import type { Product } from "@/api/schemas/Product";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../../components/inputs/AppSelectPaginated";
+import AppNumberRange from "../../../components/inputs/AppNumberRange";
 import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import {
@@ -42,7 +43,11 @@ import { Category } from "@/api/schemas/Category";
 export default function NewStockEntryPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
+  const handleFilterChange = useCallback(
+    (params: Record<string, unknown>) => setFilterParams(params),
+    [],
+  );
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<StockCartItem<Product>[]>([]);
   const [entryDate, setEntryDate] = useState(() => new Date().toISOString());
@@ -59,8 +64,8 @@ export default function NewStockEntryPage() {
   useEffect(() => {
     const timer = setTimeout(async () => {
       try {
-        const filterParams = Object.fromEntries(searchParams.entries());
         await productsPagination.load({
+          replace: true,
           params: { ...filterParams, search, page: 1 },
         });
       } catch (err) {
@@ -70,7 +75,7 @@ export default function NewStockEntryPage() {
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [search, searchParams]);
+  }, [search, filterParams]);
 
   function addToCart(product: Product) {
     setCart((prev) => addToStockCart(prev, product));
@@ -227,8 +232,8 @@ export default function NewStockEntryPage() {
               />
             </div>
             <AppFilter
-              pagination={productsPagination}
-              validKeys={["category_id", "code"]}
+              onChange={handleFilterChange}
+              validKeys={["category_id", "stock_amount"]}
             >
               <StockNewFilterFields />
             </AppFilter>
@@ -337,6 +342,7 @@ export default function NewStockEntryPage() {
 }
 
 function StockNewFilterFields() {
+  const { t } = useTranslation();
   const { control } = useFormContext();
 
   const categories = usePagination<Category>(
@@ -364,6 +370,16 @@ function StockNewFilterFields() {
             clearable
             value={field.value}
             onChange={field.onChange}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name="stock_amount"
+        render={({ field }) => (
+          <AppNumberRange
+            label={t("labels.products.stock_amount")}
+            {...field}
           />
         )}
       />

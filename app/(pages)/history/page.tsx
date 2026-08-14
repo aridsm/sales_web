@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { ACTION_CONFIG } from "@/app/utils/constants";
 import AppPage from "../../components/AppPage";
 import AppGrid from "../../components/AppGrid";
@@ -11,7 +11,7 @@ import {
 import { historyService } from "@/api/services/HistoryService";
 import { History } from "@/api/schemas/History";
 import { useTranslation } from "@/app/utils/i18n";
-import { useFilterParams } from "../../utils/useFilterParams";
+
 import { ActionType } from "@/enums/ActionType";
 import { EntityType } from "@/enums/EntityType";
 import { formatDateTime } from "@/app/utils/formatters/date";
@@ -26,12 +26,8 @@ export default function HistoryPage() {
   const { openDialog } = useDialogStore();
   const [rowsSelected, setRowsSelected] = useState<History[]>([]);
 
-  const filterParams = useFilterParams([
-    "action_type",
-    "entity_type",
-    "start_created_at",
-    "end_created_at",
-  ]);
+  const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
+  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
 
   const pagination = usePagination<History>(
     historyService as unknown as PaginationService<History>,
@@ -39,8 +35,9 @@ export default function HistoryPage() {
   );
 
   useEffect(() => {
-    pagination.load({ params: filterParams });
-  }, []);
+    pagination.load({ replace: true, params: filterParams });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterParams]);
 
   const entityLabels: Record<number, string> = {
     [EntityType.PRODUCT]: t("labels.history.entities.PRODUCT"),
@@ -129,7 +126,7 @@ export default function HistoryPage() {
         search
         filter={
           <AppFilter
-            pagination={pagination}
+            onChange={handleFilterChange}
             validKeys={["action_type", "entity_type", "created_at"]}
           >
             <HistoryFilterFields />
@@ -197,7 +194,7 @@ function HistoryFilterFields() {
         control={control}
         name="created_at"
         render={({ field }) => (
-          <AppDateRange label={t("labels.history.date")} {...field} />
+          <AppDateRange label={t("labels.history.date")} showTime {...field} />
         )}
       />
     </>

@@ -180,7 +180,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
       }
       newParams.set("page", "1");
       router.push(`${pathname}?${newParams.toString()}`);
-      groups.load({ params: { [searchKey]: searchInput, page: 1 } });
+      groups.load({ replace: true, params: { [searchKey]: searchInput, page: 1 } });
     } catch (error) {
       openDialog({
         variant: "error",

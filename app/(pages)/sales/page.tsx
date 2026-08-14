@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { STATUS_CONFIG } from "@/app/utils/constants";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useRouter } from "next/navigation";
-import { useFilterParams } from "../../utils/useFilterParams";
+
 import AppPage from "../../components/AppPage";
 import AppCard from "../../components/AppCard";
 import Link from "next/link";
@@ -42,21 +42,14 @@ export default function SalePage() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const filterParams = useFilterParams([
-    "category_id",
-    "status",
-    "product_id",
-    "start_date",
-    "end_date",
-    "start_total",
-    "end_total",
-  ]);
+  const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
+  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
   const salesPagination = usePagination<Sale>(salesService, { sort: "-code" });
 
   useEffect(() => {
-    salesPagination.load({ params: filterParams });
+    salesPagination.load({ replace: true, params: filterParams });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [filterParams]);
 
   return (
     <AppPage title={t("labels.sales.title")}>
@@ -114,7 +107,7 @@ export default function SalePage() {
         search
         filter={
           <AppFilter
-            pagination={salesPagination}
+            onChange={handleFilterChange}
             validKeys={["category_id", "status", "product_id", "date", "total"]}
           >
             <SaleFilterFields />

@@ -59,7 +59,7 @@ export default function AppCategoryForm({
       } else {
         reset({
           name: "",
-          type: model?.type,
+          type: undefined,
           color: "",
         });
       }

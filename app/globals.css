@@ -148,3 +148,14 @@ body {
     0 20px 40px -15px rgba(0, 0, 0, 0.3),
     0 15px 25px -10px rgba(0, 0, 0, 0.2);
 }
+
+/* Remove spin buttons from number inputs */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

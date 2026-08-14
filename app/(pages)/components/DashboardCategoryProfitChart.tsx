@@ -116,7 +116,7 @@ export const DashboardCategoryProfitChart = ({
       .getAmounts({
         start_created_at: startDate,
         end_created_at: endDate,
-        type: activeTab,
+        type: activeTab as unknown as CategoryType,
       })
       .then((res: CategoryAmount) => setCategoriesAmounts(res));
 

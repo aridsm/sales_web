@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import AppPage from "../../components/AppPage";
 import AppGrid from "../../components/AppGrid";
 import { useDialogStore } from "@/stores/dialogStore";
@@ -13,12 +13,13 @@ import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import { Edit } from "@mui/icons-material";
-import { useFilterParams } from "../../utils/useFilterParams";
+
 import AppOtherExpenseForm from "./components/AppOtherExpenseForm";
 import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { OtherExpense, OtherExpenseForm } from "@/api/schemas/OtherExpense";
+import { Category } from "@/api/schemas/Category";
 import { useTranslation } from "@/app/utils/i18n";
 import AppDateRange from "../../components/inputs/AppDateRange";
 import AppAmountRange from "../../components/inputs/AppAmountRange";
@@ -31,13 +32,8 @@ export default function OtherExpensesPage() {
     item: undefined as OtherExpenseForm | undefined,
   });
 
-  const filterParams = useFilterParams([
-    "category_id",
-    "start_date",
-    "end_date",
-    "start_value",
-    "end_value",
-  ]);
+  const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
+  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
 
   const pagination = usePagination<OtherExpense>(
     otherExpensesService as unknown as PaginationService<OtherExpense>,
@@ -45,8 +41,9 @@ export default function OtherExpensesPage() {
   );
 
   useEffect(() => {
-    pagination.load({ params: filterParams });
-  }, []);
+    pagination.load({ replace: true, params: filterParams });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterParams]);
 
   const columns = useMemo(
     () => [
@@ -171,7 +168,7 @@ export default function OtherExpensesPage() {
         search
         filter={
           <AppFilter
-            pagination={pagination}
+            onChange={handleFilterChange}
             validKeys={["category_id", "date", "value"]}
           >
             <OtherExpensesFilterFields />

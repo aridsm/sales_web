@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import AppPage from "../../components/AppPage";
 import {
@@ -14,7 +14,6 @@ import { CategoryType } from "@/enums/CategoryType";
 import { useDialogStore } from "@/stores/dialogStore";
 import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
-import { useFilterParams } from "../../utils/useFilterParams";
 import AppProductForm, {
   type ProductFormValues,
 } from "./components/AppProductForm";
@@ -31,7 +30,7 @@ import AppDateRange from "../../components/inputs/AppDateRange";
 import AppAmountRange from "../../components/inputs/AppAmountRange";
 import AppNumberRange from "../../components/inputs/AppNumberRange";
 
-const VALID_FILTER_KEYS = ["id", "product_created_at", "price", "stock_amount"];
+const VALID_FILTER_KEYS = ["created_at", "price", "stock_amount"];
 
 export default function ProductsPage() {
   const { t } = useTranslation();
@@ -41,6 +40,7 @@ export default function ProductsPage() {
   >(null);
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearchInput = useDebounce(searchInput, 500);
+  const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
 
   const [form, setForm] = useState({
     open: false,
@@ -48,30 +48,14 @@ export default function ProductsPage() {
   });
   const { openDialog } = useDialogStore();
 
-  const filterParams = useFilterParams([
-    "id",
-    "start_created_at",
-    "end_created_at",
-    "start_price",
-    "end_price",
-    "start_stock_amount",
-    "end_stock_amount",
-  ]);
-
   // Fetch categories for sidebar
   const categories = usePagination<Category>(
     categoriesService as unknown as PaginationService<Category>,
     { type: CategoryType.PRODUCT, page_size: 50 },
   );
 
-  // Fetch products with selected category filter
   const products = usePagination<Product>(
     productsService as unknown as PaginationService<Product>,
-    {
-      category_id: selectedCategoryId || undefined,
-      search: debouncedSearchInput,
-      ...filterParams,
-    },
   );
 
   useEffect(() => {
@@ -81,8 +65,10 @@ export default function ProductsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Re-fetch products whenever search, category or filter params change.
   useEffect(() => {
     products.load({
+      replace: true,
       params: {
         category_id: selectedCategoryId || undefined,
         search: debouncedSearchInput,
@@ -91,6 +77,11 @@ export default function ProductsPage() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryId, debouncedSearchInput, filterParams]);
+
+  // Stable callback passed to AppFilter as onChange.
+  const handleFilterChange = useCallback((params: Record<string, unknown>) => {
+    setFilterParams(params);
+  }, []);
 
   function onDeleteSelected() {
     openDialog({
@@ -343,7 +334,7 @@ export default function ProductsPage() {
                   }
                   value={searchInput}
                   clearable
-                  onChange={(e) => setSearchInput(e.target.value)}
+                  onChange={(e) => setSearchInput(String(e.target.value ?? ""))}
                   className="min-w-90"
                 />
               </div>
@@ -364,8 +355,8 @@ export default function ProductsPage() {
                 )}
 
                 <AppFilter
-                  pagination={products}
                   validKeys={VALID_FILTER_KEYS}
+                  onChange={handleFilterChange}
                 >
                   <ProductFilterFields />
                 </AppFilter>
@@ -375,7 +366,7 @@ export default function ProductsPage() {
                   onClick={() => {
                     setForm({
                       open: true,
-                      item: { category_id: selectedCategoryId || null },
+                      item: { category_id: selectedCategoryId != null ? String(selectedCategoryId) : null },
                     });
                   }}
                   className="flex items-center gap-1.5"

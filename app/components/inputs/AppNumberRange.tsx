@@ -31,6 +31,12 @@ export default function AppNumberRange({
   disabled,
   className = "",
 }: AppNumberRangeProps) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (["e", "E", "+", "-", ".", ","].includes(e.key)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div className={`flex flex-col gap-1 w-full ${className}`}>
       {label && <AppLabel>{label}</AppLabel>}
@@ -45,6 +51,7 @@ export default function AppNumberRange({
               onChange?.({ ...value, start: val });
             }}
             onBlur={onBlur}
+            onKeyDown={handleKeyDown}
             disabled={disabled}
           />
         </div>
@@ -59,6 +66,7 @@ export default function AppNumberRange({
               onChange?.({ ...value, end: val });
             }}
             onBlur={onBlur}
+            onKeyDown={handleKeyDown}
             disabled={disabled}
           />
         </div>

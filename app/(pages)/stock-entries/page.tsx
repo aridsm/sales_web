@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { STOCK_ENTRY_STATUS_CONFIG } from "@/app/utils/constants";
 import Link from "next/link";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useRouter } from "next/navigation";
-import { useFilterParams } from "../../utils/useFilterParams";
+
 import AppPage from "../../components/AppPage";
 import AppCard from "../../components/AppCard";
 import AppGroup from "../../components/AppGroup";
@@ -41,24 +41,17 @@ export default function StockEntriesPage() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const filterParams = useFilterParams([
-    "start_date",
-    "end_date",
-    "start_total",
-    "end_total",
-    "category_id",
-    "product_id",
-    "status",
-  ]);
+  const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
+  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
 
   const stockPagination = usePagination<StockEntry>(stockEntriesService, {
     sort: "-code",
   });
 
   useEffect(() => {
-    stockPagination.load({ params: filterParams });
+    stockPagination.load({ replace: true, params: filterParams });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [filterParams]);
 
   return (
     <AppPage title={t("labels.stock_entries.title")}>
@@ -118,7 +111,7 @@ export default function StockEntriesPage() {
         search
         filter={
           <AppFilter
-            pagination={stockPagination}
+            onChange={handleFilterChange}
             validKeys={["date", "total", "category_id", "product_id", "status"]}
           >
             <StockEntryFilterFields />

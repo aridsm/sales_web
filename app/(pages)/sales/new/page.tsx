@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { formatCurrency } from "@/app/utils/formatters/currency";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import AppPage from "../../../components/AppPage";
 import AppCard from "../../../components/AppCard";
 import AppButton from "../../../components/AppButton";
@@ -26,6 +26,8 @@ import { SaleCart } from "../components/SaleCart";
 import type { Product } from "@/api/schemas/Product";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../../components/inputs/AppSelectPaginated";
+import AppAmountRange from "../../../components/inputs/AppAmountRange";
+import AppNumberRange from "../../../components/inputs/AppNumberRange";
 import AppInputText from "../../../components/inputs/AppInputText";
 import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
@@ -43,7 +45,8 @@ import { Category } from "@/api/schemas/Category";
 export default function NewSalePage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
+  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<CartItem<Product>[]>([]);
   const [saleDate, setSaleDate] = useState(() => new Date().toISOString());
@@ -60,8 +63,8 @@ export default function NewSalePage() {
   useEffect(() => {
     const timer = setTimeout(async () => {
       try {
-        const filterParams = Object.fromEntries(searchParams.entries());
         await productsPagination.load({
+          replace: true,
           params: { ...filterParams, search, page: 1 },
         });
       } catch (err) {
@@ -71,7 +74,7 @@ export default function NewSalePage() {
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [search, searchParams]);
+  }, [search, filterParams]);
 
   function addToCart(product: Product) {
     setCart((prev) => addToCartFn(prev, product));
@@ -196,8 +199,8 @@ export default function NewSalePage() {
               />
             </div>
             <AppFilter
-              pagination={productsPagination}
-              validKeys={["category_id", "code"]}
+              onChange={handleFilterChange}
+              validKeys={["category_id", "stock_amount", "price"]}
             >
               <SaleNewFilterFields />
             </AppFilter>
@@ -345,11 +348,19 @@ function SaleNewFilterFields() {
           />
         )}
       />
-      <AppInputText
-        label={t("labels.sales.code")}
-        placeholder={t("labels.sales.search_code")}
-        clearable
-        {...register("code")}
+      <Controller
+        control={control}
+        name="stock_amount"
+        render={({ field }) => (
+          <AppNumberRange label={t("labels.products.stock_amount")} {...field} />
+        )}
+      />
+      <Controller
+        control={control}
+        name="price"
+        render={({ field }) => (
+          <AppAmountRange label={t("labels.products.price")} {...field} />
+        )}
       />
     </>
   );

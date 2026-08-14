@@ -19,6 +19,7 @@ interface AppAmountRangeProps {
   onBlur?: () => void;
   disabled?: boolean;
   className?: string;
+  type?: "currency" | "number";
 }
 
 export default function AppAmountRange({
@@ -31,6 +32,7 @@ export default function AppAmountRange({
   onBlur,
   disabled,
   className = "",
+  type = "currency",
 }: AppAmountRangeProps) {
   return (
     <div className={`flex flex-col gap-1 w-full ${className}`}>
@@ -38,6 +40,7 @@ export default function AppAmountRange({
       <div className="flex gap-2 items-center">
         <div className="flex-1 min-w-0">
           <AppInputText
+            type={type === "number" ? "number" : "text"}
             value={value?.start ?? ""}
             placeholder={placeholderStart}
             onChange={(e) => {
@@ -46,12 +49,13 @@ export default function AppAmountRange({
             }}
             onBlur={onBlur}
             disabled={disabled}
-            mask={currencyFormatter as any}
+            mask={type === "currency" ? (currencyFormatter as any) : undefined}
           />
         </div>
         <span className="text-label shrink-0">-</span>
         <div className="flex-1 min-w-0">
           <AppInputText
+            type={type === "number" ? "number" : "text"}
             value={value?.end ?? ""}
             placeholder={placeholderEnd}
             onChange={(e) => {
@@ -60,7 +64,7 @@ export default function AppAmountRange({
             }}
             onBlur={onBlur}
             disabled={disabled}
-            mask={currencyFormatter as any}
+            mask={type === "currency" ? (currencyFormatter as any) : undefined}
           />
         </div>
       </div>
