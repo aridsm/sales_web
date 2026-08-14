@@ -264,7 +264,7 @@ export default function AppGrid<T>({
       </div>
 
       {hasSelection && selectedRows && selectedRows.length > 0 && (
-        <div className="flex flex-col border-l-3 border-l-emerald-400 sm:flex-row items-center justify-between bg-emerald-500/5 dark:bg-emerald-500/10 rounded-r-lg p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200 gap-3">
+        <div className="flex flex-col border-l-3 border-y border-r border-emerald-600/20 border-l-emerald-400 sm:flex-row items-center justify-between bg-emerald-500/5 dark:bg-emerald-500/10 rounded-r-lg p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200 gap-3">
           <div className="flex items-center gap-3 w-full">
             <div className="w-6 h-6 rounded-full flex items-center justify-center bg-emerald-400 text-white dark:text-emerald-950 font-bold text-sm">
               {selectedRows.length}
@@ -312,7 +312,7 @@ export default function AppGrid<T>({
               <thead className="text-sm font-medium sticky top-0 z-20 text-foreground/80 bg-background-3 dark:bg-background-3">
                 <tr>
                   {hasSelection && (
-                    <th className="p-3 text-center sticky left-0 z-30 w-12 border-b border-border font-medium">
+                    <th className="p-3 text-center sticky left-0 z-30 w-12 border-b border-border font-medium bg-background-3 dark:bg-background-3">
                       {items.length > 0 && (
                         <AppCheckbox
                           checked={isAllSelected}

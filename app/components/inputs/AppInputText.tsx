@@ -110,7 +110,7 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
           : props.value;
 
     return (
-      <div className="flex flex-col gap-1 w-full">
+      <div className="flex flex-col gap-1">
         {label && <AppLabel htmlFor={label}>{label}</AppLabel>}
         <div className="relative flex items-center w-full">
           <input
@@ -124,16 +124,20 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
-          {clearable && displayValue !== "" && displayValue !== undefined && displayValue !== null && !props.disabled && (
-            <button
-              type="button"
-              onClick={handleClear}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-              tabIndex={-1}
-            >
-              <CloseIcon style={{ fontSize: 16 }} />
-            </button>
-          )}
+          {clearable &&
+            displayValue !== "" &&
+            displayValue !== undefined &&
+            displayValue !== null &&
+            !props.disabled && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                tabIndex={-1}
+              >
+                <CloseIcon style={{ fontSize: 16 }} />
+              </button>
+            )}
         </div>
         {error && <span className="text-xs text-red-500 mt-1">{error}</span>}
       </div>

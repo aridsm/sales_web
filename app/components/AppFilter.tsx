@@ -64,7 +64,7 @@ export default function AppFilter<T = unknown>({
     if (validKeys) {
       const filteredParams: Record<string, unknown> = {};
       validKeys.forEach((key) => {
-        filteredParams[key] = params[key] !== undefined ? params[key] : undefined;
+        filteredParams[key] = params[key] !== undefined ? params[key] : null;
       });
       reset(filteredParams);
     } else {
@@ -120,7 +120,6 @@ export default function AppFilter<T = unknown>({
     });
 
     router.push(`${pathname}?${newParams.toString()}`);
-    pagination.load({ params: flatParams, replace: true });
     handleClose();
   };
 
@@ -128,18 +127,16 @@ export default function AppFilter<T = unknown>({
     const emptyValues: Record<string, unknown> = {};
     if (validKeys) {
       validKeys.forEach((key) => {
-        emptyValues[key] = undefined;
+        emptyValues[key] = null;
       });
     } else {
       const currentValues = methods.getValues();
       Object.keys(currentValues).forEach((key) => {
-        emptyValues[key] = undefined;
+        emptyValues[key] = null;
       });
     }
     reset(emptyValues);
     router.push(pathname);
-    pagination.load({ params: { page: 1 }, replace: true });
-    handleClose();
   }
 
   const hasActiveFilters = validKeys

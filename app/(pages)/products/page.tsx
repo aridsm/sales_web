@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import AppPage from "../../components/AppPage";
 import {
   usePagination,
   type PaginationService,
 } from "../../utils/usePagination";
+import { useDebounce } from "../../utils/useDebounce";
 import { categoriesService } from "@/api/services/CategoryService";
 import { productsService } from "@/api/services/ProductService";
 import { CategoryType } from "@/enums/CategoryType";
 import { useDialogStore } from "@/stores/dialogStore";
 import AppFilter from "../../components/AppFilter";
 import { Controller, useFormContext } from "react-hook-form";
-import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import { useFilterParams } from "../../utils/useFilterParams";
 import AppProductForm, {
   type ProductFormValues,
@@ -29,6 +29,9 @@ import { Category } from "@/api/schemas/Category";
 import { Product } from "@/api/schemas/Product";
 import AppDateRange from "../../components/inputs/AppDateRange";
 import AppAmountRange from "../../components/inputs/AppAmountRange";
+import AppNumberRange from "../../components/inputs/AppNumberRange";
+
+const VALID_FILTER_KEYS = ["id", "product_created_at", "price", "stock_amount"];
 
 export default function ProductsPage() {
   const { t } = useTranslation();
@@ -37,6 +40,7 @@ export default function ProductsPage() {
     string | number | null
   >(null);
   const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchInput = useDebounce(searchInput, 500);
 
   const [form, setForm] = useState({
     open: false,
@@ -44,19 +48,15 @@ export default function ProductsPage() {
   });
   const { openDialog } = useDialogStore();
 
-  const filterParams = useFilterParams(
-    [
-      "id",
-      "start_product_created_at",
-      "end_product_created_at",
-      "start_price",
-      "end_price",
-    ],
-    {
-      start_product_created_at: "start_created_at",
-      end_product_created_at: "end_created_at",
-    },
-  );
+  const filterParams = useFilterParams([
+    "id",
+    "start_created_at",
+    "end_created_at",
+    "start_price",
+    "end_price",
+    "start_stock_amount",
+    "end_stock_amount",
+  ]);
 
   // Fetch categories for sidebar
   const categories = usePagination<Category>(
@@ -69,7 +69,7 @@ export default function ProductsPage() {
     productsService as unknown as PaginationService<Product>,
     {
       category_id: selectedCategoryId || undefined,
-      search: searchInput,
+      search: debouncedSearchInput,
       ...filterParams,
     },
   );
@@ -85,12 +85,12 @@ export default function ProductsPage() {
     products.load({
       params: {
         category_id: selectedCategoryId || undefined,
-        search: searchInput,
+        search: debouncedSearchInput,
         ...filterParams,
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategoryId, searchInput, filterParams]);
+  }, [selectedCategoryId, debouncedSearchInput, filterParams]);
 
   function onDeleteSelected() {
     openDialog({
@@ -182,14 +182,22 @@ export default function ProductsPage() {
       },
       {
         column: t("labels.products.stock_amount"),
-        cell: ({ row }: { row: Product }) => (
-          <span
-            className={`${row.stock_amount <= 5 ? "text-amber-500 font-semibold" : ""} flex items-center gap-1`}
-          >
-            {row.stock_amount <= 5 && <ErrorTwoTone fontSize="small" />}
-            {row.stock_amount}
-          </span>
-        ),
+        cell: ({ row }: { row: Product }) => {
+          let className = "";
+
+          if (row.stock_amount == 0) {
+            className = "text-red-500 font-semibold";
+          } else if (row.stock_amount <= 5) {
+            className = "text-amber-500 font-semibold";
+          }
+
+          return (
+            <span className={`${className} flex items-center gap-1`}>
+              {row.stock_amount <= 5 && <ErrorTwoTone fontSize="small" />}
+              {row.stock_amount}
+            </span>
+          );
+        },
         size: 160,
       },
       {
@@ -336,7 +344,7 @@ export default function ProductsPage() {
                   value={searchInput}
                   clearable
                   onChange={(e) => setSearchInput(e.target.value)}
-                  className="w-full max-w-xs"
+                  className="min-w-90"
                 />
               </div>
 
@@ -357,7 +365,7 @@ export default function ProductsPage() {
 
                 <AppFilter
                   pagination={products}
-                  validKeys={["id", "product_created_at", "price"]}
+                  validKeys={VALID_FILTER_KEYS}
                 >
                   <ProductFilterFields />
                 </AppFilter>
@@ -413,37 +421,11 @@ function ProductFilterFields() {
   const { t } = useTranslation();
   const { control } = useFormContext();
 
-  const categories = usePagination<Category>(
-    categoriesService as unknown as PaginationService<Category>,
-    { type: CategoryType.PRODUCT, page_size: 20 },
-  );
-
-  useEffect(() => {
-    categories.load({ params: { page: 1 } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <>
       <Controller
         control={control}
-        name="id"
-        render={({ field }) => (
-          <AppSelectPaginated
-            label={t("labels.products.category")}
-            placeholder={t("labels.products.filter_category")}
-            pagination={categories}
-            search
-            multiple
-            clearable
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="product_created_at"
+        name="created_at"
         render={({ field }) => (
           <AppDateRange label={t("labels.products.created_at")} {...field} />
         )}
@@ -453,6 +435,16 @@ function ProductFilterFields() {
         name="price"
         render={({ field }) => (
           <AppAmountRange label={t("labels.products.price")} {...field} />
+        )}
+      />
+      <Controller
+        control={control}
+        name="stock_amount"
+        render={({ field }) => (
+          <AppNumberRange
+            label={t("labels.products.stock_amount")}
+            {...field}
+          />
         )}
       />
     </>

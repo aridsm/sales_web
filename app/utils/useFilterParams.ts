@@ -21,6 +21,7 @@ export function useFilterParams(
   const keyMapKey = JSON.stringify(keyMap);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const allowedKey = JSON.stringify(allowedKeys);
+  const searchParamsString = searchParams.toString();
 
   return useMemo(() => {
     const builtInKeys = ["page", "page_size", "search"];
@@ -35,5 +36,5 @@ export function useFilterParams(
 
     return params;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, allowedKey, keyMapKey]);
+  }, [searchParamsString, allowedKey, keyMapKey]);
 }
