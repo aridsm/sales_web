@@ -62,20 +62,31 @@ export default function CategoriesPage() {
         column: t("labels.categories.color"),
         size: 150,
         cell: ({ row }: { row: Category }) => (
-          <div className="flex gap-2 items-center">
-            <div
-              className={`min-w-4 h-4 rounded-sm`}
-              style={{ backgroundColor: row.color }}
-            />
-            <span>{row.color}</span>
+          <div className="flex items-center gap-2 whitespace-nowrap">
+            {row.color && (
+              <div
+                className="w-3 h-3 rounded-full shrink-0 border border-black/10 dark:border-white/10"
+                style={{ backgroundColor: row.color }}
+              />
+            )}
+            <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium">
+              {row.color || "-"}
+            </span>
           </div>
         ),
       },
 
       {
         column: "ID",
-        cell: ({ row }: { row: Category }) => row.id,
-        size: 400,
+        cell: ({ row }: { row: Category }) => (
+          <span
+            className="font-mono text-xs bg-background-2 dark:bg-background-3 px-2 py-1 rounded-md max-w-full truncate inline-block border border-border"
+            title={row.id}
+          >
+            {row.id}
+          </span>
+        ),
+        size: 300,
       },
     ],
     [t],
@@ -148,7 +159,7 @@ export default function CategoriesPage() {
 
   return (
     <AppPage title={t("labels.categories.title")}>
-      <div className="mb-4">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-3">
         <AppTabs
           tabs={[
             {
@@ -166,28 +177,8 @@ export default function CategoriesPage() {
             setRowsSelected([]);
           }}
         />
-      </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-3">
-        <div className="relative w-full sm:max-w-sm">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-foreground z-10">
-            <SearchOutlined fontSize="small" />
-          </div>
-          <AppInputText
-            type="text"
-            className="pl-10!"
-            placeholder={t("labels.grid.search_placeholder")}
-            value={search}
-            onChange={(e: any) => setSearch(e.target.value as string)}
-            onBlur={() => pagination.load({ params: { search, page: 1 } })}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                pagination.load({ params: { search, page: 1 } });
-              }
-            }}
-          />
-        </div>
-        <div className="flex gap-3 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
           {rowsSelected.length > 0 && (
             <AppButton
               onClick={onDeleteSelected}
@@ -199,17 +190,37 @@ export default function CategoriesPage() {
               {t("labels.all.delete")} ({rowsSelected.length})
             </AppButton>
           )}
-          <AppButton
-            onClick={handleNew}
-            color="primary"
-            className="w-full sm:w-auto px-4 py-2 shrink-0"
-          >
-            <AddOutlined fontSize="small" />
-            {t("labels.grid.add_item")}
-          </AppButton>
+          <div className="relative w-full sm:w-64">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-foreground z-10">
+              <SearchOutlined fontSize="small" />
+            </div>
+            <AppInputText
+              type="text"
+              className="pl-10!"
+              placeholder={t("labels.grid.search_placeholder")}
+              value={search}
+              onChange={(e: any) => setSearch(e.target.value as string)}
+              onBlur={() => pagination.load({ params: { search, page: 1 } })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  pagination.load({ params: { search, page: 1 } });
+                }
+              }}
+            />
+          </div>
+
+          <div className="flex gap-2 w-full sm:w-auto">
+            <AppButton
+              onClick={handleNew}
+              color="primary"
+              className="w-full sm:w-auto px-4 py-2 shrink-0"
+            >
+              <AddOutlined fontSize="small" />
+              {t("labels.grid.add_item")}
+            </AppButton>
+          </div>
         </div>
       </div>
-
       <AppGrid
         columns={columns}
         pagination={pagination}

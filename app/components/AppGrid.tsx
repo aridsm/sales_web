@@ -3,11 +3,9 @@
 import React from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { PaginationResult } from "../utils/usePagination";
-import { Search, Add, DeleteOutlined, Close } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import AppPagination from "./AppPagination";
-import AppButton from "./AppButton";
 import AppCheckbox from "./inputs/AppCheckbox";
-import AppInputText from "./inputs/AppInputText";
 import AppActions, { ActionItem } from "./AppActions";
 import AppLoading from "./AppLoading";
 import { useDialogStore } from "@/stores/dialogStore";
@@ -192,8 +190,6 @@ export default function AppGrid<T>({
     <div
       className={`flex flex-col h-full min-h-0 min-w-0 flex-1 w-full ${className || ""}`}
     >
-
-
       {hasSelection && selectedRows && selectedRows.length > 0 && (
         <div className="flex flex-col border-l-3 border-y border-r border-emerald-600/20 border-l-emerald-400 sm:flex-row items-center justify-between bg-emerald-500/5 dark:bg-emerald-500/10 rounded-r-lg p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200 gap-3">
           <div className="flex items-center gap-3 w-full">
@@ -304,10 +300,10 @@ export default function AppGrid<T>({
                       >
                         {hasSelection && (
                           <td
-                            className={`p-3 w-12 sticky left-0 z-10 text-center ${borderBClass} transition-colors ${
+                            className={`border-border p-3 w-12 sticky left-0 z-10 text-center ${borderBClass} transition-colors ${
                               selected
-                                ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3 border-primary-3/20 dark:border-border"
-                                : `${rowBgClass} ${groupHoverBgClass} border-border`
+                                ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3"
+                                : `${rowBgClass} ${groupHoverBgClass}`
                             }`}
                           >
                             <AppCheckbox
@@ -321,10 +317,8 @@ export default function AppGrid<T>({
                         {columns.map((col, colIndex) => (
                           <td
                             key={colIndex}
-                            className={`py-3.5 px-4 overflow-hidden ${borderBClass} text-foreground transition-colors ${
-                              selected
-                                ? "border-primary-3/20 dark:border-border text-foreground"
-                                : "border-border"
+                            className={`py-3.5 px-4 border-border overflow-hidden ${borderBClass} text-foreground transition-colors ${
+                              selected ? "text-foreground" : ""
                             }`}
                             style={{
                               width: colWidths[colIndex] || col.size || 140,
@@ -334,17 +328,13 @@ export default function AppGrid<T>({
                           </td>
                         ))}
                         <td
-                          className={`${borderBClass} transition-colors ${
-                            selected
-                              ? "border-primary-3/20 dark:border-border"
-                              : "border-border"
-                          }`}
+                          className={`${borderBClass} transition-colors border-border`}
                         ></td>
                         {actions && (
                           <td
-                            className={`p-3 ${borderBClass} text-center w-12 sticky right-0 z-10 transition-colors ${
+                            className={`p-3 ${borderBClass} border-border text-center w-12 sticky right-0 z-10 transition-colors ${
                               selected
-                                ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3 border-primary-3/20 dark:border-border"
+                                ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3"
                                 : `${rowBgClass} ${groupHoverBgClass} border-border`
                             }`}
                           >
