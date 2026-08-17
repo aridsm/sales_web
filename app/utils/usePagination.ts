@@ -111,7 +111,7 @@ export function usePagination<T>(
         const baseParams = replace
           ? { page: 1, page_size: 20, ...defaultParamsRef.current }
           : base;
-        return newParams ? { ...baseParams, ...newParams } : baseParams;
+        return newParams ? { ...baseParams, ...newParams } : { ...baseParams };
       });
     },
     [],

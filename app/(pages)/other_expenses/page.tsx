@@ -12,7 +12,14 @@ import { otherExpensesService } from "@/api/services/OtherExpenseService";
 import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
-import { Edit } from "@mui/icons-material";
+import {
+  Edit,
+  SearchOutlined,
+  AddOutlined,
+  DeleteOutlined,
+} from "@mui/icons-material";
+import AppInputText from "../../components/inputs/AppInputText";
+import AppButton from "../../components/AppButton";
 
 import AppOtherExpenseForm from "./components/AppOtherExpenseForm";
 import AppFilter from "../../components/AppFilter";
@@ -27,13 +34,17 @@ import AppAmountRange from "../../components/inputs/AppAmountRange";
 export default function OtherExpensesPage() {
   const { t: getLabel } = useTranslation();
   const [rowsSelected, setRowsSelected] = useState<OtherExpense[]>([]);
+  const [search, setSearch] = useState("");
   const [form, setForm] = useState({
     open: false,
     item: undefined as OtherExpenseForm | undefined,
   });
 
   const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
-  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
+  const handleFilterChange = useCallback(
+    (params: Record<string, unknown>) => setFilterParams(params),
+    [],
+  );
 
   const pagination = usePagination<OtherExpense>(
     otherExpensesService as unknown as PaginationService<OtherExpense>,
@@ -158,22 +169,61 @@ export default function OtherExpensesPage() {
 
   return (
     <AppPage title={getLabel("labels.other_expenses.title")}>
-      <AppGrid
-        columns={columns}
-        pagination={pagination}
-        onNew={handleNew}
-        selectedRows={rowsSelected}
-        onSelectedChange={(rows) => setRowsSelected(rows)}
-        actions={actions}
-        search
-        filter={
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-3">
+        <div className="relative w-full sm:max-w-sm">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-foreground z-10">
+            <SearchOutlined fontSize="small" />
+          </div>
+          <AppInputText
+            type="text"
+            className="pl-10!"
+            placeholder={getLabel("labels.grid.search_placeholder")}
+            value={search}
+            onChange={(e: any) => setSearch(e.target.value as string)}
+            onBlur={() => pagination.load({ params: { search, page: 1 } })}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                pagination.load({ params: { search, page: 1 } });
+              }
+            }}
+          />
+        </div>
+        <div className="flex gap-3 w-full sm:w-auto ml-auto">
+          {" "}
+          {rowsSelected.length > 0 && (
+            <AppButton
+              onClick={onDeleteSelected}
+              color="red"
+              flat
+              className="w-full sm:w-auto px-4 py-2 shrink-0"
+            >
+              <DeleteOutlined fontSize="small" />
+              {getLabel("labels.all.delete")} ({rowsSelected.length})
+            </AppButton>
+          )}
           <AppFilter
             onChange={handleFilterChange}
             validKeys={["category_id", "date", "value"]}
           >
             <OtherExpensesFilterFields />
           </AppFilter>
-        }
+          <AppButton
+            onClick={handleNew}
+            color="primary"
+            className="w-full sm:w-auto px-4 py-2 shrink-0"
+          >
+            <AddOutlined fontSize="small" />
+            {getLabel("labels.grid.add_item")}
+          </AppButton>
+        </div>
+      </div>
+
+      <AppGrid
+        columns={columns}
+        pagination={pagination}
+        selectedRows={rowsSelected}
+        onSelectedChange={(rows) => setRowsSelected(rows)}
+        actions={actions}
       />
 
       <AppOtherExpenseForm

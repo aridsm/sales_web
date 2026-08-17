@@ -43,7 +43,10 @@ export default function SalePage() {
   const router = useRouter();
 
   const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
-  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
+  const handleFilterChange = useCallback(
+    (params: Record<string, unknown>) => setFilterParams(params),
+    [],
+  );
   const salesPagination = usePagination<Sale>(salesService, { sort: "-code" });
 
   useEffect(() => {
@@ -204,7 +207,7 @@ function SaleProductsGrid({ sale }: { sale: Sale }) {
     [t],
   );
 
-  return <AppGrid columns={columns} pagination={pagination} />;
+  return <AppGrid columns={columns} pagination={pagination} className="mt-3" />;
 }
 
 function SaleFilterFields() {

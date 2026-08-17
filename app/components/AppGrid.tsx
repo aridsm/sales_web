@@ -23,13 +23,11 @@ interface Column<T> {
 interface AppGridProps<T> {
   columns: Column<T>[];
   pagination: PaginationResult<T>;
-  onNew?: () => void;
+
   selectedRows?: T[];
   onSelectedChange?: (rows: T[]) => void;
   actions?: ActionItem<T>[];
-  filter?: React.ReactNode;
-  search?: boolean;
-  searchKey?: string;
+
   hideSelectionCount?: boolean;
   className?: string;
 }
@@ -37,13 +35,11 @@ interface AppGridProps<T> {
 export default function AppGrid<T>({
   columns,
   pagination,
-  onNew,
+
   selectedRows,
   onSelectedChange,
   actions,
-  filter,
-  search,
-  searchKey = "search",
+
   hideSelectionCount,
   className,
 }: AppGridProps<T>) {
@@ -121,10 +117,6 @@ export default function AppGrid<T>({
     }
   }
 
-  const [searchInput, setSearchInput] = React.useState(
-    () => searchParams.get(searchKey) || "",
-  );
-
   const [delayedLoading, setDelayedLoading] = React.useState(false);
   const [hasStartedLoading, setHasStartedLoading] = React.useState(
     loaded || items.length > 0,
@@ -149,30 +141,6 @@ export default function AppGrid<T>({
       if (timer) clearTimeout(timer);
     };
   }, [loading, loaded]);
-
-  React.useEffect(() => {
-    setSearchInput(searchParams.get(searchKey) || "");
-  }, [searchParams, searchKey]);
-
-  function handleSearch() {
-    try {
-      const newParams = new URLSearchParams(searchParams.toString());
-      if (searchInput) {
-        newParams.set(searchKey, searchInput);
-      } else {
-        newParams.delete(searchKey);
-      }
-      newParams.set("page", "1");
-      router.push(`${pathname}?${newParams.toString()}`);
-      load({ params: { [searchKey]: searchInput, page: 1 } });
-    } catch (error) {
-      console.error(error);
-      openDialog({
-        variant: "error",
-        message: t("labels.grid.search_error"),
-      });
-    }
-  }
 
   const [colWidths, setColWidths] = React.useState<number[]>(
     columns.map((c) => c.size || 140),
@@ -224,44 +192,7 @@ export default function AppGrid<T>({
     <div
       className={`flex flex-col h-full min-h-0 min-w-0 flex-1 w-full ${className || ""}`}
     >
-      <div className="flex flex-col sm:flex-row justify-between items-center pb-3 gap-4">
-        {search && (
-          <div className="relative w-full sm:max-w-sm">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-foreground z-10">
-              <Search fontSize="small" />
-            </div>
-            <AppInputText
-              type="text"
-              className="pl-10!"
-              placeholder={t("labels.grid.search_placeholder")}
-              value={searchInput}
-              onChange={(e: any) => setSearchInput(e.target.value as string)}
-              onBlur={handleSearch}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch();
-                }
-              }}
-            />
-          </div>
-        )}
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto ml-auto">
-          <div className="flex gap-3 w-full sm:w-auto">
-            {filter}
 
-            {onNew && (
-              <AppButton
-                color="primary"
-                onClick={onNew}
-                className="px-4 py-2 shrink-0 w-full sm:w-auto"
-              >
-                <Add fontSize="small" />
-                {t("labels.grid.add_item")}
-              </AppButton>
-            )}
-          </div>
-        </div>
-      </div>
 
       {hasSelection && selectedRows && selectedRows.length > 0 && (
         <div className="flex flex-col border-l-3 border-y border-r border-emerald-600/20 border-l-emerald-400 sm:flex-row items-center justify-between bg-emerald-500/5 dark:bg-emerald-500/10 rounded-r-lg p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200 gap-3">
@@ -300,7 +231,7 @@ export default function AppGrid<T>({
             <div className="h-full w-full flex-1" />
           )
         ) : (
-          <div className="overflow-auto min-h-0 border border-border rounded-lg bg-white dark:bg-background shadow-sm">
+          <div className="overflow-auto min-h-0 border border-border rounded-lg bg-white dark:bg-background">
             <table
               className="table-fixed max-w-none border-separate border-spacing-0"
               style={{

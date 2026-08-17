@@ -313,7 +313,7 @@ export default function StockEntryDetailPage() {
           </AppCard>
         </div>
         <div className="flex flex-col">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-2">
             <h3 className="text-base font-semibold text-foreground">
               {t("labels.products.title")}
             </h3>

@@ -42,7 +42,10 @@ export default function StockEntriesPage() {
   const router = useRouter();
 
   const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
-  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
+  const handleFilterChange = useCallback(
+    (params: Record<string, unknown>) => setFilterParams(params),
+    [],
+  );
 
   const stockPagination = usePagination<StockEntry>(stockEntriesService, {
     sort: "-code",
@@ -219,7 +222,7 @@ function StockEntryProductsGrid({ entry }: { entry: StockEntry }) {
     [t],
   );
 
-  return <AppGrid columns={columns} pagination={pagination} />;
+  return <AppGrid columns={columns} pagination={pagination} className="mt-3" />;
 }
 
 function StockEntryFilterFields() {

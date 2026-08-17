@@ -325,7 +325,7 @@ export default function ProductsPage() {
           </div>
 
           <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between flex-wrap">
+            <div className="flex items-center justify-between flex-wrap mb-3">
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <AppInputText
                   placeholder={
@@ -366,7 +366,12 @@ export default function ProductsPage() {
                   onClick={() => {
                     setForm({
                       open: true,
-                      item: { category_id: selectedCategoryId != null ? String(selectedCategoryId) : null },
+                      item: {
+                        category_id:
+                          selectedCategoryId != null
+                            ? String(selectedCategoryId)
+                            : null,
+                      },
                     });
                   }}
                   className="flex items-center gap-1.5"

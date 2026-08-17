@@ -16,6 +16,9 @@ import { ActionType } from "@/enums/ActionType";
 import { EntityType } from "@/enums/EntityType";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import { useDialogStore } from "@/stores/dialogStore";
+import { SearchOutlined, DeleteOutlined } from "@mui/icons-material";
+import AppInputText from "../../components/inputs/AppInputText";
+import AppButton from "../../components/AppButton";
 import AppFilter from "../../components/AppFilter";
 import AppSelect from "../../components/inputs/AppSelect";
 import { Controller, useFormContext } from "react-hook-form";
@@ -25,9 +28,13 @@ export default function HistoryPage() {
   const { t } = useTranslation();
   const { openDialog } = useDialogStore();
   const [rowsSelected, setRowsSelected] = useState<History[]>([]);
+  const [search, setSearch] = useState("");
 
   const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
-  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
+  const handleFilterChange = useCallback(
+    (params: Record<string, unknown>) => setFilterParams(params),
+    [],
+  );
 
   const pagination = usePagination<History>(
     historyService as unknown as PaginationService<History>,
@@ -118,20 +125,46 @@ export default function HistoryPage() {
 
   return (
     <AppPage title={t("labels.history.title")}>
-      <AppGrid
-        columns={columns}
-        pagination={pagination}
-        selectedRows={rowsSelected}
-        onSelectedChange={(rows) => setRowsSelected(rows)}
-        search
-        filter={
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-3">
+        <div className="relative w-full sm:max-w-sm">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-foreground z-10">
+            <SearchOutlined fontSize="small" />
+          </div>
+          <AppInputText
+            type="text"
+            className="pl-10!"
+            placeholder={t("labels.grid.search_placeholder")}
+            value={search}
+            onChange={(e: any) => setSearch(e.target.value as string)}
+            onBlur={() => pagination.load({ params: { search, page: 1 } })}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                pagination.load({ params: { search, page: 1 } });
+              }
+            }}
+          />
+        </div>
+        <div className="flex gap-3 w-full sm:w-auto ml-auto">
           <AppFilter
             onChange={handleFilterChange}
             validKeys={["action_type", "entity_type", "created_at"]}
           >
             <HistoryFilterFields />
           </AppFilter>
-        }
+          {rowsSelected.length > 0 && (
+            <AppButton onClick={onDeleteSelected} color="red" className="w-full sm:w-auto px-4 py-2 shrink-0">
+              <DeleteOutlined fontSize="small" />
+              {t("labels.all.delete")} ({rowsSelected.length})
+            </AppButton>
+          )}
+        </div>
+      </div>
+
+      <AppGrid
+        columns={columns}
+        pagination={pagination}
+        selectedRows={rowsSelected}
+        onSelectedChange={(rows) => setRowsSelected(rows)}
       />
     </AppPage>
   );
