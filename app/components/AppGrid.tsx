@@ -236,10 +236,10 @@ export default function AppGrid<T>({
                   items.length > 0 && tableWidth > 0 ? tableWidth : "100%",
               }}
             >
-              <thead className="text-sm font-medium sticky top-0 z-20 text-foreground/80 bg-background-3 dark:bg-background-3">
+              <thead className="text-sm sticky top-0 z-20 text-label bg-background-3 dark:bg-background-3">
                 <tr>
                   {hasSelection && (
-                    <th className="p-3 text-center sticky left-0 z-30 w-12 border-b border-border font-medium bg-background-3 dark:bg-background-3">
+                    <th className="p-3 text-center sticky left-0 z-30 w-12 border-b border-border bg-background-3 dark:bg-background-3">
                       {items.length > 0 && (
                         <AppCheckbox
                           checked={isAllSelected}

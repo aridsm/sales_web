@@ -237,7 +237,7 @@ export default function ProductsPage() {
           <div className="w-70 shrink-0 bg-background-2 dark:bg-background-3 border border-border rounded-lg flex flex-col overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <span className="font-semibold">
-                {t("labels.products.category") || "Categorias"}
+                {t("labels.categories.title")}
               </span>
               <span className="text-sm bg-foreground/8 text-foreground/60 px-1.5 py-0.5 rounded-md font-medium tabular-nums">
                 {categories.items.length}
@@ -262,7 +262,7 @@ export default function ProductsPage() {
                         : "bg-foreground/25"
                     }`}
                   />
-                  <span className="truncate">Todas</span>
+                  <span className="truncate">{t("labels.categories.all")}</span>
                 </div>
                 <span
                   className={`text-sm tabular-nums px-1.5 py-0.5 rounded-md transition-colors ${
@@ -283,7 +283,7 @@ export default function ProductsPage() {
                 </div>
               ) : categories.items.length === 0 ? (
                 <div className="p-6 text-center text-sm text-foreground/40">
-                  Nenhuma categoria
+                  {t("labels.categories.no_category")}
                 </div>
               ) : (
                 categories.items.map((cat) => {
@@ -328,10 +328,7 @@ export default function ProductsPage() {
             <div className="flex items-center justify-between flex-wrap mb-3">
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <AppInputText
-                  placeholder={
-                    t("labels.grid.search_placeholder") ||
-                    "Pesquisar produtos..."
-                  }
+                  placeholder={t("labels.products.search_placeholder")}
                   value={searchInput}
                   clearable
                   onChange={(e) => setSearchInput(String(e.target.value ?? ""))}
@@ -339,7 +336,7 @@ export default function ProductsPage() {
                 />
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-3 shrink-0">
                 {rowsSelected.length > 0 && (
                   <AppButton
                     color="red"

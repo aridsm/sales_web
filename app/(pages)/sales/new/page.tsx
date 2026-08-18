@@ -46,7 +46,10 @@ export default function NewSalePage() {
   const { t } = useTranslation();
   const router = useRouter();
   const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
-  const handleFilterChange = useCallback((params: Record<string, unknown>) => setFilterParams(params), []);
+  const handleFilterChange = useCallback(
+    (params: Record<string, unknown>) => setFilterParams(params),
+    [],
+  );
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<CartItem<Product>[]>([]);
   const [saleDate, setSaleDate] = useState(() => new Date().toISOString());
@@ -183,7 +186,7 @@ export default function NewSalePage() {
 
       <div className="flex gap-5 flex-1 min-h-0">
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
-          <div className="flex gap-4 mb-4">
+          <div className="flex gap-3 mb-3">
             <div className="relative flex-1">
               <SearchOutlined
                 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-label pointer-events-none"
@@ -212,7 +215,7 @@ export default function NewSalePage() {
               initialLoaded={initialLoaded}
               emptyMessage={t("labels.sales.new.no_products")}
             >
-              <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
                 {productsPagination.items.map((product) => {
                   const inCart = getCartQuantity(product.id);
                   const outOfStock = product.stock_amount <= 0;
@@ -352,7 +355,10 @@ function SaleNewFilterFields() {
         control={control}
         name="stock_amount"
         render={({ field }) => (
-          <AppNumberRange label={t("labels.products.stock_amount")} {...field} />
+          <AppNumberRange
+            label={t("labels.products.stock_amount")}
+            {...field}
+          />
         )}
       />
       <Controller

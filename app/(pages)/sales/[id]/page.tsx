@@ -4,15 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { STATUS_CONFIG } from "@/app/utils/constants";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useParams, useRouter } from "next/navigation";
-import AppPage from "@/app/components/AppPage";
-import AppCard from "@/app/components/AppCard";
-import AppButton from "@/app/components/AppButton";
 import AppGrid from "@/app/components/AppGrid";
-import AppLoading from "@/app/components/AppLoading";
-import {
-  usePagination,
-  type PaginationService,
-} from "@/app/utils/usePagination";
+import AppButton from "@/app/components/AppButton";
+import { usePagination } from "@/app/utils/usePagination";
 import { salesService } from "@/api/services/SaleService";
 import { saleProductsService } from "@/api/services/SaleProductsService";
 import { Sale } from "@/api/schemas/Sale";
@@ -110,27 +104,29 @@ export default function SaleDetailPage() {
         cell: ({ row }: { row: SaleProduct }) => (
           <span className="font-medium">{row.product_name}</span>
         ),
-        size: 300,
+        size: 250,
       },
       {
         column: t("labels.sales.category"),
         cell: ({ row }: { row: SaleProduct }) => (
           <div className="flex items-center gap-2">
             <div
-              className="w-3 h-3 rounded-sm shrink-0"
+              className="w-2.5 h-2.5 rounded-sm shrink-0"
               style={{ backgroundColor: row.category_color }}
             />
-            <span>{row.category_name}</span>
+            <span className="text-sm">{row.category_name}</span>
           </div>
         ),
-        size: 220,
+        size: 180,
       },
       {
         column: t("labels.sales.unit_price"),
         cell: ({ row }: { row: SaleProduct }) => (
-          <span className="tabular-nums">{formatCurrency(row.unit_price)}</span>
+          <span className="tabular-nums text-label">
+            {formatCurrency(row.unit_price)}
+          </span>
         ),
-        size: 130,
+        size: 110,
       },
       {
         column: t("labels.sales.qty"),
@@ -146,7 +142,7 @@ export default function SaleDetailPage() {
             {formatCurrency(row.unit_price * row.quantity)}
           </span>
         ),
-        size: 140,
+        size: 130,
       },
     ],
     [t],
@@ -154,127 +150,155 @@ export default function SaleDetailPage() {
 
   if (loading) {
     return (
-      <AppPage title={t("labels.sales.detail.title")}>
-        <AppLoading className="py-20" />
-      </AppPage>
+      <div className="flex-1 flex justify-center py-20">
+        <div className="text-label text-sm">{t("labels.all.processing")}</div>
+      </div>
     );
   }
 
   if (!sale) {
     return (
-      <AppPage title={t("labels.sales.detail.title")}>
-        <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <p className="text-label">{t("labels.sales.detail.not_found")}</p>
-          <AppButton color="primary" flat onClick={() => router.push("/sales")}>
-            <ArrowBack fontSize="small" />
-            {t("labels.sales.new.back")}
-          </AppButton>
-        </div>
-      </AppPage>
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <p className="text-label">{t("labels.sales.detail.not_found")}</p>
+        <AppButton color="primary" flat onClick={() => router.push("/sales")}>
+          <ArrowBack fontSize="small" />
+          {t("labels.sales.new.back")}
+        </AppButton>
+      </div>
     );
   }
 
   const isCanceled = sale.status === SaleStatus.CANCELED;
+  const status = STATUS_CONFIG[sale.status];
 
   return (
-    <AppPage title={t("labels.sales.detail.title")}>
-      <AppButton
-        color="transparent"
-        flat
-        onClick={() => router.push("/sales")}
-        className="gap-1.5! px-2! mr-auto mb-2"
-      >
-        <ArrowBackOutlined style={{ fontSize: 18 }} />
-        <span className="text-sm">{t("labels.sales.new.back")}</span>
-      </AppButton>
-      <div className="flex flex-col gap-6">
-        <div className="flex items-center  gap-4">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <h2 className=" font-bold text-foreground tracking-tight">
-                #{sale.code.toString().padStart(6, "0")}
-              </h2>
-              {(() => {
-                const config = STATUS_CONFIG[sale.status];
-                return (
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${config.bg} ${config.color}`}
-                  >
-                    {t(config.labelKey)}
-                  </span>
-                );
-              })()}
-            </div>
-          </div>
-          <span className="text-label truncate text-sm mr-auto">{sale.id}</span>
-          {!isCanceled && (
-            <AppButton color="red" onClick={handleCancel}>
+    <div className="flex flex-col flex-1 min-h-0 pb-6 pr-1">
+      <div className="mb-2">
+        <AppButton
+          color="transparent"
+          flat
+          onClick={() => router.push("/sales")}
+          className="gap-1.5! px-2!"
+        >
+          <ArrowBackOutlined style={{ fontSize: 18 }} />
+          <span className="text-sm">{t("labels.sales.new.back")}</span>
+        </AppButton>
+      </div>
+
+      <div className="rounded-xl border border-border bg-background-2 dark:bg-background-3 p-5 relative overflow-hidden">
+        {!isCanceled && (
+          <div className="absolute top-4 right-4">
+            <AppButton
+              color="red"
+              flat
+              onClick={handleCancel}
+              className="px-3! py-1.5!"
+            >
               {t("labels.sales.detail.cancel_title")}
             </AppButton>
-          )}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <AppCard className="p-5 flex-row! items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-indigo-500/10 flex items-center justify-center shrink-0">
-              <CalendarTodayOutlined
-                className="text-indigo-500"
-                style={{ fontSize: 20 }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-label">
-                {t("labels.sales.detail.date")}
-              </span>
-              <span className="font-semibold">
-                {formatDateTime(sale.created_at)}
-              </span>
-            </div>
-          </AppCard>
-
-          <AppCard className="p-5 flex-row! items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-orange-500/10 flex items-center justify-center shrink-0">
-              <ShoppingBagOutlined
-                className="text-orange-500"
-                style={{ fontSize: 20 }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-label">
-                {t("labels.sales.detail.items")}
-              </span>
-              <span className="font-semibold">
-                {sale.items_count}{" "}
-                {sale.items_count === 1
-                  ? t("labels.sales.new.item_singular")
-                  : t("labels.sales.new.item_plural")}
-              </span>
-            </div>
-          </AppCard>
-
-          <AppCard className="p-5 flex-row! items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-teal-500/10 flex items-center justify-center shrink-0">
-              <AttachMoneyOutlined
-                className="text-teal-500"
-                style={{ fontSize: 20 }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-label">{t("labels.sales.new.total")}</span>
-              <span className="font-semibold">
-                {formatCurrency(sale.total)}
-              </span>
-            </div>
-          </AppCard>
-        </div>
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-base font-semibold text-foreground">
-              {t("labels.products.title")}
-            </h3>
           </div>
-          <AppGrid columns={columns} pagination={productsPagination} />
+        )}
+
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl font-bold text-foreground">
+                #{sale.code.toString().padStart(6, "0")}
+              </span>
+              <span
+                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${status.bg} ${status.color}`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    isCanceled ? "bg-red-400" : "bg-emerald-400"
+                  }`}
+                />
+                {t(status.labelKey)}
+              </span>
+            </div>
+            <span className=" text-label">{formatDateTime(sale.date)}</span>
+            <span className="text-label/60 font-mono mt-1">{sale.id}</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3">
+          <SaleStatBlock
+            label={t("labels.sales.detail.date")}
+            value={formatDateTime(sale.created_at).split(" ")[0]}
+            icon={<CalendarTodayOutlined style={{ fontSize: 16 }} />}
+            iconColor="text-indigo-500"
+            iconBg="bg-indigo-500/10"
+          />
+          <SaleStatBlock
+            label={t("labels.sales.detail.items")}
+            value={sale.items_count.toString()}
+            icon={<ShoppingBagOutlined style={{ fontSize: 16 }} />}
+            iconColor="text-orange-500"
+            iconBg="bg-orange-500/10"
+          />
+          <SaleStatBlock
+            label={t("labels.sales.new.total")}
+            value={formatCurrency(sale.total)}
+            icon={<AttachMoneyOutlined style={{ fontSize: 16 }} />}
+            iconColor="text-teal-500"
+            iconBg="bg-teal-500/10"
+            highlight={!isCanceled}
+          />
         </div>
       </div>
-    </AppPage>
+
+      <div className="flex flex-col flex-1 min-h-0 mt-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-semibold text-foreground">
+            {t("labels.products.title")}
+            {productsPagination.pageData.total_items > 0 && (
+              <span className="ml-2 text-sm font-normal text-label tabular-nums">
+                ({productsPagination.pageData.total_items})
+              </span>
+            )}
+          </h2>
+        </div>
+
+        <AppGrid columns={columns} pagination={productsPagination} />
+      </div>
+    </div>
+  );
+}
+
+function SaleStatBlock({
+  label,
+  value,
+  icon,
+  iconColor,
+  iconBg,
+  highlight = false,
+}: {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+  iconColor: string;
+  iconBg: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-3 px-3 py-3 rounded-lg bg-background dark:bg-background-2 border border-border">
+      <div
+        className={`w-9 h-9 rounded-lg ${iconBg} flex items-center justify-center shrink-0`}
+      >
+        <span className={iconColor}>{icon}</span>
+      </div>
+      <div className="flex flex-col min-w-0">
+        <span className="text-[11px] text-label uppercase tracking-wide truncate ">
+          {label}
+        </span>
+        <span
+          className={`text-sm font-bold tabular-nums ${
+            highlight ? "text-foreground" : "text-foreground"
+          }`}
+        >
+          {value}
+        </span>
+      </div>
+    </div>
   );
 }

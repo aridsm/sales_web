@@ -132,6 +132,7 @@
       "created_at": "Created at",
       "category": "Category",
       "filter_category": "Filter by category",
+      "search_placeholder": "Search products...",
       "form": {
         "edit_title": "Edit Product",
         "add_title": "New Product",
@@ -160,6 +161,7 @@
       "qty": "Qty",
       "subtotal": "Subtotal",
       "filter_category": "Filter by category",
+      "filter_status": "Filter by status",
       "code": "Code",
       "search_code": "Search by code",
       "total": "Total",
@@ -199,7 +201,8 @@
         "cancel_message": "Are you sure you want to cancel sale #{{code}}? This action cannot be undone.",
         "not_found": "Sale not found.",
         "date": "Date",
-        "items": "Items"
+        "items": "Items",
+        "select_sale": "Select a sale on the side to view details"
       }
     },
     "stock_entries": {
@@ -284,6 +287,8 @@
       "delete_single": "Are you sure you want to delete the selected item? This action cannot be undone.",
       "delete_multiple": "Are you sure you want to delete the {{count}} selected items? This action cannot be undone.",
       "filter_type": "Filter by type",
+      "no_category": "No category",
+      "all": "All",
       "types": {
         "product": "Products",
         "product_singular": "Product",

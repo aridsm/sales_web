@@ -132,6 +132,7 @@
       "created_at": "Criado em",
       "category": "Categoria",
       "filter_category": "Filtrar por categoria",
+      "search_placeholder": "Pesquisar produtos...",
       "form": {
         "edit_title": "Editar Produto",
         "add_title": "Novo Produto",
@@ -160,6 +161,7 @@
       "qty": "Qtd.",
       "subtotal": "Subtotal",
       "filter_category": "Filtrar por categoria",
+      "filter_status": "Filtrar por status",
       "code": "Código",
       "search_code": "Buscar por código",
       "total": "Total",
@@ -199,7 +201,8 @@
         "cancel_message": "Tem certeza que deseja cancelar a venda #{{code}}? Esta ação não pode ser desfeita.",
         "not_found": "Venda não encontrada.",
         "date": "Data",
-        "items": "Itens"
+        "items": "Itens",
+        "select_sale": "Selecione uma venda ao lado para ver os detalhes"
       }
     },
     "stock_entries": {
@@ -284,6 +287,8 @@
       "delete_single": "Tem certeza que deseja excluir o item selecionado? Esta ação não pode ser desfeita.",
       "delete_multiple": "Tem certeza que deseja excluir os {{count}} itens selecionados? Esta ação não pode ser desfeita.",
       "filter_type": "Filtrar por tipo",
+      "no_category": "Nenhuma categoria",
+      "all": "Todas",
       "types": {
         "product": "Produtos",
         "product_singular": "Produto",
