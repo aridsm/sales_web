@@ -63,12 +63,14 @@ export function StockEntryCart({
           </div>
           {cart.length > 0 && (
             <AppButton
-              color="red"
-              flat
+              color="background"
               onClick={onClearCart}
-              className="! px-2! py-1! gap-1!"
+              className=" px-2! py-1! gap-1! "
             >
-              <DeleteOutlined style={{ fontSize: 16 }} />
+              <DeleteOutlined
+                style={{ fontSize: 16 }}
+                className="text-red-500"
+              />
               {t("labels.all.clear")}
             </AppButton>
           )}

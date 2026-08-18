@@ -35,6 +35,7 @@ import {
   ArrowBackOutlined,
   AddOutlined,
   DeleteOutlined,
+  ErrorTwoTone,
 } from "@mui/icons-material";
 import { stockEntriesService } from "@/api/services/StockEntryService";
 import { useTranslation } from "@/app/utils/i18n";
@@ -123,14 +124,14 @@ export default function NewStockEntryPage() {
         setSearch("");
         openDialog({
           variant: "success",
-          message: "Entrada de estoque registrada com sucesso!",
+          message: t("labels.stock_entries.new.success"),
         });
         router.push("/stock-entries");
       })
       .catch(() => {
         openDialog({
           variant: "error",
-          message: "Ocorreu um erro ao registrar a entrada de estoque.",
+          message: t("errors.fallback"),
         });
       })
       .finally(() => {
@@ -147,14 +148,14 @@ export default function NewStockEntryPage() {
       .map((item) => item.product.name);
 
     if (hasZeroPrice) {
-      // Warn but don't block — user can proceed or go back to fix
       openDialog({
         variant: "confirm",
-        title: "Itens sem preço",
-        message: `Os seguintes itens estão com preço unitário zerado:\n\n${zeroPriceNames.join(", ")}.\n\nDeseja prosseguir mesmo assim?`,
-        confirmLabel: "Prosseguir",
+        title: t("labels.stock_entries.new.zero_price_title"),
+        message: t("labels.stock_entries.new.zero_price_message", {
+          items: zeroPriceNames.join(", "),
+        }),
+        confirmLabel: t("labels.stock_entries.new.proceed"),
         onConfirm: () => {
-          // After confirming the warning, show the final confirmation
           openDialog({
             variant: "confirm",
             title: t("labels.stock_entries.new.finish_entry_title"),
@@ -216,7 +217,7 @@ export default function NewStockEntryPage() {
 
       <div className="flex gap-5 flex-1 min-h-0">
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
-          <div className="flex gap-4 mb-4">
+          <div className="flex gap-3 mb-3">
             <div className="relative flex-1">
               <SearchOutlined
                 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-label pointer-events-none"
@@ -245,7 +246,7 @@ export default function NewStockEntryPage() {
               initialLoaded={initialLoaded}
               emptyMessage={t("labels.stock_entries.new.no_products")}
             >
-              <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
                 {productsPagination.items.map((product) => {
                   const inCart = getCartQuantity(product.id);
 
@@ -264,7 +265,6 @@ export default function NewStockEntryPage() {
                         }
                       `}
                     >
-                      {/* Category badge */}
                       <div className="flex items-center gap-2 mb-2 min-w-0">
                         <div
                           className="w-3 h-3 rounded-sm shrink-0"
@@ -275,17 +275,35 @@ export default function NewStockEntryPage() {
                         </span>
                       </div>
 
-                      {/* Product name */}
                       <p className="text-foreground leading-snug mb-3 line-clamp-2 font-medium">
                         {product.name}
                       </p>
 
-                      {/* Footer */}
                       <div className="flex items-center justify-between mt-auto h-8">
-                        <span className="text-xs text-label">
-                          {product.stock_amount}{" "}
-                          {t("labels.stock_entries.new.in_stock")}
-                        </span>
+                        <div className="flex items-center gap-1">
+                          {product.stock_amount <= 5 && (
+                            <ErrorTwoTone
+                              style={{ fontSize: 16 }}
+                              className={
+                                product.stock_amount === 0
+                                  ? "text-red-500"
+                                  : "text-amber-600 dark:text-amber-400"
+                              }
+                            />
+                          )}
+                          <span
+                            className={`text-xs ${
+                              product.stock_amount === 0
+                                ? "text-red-500 font-medium"
+                                : product.stock_amount <= 5
+                                  ? "text-amber-600 dark:text-amber-400 font-medium"
+                                  : "text-label"
+                            }`}
+                          >
+                            {product.stock_amount}{" "}
+                            {t("labels.stock_entries.new.in_stock")}
+                          </span>
+                        </div>
 
                         {inCart === 0 ? (
                           <AppButton
@@ -305,11 +323,13 @@ export default function NewStockEntryPage() {
                               e.stopPropagation();
                               removeFromCart(product.id);
                             }}
-                            color="red"
-                            flat
-                            className="py-1! px-3! bg-transparent! hover:bg-red-500/10!"
+                            color="background"
+                            className="py-1! px-3!"
                           >
-                            <DeleteOutlined style={{ fontSize: 16 }} />
+                            <DeleteOutlined
+                              style={{ fontSize: 16 }}
+                              className="text-red-500"
+                            />
                             {t("labels.all.remove")}
                           </AppButton>
                         )}
@@ -322,7 +342,6 @@ export default function NewStockEntryPage() {
           </div>
         </div>
 
-        {/* Cart sidebar */}
         <StockEntryCart
           cart={cart}
           totalItems={totalItems}
@@ -362,8 +381,8 @@ function StockNewFilterFields() {
         name="category_id"
         render={({ field }) => (
           <AppSelectPaginated
-            label="Categoria"
-            placeholder="Filtrar por categoria"
+            label={t("labels.stock_entries.category")}
+            placeholder={t("labels.stock_entries.filter_category")}
             pagination={categories}
             search
             multiple

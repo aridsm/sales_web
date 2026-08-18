@@ -19,6 +19,7 @@ import {
   ShoppingBagOutlined,
   AttachMoneyOutlined,
   ArrowBackOutlined,
+  HighlightOffOutlined,
 } from "@mui/icons-material";
 
 import { formatDateTime } from "@/app/utils/formatters/date";
@@ -189,11 +190,14 @@ export default function SaleDetailPage() {
         {!isCanceled && (
           <div className="absolute top-4 right-4">
             <AppButton
-              color="red"
-              flat
+              color="background"
               onClick={handleCancel}
               className="px-3! py-1.5!"
             >
+              <HighlightOffOutlined
+                style={{ fontSize: 16 }}
+                className="text-red-500"
+              />
               {t("labels.sales.detail.cancel_title")}
             </AppButton>
           </div>

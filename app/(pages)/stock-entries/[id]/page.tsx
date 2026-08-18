@@ -4,11 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { STOCK_ENTRY_STATUS_CONFIG } from "@/app/utils/constants";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useParams, useRouter } from "next/navigation";
-import AppPage from "@/app/components/AppPage";
-import AppCard from "@/app/components/AppCard";
-import AppButton from "@/app/components/AppButton";
 import AppGrid from "@/app/components/AppGrid";
-import AppLoading from "@/app/components/AppLoading";
+import AppButton from "@/app/components/AppButton";
 import { usePagination } from "@/app/utils/usePagination";
 import { stockEntriesService } from "@/api/services/StockEntryService";
 import { stockEntryProductsService } from "@/api/services/StockEntryProductService";
@@ -22,6 +19,7 @@ import {
   ShoppingBagOutlined,
   AttachMoneyOutlined,
   ArrowBackOutlined,
+  HighlightOffOutlined,
 } from "@mui/icons-material";
 
 import { formatDateTime } from "@/app/utils/formatters/date";
@@ -93,7 +91,7 @@ export default function StockEntryDetailPage() {
       variant: "confirm",
       title: t("labels.stock_entries.detail.cancel_title"),
       message: t("labels.stock_entries.detail.cancel_message", {
-        code: stockEntry.id.split("-")[0].toUpperCase(),
+        code: stockEntry.code.toString().padStart(6, "0"),
       }),
       confirmLabel: t("labels.all.confirm"),
       cancelLabel: t("labels.all.close"),
@@ -138,49 +136,51 @@ export default function StockEntryDetailPage() {
   const columns = useMemo(
     () => [
       {
-        column: t("labels.sales.product"),
+        column: t("labels.stock_entries.product"),
         cell: ({ row }: { row: StockEntryProduct }) => (
           <span className="font-medium">
             {row.product_name || "Desconhecido"}
           </span>
         ),
-        size: 300,
+        size: 250,
       },
       {
-        column: t("labels.sales.category"),
+        column: t("labels.stock_entries.category"),
         cell: ({ row }: { row: StockEntryProduct }) => (
           <div className="flex items-center gap-2">
             <div
-              className="w-3 h-3 rounded-sm shrink-0"
+              className="w-2.5 h-2.5 rounded-sm shrink-0"
               style={{ backgroundColor: row.category_color || "#ccc" }}
             />
-            <span>{row.category_name || "-"}</span>
+            <span className="text-sm">{row.category_name || "-"}</span>
           </div>
         ),
-        size: 220,
+        size: 180,
       },
       {
-        column: t("labels.sales.unit_price"),
+        column: t("labels.stock_entries.unit_price"),
         cell: ({ row }: { row: StockEntryProduct }) => (
-          <span className="tabular-nums">{formatCurrency(row.unit_price)}</span>
+          <span className="tabular-nums text-label">
+            {formatCurrency(row.unit_price)}
+          </span>
         ),
-        size: 130,
+        size: 110,
       },
       {
-        column: t("labels.sales.qty"),
+        column: t("labels.stock_entries.qty"),
         cell: ({ row }: { row: StockEntryProduct }) => (
           <span className="tabular-nums font-medium">{row.quantity}</span>
         ),
         size: 80,
       },
       {
-        column: t("labels.sales.subtotal"),
+        column: t("labels.stock_entries.subtotal"),
         cell: ({ row }: { row: StockEntryProduct }) => (
           <span className="font-semibold tabular-nums text-foreground">
             {formatCurrency(row.unit_price * row.quantity)}
           </span>
         ),
-        size: 140,
+        size: 130,
       },
     ],
     [t],
@@ -188,139 +188,175 @@ export default function StockEntryDetailPage() {
 
   if (loading) {
     return (
-      <AppPage title={t("labels.stock_entries.detail.title")}>
-        <AppLoading className="py-20" />
-      </AppPage>
+      <div className="flex-1 flex justify-center py-20">
+        <div className="text-label text-sm">{t("labels.all.processing")}</div>
+      </div>
     );
   }
 
   if (!stockEntry) {
     return (
-      <AppPage title={t("labels.stock_entries.detail.title")}>
-        <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <p className="text-label">
-            {t("labels.stock_entries.detail.not_found")}
-          </p>
-          <AppButton
-            color="primary"
-            flat
-            onClick={() => router.push("/stock-entries")}
-          >
-            <ArrowBack fontSize="small" />
-            {t("labels.stock_entries.detail.back")}
-          </AppButton>
-        </div>
-      </AppPage>
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <p className="text-label">
+          {t("labels.stock_entries.detail.not_found")}
+        </p>
+        <AppButton
+          color="primary"
+          flat
+          onClick={() => router.push("/stock-entries")}
+        >
+          <ArrowBack fontSize="small" />
+          {t("labels.stock_entries.detail.back")}
+        </AppButton>
+      </div>
     );
   }
 
   const isOpenStatus = stockEntry.status === StockEntryStatus.OPEN;
+  const status = STOCK_ENTRY_STATUS_CONFIG[stockEntry.status] || {
+    bg: "bg-gray-500/10",
+    color: "text-gray-500",
+    labelKey: "labels.all.unknown",
+  };
+  const isCanceled = stockEntry.status === StockEntryStatus.CANCELED;
 
   return (
-    <AppPage title={t("labels.stock_entries.detail.title")}>
-      <AppButton
-        color="transparent"
-        flat
-        onClick={() => router.push("/stock-entries")}
-        className="gap-1.5! px-2! mr-auto mb-2"
-      >
-        <ArrowBackOutlined style={{ fontSize: 18 }} />
-        <span className="text-sm">{t("labels.stock_entries.detail.back")}</span>
-      </AppButton>
-      <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <h2 className="font-bold text-foreground tracking-tight">
-                #{stockEntry.code.toString().padStart(6, "0")}
-              </h2>
-              {(() => {
-                const config = STOCK_ENTRY_STATUS_CONFIG[stockEntry.status] || {
-                  bg: "bg-gray-500/10",
-                  color: "text-gray-500",
-                  labelKey: "labels.all.unknown",
-                };
-                return (
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${config.bg} ${config.color}`}
-                  >
-                    {t(config.labelKey)}
-                  </span>
-                );
-              })()}
-            </div>
-          </div>
-          <span className="text-label truncate text-sm mr-auto">
-            {stockEntry.id}
+    <div className="flex flex-col flex-1 min-h-0 pb-6 pr-1">
+      <div className="mb-2">
+        <AppButton
+          color="transparent"
+          flat
+          onClick={() => router.push("/stock-entries")}
+          className="gap-1.5! px-2!"
+        >
+          <ArrowBackOutlined style={{ fontSize: 18 }} />
+          <span className="text-sm">
+            {t("labels.stock_entries.detail.back")}
           </span>
-          {isOpenStatus && (
-            <AppButton color="red" onClick={handleCancel}>
+        </AppButton>
+      </div>
+
+      <div className="rounded-xl border border-border bg-background-2 dark:bg-background-3 p-5 relative overflow-hidden">
+        {isOpenStatus && (
+          <div className="absolute top-4 right-4">
+            <AppButton
+              onClick={handleCancel}
+              color="background"
+              className="px-3! py-1.5!"
+            >
+              <HighlightOffOutlined
+                style={{ fontSize: 16 }}
+                className="text-red-500"
+              />
               {t("labels.stock_entries.detail.cancel_title")}
             </AppButton>
-          )}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <AppCard className="p-5 flex-row! items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-indigo-500/10 flex items-center justify-center shrink-0">
-              <CalendarTodayOutlined
-                className="text-indigo-500"
-                style={{ fontSize: 20 }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-label">
-                {t("labels.stock_entries.detail.date")}
-              </span>
-              <span className="font-semibold">
-                {formatDateTime(stockEntry.date)}
-              </span>
-            </div>
-          </AppCard>
-
-          <AppCard className="p-5 flex-row! items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-orange-500/10 flex items-center justify-center shrink-0">
-              <ShoppingBagOutlined
-                className="text-orange-500"
-                style={{ fontSize: 20 }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-label">
-                {t("labels.stock_entries.detail.items")}
-              </span>
-              <span className="font-semibold">
-                {stockEntry.items_count || 0}{" "}
-                {(stockEntry.items_count || 0) === 1
-                  ? t("labels.sales.new.item_singular")
-                  : t("labels.sales.new.item_plural")}
-              </span>
-            </div>
-          </AppCard>
-
-          <AppCard className="p-5 flex-row! items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-teal-500/10 flex items-center justify-center shrink-0">
-              <AttachMoneyOutlined
-                className="text-teal-500"
-                style={{ fontSize: 20 }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-label">{t("labels.sales.new.total")}</span>
-              <span className="font-semibold">
-                {formatCurrency(stockEntry.total)}
-              </span>
-            </div>
-          </AppCard>
-        </div>
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-base font-semibold text-foreground">
-              {t("labels.products.title")}
-            </h3>
           </div>
-          <AppGrid columns={columns} pagination={productsPagination} />
+        )}
+
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl font-bold text-foreground">
+                #{stockEntry.code.toString().padStart(6, "0")}
+              </span>
+              <span
+                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${status.bg} ${status.color}`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    isCanceled ? "bg-red-400" : "bg-emerald-400"
+                  }`}
+                />
+                {t(status.labelKey)}
+              </span>
+            </div>
+            <span className="text-label">
+              {formatDateTime(stockEntry.date)}
+            </span>
+            <span className="text-label/60 font-mono mt-1">
+              {stockEntry.id}
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3">
+          <StockEntryStatBlock
+            label={t("labels.stock_entries.detail.date")}
+            value={formatDateTime(stockEntry.created_at).split(" ")[0]}
+            icon={<CalendarTodayOutlined style={{ fontSize: 16 }} />}
+            iconColor="text-indigo-500"
+            iconBg="bg-indigo-500/10"
+          />
+          <StockEntryStatBlock
+            label={t("labels.stock_entries.detail.items")}
+            value={(stockEntry.items_count || 0).toString()}
+            icon={<ShoppingBagOutlined style={{ fontSize: 16 }} />}
+            iconColor="text-orange-500"
+            iconBg="bg-orange-500/10"
+          />
+          <StockEntryStatBlock
+            label={t("labels.stock_entries.new.total")}
+            value={formatCurrency(stockEntry.total)}
+            icon={<AttachMoneyOutlined style={{ fontSize: 16 }} />}
+            iconColor="text-teal-500"
+            iconBg="bg-teal-500/10"
+            highlight={isOpenStatus}
+          />
         </div>
       </div>
-    </AppPage>
+
+      <div className="flex flex-col flex-1 min-h-0 mt-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-semibold text-foreground">
+            {t("labels.products.title")}
+            {productsPagination.pageData.total_items > 0 && (
+              <span className="ml-2 text-sm font-normal text-label tabular-nums">
+                ({productsPagination.pageData.total_items})
+              </span>
+            )}
+          </h2>
+        </div>
+
+        <AppGrid columns={columns} pagination={productsPagination} />
+      </div>
+    </div>
+  );
+}
+
+function StockEntryStatBlock({
+  label,
+  value,
+  icon,
+  iconColor,
+  iconBg,
+  highlight = false,
+}: {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+  iconColor: string;
+  iconBg: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-3 px-3 py-3 rounded-lg bg-background dark:bg-background-2 border border-border">
+      <div
+        className={`w-9 h-9 rounded-lg ${iconBg} flex items-center justify-center shrink-0`}
+      >
+        <span className={iconColor}>{icon}</span>
+      </div>
+      <div className="flex flex-col min-w-0">
+        <span className="text-[11px] text-label uppercase tracking-wide truncate">
+          {label}
+        </span>
+        <span
+          className={`text-sm font-bold tabular-nums ${
+            highlight ? "text-foreground" : "text-foreground"
+          }`}
+        >
+          {value}
+        </span>
+      </div>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useRouter } from "next/navigation";
 import AppPage from "../../../components/AppPage";
@@ -28,15 +28,13 @@ import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../../components/inputs/AppSelectPaginated";
 import AppAmountRange from "../../../components/inputs/AppAmountRange";
 import AppNumberRange from "../../../components/inputs/AppNumberRange";
-import AppInputText from "../../../components/inputs/AppInputText";
 import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import {
   SearchOutlined,
-  AddOutlined,
-  RemoveOutlined,
   DeleteOutlined,
   ArrowBackOutlined,
+  ErrorTwoTone,
 } from "@mui/icons-material";
 import { salesService } from "@/api/services/SaleService";
 import { useTranslation } from "@/app/utils/i18n";
@@ -235,7 +233,7 @@ export default function NewSalePage() {
                               ? "border-primary-3 bg-primary-3/5 dark:bg-primary-3/10 "
                               : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-2!"
                           }
-                          ${outOfStock ? "opacity-50" : ""}
+                          ${outOfStock ? "opacity-50 cursor-not-allowed" : ""}
                           ${inCart === 0 && !outOfStock ? "cursor-pointer" : ""}
                         `}
                     >
@@ -260,10 +258,30 @@ export default function NewSalePage() {
                           <span className="text-lg font-semibold text-foreground leading-none mb-1">
                             {formatCurrency(product.price)}
                           </span>
-                          <span className="text-xs text-label">
-                            {product.stock_amount}{" "}
-                            {t("labels.sales.new.in_stock")}
-                          </span>
+                          <div className="flex items-center gap-1">
+                            {product.stock_amount <= 5 && (
+                              <ErrorTwoTone
+                                style={{ fontSize: 16 }}
+                                className={
+                                  product.stock_amount === 0
+                                    ? "text-red-500"
+                                    : "text-amber-600 dark:text-amber-400"
+                                }
+                              />
+                            )}
+                            <span
+                              className={`text-xs ${
+                                product.stock_amount === 0
+                                  ? "text-red-500 font-medium"
+                                  : product.stock_amount <= 5
+                                    ? "text-amber-600 dark:text-amber-400 font-medium"
+                                    : "text-label"
+                              }`}
+                            >
+                              {product.stock_amount}{" "}
+                              {t("labels.sales.new.in_stock")}
+                            </span>
+                          </div>
                         </div>
 
                         {inCart > 0 ? (
@@ -272,11 +290,13 @@ export default function NewSalePage() {
                               e.stopPropagation();
                               removeFromCart(product.id);
                             }}
-                            color="red"
-                            flat
-                            className="py-1! px-3! bg-transparent! hover:bg-red-500/10!"
+                            color="background"
+                            className="py-1! px-3!"
                           >
-                            <DeleteOutlined style={{ fontSize: 16 }} />
+                            <DeleteOutlined
+                              style={{ fontSize: 16 }}
+                              className="text-red-500"
+                            />
                             {t("labels.all.remove")}
                           </AppButton>
                         ) : (
@@ -321,7 +341,7 @@ export default function NewSalePage() {
 
 function SaleNewFilterFields() {
   const { t } = useTranslation();
-  const { control, register } = useFormContext();
+  const { control } = useFormContext();
 
   const categories = usePagination<Category>(
     categoriesService as unknown as PaginationService<Category>,

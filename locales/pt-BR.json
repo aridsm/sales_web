@@ -207,6 +207,13 @@
     },
     "stock_entries": {
       "title": "Entrada de Estoque",
+      "product": "Produto",
+      "category": "Categoria",
+      "filter_category": "Filtrar por categoria",
+      "unit_price": "Preço un.",
+      "quantity": "Quantidade",
+      "qty": "Qtd.",
+      "subtotal": "Subtotal",
       "status": {
         "open": "Concluída",
         "canceled": "Cancelada"
@@ -218,6 +225,7 @@
         "not_found": "Entrada de estoque não encontrada.",
         "date": "Data",
         "items": "Itens",
+        "select_entry": "Selecione uma entrada ao lado para ver os detalhes",
         "back": "Voltar para entradas"
       },
       "new": {
@@ -245,7 +253,9 @@
         "unit_price": "Preço un.",
         "subtotal": "Subtotal",
         "total": "Total",
-        "items": "Itens"
+        "items": "Itens",
+        "zero_price_title": "Itens sem preço",
+        "zero_price_message": "Os seguintes itens estão com preço unitário zerado:\n\n{{items}}.\n\nDeseja prosseguir mesmo assim?"
       },
       "list": {
         "purchases_today": "Compras Hoje",
