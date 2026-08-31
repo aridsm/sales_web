@@ -19,6 +19,8 @@ import { Menu as MenuIcon, ExitToAppOutlined } from "@mui/icons-material";
 import AppButton from "./AppButton";
 import { useTranslation } from "@/app/utils/i18n";
 
+import { useUserStore } from "@/stores/userStore";
+
 const menuItems = [
   { key: "dashboard", href: "/", icon: DashboardOutlined },
   { key: "categories", href: "/categories", icon: CategoryOutlined },
@@ -41,6 +43,7 @@ export default function AppMenu() {
     try {
       await usersService.logout();
     } finally {
+      useUserStore.getState().clearUserData();
       clearToken();
       router.push("/login");
     }

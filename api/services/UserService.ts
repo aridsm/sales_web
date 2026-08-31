@@ -5,6 +5,7 @@ import {
   Login,
   RefreshToken,
 } from "@/api/schemas/User";
+import { CompanyInvitation } from "@/api/schemas/Company";
 import { axiosClient, CustomAxiosConfig } from "@/api/axiosClient";
 
 export class UserService {
@@ -13,6 +14,36 @@ export class UserService {
   async me(): Promise<User> {
     return await axiosClient
       .get(`/${this.resource}/me`)
+      .then((res) => res.data);
+  }
+
+  async updateMe(data: { name?: string }): Promise<User> {
+    return await axiosClient
+      .patch(`/${this.resource}/me`, data)
+      .then((res) => res.data);
+  }
+
+  async switchCompany(companyId: string): Promise<User> {
+    return await axiosClient
+      .post(`/${this.resource}/switch-company`, { company_id: companyId })
+      .then((res) => res.data);
+  }
+
+  async getInvitations(): Promise<CompanyInvitation[]> {
+    return await axiosClient
+      .get(`/${this.resource}/invitations`)
+      .then((res) => res.data);
+  }
+
+  async acceptInvitation(invitationId: string): Promise<void> {
+    return await axiosClient
+      .post(`/${this.resource}/invitations/${invitationId}/accept`)
+      .then((res) => res.data);
+  }
+
+  async rejectInvitation(invitationId: string): Promise<void> {
+    return await axiosClient
+      .post(`/${this.resource}/invitations/${invitationId}/reject`)
       .then((res) => res.data);
   }
 

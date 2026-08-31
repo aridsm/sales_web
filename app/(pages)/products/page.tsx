@@ -233,7 +233,7 @@ export default function ProductsPage() {
   return (
     <AppPage title={t("labels.products.title")}>
       <div className="flex flex-col flex-1 gap-4 min-h-0">
-        <div className="flex flex-1 gap-4 min-h-0 overflow-hidden">
+        <div className="flex flex-1 gap-3 min-h-0 overflow-hidden">
           <div className="w-70 shrink-0 bg-background-2 dark:bg-background-3 border border-border rounded-lg flex flex-col overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <span className="font-semibold">
@@ -256,7 +256,7 @@ export default function ProductsPage() {
               >
                 <div className="flex items-center gap-2.5 truncate">
                   <div
-                    className={`w-2.5 h-4.5 rounded-xs  shrink-0 transition-colors ${
+                    className={`w-2.5 h-4 rounded-xs  shrink-0 transition-colors ${
                       selectedCategoryId === null
                         ? "bg-primary-3 dark:bg-white"
                         : "bg-foreground/25"

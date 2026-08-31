@@ -7,3 +7,5 @@ export * from "./ProductService";
 export * from "./SaleProductsService";
 export * from "./SaleService";
 export * from "./UserService";
+export * from "./CompanyService";
+

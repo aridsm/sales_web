@@ -31,3 +31,16 @@ export function formatDateTime(
     minute: "2-digit",
   }).format(date);
 }
+
+export function formatDate(
+  dateStr: string | Date | null | undefined,
+): string {
+  const date = parseUTCDate(dateStr);
+  if (!date || isNaN(date.getTime())) return "-";
+
+  return new Intl.DateTimeFormat(getLocale(), {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}

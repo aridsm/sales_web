@@ -9,7 +9,7 @@ describe("AppButton", () => {
     expect(button).toBeInTheDocument();
     // Default color is primary
     expect(button).toHaveClass("bg-primary");
-    expect(button).toHaveClass("rounded-md");
+    expect(button).toHaveClass("rounded-sm");
   });
 
   it("handles clicks", () => {
