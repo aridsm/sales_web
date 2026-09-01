@@ -11,7 +11,7 @@ import AppColor from "@/app/components/inputs/AppColor";
 import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/CategoryService";
 import { useDialogStore } from "@/stores/dialogStore";
-import { Category, CategoryForm } from "@/api/schemas/Category";
+import { Category, CategoryForm, getApiError } from "@/api/schemas";
 import { useTranslation } from "@/app/utils/i18n";
 
 interface AppCategoryFormProps {
@@ -75,17 +75,13 @@ export default function AppCategoryForm({
       }
       await onSave();
       handleClose();
-    } catch (err: unknown) {
-      const error = err as {
-        response?: { data?: { detail?: { error?: string } } };
-      };
-      console.error(error);
+    } catch (err) {
+      const { code, params } = getApiError(err);
       openDialog({
         variant: "error",
         message: t(
-          error.response?.data?.detail?.error
-            ? `errors.categories.${error.response.data.detail.error}`
-            : "errors.all.generic",
+          code ? `errors.categories.${code}` : "errors.all.generic",
+          params,
         ),
       });
     }

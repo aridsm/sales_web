@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usersService } from "@/api/services/UserService";
-import { Login } from "@/api/schemas/User";
+import { Login, getApiError } from "@/api/schemas";
 import { useTokenStore } from "@/stores/tokenStore";
 import { useDialogStore } from "@/stores/dialogStore";
 import AppLogo from "@/app/components/AppLogo";
@@ -47,14 +47,12 @@ export default function LoginPage() {
         await usersService.login(formData.toString() as unknown as Login);
       setTokenData(access_token, refresh_token, expires_at);
       router.push("/");
-    } catch (err: unknown) {
-      const error = err as { response?: { data?: { detail?: string } } };
+    } catch (err) {
+      const { code } = getApiError(err);
       openDialog({
         variant: "error",
         message: t(
-          error.response?.data?.detail
-            ? `errors.auth.${error.response.data.detail}`
-            : "errors.all.generic",
+          code ? `errors.auth.${code}` : "errors.all.generic",
         ),
       });
     } finally {

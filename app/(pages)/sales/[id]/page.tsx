@@ -11,6 +11,7 @@ import { salesService } from "@/api/services/SaleService";
 import { saleProductsService } from "@/api/services/SaleProductsService";
 import { Sale } from "@/api/schemas/Sale";
 import { SaleProduct } from "@/api/schemas/SaleProduct";
+import { getApiError } from "@/api/schemas";
 import { SaleStatus } from "@/enums/SaleStatus";
 import { useDialogStore } from "@/stores/dialogStore";
 import {
@@ -81,16 +82,13 @@ export default function SaleDetailPage() {
           await salesService.cancel(sale.id);
           const updated = await salesService.getById(sale.id);
           setSale(updated);
-        } catch (err: unknown) {
-          const error = err as {
-            response?: { data?: { detail?: { error?: string } } };
-          };
+        } catch (err) {
+          const { code, params } = getApiError(err);
           openDialog({
             variant: "error",
             message: t(
-              error.response?.data?.detail?.error
-                ? `errors.sales.${error.response.data.detail.error}`
-                : "errors.all.generic",
+              code ? `errors.sales.${code}` : "errors.all.generic",
+              params,
             ),
           });
         }

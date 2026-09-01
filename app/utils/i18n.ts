@@ -62,7 +62,16 @@ export function getLabel(
 ): string {
   const targetLocale = forceLocale || getLocale();
   const messages = locales[targetLocale] ?? locales[DEFAULT_LOCALE];
-  const value = resolve(messages, route);
+  let value = resolve(messages, route);
+
+  if (!value && route.startsWith("errors.")) {
+    const parts = route.split(".");
+    if (parts.length === 3) {
+      const errorCode = parts[2];
+      value = resolve(messages, `errors.all.${errorCode}`);
+    }
+  }
+
   if (!value) return route;
   return params ? interpolate(value, params) : value;
 }

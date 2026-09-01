@@ -38,7 +38,12 @@ describe("i18n", () => {
       expect(result).toBe("Ocorreu um erro inesperado. Tente novamente.");
     });
 
-    it("retorna a chave crua se não encontrar tradução", () => {
+    it("faz fallback para errors.all se chave não existir no módulo específico", () => {
+      const result = getLabel("errors.categories.errorInsufficientPermission");
+      expect(result).toBe("Você não tem permissão para realizar esta ação.");
+    });
+
+    it("retorna a chave crua se não encontrar tradução nem no módulo nem em errors.all", () => {
       const result = getLabel("errors.categories.chaveInexistente");
       expect(result).toBe("errors.categories.chaveInexistente");
     });

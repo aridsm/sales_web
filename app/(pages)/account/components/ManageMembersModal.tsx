@@ -9,7 +9,7 @@ import { DeleteOutlined, ExitToAppOutlined, MailOutlined } from "@mui/icons-mate
 import { useTranslation } from "@/app/utils/i18n";
 import { useDialogStore } from "@/stores/dialogStore";
 import { companyService } from "@/api/services/CompanyService";
-import { CompanyListItem, CompanyUser, CompanyInvitation } from "@/api/schemas/Company";
+import { CompanyListItem, CompanyUser, CompanyInvitation, getApiError } from "@/api/schemas";
 import { User } from "@/api/schemas/User";
 import { CompanyPermission } from "@/enums/CompanyPermission";
 import { InvitationStatus } from "@/enums/InvitationStatus";
@@ -158,12 +158,12 @@ export default function ManageMembersModal({
         },
       });
       setActiveTab("pendentes");
-    } catch (err: any) {
-      const errMsg = err.response?.data?.detail?.error;
+    } catch (err) {
+      const { code } = getApiError(err);
       openDialog({
         variant: "error",
-        message: errMsg
-          ? t(`errors.auth.${errMsg}`)
+        message: code
+          ? t(`errors.companies.${code}`)
           : t("labels.account.member_invite_error"),
       });
     } finally {
@@ -186,10 +186,13 @@ export default function ManageMembersModal({
             message: t("labels.account.member_removed"),
           });
           membersPagination.load();
-        } catch {
+        } catch (err) {
+          const { code } = getApiError(err);
           openDialog({
             variant: "error",
-            message: t("labels.account.member_remove_error"),
+            message: code
+              ? t(`errors.companies.${code}`)
+              : t("labels.account.member_remove_error"),
           });
         }
       },
@@ -214,10 +217,13 @@ export default function ManageMembersModal({
             variant: "success",
             message: t("labels.account.left_company"),
           });
-        } catch {
+        } catch (err) {
+          const { code } = getApiError(err);
           openDialog({
             variant: "error",
-            message: t("labels.account.left_company_error"),
+            message: code
+              ? t(`errors.companies.${code}`)
+              : t("labels.account.left_company_error"),
           });
         }
       },
@@ -236,10 +242,13 @@ export default function ManageMembersModal({
         message: t("labels.account.permission_updated"),
       });
       membersPagination.load();
-    } catch {
+    } catch (err) {
+      const { code } = getApiError(err);
       openDialog({
         variant: "error",
-        message: t("labels.account.permission_update_error"),
+        message: code
+          ? t(`errors.companies.${code}`)
+          : t("labels.account.permission_update_error"),
       });
     }
   };

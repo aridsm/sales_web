@@ -418,24 +418,53 @@
     }
   },
   "errors": {
+    "all": {
+      "generic": "Ocorreu um erro inesperado. Tente novamente.",
+      "errorEntityNotFound": "O registro solicitado não foi encontrado.",
+      "errorNoCompanySelected": "Nenhuma empresa selecionada.",
+      "errorInsufficientPermission": "Você não tem permissão para realizar esta ação.",
+      "errorNotMemberOfCompany": "Você não é membro desta empresa."
+    },
     "products": {
-      "errorHasDoneSales": "Os seguintes produtos possuem vendas vinculadas: {{name}}"
+      "errorHasDoneSales": "Os seguintes produtos possuem vendas vinculadas: {{name}}",
+      "errorEntityNotFound": "Produto não encontrado."
     },
     "categories": {
       "errorHasProducts": "As seguintes categorias não podem ser excluídas porque possuem produtos vinculados: {{name}}",
-      "errorHasExpenses": "As seguintes categorias não podem ser excluídas porque possuem despesas vinculadas: {{name}}"
+      "errorHasExpenses": "As seguintes categorias não podem ser excluídas porque possuem despesas vinculadas: {{name}}",
+      "errorEntityNotFound": "Categoria não encontrada."
     },
     "sales": {
       "errorInsufficientStock": "Estoque insuficiente para {{name}}.",
-      "errorSaleAlreadyCanceled": "Esta venda já foi cancelada."
+      "errorSaleAlreadyCanceled": "Esta venda já foi cancelada.",
+      "errorEntityNotFound": "Venda não encontrada."
     },
     "stock_entries": {
-      "errorNoRemainingItems": "Estoque insuficiente para a devolução dos seguintes produtos: {{products}}."
+      "errorNoRemainingItems": "Estoque insuficiente para a devolução dos seguintes produtos: {{products}}.",
+      "errorStockEntryAlreadyCanceled": "Esta entrada de estoque já foi cancelada.",
+      "errorEntityNotFound": "Entrada de estoque não encontrada."
     },
-    "other_expenses": {},
+    "companies": {
+      "errorUserNotFound": "Usuário não encontrado com o e-mail informado.",
+      "errorUserAlreadyMember": "Este usuário já é membro desta empresa.",
+      "errorInvitationAlreadyPending": "Já existe um convite pendente para este usuário.",
+      "errorCannotHaveNoAdministrator": "A empresa deve ter pelo menos um administrador.",
+      "errorCannotRemoveSelf": "Você não pode remover a si mesmo da empresa.",
+      "errorNotMemberOfCompany": "Você não é membro desta empresa.",
+      "errorInsufficientPermission": "Você não tem permissão para gerenciar membros.",
+      "errorEntityNotFound": "Empresa ou convite não encontrado."
+    },
+    "other_expenses": {
+      "errorEntityNotFound": "Despesa não encontrada."
+    },
     "auth": {
       "errorInvalidCredentials": "E-mail ou senha incorretos.",
+      "errorEmailAlreadyRegistered": "Este e-mail já está cadastrado.",
       "errorEmailAlreadyExists": "Este e-mail já está cadastrado.",
+      "errorInvalidToken": "Sessão inválida ou expirada. Faça login novamente.",
+      "errorExpiredToken": "Sessão expirada. Faça login novamente.",
+      "errorInvalidRefreshToken": "Sessão expirada. Faça login novamente.",
+      "errorUserNotFound": "Usuário não encontrado.",
       "errorPasswordsNotMatch": "As senhas não coincidem.",
       "errorPasswordMinLength": "A senha deve ter pelo menos 6 caracteres."
     },

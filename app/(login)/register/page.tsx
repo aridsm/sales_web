@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usersService } from "@/api/services/UserService";
+import { getApiError } from "@/api/schemas";
 import { useTokenStore } from "@/stores/tokenStore";
 import { useDialogStore } from "@/stores/dialogStore";
 import AppLogo from "@/app/components/AppLogo";
@@ -60,16 +61,12 @@ export default function RegisterPage() {
         expires_at || null,
       );
       router.push("/");
-    } catch (err: unknown) {
-      const error = err as {
-        response?: { data?: { detail?: { error?: string } } };
-      };
+    } catch (err) {
+      const { code } = getApiError(err);
       openDialog({
         variant: "error",
         message: t(
-          error.response?.data?.detail?.error
-            ? `errors.auth.${error.response.data.detail.error}`
-            : "errors.all.generic",
+          code ? `errors.auth.${code}` : "errors.all.generic",
         ),
       });
     } finally {

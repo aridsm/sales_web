@@ -22,7 +22,7 @@ import AppInputText from "../../components/inputs/AppInputText";
 import AppButton from "../../components/AppButton";
 import AppTabs from "../../components/AppTabs";
 import { useSearchParams } from "next/navigation";
-import { Category } from "@/api/schemas/Category";
+import { Category, getApiError } from "@/api/schemas";
 import { useTranslation } from "@/app/utils/i18n";
 
 export default function CategoriesPage() {
@@ -135,21 +135,13 @@ export default function CategoriesPage() {
           await categoriesService.bulkDelete(ids);
           await pagination.load();
           setRowsSelected([]);
-        } catch (err: unknown) {
-          const error = err as {
-            response?: {
-              data?: { detail?: { error?: string; name?: string[] } };
-            };
-          };
+        } catch (err) {
+          const { code, params } = getApiError(err);
           openDialog({
             variant: "error",
             message: t(
-              error.response?.data?.detail?.error
-                ? `errors.categories.${error.response.data.detail.error}`
-                : "errors.all.generic",
-              {
-                name: error.response?.data?.detail?.name?.join(", "),
-              },
+              code ? `errors.categories.${code}` : "errors.all.generic",
+              params,
             ),
           });
         }

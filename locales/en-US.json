@@ -418,24 +418,53 @@
     }
   },
   "errors": {
+    "all": {
+      "generic": "An unexpected error occurred. Please try again.",
+      "errorEntityNotFound": "The requested record was not found.",
+      "errorNoCompanySelected": "No company selected.",
+      "errorInsufficientPermission": "You do not have permission to perform this action.",
+      "errorNotMemberOfCompany": "You are not a member of this company."
+    },
     "products": {
-      "errorHasDoneSales": "The following products have linked sales: {{name}}"
+      "errorHasDoneSales": "The following products have linked sales: {{name}}",
+      "errorEntityNotFound": "Product not found."
     },
     "categories": {
       "errorHasProducts": "The following categories cannot be deleted because they have linked products: {{name}}",
-      "errorHasExpenses": "The following categories cannot be deleted because they have linked expenses: {{name}}"
+      "errorHasExpenses": "The following categories cannot be deleted because they have linked expenses: {{name}}",
+      "errorEntityNotFound": "Category not found."
     },
     "sales": {
       "errorInsufficientStock": "Insufficient stock for {{name}}.",
-      "errorSaleAlreadyCanceled": "This sale has already been canceled."
+      "errorSaleAlreadyCanceled": "This sale has already been canceled.",
+      "errorEntityNotFound": "Sale not found."
     },
     "stock_entries": {
-      "errorNoRemainingItems": "Insufficient stock to return the following products: {{products}}."
+      "errorNoRemainingItems": "Insufficient stock to return the following products: {{products}}.",
+      "errorStockEntryAlreadyCanceled": "This stock entry has already been canceled.",
+      "errorEntityNotFound": "Stock entry not found."
     },
-    "other_expenses": {},
+    "companies": {
+      "errorUserNotFound": "User not found with the provided email.",
+      "errorUserAlreadyMember": "This user is already a member of this company.",
+      "errorInvitationAlreadyPending": "An invitation is already pending for this user.",
+      "errorCannotHaveNoAdministrator": "The company must have at least one administrator.",
+      "errorCannotRemoveSelf": "You cannot remove yourself from the company.",
+      "errorNotMemberOfCompany": "You are not a member of this company.",
+      "errorInsufficientPermission": "You do not have permission to manage members.",
+      "errorEntityNotFound": "Company or invitation not found."
+    },
+    "other_expenses": {
+      "errorEntityNotFound": "Expense not found."
+    },
     "auth": {
       "errorInvalidCredentials": "Invalid email or password.",
+      "errorEmailAlreadyRegistered": "This email is already registered.",
       "errorEmailAlreadyExists": "This email is already registered.",
+      "errorInvalidToken": "Invalid or expired session. Please log in again.",
+      "errorExpiredToken": "Session expired. Please log in again.",
+      "errorInvalidRefreshToken": "Session expired. Please log in again.",
+      "errorUserNotFound": "User not found.",
       "errorPasswordsNotMatch": "Passwords do not match.",
       "errorPasswordMinLength": "Password must be at least 6 characters long."
     },

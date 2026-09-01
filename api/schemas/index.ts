@@ -7,4 +7,4 @@ export * from "./Sale";
 export * from "./SaleProduct";
 export * from "./User";
 export * from "./Company";
-
+export * from "./ApiError";

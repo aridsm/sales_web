@@ -39,7 +39,7 @@ import {
 } from "@mui/icons-material";
 import { stockEntriesService } from "@/api/services/StockEntryService";
 import { useTranslation } from "@/app/utils/i18n";
-import { Category } from "@/api/schemas/Category";
+import { Category, getApiError } from "@/api/schemas";
 
 export default function NewStockEntryPage() {
   const { t } = useTranslation();
@@ -128,10 +128,14 @@ export default function NewStockEntryPage() {
         });
         router.push("/stock-entries");
       })
-      .catch(() => {
+      .catch((err) => {
+        const { code, params } = getApiError(err);
         openDialog({
           variant: "error",
-          message: t("errors.fallback"),
+          message: t(
+            code ? `errors.stock_entries.${code}` : "errors.all.generic",
+            params,
+          ),
         });
       })
       .finally(() => {

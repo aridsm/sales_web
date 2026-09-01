@@ -10,7 +10,7 @@ import AppPage from "../../components/AppPage";
 import { usersService } from "@/api/services/UserService";
 import { companyService } from "@/api/services/CompanyService";
 import { User } from "@/api/schemas/User";
-import { CompanyListItem, CompanyInvitation } from "@/api/schemas/Company";
+import { CompanyListItem, CompanyInvitation, getApiError } from "@/api/schemas";
 import { usePagination } from "@/app/utils/usePagination";
 import ProfileCard from "./components/ProfileCard";
 import ActiveCompanyCard from "./components/ActiveCompanyCard";
@@ -137,10 +137,13 @@ export default function AccountPage() {
                 fetchData(true);
               },
             });
-          } catch {
+          } catch (err) {
+            const { code } = getApiError(err);
             openDialog({
               variant: "error",
-              message: t("labels.account.company_delete_error"),
+              message: code
+                ? t(`errors.companies.${code}`)
+                : t("labels.account.company_delete_error"),
             });
           }
         },
@@ -158,8 +161,12 @@ export default function AccountPage() {
       });
       await fetchData(true);
       companiesPagination.load({ replace: true });
-    } catch {
-      openDialog({ variant: "error", message: t("errors.fallback") });
+    } catch (err) {
+      const { code } = getApiError(err);
+      openDialog({
+        variant: "error",
+        message: code ? t(`errors.companies.${code}`) : t("errors.fallback"),
+      });
     }
   };
 
@@ -168,8 +175,12 @@ export default function AccountPage() {
       await usersService.rejectInvitation(id);
       await fetchData(true);
       companiesPagination.load({ replace: true });
-    } catch {
-      openDialog({ variant: "error", message: t("errors.fallback") });
+    } catch (err) {
+      const { code } = getApiError(err);
+      openDialog({
+        variant: "error",
+        message: code ? t(`errors.companies.${code}`) : t("errors.fallback"),
+      });
     }
   };
 

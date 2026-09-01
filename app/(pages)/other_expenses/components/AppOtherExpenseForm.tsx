@@ -13,8 +13,7 @@ import { otherExpensesService } from "@/api/services/OtherExpenseService";
 import { useDialogStore } from "@/stores/dialogStore";
 import { CategoryType } from "@/enums/CategoryType";
 import { categoriesService } from "@/api/services/CategoryService";
-import { Category } from "@/api/schemas/Category";
-import { OtherExpenseForm } from "@/api/schemas/OtherExpense";
+import { Category, OtherExpenseForm, getApiError } from "@/api/schemas";
 import { useTranslation } from "@/app/utils/i18n";
 
 interface AppOtherExpenseFormProps {
@@ -96,16 +95,13 @@ export default function AppOtherExpenseForm({
       reset();
       onSaved?.();
       onClose();
-    } catch (err: unknown) {
-      const error = err as {
-        response?: { data?: { detail?: { error?: string } } };
-      };
+    } catch (err) {
+      const { code, params } = getApiError(err);
       openDialog({
         variant: "error",
         message: getLabel(
-          error.response?.data?.detail?.error
-            ? `errors.other_expenses.${error.response.data.detail.error}`
-            : "errors.all.generic",
+          code ? `errors.other_expenses.${code}` : "errors.all.generic",
+          params,
         ),
       });
     }

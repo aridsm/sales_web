@@ -26,6 +26,7 @@ import AppLoading from "@/app/components/AppLoading";
 import { useTranslation } from "@/app/utils/i18n";
 import { Category } from "@/api/schemas/Category";
 import { Product } from "@/api/schemas/Product";
+import { getApiError } from "@/api/schemas";
 import AppDateRange from "../../components/inputs/AppDateRange";
 import AppAmountRange from "../../components/inputs/AppAmountRange";
 import AppNumberRange from "../../components/inputs/AppNumberRange";
@@ -100,21 +101,13 @@ export default function ProductsPage() {
           await productsService.bulkDelete(ids);
           await Promise.all([products.load(), categories.load()]);
           setRowsSelected([]);
-        } catch (err: unknown) {
-          const error = err as {
-            response?: {
-              data?: { detail?: { error?: string; name?: string[] } };
-            };
-          };
+        } catch (err) {
+          const { code, params } = getApiError(err);
           openDialog({
             variant: "error",
             message: t(
-              error.response?.data?.detail?.error
-                ? `errors.products.${error.response.data.detail.error}`
-                : "errors.all.generic",
-              {
-                name: error.response?.data?.detail?.name?.join(", "),
-              },
+              code ? `errors.products.${code}` : "errors.all.generic",
+              params,
             ),
           });
         }

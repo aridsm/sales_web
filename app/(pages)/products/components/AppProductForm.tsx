@@ -13,7 +13,7 @@ import { usePagination, type PaginationService } from "@/app/utils/usePagination
 import { categoriesService } from "@/api/services/CategoryService";
 import { productsService } from "@/api/services/ProductService";
 
-import { Category } from "@/api/schemas/Category";
+import { Category, getApiError } from "@/api/schemas";
 
 interface ProductFormData {
   name: string;
@@ -110,15 +110,13 @@ export default function AppProductForm({
       reset();
       onSaved?.();
       onClose();
-    } catch (err: unknown) {
-      const error = err as { response?: { data?: { detail?: { error?: string; name?: string } } } };
+    } catch (err) {
+      const { code, params } = getApiError(err);
       openDialog({
         variant: "error",
         message: t(
-          error.response?.data?.detail?.error ? `errors.products.${error.response.data.detail.error}` : "errors.all.generic",
-          {
-            name: error.response?.data?.detail?.name,
-          },
+          code ? `errors.products.${code}` : "errors.all.generic",
+          params,
         ),
       });
     }

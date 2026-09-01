@@ -38,7 +38,7 @@ import {
 } from "@mui/icons-material";
 import { salesService } from "@/api/services/SaleService";
 import { useTranslation } from "@/app/utils/i18n";
-import { Category } from "@/api/schemas/Category";
+import { Category, getApiError } from "@/api/schemas";
 
 export default function NewSalePage() {
   const { t } = useTranslation();
@@ -131,16 +131,13 @@ export default function NewSalePage() {
             message: t("labels.sales.new.success"),
           });
           router.push("/sales");
-        } catch (err: unknown) {
-          const error = err as {
-            response?: { data?: { detail?: { error?: string } } };
-          };
+        } catch (err) {
+          const { code, params } = getApiError(err);
           openDialog({
             variant: "error",
             message: t(
-              error.response?.data?.detail?.error
-                ? `errors.sales.${error.response.data.detail.error}`
-                : "errors.all.generic",
+              code ? `errors.sales.${code}` : "errors.all.generic",
+              params,
             ),
           });
         } finally {

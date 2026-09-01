@@ -11,6 +11,7 @@ import { stockEntriesService } from "@/api/services/StockEntryService";
 import { stockEntryProductsService } from "@/api/services/StockEntryProductService";
 import { StockEntry } from "@/api/schemas/StockEntry";
 import { StockEntryProduct } from "@/api/schemas/StockEntryProduct";
+import { getApiError } from "@/api/schemas";
 import { StockEntryStatus } from "@/enums/StockEntryStatus";
 import { useDialogStore } from "@/stores/dialogStore";
 import {
@@ -100,33 +101,14 @@ export default function StockEntryDetailPage() {
           await stockEntriesService.cancel(stockEntry.id);
           const updated = await stockEntriesService.getById(stockEntry.id);
           setStockEntry(updated);
-        } catch (err: unknown) {
-          const errorResponse = err as {
-            response?: {
-              data?: {
-                error?: string;
-                detail?: {
-                  error?: string;
-                  products?: string[];
-                  [key: string]: unknown;
-                };
-                products?: string[];
-                [key: string]: unknown;
-              };
-            };
-          };
-          const errorData = errorResponse.response?.data;
-          const detailData = errorData?.detail;
-          const params = {
-            ...errorData,
-            ...(typeof detailData === "object" ? detailData : null),
-          };
-          const errorCode = params.error;
+        } catch (err) {
+          const { code, params } = getApiError(err);
           openDialog({
             variant: "error",
-            message: errorCode
-              ? t(`errors.stock_entries.${errorCode}`, params)
-              : t("errors.all.generic"),
+            message: t(
+              code ? `errors.stock_entries.${code}` : "errors.all.generic",
+              params,
+            ),
           });
         }
       },
