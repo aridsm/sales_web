@@ -415,6 +415,11 @@
       "member_email_placeholder": "email@example.com",
       "invited_by_subtitle": "By {{name}} • Sent on {{date}}",
       "remove_member_confirm": "Are you sure you want to remove {{name}}?"
+    },
+    "no_active_company": {
+      "title": "No active company",
+      "message": "Nothing to display. You do not have an active company selected at the moment. Activate, create or select a company to get started.",
+      "action_button": "Activate a company"
     }
   },
   "errors": {

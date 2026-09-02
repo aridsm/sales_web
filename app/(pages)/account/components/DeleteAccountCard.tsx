@@ -18,7 +18,7 @@ export default function DeleteAccountCard({
         <span className="font-semibold text-sm">
           {t("labels.account.delete_account")}
         </span>
-        <span className="text-xs text-label">
+        <span className="text-label">
           {t("labels.account.delete_account_description")}
         </span>
       </div>
