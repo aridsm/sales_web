@@ -8,6 +8,12 @@
         "this_month": "Este mês",
         "this_year": "Este ano"
       },
+      "frequencies": {
+        "today": "Diário",
+        "this_week": "Semanal",
+        "this_month": "Mensal",
+        "this_year": "Anual"
+      },
       "kpi": {
         "current_balance": "Saldo atual",
         "net_profit": "Lucro líquido",
@@ -96,6 +102,13 @@
       "account": "Sua conta",
       "logout": "Sair"
     },
+    "select": {
+      "placeholder": "Selecione...",
+      "search_placeholder": "Pesquisar...",
+      "selected_count": "{{count}} selecionados",
+      "item_selected": "Item selecionado",
+      "no_results": "Nenhum resultado encontrado"
+    },
     "grid": {
       "search_error": "Ocorreu um erro ao realizar a busca. Tente novamente.",
       "search_placeholder": "Buscar...",
@@ -133,6 +146,11 @@
       "category": "Categoria",
       "filter_category": "Filtrar por categoria",
       "search_placeholder": "Pesquisar produtos...",
+      "change_category": "Mudar categoria",
+      "change_category_title": "Mudar Categoria",
+      "category_changed": "Categoria alterada com sucesso!",
+      "category_change_error": "Erro ao alterar categoria.",
+      "select_new_category": "Selecione a nova categoria para o produto",
       "form": {
         "edit_title": "Editar Produto",
         "add_title": "Novo Produto",
@@ -286,7 +304,8 @@
         "PRODUCT": "Produto",
         "CATEGORY": "Categoria",
         "SALE": "Venda",
-        "OTHER_EXPENSE": "Despesas"
+        "OTHER_EXPENSE": "Despesas",
+        "STOCK_ENTRY": "Entrada de Estoque"
       }
     },
     "categories": {
@@ -354,6 +373,7 @@
       "reject": "Recusar",
       "my_companies": "Minhas Empresas",
       "create_company": "Criar Empresa",
+      "edit_company": "Editar Empresa",
       "company_name": "Nome da Empresa",
       "role": "Permissão",
       "status": "Status",
@@ -362,6 +382,8 @@
       "switch": "Ativar",
       "manage_members": "Membros",
       "company_created": "Empresa criada com sucesso!",
+      "company_updated": "Empresa atualizada com sucesso!",
+      "company_update_error": "Erro ao atualizar empresa.",
       "company_deleted": "Empresa excluída com sucesso!",
       "company_delete_confirm": "Tem certeza que deseja excluir a empresa \"{{name}}\"? Todos os dados atrelados serão excluídos.",
       "company_delete_error": "Erro ao excluir empresa.",

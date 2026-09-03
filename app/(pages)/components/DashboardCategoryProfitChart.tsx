@@ -97,10 +97,12 @@ export const DashboardCategoryProfitChart = ({
   entityLabels,
   startDate,
   endDate,
+  activePeriod,
 }: {
   entityLabels: Record<number, string>;
   startDate: string;
   endDate: string;
+  activePeriod: string;
 }) => {
   const { t } = useTranslation();
   const [activePieIndex, setActivePieIndex] = useState<number | undefined>();
@@ -136,13 +138,18 @@ export const DashboardCategoryProfitChart = ({
   return (
     <AppCard className="px-5 pt-4 pb-5 flex flex-col lg:col-span-1 lg:row-span-2 overflow-hidden">
       <div className="flex flex-col gap-3 mb-4">
-        <span className="font-semibold text-lg">
-          {activeTab === "sales"
-            ? t("labels.dashboard.charts.profit_by_category")
-            : activeTab === "stock_entries"
-              ? "Entradas de Estoque por categoria"
-              : t("labels.dashboard.charts.expenses_by_category")}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="font-semibold text-lg">
+            {activeTab === "sales"
+              ? t("labels.dashboard.charts.profit_by_category")
+              : activeTab === "stock_entries"
+                ? "Entradas de Estoque por categoria"
+                : t("labels.dashboard.charts.expenses_by_category")}
+          </span>
+          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label shrink-0 mt-0.5">
+            {t(`labels.dashboard.periods.${activePeriod}`)}
+          </span>
+        </div>
         <AppTabs
           tabs={[
             {

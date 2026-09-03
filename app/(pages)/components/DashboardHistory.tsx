@@ -18,10 +18,12 @@ export const DashboardHistory = ({
   entityLabels,
   startDate,
   endDate,
+  activePeriod,
 }: {
   entityLabels: Record<number, string>;
   startDate: string;
   endDate: string;
+  activePeriod: string;
 }) => {
   const { t } = useTranslation();
 
@@ -76,10 +78,15 @@ export const DashboardHistory = ({
 
   return (
     <AppCard className="flex flex-col lg:col-span-2 p-5 flex-1 overflow-hidden min-h-0">
-      <div className="flex justify-between items-center mb-1">
-        <span className="font-semibold text-lg">
-          {t("labels.dashboard.history.title")}
-        </span>
+      <div className="flex justify-between items-center mb-3">
+        <div className="flex items-center gap-3">
+          <span className="font-semibold text-lg">
+            {t("labels.dashboard.history.title")}
+          </span>
+          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label mt-0.5">
+            {t(`labels.dashboard.periods.${activePeriod}`)}
+          </span>
+        </div>
 
         <Link
           href="/history"

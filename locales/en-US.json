@@ -8,6 +8,12 @@
         "this_month": "This month",
         "this_year": "This year"
       },
+      "frequencies": {
+        "today": "Daily",
+        "this_week": "Weekly",
+        "this_month": "Monthly",
+        "this_year": "Yearly"
+      },
       "kpi": {
         "current_balance": "Current balance",
         "net_profit": "Net profit",
@@ -96,6 +102,13 @@
       "account": "Your Account",
       "logout": "Logout"
     },
+    "select": {
+      "placeholder": "Select...",
+      "search_placeholder": "Search...",
+      "selected_count": "{{count}} selected",
+      "item_selected": "Item selected",
+      "no_results": "No results found"
+    },
     "grid": {
       "search_error": "An error occurred while searching. Please try again.",
       "search_placeholder": "Search...",
@@ -133,6 +146,11 @@
       "category": "Category",
       "filter_category": "Filter by category",
       "search_placeholder": "Search products...",
+      "change_category": "Change category",
+      "change_category_title": "Change Category",
+      "category_changed": "Category changed successfully!",
+      "category_change_error": "Error changing category.",
+      "select_new_category": "Select the new category for the product",
       "form": {
         "edit_title": "Edit Product",
         "add_title": "New Product",
@@ -286,7 +304,8 @@
         "PRODUCT": "Product",
         "CATEGORY": "Category",
         "SALE": "Sale",
-        "OTHER_EXPENSE": "Other Expenses"
+        "OTHER_EXPENSE": "Other Expenses",
+        "STOCK_ENTRY": "Stock Entry"
       }
     },
     "categories": {
@@ -354,14 +373,17 @@
       "reject": "Reject",
       "my_companies": "My Companies",
       "create_company": "Create Company",
+      "edit_company": "Edit Company",
       "company_name": "Company Name",
-      "role": "Permission",
+      "role": "Role",
       "status": "Status",
       "actions": "Actions",
       "active": "Active",
       "switch": "Switch",
       "manage_members": "Members",
       "company_created": "Company created successfully!",
+      "company_updated": "Company updated successfully!",
+      "company_update_error": "Error updating company.",
       "company_deleted": "Company deleted successfully!",
       "company_delete_confirm": "Are you sure you want to delete the company \"{{name}}\"? All associated data will be deleted.",
       "company_delete_error": "Error deleting company.",

@@ -12,13 +12,8 @@ import { otherExpensesService } from "@/api/services/OtherExpenseService";
 import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
-import {
-  Edit,
-  SearchOutlined,
-  AddOutlined,
-  DeleteOutlined,
-} from "@mui/icons-material";
-import AppInputText from "../../components/inputs/AppInputText";
+import { Edit, AddOutlined, DeleteOutlined } from "@mui/icons-material";
+import AppSearchInput from "../../components/inputs/AppSearchInput";
 import AppButton from "../../components/AppButton";
 
 import AppOtherExpenseForm from "./components/AppOtherExpenseForm";
@@ -168,31 +163,21 @@ export default function OtherExpensesPage() {
   return (
     <AppPage title={getLabel("labels.other_expenses.title")}>
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-3">
-        <div className="relative w-full sm:max-w-sm">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-foreground z-10">
-            <SearchOutlined fontSize="small" />
-          </div>
-          <AppInputText
-            type="text"
-            className="pl-10!"
-            placeholder={getLabel("labels.grid.search_placeholder")}
-            value={search}
-            onChange={(e: any) => setSearch(e.target.value as string)}
-            onBlur={() => pagination.load({ params: { search, page: 1 } })}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                pagination.load({ params: { search, page: 1 } });
-              }
-            }}
-          />
-        </div>
+        <AppSearchInput
+          value={search}
+          onChange={setSearch}
+          onSearch={(val) =>
+            pagination.load({ params: { search: val, page: 1 } })
+          }
+          placeholder={getLabel("labels.grid.search_placeholder")}
+          className="w-full sm:max-w-sm"
+        />
         <div className="flex gap-3 w-full sm:w-auto ml-auto">
           {" "}
           {rowsSelected.length > 0 && (
             <AppButton
               onClick={onDeleteSelected}
               color="red"
-              flat
               className="w-full sm:w-auto px-4 py-2 shrink-0"
             >
               <DeleteOutlined fontSize="small" />

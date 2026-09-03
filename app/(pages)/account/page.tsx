@@ -19,6 +19,7 @@ import InvitationsCard from "./components/InvitationsCard";
 import CompaniesCard from "./components/CompaniesCard";
 import DeleteAccountCard from "./components/DeleteAccountCard";
 import CreateCompanyModal from "./components/CreateCompanyModal";
+import EditCompanyModal from "./components/EditCompanyModal";
 import ManageMembersModal from "./components/ManageMembersModal";
 
 export default function AccountPage() {
@@ -32,6 +33,7 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(true);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [editingCompany, setEditingCompany] = useState<CompanyListItem | null>(null);
   const [selectedCompany, setSelectedCompany] =
     useState<CompanyListItem | null>(null);
 
@@ -110,6 +112,31 @@ export default function AccountPage() {
       openDialog({
         variant: "error",
         message: t("labels.account.company_create_error"),
+      });
+      throw new Error();
+    }
+  };
+
+  const handleUpdateCompany = async (companyId: string, companyName: string) => {
+    try {
+      await companyService.update(companyId, companyName);
+      companiesPagination.load();
+      fetchData(true);
+      openDialog({
+        variant: "success",
+        message: t("labels.account.company_updated"),
+        onConfirm: () => {
+          companiesPagination.load();
+          fetchData(true);
+        },
+      });
+    } catch (err) {
+      const { code } = getApiError(err);
+      openDialog({
+        variant: "error",
+        message: code
+          ? t(`errors.companies.${code}`)
+          : t("labels.account.company_update_error"),
       });
       throw new Error();
     }
@@ -263,6 +290,7 @@ export default function AccountPage() {
           currentUser={currentUser}
           onOpenMembers={setSelectedCompany}
           onSwitchCompany={handleSwitchCompany}
+          onEditCompany={setEditingCompany}
           onDeleteCompany={handleDeleteCompany}
           onCreateCompanyClick={() => setIsCreateModalOpen(true)}
         />
@@ -274,6 +302,13 @@ export default function AccountPage() {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onCreateCompany={handleCreateCompany}
+      />
+
+      <EditCompanyModal
+        isOpen={editingCompany !== null}
+        onClose={() => setEditingCompany(null)}
+        company={editingCompany}
+        onUpdateCompany={handleUpdateCompany}
       />
 
       <ManageMembersModal

@@ -13,4 +13,6 @@ export interface Product extends ProductBase {
   category_name: string;
 }
 
-export type ProductForm = Omit<ProductBase, "sold_amount">;
+export type ProductForm = Omit<ProductBase, "sold_amount" | "stock_amount"> & {
+  stock_amount?: number;
+};

@@ -8,6 +8,7 @@ import AppPagination from "../../../components/AppPagination";
 import {
   AddOutlined,
   GroupOutlined,
+  EditOutlined,
   DeleteOutlined,
 } from "@mui/icons-material";
 import { useTranslation } from "@/app/utils/i18n";
@@ -19,6 +20,7 @@ interface CompaniesCardProps {
   currentUser: User | null;
   onOpenMembers: (company: CompanyListItem) => void;
   onSwitchCompany: (companyId: string) => Promise<void>;
+  onEditCompany: (company: CompanyListItem) => void;
   onDeleteCompany: (company: CompanyListItem) => void;
   onCreateCompanyClick: () => void;
 }
@@ -64,6 +66,7 @@ export default function CompaniesCard({
   currentUser,
   onOpenMembers,
   onSwitchCompany,
+  onEditCompany,
   onDeleteCompany,
   onCreateCompanyClick,
 }: CompaniesCardProps) {
@@ -74,6 +77,12 @@ export default function CompaniesCard({
   const companyActions = useMemo<ActionItem<CompanyListItem>[]>(
     () => [
       {
+        text: t("labels.all.edit"),
+        preText: <EditOutlined style={{ fontSize: 18 }} />,
+        click: (comp) => onEditCompany(comp),
+        disabled: (comp) => comp.permission !== CompanyPermission.ADMIN,
+      },
+      {
         text: t("labels.all.delete"),
         preText: (
           <DeleteOutlined style={{ fontSize: 18 }} className="text-red-500" />
@@ -83,7 +92,7 @@ export default function CompaniesCard({
         disabled: (comp) => comp.permission !== CompanyPermission.ADMIN,
       },
     ],
-    [t, onDeleteCompany],
+    [t, onEditCompany, onDeleteCompany],
   );
 
   return (

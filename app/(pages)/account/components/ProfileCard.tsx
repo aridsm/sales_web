@@ -9,7 +9,7 @@ import {
   ExitToAppOutlined,
 } from "@mui/icons-material";
 import { useTranslation } from "@/app/utils/i18n";
-import { formatDateTime } from "@/app/utils/formatters/date";
+import { formatDateTime, formatDate } from "@/app/utils/formatters/date";
 import AppButton from "@/app/components/AppButton";
 import AppInputText from "@/app/components/inputs/AppInputText";
 
@@ -125,7 +125,7 @@ export default function ProfileCard({
           <div className="flex justify-between items-center">
             <span className="text-xs text-label">
               {t("labels.account.member_since")}{" "}
-              {formatDateTime(currentUser?.created_at || "").split(" ")[0]}
+              {formatDate(currentUser?.created_at)}
             </span>
             <AppButton
               onClick={onLogout}

@@ -16,6 +16,7 @@ const useIsomorphicLayoutEffect =
 import { ChevronLeft } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTranslation } from "@/app/utils/i18n";
 
 export interface AppSelectOption {
   id: string | number;
@@ -46,7 +47,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
       error,
       search = false,
       multiple = false,
-      placeholder = "Selecione...",
+      placeholder,
       disabled = false,
       value,
       clearable = false,
@@ -57,6 +58,8 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
     },
     ref,
   ) => {
+    const { t } = useTranslation();
+    const effectivePlaceholder = placeholder ?? t("labels.select.placeholder");
     const [isOpen, setIsOpen] = useState(false);
     const [coords, setCoords] = useState<{ top: number; left: number; width: number; isAbove: boolean } | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -192,14 +195,14 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
           : value !== undefined && value !== null
             ? [value]
             : [];
-        if (currentValues.length === 0) return placeholder;
+        if (currentValues.length === 0) return effectivePlaceholder;
         const names = options
           .filter((opt) => currentValues.includes(opt.id))
           .map((opt) => opt.name);
         return names.join(", ");
       } else {
         const selected = options.find((opt) => opt.id === value);
-        return selected ? selected.name : placeholder;
+        return selected ? selected.name : effectivePlaceholder;
       }
     };
 
@@ -327,7 +330,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                     ref={searchInputRef}
                     type="text"
                     className="w-full outline-none border-none transition-all py-3"
-                    placeholder="Pesquisar..."
+                    placeholder={t("labels.select.search_placeholder")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
@@ -355,7 +358,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                   })
                 ) : (
                   <div className="px-3 py-4 text-center text-foreground/40 text-sm italic">
-                    Nenhum resultado encontrado
+                    {t("labels.select.no_results")}
                   </div>
                 )}
               </div>

@@ -23,8 +23,9 @@ import {
   HighlightOffOutlined,
 } from "@mui/icons-material";
 
-import { formatDateTime } from "@/app/utils/formatters/date";
+import { formatDateTime, formatDate } from "@/app/utils/formatters/date";
 import { useTranslation } from "@/app/utils/i18n";
+import AppCard from "@/app/components/AppCard";
 
 export default function StockEntryDetailPage() {
   const { t } = useTranslation();
@@ -218,74 +219,59 @@ export default function StockEntryDetailPage() {
         </AppButton>
       </div>
 
-      <div className="rounded-xl border border-border bg-background-2 dark:bg-background-3 p-5 relative overflow-hidden">
-        {isOpenStatus && (
-          <div className="absolute top-4 right-4">
-            <AppButton
-              onClick={handleCancel}
-              color="background"
-              className="px-3! py-1.5!"
+      <AppCard className="flex flex-col p-5">
+        <div className="flex flex-col gap-1.5 w-full mb-4">
+          <div className="flex items-center gap-3 w-full">
+            <span className="text-2xl font-bold text-foreground">
+              #{stockEntry.code.toString().padStart(6, "0")}
+            </span>
+            <span
+              className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${status.bg} ${status.color}`}
             >
-              <HighlightOffOutlined
-                style={{ fontSize: 16 }}
-                className="text-red-500"
-              />
-              {t("labels.stock_entries.detail.cancel_title")}
-            </AppButton>
-          </div>
-        )}
-
-        <div className="flex items-start justify-between gap-4 mb-6">
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl font-bold text-foreground">
-                #{stockEntry.code.toString().padStart(6, "0")}
-              </span>
               <span
-                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${status.bg} ${status.color}`}
+                className={`w-1.5 h-1.5 rounded-full ${
+                  isCanceled ? "bg-red-400" : "bg-emerald-400"
+                }`}
+              />
+              {t(status.labelKey)}
+            </span>
+
+            {isOpenStatus && (
+              <AppButton
+                onClick={handleCancel}
+                color="background"
+                className="px-3! py-1.5! ml-auto"
               >
-                <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    isCanceled ? "bg-red-400" : "bg-emerald-400"
-                  }`}
+                <HighlightOffOutlined
+                  style={{ fontSize: 16 }}
+                  className="text-red-500"
                 />
-                {t(status.labelKey)}
-              </span>
-            </div>
-            <span className="text-label">
-              {formatDateTime(stockEntry.date)}
-            </span>
-            <span className="text-label/60 font-mono mt-1">
-              {stockEntry.id}
-            </span>
+                {t("labels.stock_entries.detail.cancel_title")}
+              </AppButton>
+            )}
           </div>
+          <span className="text-label">{formatDateTime(stockEntry.date)}</span>
+          <span className="text-label/60 mt-1">{stockEntry.id}</span>
         </div>
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3">
           <StockEntryStatBlock
             label={t("labels.stock_entries.detail.date")}
-            value={formatDateTime(stockEntry.created_at).split(" ")[0]}
-            icon={<CalendarTodayOutlined style={{ fontSize: 16 }} />}
-            iconColor="text-indigo-500"
-            iconBg="bg-indigo-500/10"
+            value={formatDate(stockEntry.created_at)}
+            icon={<CalendarTodayOutlined style={{ fontSize: 18 }} />}
           />
           <StockEntryStatBlock
             label={t("labels.stock_entries.detail.items")}
             value={(stockEntry.items_count || 0).toString()}
-            icon={<ShoppingBagOutlined style={{ fontSize: 16 }} />}
-            iconColor="text-orange-500"
-            iconBg="bg-orange-500/10"
+            icon={<ShoppingBagOutlined style={{ fontSize: 18 }} />}
           />
           <StockEntryStatBlock
             label={t("labels.stock_entries.new.total")}
             value={formatCurrency(stockEntry.total)}
-            icon={<AttachMoneyOutlined style={{ fontSize: 16 }} />}
-            iconColor="text-teal-500"
-            iconBg="bg-teal-500/10"
-            highlight={isOpenStatus}
+            icon={<AttachMoneyOutlined style={{ fontSize: 18 }} />}
           />
         </div>
-      </div>
+      </AppCard>
 
       <div className="flex flex-col flex-1 min-h-0 mt-6">
         <div className="flex items-center justify-between mb-3">
@@ -309,36 +295,24 @@ function StockEntryStatBlock({
   label,
   value,
   icon,
-  iconColor,
-  iconBg,
-  highlight = false,
 }: {
   label: string;
   value: string;
   icon: React.ReactNode;
-  iconColor: string;
-  iconBg: string;
-  highlight?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-3 px-3 py-3 rounded-lg bg-background dark:bg-background-2 border border-border">
+    <AppCard className="flex flex-row items-center gap-3 p-3">
       <div
-        className={`w-9 h-9 rounded-lg ${iconBg} flex items-center justify-center shrink-0`}
+        className={`w-9 h-9 rounded-lg bg-primary-4 dark:bg-primary-3 flex items-center justify-center shrink-0`}
       >
-        <span className={iconColor}>{icon}</span>
+        <span className="text-primary-3 dark:text-white -mt-1">{icon}</span>
       </div>
       <div className="flex flex-col min-w-0">
-        <span className="text-[11px] text-label uppercase tracking-wide truncate">
+        <span className="text-xs font-bold tracking-wider truncate">
           {label}
         </span>
-        <span
-          className={`text-sm font-bold tabular-nums ${
-            highlight ? "text-foreground" : "text-foreground"
-          }`}
-        >
-          {value}
-        </span>
+        <span className="text-sm tabular-nums">{value}</span>
       </div>
-    </div>
+    </AppCard>
   );
 }

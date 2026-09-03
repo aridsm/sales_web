@@ -21,7 +21,7 @@ import { Edit, Add, DeleteOutlined, ErrorTwoTone } from "@mui/icons-material";
 import AppModal from "@/app/components/AppModal";
 import AppGrid from "@/app/components/AppGrid";
 import AppButton from "@/app/components/AppButton";
-import AppInputText from "@/app/components/inputs/AppInputText";
+import AppSearchInput from "@/app/components/inputs/AppSearchInput";
 import AppLoading from "@/app/components/AppLoading";
 import { useTranslation } from "@/app/utils/i18n";
 import { Category } from "@/api/schemas/Category";
@@ -320,11 +320,10 @@ export default function ProductsPage() {
           <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
             <div className="flex items-center justify-between flex-wrap mb-3">
               <div className="flex items-center gap-3 flex-1 min-w-0">
-                <AppInputText
+                <AppSearchInput
                   placeholder={t("labels.products.search_placeholder")}
                   value={searchInput}
-                  clearable
-                  onChange={(e) => setSearchInput(String(e.target.value ?? ""))}
+                  onChange={setSearchInput}
                   className="min-w-90"
                 />
               </div>
@@ -333,7 +332,6 @@ export default function ProductsPage() {
                 {rowsSelected.length > 0 && (
                   <AppButton
                     color="red"
-                    flat
                     onClick={onDeleteSelected}
                     className="flex items-center gap-1.5"
                   >

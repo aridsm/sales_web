@@ -19,7 +19,6 @@ interface ProductFormData {
   name: string;
   category_id: string | null;
   price: number | string;
-  stock_amount: number | string;
 }
 
 export interface ProductFormValues {
@@ -27,7 +26,6 @@ export interface ProductFormValues {
   name?: string;
   category_id?: string | null;
   price?: number;
-  stock_amount?: number;
 }
 
 interface AppProductFormProps {
@@ -72,7 +70,6 @@ export default function AppProductForm({
       name: "",
       category_id: null,
       price: "",
-      stock_amount: "",
     },
   });
 
@@ -81,7 +78,6 @@ export default function AppProductForm({
       name: product.name || "",
       category_id: product.category_id ?? null,
       price: product.price ?? "",
-      stock_amount: product.stock_amount ?? "",
     });
   }, []);
 
@@ -91,7 +87,6 @@ export default function AppProductForm({
         name: data.name,
         category_id: data.category_id!,
         price: Number(data.price),
-        stock_amount: Number(data.stock_amount),
       };
 
       if (isEditing) {
@@ -164,19 +159,6 @@ export default function AppProductForm({
             error={errors.price?.message}
           />
         )}
-      />
-
-      <AppInputText
-        label={t("labels.products.stock_amount")}
-        type="number"
-        placeholder="0"
-        min="0"
-        step="1"
-        {...register("stock_amount", {
-          required: t("labels.products.form.stock_required"),
-          min: { value: 0, message: t("labels.products.form.stock_positive") },
-        })}
-        error={errors.stock_amount?.message}
       />
 
       <div className="flex justify-end gap-3 pt-2">

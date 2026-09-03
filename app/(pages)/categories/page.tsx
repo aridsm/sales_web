@@ -14,11 +14,10 @@ import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
 import {
   Edit,
-  SearchOutlined,
   AddOutlined,
   DeleteOutlined,
 } from "@mui/icons-material";
-import AppInputText from "../../components/inputs/AppInputText";
+import AppSearchInput from "../../components/inputs/AppSearchInput";
 import AppButton from "../../components/AppButton";
 import AppTabs from "../../components/AppTabs";
 import { useSearchParams } from "next/navigation";
@@ -62,16 +61,14 @@ export default function CategoriesPage() {
         column: t("labels.categories.color"),
         size: 150,
         cell: ({ row }: { row: Category }) => (
-          <div className="flex items-center gap-2 whitespace-nowrap">
+          <div className="flex items-center gap-2 whitespace-nowrap px-2">
             {row.color && (
               <div
                 className="w-3 h-3 rounded-full shrink-0 border border-black/10 dark:border-white/10"
                 style={{ backgroundColor: row.color }}
               />
             )}
-            <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium">
-              {row.color || "-"}
-            </span>
+            <span>{row.color || "-"}</span>
           </div>
         ),
       },
@@ -79,14 +76,11 @@ export default function CategoriesPage() {
       {
         column: "ID",
         cell: ({ row }: { row: Category }) => (
-          <span
-            className="font-mono text-xs bg-background-2 dark:bg-background-3 px-2 py-1 rounded-md max-w-full truncate inline-block border border-border"
-            title={row.id}
-          >
+          <span className="px-2" title={row.id}>
             {row.id}
           </span>
         ),
-        size: 300,
+        size: 350,
       },
     ],
     [t],
@@ -112,8 +106,8 @@ export default function CategoriesPage() {
     });
   }
 
-  async function onSave() {
-    await pagination.load();
+  function onSave() {
+    pagination.load();
   }
 
   const { openDialog } = useDialogStore();
@@ -151,66 +145,54 @@ export default function CategoriesPage() {
 
   return (
     <AppPage title={t("labels.categories.title")}>
-      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-3">
-        <AppTabs
-          tabs={[
-            {
-              value: String(CategoryType.PRODUCT),
-              label: t("labels.categories.types.product"),
-            },
-            {
-              value: String(CategoryType.OTHER_EXPENSE),
-              label: t("labels.categories.types.other_expense"),
-            },
-          ]}
-          activeTab={String(activeTab)}
-          onChange={(val) => {
-            setActiveTab(Number(val) as CategoryType);
-            setRowsSelected([]);
-          }}
+      <AppTabs
+        tabs={[
+          {
+            value: String(CategoryType.PRODUCT),
+            label: t("labels.categories.types.product"),
+          },
+          {
+            value: String(CategoryType.OTHER_EXPENSE),
+            label: t("labels.categories.types.other_expense"),
+          },
+        ]}
+        activeTab={String(activeTab)}
+        onChange={(val) => {
+          setActiveTab(Number(val) as CategoryType);
+          setRowsSelected([]);
+        }}
+        className="mb-4"
+      />
+
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
+        <AppSearchInput
+          value={search}
+          onChange={setSearch}
+          onSearch={(val) => pagination.load({ params: { search: val, page: 1 } })}
+          placeholder={t("labels.grid.search_placeholder")}
+          className="w-full sm:w-90"
         />
 
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+        <div className="flex items-center gap-2">
           {rowsSelected.length > 0 && (
             <AppButton
               onClick={onDeleteSelected}
-              flat
               color="red"
-              className="w-full sm:w-auto px-4 py-2 shrink-0"
+              className="px-4 py-2 shrink-0"
             >
               <DeleteOutlined fontSize="small" />
               {t("labels.all.delete")} ({rowsSelected.length})
             </AppButton>
           )}
-          <div className="relative w-full sm:w-64">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-foreground z-10">
-              <SearchOutlined fontSize="small" />
-            </div>
-            <AppInputText
-              type="text"
-              className="pl-10!"
-              placeholder={t("labels.grid.search_placeholder")}
-              value={search}
-              onChange={(e: any) => setSearch(e.target.value as string)}
-              onBlur={() => pagination.load({ params: { search, page: 1 } })}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  pagination.load({ params: { search, page: 1 } });
-                }
-              }}
-            />
-          </div>
 
-          <div className="flex gap-2 w-full sm:w-auto">
-            <AppButton
-              onClick={handleNew}
-              color="primary"
-              className="w-full sm:w-auto px-4 py-2 shrink-0"
-            >
-              <AddOutlined fontSize="small" />
-              {t("labels.grid.add_item")}
-            </AppButton>
-          </div>
+          <AppButton
+            onClick={handleNew}
+            color="primary"
+            className="px-4 py-2 shrink-0"
+          >
+            <AddOutlined fontSize="small" />
+            {t("labels.grid.add_item")}
+          </AppButton>
         </div>
       </div>
       <AppGrid

@@ -18,7 +18,7 @@ interface AppCategoryFormProps {
   isOpen: boolean;
   onClose: () => void;
   model?: Category;
-  onSave: () => Promise<void>;
+  onSave: () => void;
 }
 
 export default function AppCategoryForm({
