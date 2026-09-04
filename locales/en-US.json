@@ -442,6 +442,11 @@
       "title": "No active company",
       "message": "Nothing to display. You do not have an active company selected at the moment. Activate, create or select a company to get started.",
       "action_button": "Activate a company"
+    },
+    "permission": {
+      "no_access_title": "Restricted access",
+      "no_access_message": "You don't have access to this page",
+      "go_back": "Go back"
     }
   },
   "errors": {

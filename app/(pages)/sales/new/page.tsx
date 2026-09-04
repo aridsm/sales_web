@@ -34,14 +34,17 @@ import {
   DeleteOutlined,
   ArrowBackOutlined,
   ErrorTwoTone,
+  LockOutlined,
 } from "@mui/icons-material";
 import AppSearchInput from "../../../components/inputs/AppSearchInput";
 import { salesService } from "@/api/services/SaleService";
 import { useTranslation } from "@/app/utils/i18n";
+import { usePermission } from "@/app/utils/usePermission";
 import { Category, getApiError } from "@/api/schemas";
 
 export default function NewSalePage() {
   const { t } = useTranslation();
+  const { canEdit } = usePermission();
   const router = useRouter();
   const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
   const handleFilterChange = useCallback(
@@ -57,6 +60,7 @@ export default function NewSalePage() {
   const [initialLoaded, setInitialLoaded] = useState(false);
 
   useEffect(() => {
+    if (!canEdit) return;
     const timer = setTimeout(async () => {
       try {
         await productsPagination.load({
@@ -158,6 +162,33 @@ export default function NewSalePage() {
     } else {
       router.push("/sales");
     }
+  }
+
+  if (!canEdit) {
+    return (
+      <AppPage title={t("labels.sales.new.title")}>
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="border border-border bg-background-2 dark:bg-background-3/50 rounded-2xl p-8 max-w-md w-full text-center shadow-xs">
+            <div className="w-16 h-16 rounded-2xl bg-red-500/10 text-red-500 flex items-center justify-center mx-auto mb-4">
+              <LockOutlined style={{ fontSize: 32 }} />
+            </div>
+            <h2 className="text-lg font-semibold text-foreground mb-2">
+              {t("labels.permission.no_access_title")}
+            </h2>
+            <p className="text-sm text-label mb-6 leading-relaxed">
+              {t("labels.permission.no_access_message")}
+            </p>
+            <AppButton
+              onClick={() => router.push("/sales")}
+              className="mx-auto justify-center"
+            >
+              <ArrowBackOutlined style={{ fontSize: 18 }} />
+              {t("labels.permission.go_back")}
+            </AppButton>
+          </div>
+        </div>
+      </AppPage>
+    );
   }
 
   return (

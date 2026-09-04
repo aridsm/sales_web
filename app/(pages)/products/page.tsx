@@ -27,6 +27,7 @@ import { useTranslation } from "@/app/utils/i18n";
 import { Category } from "@/api/schemas/Category";
 import { Product } from "@/api/schemas/Product";
 import { getApiError } from "@/api/schemas";
+import { usePermission } from "../../utils/usePermission";
 import AppDateRange from "../../components/inputs/AppDateRange";
 import AppAmountRange from "../../components/inputs/AppAmountRange";
 import AppNumberRange from "../../components/inputs/AppNumberRange";
@@ -35,6 +36,7 @@ const VALID_FILTER_KEYS = ["created_at", "price", "stock_amount"];
 
 export default function ProductsPage() {
   const { t } = useTranslation();
+  const { canEdit } = usePermission();
   const [rowsSelected, setRowsSelected] = useState<Product[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     string | number | null
@@ -329,7 +331,7 @@ export default function ProductsPage() {
               </div>
 
               <div className="flex items-center gap-3 shrink-0">
-                {rowsSelected.length > 0 && (
+                {canEdit && rowsSelected.length > 0 && (
                   <AppButton
                     color="red"
                     onClick={onDeleteSelected}
@@ -349,33 +351,35 @@ export default function ProductsPage() {
                   <ProductFilterFields />
                 </AppFilter>
 
-                <AppButton
-                  color="primary"
-                  onClick={() => {
-                    setForm({
-                      open: true,
-                      item: {
-                        category_id:
-                          selectedCategoryId != null
-                            ? String(selectedCategoryId)
-                            : null,
-                      },
-                    });
-                  }}
-                  className="flex items-center gap-1.5"
-                >
-                  <Add style={{ fontSize: 18 }} />
-                  <span>{t("labels.grid.add_item")}</span>
-                </AppButton>
+                {canEdit && (
+                  <AppButton
+                    color="primary"
+                    onClick={() => {
+                      setForm({
+                        open: true,
+                        item: {
+                          category_id:
+                            selectedCategoryId != null
+                              ? String(selectedCategoryId)
+                              : null,
+                        },
+                      });
+                    }}
+                    className="flex items-center gap-1.5"
+                  >
+                    <Add style={{ fontSize: 18 }} />
+                    <span>{t("labels.grid.add_item")}</span>
+                  </AppButton>
+                )}
               </div>
             </div>
 
             <AppGrid
               columns={columns}
               pagination={products}
-              actions={actions}
-              selectedRows={rowsSelected}
-              onSelectedChange={setRowsSelected}
+              actions={canEdit ? actions : undefined}
+              selectedRows={canEdit ? rowsSelected : undefined}
+              onSelectedChange={canEdit ? setRowsSelected : undefined}
               className="flex-1"
             />
           </div>

@@ -25,10 +25,12 @@ import {
 
 import { formatDateTime, formatDate } from "@/app/utils/formatters/date";
 import { useTranslation } from "@/app/utils/i18n";
+import { usePermission } from "@/app/utils/usePermission";
 import AppCard from "@/app/components/AppCard";
 
 export default function StockEntryDetailPage() {
   const { t } = useTranslation();
+  const { canEdit } = usePermission();
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { openDialog } = useDialogStore();
@@ -236,7 +238,7 @@ export default function StockEntryDetailPage() {
               {t(status.labelKey)}
             </span>
 
-            {isOpenStatus && (
+            {canEdit && isOpenStatus && (
               <AppButton
                 onClick={handleCancel}
                 color="background"

@@ -33,6 +33,7 @@ import { Product } from "@/api/schemas/Product";
 import { productsService } from "@/api/services/ProductService";
 import { StockEntryStatus } from "@/enums/StockEntryStatus";
 import { useTranslation } from "@/app/utils/i18n";
+import { usePermission } from "@/app/utils/usePermission";
 
 import { Add, InventoryOutlined } from "@mui/icons-material";
 import Link from "next/link";
@@ -43,6 +44,7 @@ export default function StockEntriesLayout({
   children: React.ReactNode;
 }) {
   const { t } = useTranslation();
+  const { canEdit } = usePermission();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -118,14 +120,16 @@ export default function StockEntriesLayout({
               </AppFilter>
             </div>
 
-            <AppButton
-              color="primary"
-              onClick={() => router.push("/stock-entries/new")}
-              className={`shrink-0 ${isEntrySelected ? " w-full mt-3" : ""}`}
-            >
-              <Add style={{ fontSize: 18 }} />
-              {t("labels.grid.add_item")}
-            </AppButton>
+            {canEdit && (
+              <AppButton
+                color="primary"
+                onClick={() => router.push("/stock-entries/new")}
+                className={`shrink-0 ${isEntrySelected ? " w-full mt-3" : ""}`}
+              >
+                <Add style={{ fontSize: 18 }} />
+                {t("labels.grid.add_item")}
+              </AppButton>
+            )}
           </div>
 
           <div className="flex-1 min-h-0 overflow-y-auto pr-1">

@@ -24,11 +24,13 @@ import { OtherExpense, OtherExpenseForm } from "@/api/schemas/OtherExpense";
 import { Category } from "@/api/schemas/Category";
 import { getApiError } from "@/api/schemas";
 import { useTranslation } from "@/app/utils/i18n";
+import { usePermission } from "../../utils/usePermission";
 import AppDateRange from "../../components/inputs/AppDateRange";
 import AppAmountRange from "../../components/inputs/AppAmountRange";
 
 export default function OtherExpensesPage() {
   const { t: getLabel } = useTranslation();
+  const { canEdit } = usePermission();
   const [rowsSelected, setRowsSelected] = useState<OtherExpense[]>([]);
   const [search, setSearch] = useState("");
   const [form, setForm] = useState({
@@ -174,7 +176,7 @@ export default function OtherExpensesPage() {
         />
         <div className="flex gap-3 w-full sm:w-auto ml-auto">
           {" "}
-          {rowsSelected.length > 0 && (
+          {canEdit && rowsSelected.length > 0 && (
             <AppButton
               onClick={onDeleteSelected}
               color="red"
@@ -190,23 +192,25 @@ export default function OtherExpensesPage() {
           >
             <OtherExpensesFilterFields />
           </AppFilter>
-          <AppButton
-            onClick={handleNew}
-            color="primary"
-            className="w-full sm:w-auto px-4 py-2 shrink-0"
-          >
-            <AddOutlined fontSize="small" />
-            {getLabel("labels.grid.add_item")}
-          </AppButton>
+          {canEdit && (
+            <AppButton
+              onClick={handleNew}
+              color="primary"
+              className="w-full sm:w-auto px-4 py-2 shrink-0"
+            >
+              <AddOutlined fontSize="small" />
+              {getLabel("labels.grid.add_item")}
+            </AppButton>
+          )}
         </div>
       </div>
 
       <AppGrid
         columns={columns}
         pagination={pagination}
-        selectedRows={rowsSelected}
-        onSelectedChange={(rows) => setRowsSelected(rows)}
-        actions={actions}
+        selectedRows={canEdit ? rowsSelected : undefined}
+        onSelectedChange={canEdit ? (rows) => setRowsSelected(rows) : undefined}
+        actions={canEdit ? actions : undefined}
       />
 
       <AppOtherExpenseForm

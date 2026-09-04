@@ -442,6 +442,11 @@
       "title": "Nenhuma empresa ativa",
       "message": "Nada para exibir. Você não possui uma empresa ativa selecionada no momento. Ative, crie ou selecione uma empresa para começar.",
       "action_button": "Ativar uma empresa"
+    },
+    "permission": {
+      "no_access_title": "Acesso restrito",
+      "no_access_message": "Você não tem acesso a esta tela",
+      "go_back": "Voltar"
     }
   },
   "errors": {

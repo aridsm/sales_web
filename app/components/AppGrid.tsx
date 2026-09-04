@@ -11,6 +11,7 @@ import AppLoading from "./AppLoading";
 import { useDialogStore } from "@/stores/dialogStore";
 import { useTranslation } from "@/app/utils/i18n";
 import AppEmptyState from "./AppEmptyState";
+import { usePermission } from "../utils/usePermission";
 
 interface Column<T> {
   column: React.ReactNode | string;
@@ -47,9 +48,10 @@ export default function AppGrid<T>({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { openDialog } = useDialogStore();
+  const { canEdit } = usePermission();
 
   const hasSelection =
-    selectedRows !== undefined && onSelectedChange !== undefined;
+    canEdit && selectedRows !== undefined && onSelectedChange !== undefined;
 
   const isSelected = (row: T) =>
     selectedRows?.some(

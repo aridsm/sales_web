@@ -23,9 +23,11 @@ import AppTabs from "../../components/AppTabs";
 import { useSearchParams } from "next/navigation";
 import { Category, getApiError } from "@/api/schemas";
 import { useTranslation } from "@/app/utils/i18n";
+import { usePermission } from "../../utils/usePermission";
 
 export default function CategoriesPage() {
   const { t } = useTranslation();
+  const { canEdit } = usePermission();
   const [rowsSelected, setRowsSelected] = useState<Category[]>([]);
   const [activeTab, setActiveTab] = useState<CategoryType>(
     CategoryType.PRODUCT,
@@ -185,22 +187,24 @@ export default function CategoriesPage() {
             </AppButton>
           )}
 
-          <AppButton
-            onClick={handleNew}
-            color="primary"
-            className="px-4 py-2 shrink-0"
-          >
-            <AddOutlined fontSize="small" />
-            {t("labels.grid.add_item")}
-          </AppButton>
+          {canEdit && (
+            <AppButton
+              onClick={handleNew}
+              color="primary"
+              className="px-4 py-2 shrink-0"
+            >
+              <AddOutlined fontSize="small" />
+              {t("labels.grid.add_item")}
+            </AppButton>
+          )}
         </div>
       </div>
       <AppGrid
         columns={columns}
         pagination={pagination}
-        selectedRows={rowsSelected}
-        onSelectedChange={(rows) => setRowsSelected(rows)}
-        actions={actions}
+        selectedRows={canEdit ? rowsSelected : undefined}
+        onSelectedChange={canEdit ? (rows) => setRowsSelected(rows) : undefined}
+        actions={canEdit ? actions : undefined}
       />
 
       <AppCategoryForm
