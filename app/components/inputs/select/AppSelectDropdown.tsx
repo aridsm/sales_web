@@ -5,11 +5,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useCallback, useState, useRef, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { useAppSelect, SelectOption } from "./AppSelectContext";
+import { useTranslation } from "@/app/utils/i18n";
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export default function AppSelectDropdown<T extends SelectOption>() {
+  const { t } = useTranslation();
   const {
     listRef,
     loading,
@@ -130,7 +132,7 @@ export default function AppSelectDropdown<T extends SelectOption>() {
             ref={searchInputRef}
             type="text"
             className="w-full outline-none border-none transition-all py-3"
-            placeholder="Pesquisar..."
+            placeholder={t("labels.select.search_placeholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onClick={(e) => e.stopPropagation()}
@@ -173,7 +175,7 @@ export default function AppSelectDropdown<T extends SelectOption>() {
             {loading ? (
               <CircularProgress size={32} />
             ) : (
-              "Nenhum resultado encontrado"
+              t("labels.select.no_results")
             )}
           </div>
         )}

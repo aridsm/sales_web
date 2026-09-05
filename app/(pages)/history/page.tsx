@@ -16,8 +16,8 @@ import { ActionType } from "@/enums/ActionType";
 import { EntityType } from "@/enums/EntityType";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import { useDialogStore } from "@/stores/dialogStore";
-import { SearchOutlined, DeleteOutlined } from "@mui/icons-material";
-import AppInputText from "../../components/inputs/AppInputText";
+import { DeleteOutlined } from "@mui/icons-material";
+import AppSearchInput from "../../components/inputs/AppSearchInput";
 import AppButton from "../../components/AppButton";
 import AppFilter from "../../components/AppFilter";
 import AppSelect from "../../components/inputs/AppSelect";
@@ -51,6 +51,7 @@ export default function HistoryPage() {
     [EntityType.CATEGORY]: t("labels.history.entities.CATEGORY"),
     [EntityType.SALE]: t("labels.history.entities.SALE"),
     [EntityType.OTHER_EXPENSE]: t("labels.history.entities.OTHER_EXPENSE"),
+    [EntityType.STOCK_ENTRY]: t("labels.history.entities.STOCK_ENTRY"),
   };
 
   const columns = useMemo(
@@ -126,37 +127,32 @@ export default function HistoryPage() {
   return (
     <AppPage title={t("labels.history.title")}>
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-3">
-        <div className="relative w-full sm:max-w-sm">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-foreground z-10">
-            <SearchOutlined fontSize="small" />
-          </div>
-          <AppInputText
-            type="text"
-            className="pl-10!"
-            placeholder={t("labels.grid.search_placeholder")}
-            value={search}
-            onChange={(e: any) => setSearch(e.target.value as string)}
-            onBlur={() => pagination.load({ params: { search, page: 1 } })}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                pagination.load({ params: { search, page: 1 } });
-              }
-            }}
-          />
-        </div>
+        <AppSearchInput
+          value={search}
+          onChange={setSearch}
+          onSearch={(val) =>
+            pagination.load({ params: { search: val, page: 1 } })
+          }
+          placeholder={t("labels.grid.search_placeholder")}
+          className="w-full sm:max-w-sm"
+        />
         <div className="flex gap-3 w-full sm:w-auto ml-auto">
+          {rowsSelected.length > 0 && (
+            <AppButton
+              onClick={onDeleteSelected}
+              color="red"
+              className="w-full sm:w-auto px-4 py-2 shrink-0"
+            >
+              <DeleteOutlined fontSize="small" />
+              {t("labels.all.delete")} ({rowsSelected.length})
+            </AppButton>
+          )}
           <AppFilter
             onChange={handleFilterChange}
             validKeys={["action_type", "entity_type", "created_at"]}
           >
             <HistoryFilterFields />
           </AppFilter>
-          {rowsSelected.length > 0 && (
-            <AppButton onClick={onDeleteSelected} color="red" className="w-full sm:w-auto px-4 py-2 shrink-0">
-              <DeleteOutlined fontSize="small" />
-              {t("labels.all.delete")} ({rowsSelected.length})
-            </AppButton>
-          )}
         </div>
       </div>
 
@@ -188,6 +184,10 @@ function HistoryFilterFields() {
     {
       id: EntityType.OTHER_EXPENSE,
       name: t("labels.history.entities.OTHER_EXPENSE"),
+    },
+    {
+      id: EntityType.STOCK_ENTRY,
+      name: t("labels.history.entities.STOCK_ENTRY"),
     },
   ];
 

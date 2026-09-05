@@ -15,7 +15,7 @@ import AppEmptyState from "../../components/AppEmptyState";
 import { Controller, useFormContext } from "react-hook-form";
 import AppSelectPaginated from "../../components/inputs/AppSelectPaginated";
 import AppSelect from "../../components/inputs/AppSelect";
-import AppInputText from "../../components/inputs/AppInputText";
+import AppSearchInput from "../../components/inputs/AppSearchInput";
 import AppDateRange from "../../components/inputs/AppDateRange";
 import AppAmountRange from "../../components/inputs/AppAmountRange";
 
@@ -34,7 +34,7 @@ import { productsService } from "@/api/services/ProductService";
 import { StockEntryStatus } from "@/enums/StockEntryStatus";
 import { useTranslation } from "@/app/utils/i18n";
 
-import { Add, Search, InventoryOutlined } from "@mui/icons-material";
+import { Add, InventoryOutlined } from "@mui/icons-material";
 import Link from "next/link";
 
 export default function StockEntriesLayout({
@@ -92,23 +92,16 @@ export default function StockEntriesLayout({
           <div
             className={` gap-3 mb-3 ${isEntrySelected ? "" : "flex items-center"}`}
           >
-            <div className="flex flex-1 gap-3">
+            <div className="flex flex-1 gap-3 items-center">
               <div
                 className={`flex items-center gap-2 w-full ${isEntrySelected ? "" : "sm:max-w-md mr-auto"}`}
               >
-                <div className="relative w-full">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10 text-label">
-                    <Search fontSize="small" />
-                  </div>
-                  <AppInputText
-                    className="pl-10! h-10!"
-                    placeholder={t("labels.grid.search_placeholder")}
-                    value={searchInput}
-                    onChange={(e: any) =>
-                      handleSearch(e.target.value as string)
-                    }
-                  />
-                </div>
+                <AppSearchInput
+                  className="w-full"
+                  placeholder={t("labels.grid.search_placeholder")}
+                  value={searchInput}
+                  onChange={handleSearch}
+                />
               </div>
 
               <AppFilter
@@ -197,7 +190,7 @@ function StockEntryCard({
   return (
     <Link
       href={`/stock-entries/${entry.id}`}
-      className={`flex flex-col w-full text-left p-5 rounded-xl border group relative overflow-hidden ${
+      className={`flex flex-col w-full text-left p-5 rounded-md border group relative overflow-hidden ${
         isSelected
           ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-primary-4"
           : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-3 dark:hover:bg-background-2"

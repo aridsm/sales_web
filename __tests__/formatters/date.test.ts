@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseUTCDate, formatDateTime } from "@/app/utils/formatters/date";
+import { parseUTCDate, formatDateTime, formatDate } from "@/app/utils/formatters/date";
 
 describe("parseUTCDate", () => {
   it("retorna null para null", () => {
@@ -94,5 +94,17 @@ describe("formatDateTime", () => {
     const result = formatDateTime("2026-01-15T14:30:00Z");
     // Verifica padrão completo: dd/mm/yyyy, hh:mm
     expect(result).toMatch(/\d{2}\/\d{2}\/\d{4},?\s+\d{2}:\d{2}/);
+  });
+});
+
+describe("formatDate", () => {
+  it("retorna '-' para null ou undefined", () => {
+    expect(formatDate(null)).toBe("-");
+    expect(formatDate(undefined)).toBe("-");
+  });
+
+  it("formata data no padrão dd/mm/yyyy", () => {
+    const result = formatDate("2026-01-15T14:30:00Z");
+    expect(result).toMatch(/\d{2}\/\d{2}\/\d{4}/);
   });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTokenStore } from "@/stores/tokenStore";
@@ -18,6 +18,8 @@ import {
 import { Menu as MenuIcon, ExitToAppOutlined } from "@mui/icons-material";
 import AppButton from "./AppButton";
 import { useTranslation } from "@/app/utils/i18n";
+
+import { useUserStore } from "@/stores/userStore";
 
 const menuItems = [
   { key: "dashboard", href: "/", icon: DashboardOutlined },
@@ -37,10 +39,50 @@ export default function AppMenu() {
   const router = useRouter();
   const clearToken = useTokenStore((s) => s.clearToken);
 
+  const navRef = useRef<HTMLUListElement>(null);
+  const itemRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const [pillStyle, setPillStyle] = useState<React.CSSProperties>({
+    opacity: 0,
+  });
+
+  const getActiveKey = useCallback(() => {
+    for (const item of menuItems) {
+      const isActive =
+        item.href === "/"
+          ? pathname === "/"
+          : pathname === item.href || pathname.startsWith(item.href + "/");
+      if (isActive) return item.key;
+    }
+    return null;
+  }, [pathname]);
+
+  useEffect(() => {
+    const activeKey = getActiveKey();
+    if (!activeKey) {
+      setPillStyle((prev) => ({ ...prev, opacity: 0 }));
+      return;
+    }
+
+    const el = itemRefs.current.get(activeKey);
+    const nav = navRef.current;
+    if (el && nav) {
+      const navRect = nav.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      setPillStyle({
+        top: elRect.top - navRect.top,
+        left: 0,
+        width: elRect.width,
+        height: elRect.height,
+        opacity: 1,
+      });
+    }
+  }, [pathname, isOpen, getActiveKey]);
+
   async function handleLogout() {
     try {
       await usersService.logout();
     } finally {
+      useUserStore.getState().clearUserData();
       clearToken();
       router.push("/login");
     }
@@ -82,7 +124,12 @@ export default function AppMenu() {
       </div>
 
       <nav className="mt-2 flex-1 flex flex-col justify-center px-3">
-        <ul className="flex flex-col gap-2">
+        <ul ref={navRef} className="relative flex flex-col gap-2">
+          <div
+            className="absolute rounded-md bg-primary transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] pointer-events-none"
+            style={pillStyle}
+          />
+
           {menuItems.map((item) => {
             const isActive =
               item.href === "/"
@@ -93,11 +140,14 @@ export default function AppMenu() {
               <li key={item.key} className="w-full">
                 <Link
                   href={item.href}
-                  className={`flex items-center gap-3 h-12 rounded-md transition-all duration-200 ${
+                  ref={(el) => {
+                    if (el) itemRefs.current.set(item.key, el);
+                  }}
+                  className={`relative z-[1] flex items-center gap-3 h-12 rounded-md transition-colors duration-200 ${
                     isOpen ? "px-3" : "justify-center"
                   } ${
                     isActive
-                      ? "bg-primary text-black font-semibold"
+                      ? "text-black font-semibold"
                       : "text-white/70 hover:bg-zinc-500/15 dark:hover:bg-background-2 hover:text-white"
                   }`}
                 >

@@ -32,6 +32,7 @@ export default function DashboardPage() {
       [EntityType.CATEGORY]: t("labels.history.entities.CATEGORY"),
       [EntityType.SALE]: t("labels.history.entities.SALE"),
       [EntityType.OTHER_EXPENSE]: t("labels.history.entities.OTHER_EXPENSE"),
+      [EntityType.STOCK_ENTRY]: t("labels.history.entities.STOCK_ENTRY"),
     }),
     [t],
   );
@@ -95,11 +96,13 @@ export default function DashboardPage() {
             entityLabels={entityLabels}
             startDate={startDate}
             endDate={endDate}
+            activePeriod={activePeriod}
           />
           <DashboardHistory
             entityLabels={entityLabels}
             startDate={startDate}
             endDate={endDate}
+            activePeriod={activePeriod}
           />
         </div>
       </div>

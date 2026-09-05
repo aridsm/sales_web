@@ -21,15 +21,15 @@ export default function AppButton({
   children,
   ...props
 }: AppButtonProps) {
-  const baseClasses = `py-2 px-4 flex justify-center items-center gap-1.5 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-    rounded ? "rounded-full" : "rounded-md"
+  const baseClasses = `py-2.5 px-4 min-h-10 max-h-10 text-sm flex justify-center items-center gap-1.5 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+    rounded ? "rounded-full" : "rounded-sm"
   }`;
 
   let colorClasses = "";
   if (color === "primary") {
     colorClasses = flat
       ? "bg-transparent text-primary hover:bg-primary-light active:bg-primary-light/80 border "
-      : "bg-primary text-black active:bg-primary-2/90 shadow-xs border border-primary-2 hover:bg-primary-hover";
+      : "bg-primary text-black active:bg-primary-2/90 shadow-xs hover:bg-primary-hover";
   } else if (color === "primary-3") {
     colorClasses = flat
       ? "bg-transparent text-primary-3 hover:bg-primary-3/10 active:bg-primary-3/20 border border-transparent"
@@ -41,7 +41,7 @@ export default function AppButton({
   } else if (color === "red") {
     colorClasses = flat
       ? "bg-transparent text-red-500 dark:text-red-600 hover:bg-red-500/5 active:bg-red-500/20 border border-red-300 dark:border-red-700"
-      : "bg-red-600/80 hover:bg-red-600/90 dark:bg-red-500/80 dark:hover:bg-red-500/90 text-white active:bg-red-500/10";
+      : "bg-red-600/80 hover:bg-red-600/90 dark:bg-red-700 dark:hover:bg-red-500/90 text-white active:bg-red-500/10";
   } else if (color === "transparent") {
     colorClasses = flat
       ? "bg-transparent text-foreground-2 hover:bg-background-3 hover:text-foreground border border-transparent"

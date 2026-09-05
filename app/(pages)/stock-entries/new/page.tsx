@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import { useRouter } from "next/navigation";
 import AppPage from "../../../components/AppPage";
@@ -31,15 +31,15 @@ import AppNumberRange from "../../../components/inputs/AppNumberRange";
 import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import {
-  SearchOutlined,
   ArrowBackOutlined,
   AddOutlined,
   DeleteOutlined,
   ErrorTwoTone,
 } from "@mui/icons-material";
+import AppSearchInput from "../../../components/inputs/AppSearchInput";
 import { stockEntriesService } from "@/api/services/StockEntryService";
 import { useTranslation } from "@/app/utils/i18n";
-import { Category } from "@/api/schemas/Category";
+import { Category, getApiError } from "@/api/schemas";
 
 export default function NewStockEntryPage() {
   const { t } = useTranslation();
@@ -54,13 +54,8 @@ export default function NewStockEntryPage() {
   const [entryDate, setEntryDate] = useState(() => new Date().toISOString());
   const [isFinishing, setIsFinishing] = useState(false);
   const { openDialog } = useDialogStore();
-  const searchRef = useRef<HTMLInputElement>(null);
   const productsPagination = usePagination<Product>(productsService);
   const [initialLoaded, setInitialLoaded] = useState(false);
-
-  useEffect(() => {
-    searchRef.current?.focus();
-  }, []);
 
   useEffect(() => {
     const timer = setTimeout(async () => {
@@ -128,10 +123,14 @@ export default function NewStockEntryPage() {
         });
         router.push("/stock-entries");
       })
-      .catch(() => {
+      .catch((err) => {
+        const { code, params } = getApiError(err);
         openDialog({
           variant: "error",
-          message: t("errors.fallback"),
+          message: t(
+            code ? `errors.stock_entries.${code}` : "errors.all.generic",
+            params,
+          ),
         });
       })
       .finally(() => {
@@ -218,20 +217,12 @@ export default function NewStockEntryPage() {
       <div className="flex gap-5 flex-1 min-h-0">
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           <div className="flex gap-3 mb-3">
-            <div className="relative flex-1">
-              <SearchOutlined
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-label pointer-events-none"
-                style={{ fontSize: 20 }}
-              />
-              <input
-                ref={searchRef}
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t("labels.stock_entries.new.search_placeholder")}
-                className="input-field w-full pl-11!"
-              />
-            </div>
+            <AppSearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder={t("labels.stock_entries.new.search_placeholder")}
+              className="flex-1"
+            />
             <AppFilter
               onChange={handleFilterChange}
               validKeys={["category_id", "stock_amount"]}

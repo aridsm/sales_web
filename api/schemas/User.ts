@@ -1,3 +1,5 @@
+import { CompanyPermission } from "@/enums/CompanyPermission";
+
 export interface UserBase {
   name: string;
   email: string;
@@ -6,6 +8,8 @@ export interface UserBase {
 export interface User extends UserBase {
   id: string;
   created_at: string | Date;
+  company_id?: string | null;
+  permission?: CompanyPermission | null;
 }
 
 export type UserForm = UserBase;

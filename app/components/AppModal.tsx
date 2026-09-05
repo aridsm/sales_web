@@ -10,6 +10,7 @@ interface AppModalProps {
   onClose: () => void;
   title?: string;
   children: ReactNode;
+  className?: string;
 }
 
 export default function AppModal({
@@ -17,6 +18,7 @@ export default function AppModal({
   onClose,
   title,
   children,
+  className,
 }: AppModalProps) {
   const [mounted, setMounted] = useState(false);
   const trapRef = useFocusTrap(isOpen);
@@ -41,7 +43,7 @@ export default function AppModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}
-        className="relative w-full max-w-md bg-background-2 dark:bg-background rounded-lg border border-border shadow-2xl shadow-black/15 p-4 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200"
+        className={`relative w-full max-w-md bg-background-2 dark:bg-background rounded-lg border border-border shadow-2xl shadow-black/15 p-4 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200 ${className || ""}`}
       >
         {title && (
           <div className="flex items-center justify-between border-b border-border pb-3">

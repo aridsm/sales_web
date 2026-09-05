@@ -92,9 +92,14 @@ export const DashboardRevenueExpenseChart = ({
   return (
     <AppCard className="flex px-5 pt-4 pb-5 flex-col lg:col-span-2 min-h-[250px] overflow-hidden">
       <div className="flex justify-between items-start mb-4">
-        <span className="font-semibold text-lg">
-          {t("labels.dashboard.charts.revenue_vs_expenses")}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="font-semibold text-lg">
+            {t("labels.dashboard.charts.revenue_vs_expenses")}
+          </span>
+          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label mt-0.5">
+            {t(`labels.dashboard.frequencies.${activePeriod}`)}
+          </span>
+        </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
             <button

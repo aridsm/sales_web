@@ -8,6 +8,12 @@
         "this_month": "This month",
         "this_year": "This year"
       },
+      "frequencies": {
+        "today": "Daily",
+        "this_week": "Weekly",
+        "this_month": "Monthly",
+        "this_year": "Yearly"
+      },
       "kpi": {
         "current_balance": "Current balance",
         "net_profit": "Net profit",
@@ -96,6 +102,13 @@
       "account": "Your Account",
       "logout": "Logout"
     },
+    "select": {
+      "placeholder": "Select...",
+      "search_placeholder": "Search...",
+      "selected_count": "{{count}} selected",
+      "item_selected": "Item selected",
+      "no_results": "No results found"
+    },
     "grid": {
       "search_error": "An error occurred while searching. Please try again.",
       "search_placeholder": "Search...",
@@ -133,6 +146,11 @@
       "category": "Category",
       "filter_category": "Filter by category",
       "search_placeholder": "Search products...",
+      "change_category": "Change category",
+      "change_category_title": "Change Category",
+      "category_changed": "Category changed successfully!",
+      "category_change_error": "Error changing category.",
+      "select_new_category": "Select the new category for the product",
       "form": {
         "edit_title": "Edit Product",
         "add_title": "New Product",
@@ -286,7 +304,8 @@
         "PRODUCT": "Product",
         "CATEGORY": "Category",
         "SALE": "Sale",
-        "OTHER_EXPENSE": "Other Expenses"
+        "OTHER_EXPENSE": "Other Expenses",
+        "STOCK_ENTRY": "Stock Entry"
       }
     },
     "categories": {
@@ -336,27 +355,143 @@
         "date_required": "Date is required",
         "description_placeholder": "Expense description"
       }
+    },
+    "account": {
+      "profile_settings": "Profile Settings",
+      "user_name": "Name",
+      "user_email": "Email",
+      "member_since": "Member since",
+      "delete_account": "Delete Account",
+      "delete_account_description": "Deleting your account will permanently remove all of your data and access. This action cannot be undone.",
+      "delete_account_confirm": "Are you sure you want to permanently delete your account? This action cannot be undone.",
+      "logout_confirm": "Are you sure you want to log out of your account?",
+      "active_company": "Active Company",
+      "no_active_company": "No company selected. Select or create a company to start.",
+      "invitations": "Pending Invitations",
+      "no_invitations": "No pending invitations.",
+      "accept": "Accept",
+      "reject": "Reject",
+      "my_companies": "My Companies",
+      "create_company": "Create Company",
+      "edit_company": "Edit Company",
+      "company_name": "Company Name",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions",
+      "active": "Active",
+      "switch": "Switch",
+      "manage_members": "Members",
+      "company_created": "Company created successfully!",
+      "company_updated": "Company updated successfully!",
+      "company_update_error": "Error updating company.",
+      "company_deleted": "Company deleted successfully!",
+      "company_delete_confirm": "Are you sure you want to delete the company \"{{name}}\"? All associated data will be deleted.",
+      "company_delete_error": "Error deleting company.",
+      "name_updated": "Name updated successfully!",
+      "name_update_error": "Error updating name.",
+      "company_create_error": "Error creating company.",
+      "member_invited": "Invitation sent successfully!",
+      "member_invite_error": "Error sending invitation.",
+      "member_removed": "Member removed successfully!",
+      "member_remove_error": "Error removing member.",
+      "leave_company": "Leave",
+      "leave_company_confirm": "Are you sure you want to leave the company \"{{name}}\"?",
+      "left_company": "You successfully left the company!",
+      "left_company_error": "Error leaving company.",
+      "tab_members": "Members",
+      "tab_add": "Add",
+      "tab_pending": "Pending",
+      "permission_updated": "Permission updated successfully!",
+      "permission_update_error": "Error updating permission.",
+      "invitation_accepted": "Invitation accepted successfully!",
+      "invitation_rejected": "Invitation rejected.",
+      "members_modal_title": "Company Members: {{name}}",
+      "invite_member": "Invite Member",
+      "invite_button": "Invite",
+      "member_email": "Email",
+      "member_permission": "Permission",
+      "permissions": {
+        "1": "View",
+        "2": "View & Edit",
+        "3": "Administrator"
+      },
+      "preferences": "Preferences",
+      "appearance": "Appearance",
+      "theme": "Interface Theme",
+      "theme_light": "Light",
+      "theme_dark": "Dark",
+      "language": "System Language",
+      "language_pt": "Português (Brasil)",
+      "language_en": "English (US)",
+      "edit_name_placeholder": "Enter your name",
+      "current_workspace": "Current workspace",
+      "invitation_statuses": {
+        "1": "Pending",
+        "2": "Accepted",
+        "3": "Rejected"
+      },
+      "active_members": "Active Members",
+      "you": "You",
+      "member": "Member",
+      "guest": "Guest",
+      "member_email_placeholder": "email@example.com",
+      "invited_by_subtitle": "By {{name}} • Sent on {{date}}",
+      "remove_member_confirm": "Are you sure you want to remove {{name}}?"
+    },
+    "no_active_company": {
+      "title": "No active company",
+      "message": "Nothing to display. You do not have an active company selected at the moment. Activate, create or select a company to get started.",
+      "action_button": "Activate a company"
     }
   },
   "errors": {
+    "all": {
+      "generic": "An unexpected error occurred. Please try again.",
+      "errorEntityNotFound": "The requested record was not found.",
+      "errorNoCompanySelected": "No company selected.",
+      "errorInsufficientPermission": "You do not have permission to perform this action.",
+      "errorNotMemberOfCompany": "You are not a member of this company."
+    },
     "products": {
-      "errorHasDoneSales": "The following products have linked sales: {{name}}"
+      "errorHasDoneSales": "The following products have linked sales: {{name}}",
+      "errorEntityNotFound": "Product not found."
     },
     "categories": {
       "errorHasProducts": "The following categories cannot be deleted because they have linked products: {{name}}",
-      "errorHasExpenses": "The following categories cannot be deleted because they have linked expenses: {{name}}"
+      "errorHasExpenses": "The following categories cannot be deleted because they have linked expenses: {{name}}",
+      "errorEntityNotFound": "Category not found."
     },
     "sales": {
       "errorInsufficientStock": "Insufficient stock for {{name}}.",
-      "errorSaleAlreadyCanceled": "This sale has already been canceled."
+      "errorSaleAlreadyCanceled": "This sale has already been canceled.",
+      "errorEntityNotFound": "Sale not found."
     },
     "stock_entries": {
-      "errorNoRemainingItems": "Insufficient stock to return the following products: {{products}}."
+      "errorNoRemainingItems": "Insufficient stock to return the following products: {{products}}.",
+      "errorStockEntryAlreadyCanceled": "This stock entry has already been canceled.",
+      "errorEntityNotFound": "Stock entry not found."
     },
-    "other_expenses": {},
+    "companies": {
+      "errorUserNotFound": "User not found with the provided email.",
+      "errorUserAlreadyMember": "This user is already a member of this company.",
+      "errorInvitationAlreadyPending": "An invitation is already pending for this user.",
+      "errorCannotHaveNoAdministrator": "The company must have at least one administrator.",
+      "errorCannotRemoveSelf": "You cannot remove yourself from the company.",
+      "errorNotMemberOfCompany": "You are not a member of this company.",
+      "errorInsufficientPermission": "You do not have permission to manage members.",
+      "errorEntityNotFound": "Company or invitation not found."
+    },
+    "other_expenses": {
+      "errorEntityNotFound": "Expense not found."
+    },
     "auth": {
       "errorInvalidCredentials": "Invalid email or password.",
+      "errorEmailAlreadyRegistered": "This email is already registered.",
       "errorEmailAlreadyExists": "This email is already registered.",
+      "errorInvalidToken": "Invalid or expired session. Please log in again.",
+      "errorExpiredToken": "Session expired. Please log in again.",
+      "errorInvalidRefreshToken": "Session expired. Please log in again.",
+      "errorUserNotFound": "User not found.",
       "errorPasswordsNotMatch": "Passwords do not match.",
       "errorPasswordMinLength": "Password must be at least 6 characters long."
     },
