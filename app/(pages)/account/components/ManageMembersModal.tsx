@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import AppModal from "../../../components/AppModal";
+import AppCard from "../../../components/AppCard";
 import AppInputText from "../../../components/inputs/AppInputText";
 import AppSelect from "../../../components/inputs/AppSelect";
 import AppButton from "../../../components/AppButton";
@@ -203,11 +204,11 @@ export default function ManageMembersModal({
     if (!company || !currentUser) return;
     openDialog({
       variant: "confirm",
-      title: t("labels.account.leave_company"),
+      title: t("labels.all.exit"),
       message: t("labels.account.leave_company_confirm", {
         name: company.name,
       }),
-      confirmLabel: t("labels.account.leave_company"),
+      confirmLabel: t("labels.all.exit"),
       onConfirm: async () => {
         try {
           await companyService.removeMeFromCompany(company.id);
@@ -339,18 +340,6 @@ export default function ManageMembersModal({
                         </div>
 
                         <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
-                          {isMe && (
-                            <AppButton
-                              color="transparent"
-                              flat
-                              className="text-red-500! hover:bg-red-500/10! transition-colors text-xs font-semibold px-2 py-1 h-8 flex items-center gap-1.5 shrink-0"
-                              onClick={handleLeaveCompany}
-                              title={t("labels.account.leave_company")}
-                            >
-                              <ExitToAppOutlined style={{ fontSize: 16 }} />
-                              <span>{t("labels.account.leave_company")}</span>
-                            </AppButton>
-                          )}
                           {!canManage ? (
                             <span className="text-xs font-medium bg-primary-4 text-primary-3 dark:text-primary dark:bg-primary-light px-1.5 py-0.5 rounded">
                               {t(`labels.account.permissions.${mem.permission}`)}
@@ -393,7 +382,32 @@ export default function ManageMembersModal({
                 </div>
               )}
             </div>
-            <AppPagination pagination={membersPagination} />
+            <div className="flex flex-col gap-3">
+              <AppPagination pagination={membersPagination} />
+
+              {currentUser && company && (
+                <AppCard className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex flex-col gap-1">
+                    <span className="font-semibold text-sm text-foreground">
+                      {t("labels.account.leave_company")}
+                    </span>
+                    <span className="text-xs text-label">
+                      {t("labels.account.leave_company_description")}
+                    </span>
+                  </div>
+
+                  <AppButton
+                    color="red"
+                    className="gap-1.5 shrink-0 self-start sm:self-center text-xs"
+                    onClick={handleLeaveCompany}
+                    title={t("labels.account.leave_company")}
+                  >
+                    <ExitToAppOutlined style={{ fontSize: 16 }} />
+                    {t("labels.account.leave_company")}
+                  </AppButton>
+                </AppCard>
+              )}
+            </div>
           </div>
         )}
 

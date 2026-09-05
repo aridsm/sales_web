@@ -211,14 +211,21 @@ describe("ManageMembersModal", () => {
       expect(screen.getByText("John Doe")).toBeInTheDocument();
     });
 
-    // Click "Sair" button for currentUser
-    const leaveButton = screen.getByTitle("Sair");
+    // Verify card message and leave button are displayed below members list
+    expect(
+      screen.getByText(
+        "Você perderá o acesso a esta empresa e a todos os seus dados.",
+      ),
+    ).toBeInTheDocument();
+    const leaveButton = screen.getByTitle("Sair da Empresa");
     fireEvent.click(leaveButton);
 
     // Open confirmation dialog
     let dialogState = useDialogStore.getState();
     expect(dialogState.open).toBe(true);
     expect(dialogState.options.variant).toBe("confirm");
+    expect(dialogState.options.title).toBe("Sair");
+    expect(dialogState.options.confirmLabel).toBe("Sair");
 
     // Confirm leaving
     await dialogState.options.onConfirm?.();
