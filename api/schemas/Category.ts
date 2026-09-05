@@ -6,6 +6,10 @@ export interface Category {
   color: string;
   type: CategoryType;
   products?: number;
+  created_at?: string | Date;
+  created_by?: string;
+  created_by_name?: string;
+  created_by_email?: string;
 }
 
 export interface CategoryAmount {

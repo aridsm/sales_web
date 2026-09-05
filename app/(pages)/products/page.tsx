@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { formatDateTime } from "@/app/utils/formatters/date";
+import AppCreatedBy from "@/app/components/AppCreatedBy";
 import AppPage from "../../components/AppPage";
 import {
   usePagination,
@@ -190,9 +191,15 @@ export default function ProductsPage() {
         size: 130,
       },
       {
-        column: t("labels.products.created_at"),
-        cell: ({ row }: { row: Product }) => formatDateTime(row.created_at),
-        size: 180,
+        column: t("labels.all.created_by"),
+        cell: ({ row }: { row: Product }) => (
+          <AppCreatedBy
+            name={row.created_by_name}
+            date={row.created_at}
+            email={row.created_by_email}
+          />
+        ),
+        size: 280,
       },
       {
         column: "ID",

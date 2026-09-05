@@ -26,6 +26,7 @@ import {
 import { formatDateTime, formatDate } from "@/app/utils/formatters/date";
 import { useTranslation } from "@/app/utils/i18n";
 import AppCard from "@/app/components/AppCard";
+import AppCreatedBy from "@/app/components/AppCreatedBy";
 
 export default function StockEntryDetailPage() {
   const { t } = useTranslation();
@@ -256,8 +257,14 @@ export default function StockEntryDetailPage() {
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3">
           <StockEntryStatBlock
-            label={t("labels.stock_entries.detail.date")}
-            value={formatDate(stockEntry.created_at)}
+            label={t("labels.all.created_by")}
+            value={
+              <AppCreatedBy
+                name={stockEntry.created_by_name}
+                date={stockEntry.created_at}
+                email={stockEntry.created_by_email}
+              />
+            }
             icon={<CalendarTodayOutlined style={{ fontSize: 18 }} />}
           />
           <StockEntryStatBlock
@@ -297,7 +304,7 @@ function StockEntryStatBlock({
   icon,
 }: {
   label: string;
-  value: string;
+  value: React.ReactNode;
   icon: React.ReactNode;
 }) {
   return (
@@ -311,7 +318,7 @@ function StockEntryStatBlock({
         <span className="text-xs font-bold tracking-wider truncate">
           {label}
         </span>
-        <span className="text-sm tabular-nums">{value}</span>
+        <div className="text-sm tabular-nums">{value}</div>
       </div>
     </AppCard>
   );

@@ -23,6 +23,7 @@ import AppTabs from "../../components/AppTabs";
 import { useSearchParams } from "next/navigation";
 import { Category, getApiError } from "@/api/schemas";
 import { useTranslation } from "@/app/utils/i18n";
+import AppCreatedBy from "@/app/components/AppCreatedBy";
 
 export default function CategoriesPage() {
   const { t } = useTranslation();
@@ -71,6 +72,18 @@ export default function CategoriesPage() {
             <span>{row.color || "-"}</span>
           </div>
         ),
+      },
+
+      {
+        column: t("labels.all.created_by"),
+        cell: ({ row }: { row: Category }) => (
+          <AppCreatedBy
+            name={row.created_by_name}
+            date={row.created_at}
+            email={row.created_by_email}
+          />
+        ),
+        size: 280,
       },
 
       {

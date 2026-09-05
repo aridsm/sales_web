@@ -11,6 +11,9 @@ export interface Product extends ProductBase {
   created_at: Date | string;
   category_color: string;
   category_name: string;
+  created_by?: string;
+  created_by_name?: string;
+  created_by_email?: string;
 }
 
 export type ProductForm = Omit<ProductBase, "sold_amount" | "stock_amount"> & {

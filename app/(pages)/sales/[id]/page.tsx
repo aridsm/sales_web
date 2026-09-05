@@ -26,6 +26,7 @@ import {
 import { formatDateTime, formatDate } from "@/app/utils/formatters/date";
 import { useTranslation } from "@/app/utils/i18n";
 import AppCard from "@/app/components/AppCard";
+import AppCreatedBy from "@/app/components/AppCreatedBy";
 
 export default function SaleDetailPage() {
   const { t } = useTranslation();
@@ -223,8 +224,14 @@ export default function SaleDetailPage() {
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3">
           <SaleStatBlock
-            label={t("labels.sales.detail.date")}
-            value={formatDate(sale.created_at)}
+            label={t("labels.all.created_by")}
+            value={
+              <AppCreatedBy
+                name={sale.created_by_name}
+                date={sale.created_at}
+                email={sale.created_by_email}
+              />
+            }
             icon={<CalendarTodayOutlined style={{ fontSize: 18 }} />}
           />
           <SaleStatBlock
@@ -264,7 +271,7 @@ function SaleStatBlock({
   icon,
 }: {
   label: string;
-  value: string;
+  value: React.ReactNode;
   icon: React.ReactNode;
 }) {
   return (
@@ -278,7 +285,7 @@ function SaleStatBlock({
         <span className="text-xs font-bold tracking-wider truncate">
           {label}
         </span>
-        <span className="text-sm tabular-nums">{value}</span>
+        <div className="text-sm tabular-nums">{value}</div>
       </div>
     </AppCard>
   );

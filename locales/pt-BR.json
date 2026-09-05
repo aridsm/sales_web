@@ -78,7 +78,10 @@
       "close": "Fechar",
       "status": "Status",
       "date": "Data",
-      "total_value": "Valor Total"
+      "total_value": "Valor Total",
+      "created_by": "Criado por",
+      "created_at": "Criado em",
+      "not_defined": "Não definido"
     },
     "dialog": {
       "success": "Sucesso",

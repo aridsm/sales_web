@@ -12,6 +12,9 @@ export interface OtherExpense extends OtherExpenseBase {
   category_color: string;
   user_id: string;
   created_at: string;
+  created_by?: string;
+  created_by_name?: string;
+  created_by_email?: string;
 }
 
 export interface OtherExpenseForm extends OtherExpenseBase {

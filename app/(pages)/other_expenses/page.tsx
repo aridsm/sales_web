@@ -24,6 +24,7 @@ import { OtherExpense, OtherExpenseForm } from "@/api/schemas/OtherExpense";
 import { Category } from "@/api/schemas/Category";
 import { getApiError } from "@/api/schemas";
 import { useTranslation } from "@/app/utils/i18n";
+import AppCreatedBy from "@/app/components/AppCreatedBy";
 import AppDateRange from "../../components/inputs/AppDateRange";
 import AppAmountRange from "../../components/inputs/AppAmountRange";
 
@@ -92,6 +93,17 @@ export default function OtherExpensesPage() {
             year: "numeric",
           }).format(new Date(row.date)),
         size: 150,
+      },
+      {
+        column: getLabel("labels.all.created_by"),
+        cell: ({ row }: { row: OtherExpense }) => (
+          <AppCreatedBy
+            name={row.created_by_name}
+            date={row.created_at}
+            email={row.created_by_email}
+          />
+        ),
+        size: 280,
       },
       {
         column: getLabel("labels.other_expenses.description"),

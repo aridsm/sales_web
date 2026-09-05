@@ -11,6 +11,7 @@ import {
 import { ACTION_CONFIG } from "@/app/utils/constants";
 import { ActionType } from "@/enums/ActionType";
 import { formatDateTime } from "@/app/utils/formatters/date";
+import AppCreatedBy from "@/app/components/AppCreatedBy";
 import Link from "next/link";
 import { ChevronRight } from "@mui/icons-material";
 
@@ -57,9 +58,15 @@ export const DashboardHistory = ({
         size: 140,
       },
       {
-        column: t("labels.history.date"),
-        cell: ({ row }: { row: History }) => formatDateTime(row.created_at),
-        size: 200,
+        column: t("labels.all.created_by"),
+        cell: ({ row }: { row: History }) => (
+          <AppCreatedBy
+            name={row.created_by_name}
+            date={row.created_at}
+            email={row.created_by_email}
+          />
+        ),
+        size: 280,
       },
       {
         column: t("labels.history.description"),

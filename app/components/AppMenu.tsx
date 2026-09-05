@@ -147,7 +147,7 @@ export default function AppMenu() {
                     isOpen ? "px-3" : "justify-center"
                   } ${
                     isActive
-                      ? "text-black font-semibold"
+                      ? "text-black "
                       : "text-white/70 hover:bg-zinc-500/15 dark:hover:bg-background-2 hover:text-white"
                   }`}
                 >

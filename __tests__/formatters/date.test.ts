@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseUTCDate, formatDateTime, formatDate } from "@/app/utils/formatters/date";
+import { parseUTCDate, formatDateTime, formatDate, formatCreatedBy } from "@/app/utils/formatters/date";
 
 describe("parseUTCDate", () => {
   it("retorna null para null", () => {
@@ -108,3 +108,30 @@ describe("formatDate", () => {
     expect(result).toMatch(/\d{2}\/\d{2}\/\d{4}/);
   });
 });
+
+describe("formatCreatedBy", () => {
+  it("retorna '-' para authorName e dateStr ausentes", () => {
+    expect(formatCreatedBy(null, null)).toBe("-");
+    expect(formatCreatedBy(undefined, undefined)).toBe("-");
+    expect(formatCreatedBy("", null)).toBe("-");
+  });
+
+  it("retorna apenas authorName quando dateStr for nulo ou inválido", () => {
+    expect(formatCreatedBy("Ana", null)).toBe("Ana");
+    expect(formatCreatedBy("Carlos", "invalid-date")).toBe("Carlos");
+  });
+
+  it("retorna 'Não definido em <data>' quando authorName for ausente ou vazio", () => {
+    const resultNull = formatCreatedBy(null, "2026-09-02T10:34:00Z");
+    expect(resultNull).toMatch(/^Não definido em \d{2}\/\d{2} às \d{2}:\d{2}h$/);
+
+    const resultEmpty = formatCreatedBy("", "2026-09-02T10:34:00Z");
+    expect(resultEmpty).toMatch(/^Não definido em \d{2}\/\d{2} às \d{2}:\d{2}h$/);
+  });
+
+  it("combina nome do autor e data formatada com 'em' e 'às'", () => {
+    const result = formatCreatedBy("Ana T", "2026-09-05T14:33:00Z");
+    expect(result).toMatch(/^Ana T em \d{2}\/\d{2} às \d{2}:\d{2}h$/);
+  });
+});
+

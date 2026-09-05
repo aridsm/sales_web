@@ -78,7 +78,10 @@
       "status": "Status",
       "date": "Date",
       "total_value": "Total Value",
-      "remove": "Remove"
+      "remove": "Remove",
+      "created_by": "Created by",
+      "created_at": "Created at",
+      "not_defined": "Not defined"
     },
     "dialog": {
       "success": "Success",
