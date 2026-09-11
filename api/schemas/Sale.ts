@@ -10,6 +10,9 @@ export interface Sale {
   date: string;
   updated_at: string;
   items_count: number;
+  created_by?: string;
+  created_by_name?: string;
+  created_by_email?: string;
 }
 
 export interface SaleCreate {

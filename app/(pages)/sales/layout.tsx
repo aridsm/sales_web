@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { STATUS_CONFIG } from "@/app/utils/constants";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import { formatDateTime } from "@/app/utils/formatters/date";
+import AppCreatedBy from "@/app/components/AppCreatedBy";
 
 import AppPage from "../../components/AppPage";
 import AppFilter from "../../components/AppFilter";
@@ -201,9 +202,11 @@ function SaleCard({
           >
             #{sale.code.toString().padStart(6, "0")}
           </span>
-          <span className="text-xs text-label">
-            {formatDateTime(sale.date)}
-          </span>
+          <AppCreatedBy
+            name={sale.created_by_name}
+            date={sale.created_at || sale.date}
+            email={sale.created_by_email}
+          />
         </div>
         <span
           className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 ${status.bg} ${status.color}`}

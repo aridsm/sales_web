@@ -10,6 +10,9 @@ export interface StockEntry {
   updated_at: string;
   items_count?: number;
   code: number;
+  created_by?: string;
+  created_by_name?: string;
+  created_by_email?: string;
 }
 
 export interface StockEntryCreate {

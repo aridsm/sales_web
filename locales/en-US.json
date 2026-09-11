@@ -78,7 +78,10 @@
       "status": "Status",
       "date": "Date",
       "total_value": "Total Value",
-      "remove": "Remove"
+      "remove": "Remove",
+      "created_by": "Created by",
+      "created_at": "Created at",
+      "not_defined": "Not defined"
     },
     "dialog": {
       "success": "Success",
@@ -394,7 +397,8 @@
       "member_invite_error": "Error sending invitation.",
       "member_removed": "Member removed successfully!",
       "member_remove_error": "Error removing member.",
-      "leave_company": "Leave",
+      "leave_company": "Leave Company",
+      "leave_company_description": "You will lose access to this company and all of its data.",
       "leave_company_confirm": "Are you sure you want to leave the company \"{{name}}\"?",
       "left_company": "You successfully left the company!",
       "left_company_error": "Error leaving company.",

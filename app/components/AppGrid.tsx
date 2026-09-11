@@ -193,12 +193,12 @@ export default function AppGrid<T>({
       className={`flex flex-col h-full min-h-0 min-w-0 flex-1 w-full ${className || ""}`}
     >
       {hasSelection && selectedRows && selectedRows.length > 0 && (
-        <div className="flex flex-col border-l-3 border-y border-r border-emerald-600/20 border-l-emerald-400 sm:flex-row items-center justify-between bg-emerald-500/5 dark:bg-emerald-500/10 rounded-r-lg p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200 gap-3">
-          <div className="flex items-center gap-3 w-full">
-            <div className="w-6 h-6 rounded-full flex items-center justify-center bg-emerald-400 text-white dark:text-emerald-950 font-bold text-sm">
+        <div className="flex items-center justify-between bg-background-2 dark:bg-background-3 border border-border rounded-lg p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-primary-3 text-white font-bold text-xs">
               {selectedRows.length}
-            </div>
-            <span className="font-medium text-emerald-700 dark:text-emerald-400">
+            </span>
+            <span className="font-medium text-sm text-foreground">
               {!hideSelectionCount && (
                 <>
                   {selectedRows.length === 1
@@ -207,16 +207,17 @@ export default function AppGrid<T>({
                 </>
               )}
             </span>
-            {onSelectedChange && (
-              <button
-                onClick={() => onSelectedChange([])}
-                className="w-6 h-6 text-emerald-700 dark:text-emerald-400 ml-auto cursor-pointer"
-                title={t("labels.all.clear") || "Limpar"}
-              >
-                <Close style={{ fontSize: 16 }} />
-              </button>
-            )}
           </div>
+          {onSelectedChange && (
+            <button
+              onClick={() => onSelectedChange([])}
+              className="inline-flex items-center gap-1 text-xs font-medium text-label hover:text-foreground p-1 px-2 rounded-md hover:bg-background-3 dark:hover:bg-background-2 transition-colors cursor-pointer"
+              title={t("labels.all.clear") || "Limpar"}
+            >
+              <Close style={{ fontSize: 14 }} />
+              <span>{t("labels.all.clear") || "Limpar"}</span>
+            </button>
+          )}
         </div>
       )}
       <div className="flex-1 min-h-0 min-w-0 w-full flex flex-col">

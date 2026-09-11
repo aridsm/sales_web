@@ -143,7 +143,7 @@ export default function RegisterPage() {
             type="submit"
             color="primary"
             disabled={loading}
-            className="w-full h-11 mt-4 text-sm font-semibold "
+            className="w-full h-11 mt-4 text-sm "
           >
             {loading
               ? t("labels.register.creating")

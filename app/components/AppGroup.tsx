@@ -217,11 +217,15 @@ export default function AppGroup<G extends { id: string | number }, T>({
             !!selectedItems &&
             selectedItems.length > 0 &&
             !hideSelectionCount && (
-              <span className="font-medium text-sm whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
-                {selectedItems.length}{" "}
-                {selectedItems.length === 1
-                  ? t("labels.grid.item_selected_singular")
-                  : t("labels.grid.item_selected_plural")}
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium text-foreground bg-background-2 dark:bg-background-3 border border-border whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
+                <span className="inline-flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-primary-3 text-white font-bold text-[10px]">
+                  {selectedItems.length}
+                </span>
+                <span>
+                  {selectedItems.length === 1
+                    ? t("labels.grid.item_selected_singular")
+                    : t("labels.grid.item_selected_plural")}
+                </span>
               </span>
             )}
           <div className="flex gap-3 w-full sm:w-auto">

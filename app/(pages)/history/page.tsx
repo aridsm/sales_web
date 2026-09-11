@@ -15,6 +15,7 @@ import { useTranslation } from "@/app/utils/i18n";
 import { ActionType } from "@/enums/ActionType";
 import { EntityType } from "@/enums/EntityType";
 import { formatDateTime } from "@/app/utils/formatters/date";
+import AppCreatedBy from "@/app/components/AppCreatedBy";
 import { useDialogStore } from "@/stores/dialogStore";
 import { DeleteOutlined } from "@mui/icons-material";
 import AppSearchInput from "../../components/inputs/AppSearchInput";
@@ -84,9 +85,15 @@ export default function HistoryPage() {
         size: 200,
       },
       {
-        column: t("labels.history.date"),
-        cell: ({ row }: { row: History }) => formatDateTime(row.created_at),
-        size: 200,
+        column: t("labels.all.created_by"),
+        cell: ({ row }: { row: History }) => (
+          <AppCreatedBy
+            name={row.created_by_name}
+            date={row.created_at}
+            email={row.created_by_email}
+          />
+        ),
+        size: 280,
       },
       {
         column: t("labels.history.entity_id"),

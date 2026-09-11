@@ -78,7 +78,10 @@
       "close": "Fechar",
       "status": "Status",
       "date": "Data",
-      "total_value": "Valor Total"
+      "total_value": "Valor Total",
+      "created_by": "Criado por",
+      "created_at": "Criado em",
+      "not_defined": "Não definido"
     },
     "dialog": {
       "success": "Sucesso",
@@ -394,7 +397,8 @@
       "member_invite_error": "Erro ao enviar convite.",
       "member_removed": "Membro removido com sucesso!",
       "member_remove_error": "Erro ao remover membro.",
-      "leave_company": "Sair",
+      "leave_company": "Sair da Empresa",
+      "leave_company_description": "Você perderá o acesso a esta empresa e a todos os seus dados.",
       "leave_company_confirm": "Tem certeza que deseja sair da empresa \"{{name}}\"?",
       "left_company": "Você saiu da empresa com sucesso!",
       "left_company_error": "Erro ao sair da empresa.",
