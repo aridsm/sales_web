@@ -49,26 +49,32 @@ export const DashboardKPIs = ({
   }, [startDate, endDate]);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 shrink-0">
-      {Object.entries(budget).map(([key, value]) => (
-        <AppCard
-          key={key}
-          className={`p-4 flex flex-col justify-center gap-1 ${
-            key === "current_balance"
-              ? "bg-indigo-500! text-white border-transparent"
-              : ""
-          }`}
-        >
-          <span
-            className={`text-sm ${key === "current_balance" ? "text-white" : "text-label"}`}
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 shrink-0">
+      {Object.entries(budget).map(([key, value]) => {
+        const formattedValue = currencyFormatter.mask(value);
+        return (
+          <AppCard
+            key={key}
+            title={formattedValue}
+            className={`p-3.5 sm:p-4 flex flex-col justify-center gap-1 min-w-0 ${
+              key === "current_balance"
+                ? "bg-indigo-500! text-white border-transparent"
+                : ""
+            }`}
           >
-            {t(`labels.dashboard.kpi.${key}`)}
-          </span>
-          <span className="text-2xl font-bold tracking-tight">
-            {currencyFormatter.mask(value)}
-          </span>
-        </AppCard>
-      ))}
+            <span
+              className={`text-xs sm:text-sm truncate ${
+                key === "current_balance" ? "text-white" : "text-label"
+              }`}
+            >
+              {t(`labels.dashboard.kpi.${key}`)}
+            </span>
+            <span className="text-xl sm:text-2xl font-bold tracking-tight truncate">
+              {formattedValue}
+            </span>
+          </AppCard>
+        );
+      })}
     </div>
   );
 };

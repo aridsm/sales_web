@@ -51,9 +51,9 @@ export default function AppHeader({ title }: AppHeaderProps) {
 
   return (
     <div className="flex items-center sticky top-0 z-50 justify-between border-b border-border py-3 transition-colors bg-background-2 dark:bg-background">
-      <div className="max-w-400 w-full flex items-center justify-between mx-auto px-6">
+      <div className="max-w-400 w-full flex items-center justify-between mx-auto px-3 sm:px-6">
         <div className="flex items-center gap-3 min-w-0">
-          <h1 className="text-xl font-semibold text-foreground transition-colors truncate">
+          <h1 className="text-lg sm:text-xl font-semibold text-foreground transition-colors truncate">
             {title}
           </h1>
         </div>
@@ -83,7 +83,7 @@ export default function AppHeader({ title }: AppHeaderProps) {
                 style={{ fontSize: 18 }}
                 className="text-primary-3 shrink-0"
               />
-              <span className="truncate max-w-[140px] sm:max-w-[180px]">
+              <span className="truncate max-w-[90px] sm:max-w-[140px] md:max-w-[180px]">
                 {formatShortName(activeCompany.name, 30)}
               </span>
             </div>

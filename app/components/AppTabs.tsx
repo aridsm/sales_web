@@ -25,32 +25,45 @@ export default function AppTabs({
   const [internalTab, setInternalTab] = useState<string>(
     activeTab ?? tabs[0]?.value ?? "",
   );
+  const currentTab = activeTab ?? internalTab;
   const [pillStyle, setPillStyle] = useState<React.CSSProperties>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
   useEffect(() => {
-    if (activeTab !== undefined) {
-      setInternalTab(activeTab);
-    }
-  }, [activeTab]);
+    const updatePill = () => {
+      const el = tabRefs.current.get(currentTab);
+      const container = containerRef.current;
+      if (el && container) {
+        const containerRect = container.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        setPillStyle({
+          left: elRect.left - containerRect.left + container.scrollLeft,
+          width: elRect.width,
+          height: elRect.height,
+        });
+      }
+    };
 
-  useEffect(() => {
-    const el = tabRefs.current.get(internalTab);
+    updatePill();
+    window.addEventListener("resize", updatePill);
     const container = containerRef.current;
-    if (el && container) {
-      const containerRect = container.getBoundingClientRect();
-      const elRect = el.getBoundingClientRect();
-      setPillStyle({
-        left: elRect.left - containerRect.left,
-        width: elRect.width,
-        height: elRect.height,
-      });
+    if (container) {
+      container.addEventListener("scroll", updatePill);
     }
-  }, [internalTab, tabs]);
+
+    return () => {
+      window.removeEventListener("resize", updatePill);
+      if (container) {
+        container.removeEventListener("scroll", updatePill);
+      }
+    };
+  }, [currentTab, tabs]);
 
   const handleTabClick = (value: string) => {
-    setInternalTab(value);
+    if (activeTab === undefined) {
+      setInternalTab(value);
+    }
     onChange?.(value);
   };
 
@@ -67,7 +80,7 @@ export default function AppTabs({
       />
 
       {tabs.map((tab) => {
-        const isActive = internalTab === tab.value;
+        const isActive = currentTab === tab.value;
         return (
           <button
             key={tab.value}
@@ -75,7 +88,7 @@ export default function AppTabs({
               if (el) tabRefs.current.set(tab.value, el);
             }}
             onClick={() => handleTabClick(tab.value)}
-            className={`relative z-[1] px-4 py-1.5 text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer whitespace-nowrap ${
+            className={`relative z-[1] px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer whitespace-nowrap ${
               fullWidth ? "flex-1 text-center" : ""
             } ${isActive ? "text-foreground" : "text-label hover:text-foreground"}`}
           >

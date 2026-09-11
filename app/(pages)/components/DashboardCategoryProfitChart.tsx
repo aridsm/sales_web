@@ -136,40 +136,42 @@ export const DashboardCategoryProfitChart = ({
   }, [startDate, endDate, activeTab]);
 
   return (
-    <AppCard className="px-5 pt-4 pb-5 flex flex-col lg:col-span-1 lg:row-span-2 overflow-hidden">
+    <AppCard className="px-4 py-4 sm:px-5 sm:pt-4 sm:pb-5 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 lg:row-span-2 min-h-[440px] lg:min-h-0 overflow-hidden">
       <div className="flex flex-col gap-3 mb-4">
-        <div className="flex items-center gap-3">
-          <span className="font-semibold text-lg">
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-semibold text-base sm:text-lg truncate">
             {activeTab === "sales"
               ? t("labels.dashboard.charts.profit_by_category")
               : activeTab === "stock_entries"
                 ? "Entradas de Estoque por categoria"
                 : t("labels.dashboard.charts.expenses_by_category")}
           </span>
-          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label shrink-0 mt-0.5">
+          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label shrink-0">
             {t(`labels.dashboard.periods.${activePeriod}`)}
           </span>
         </div>
-        <AppTabs
-          tabs={[
-            {
-              value: "sales",
-              label: "Vendas",
-            },
-            {
-              value: "stock_entries",
-              label: "Entrada de Estoque",
-            },
-            {
-              value: "other_expenses",
-              label: "Outros Gastos",
-            },
-          ]}
-          activeTab={activeTab}
-          onChange={(val) => setActiveTab(val)}
-        />
+        <div className="overflow-x-auto max-w-full pb-0.5 scrollbar-none">
+          <AppTabs
+            tabs={[
+              {
+                value: "sales",
+                label: "Vendas",
+              },
+              {
+                value: "stock_entries",
+                label: "Entrada de Estoque",
+              },
+              {
+                value: "other_expenses",
+                label: "Outros Gastos",
+              },
+            ]}
+            activeTab={activeTab}
+            onChange={(val) => setActiveTab(val)}
+          />
+        </div>
       </div>
-      <div className="w-full relative shrink-0 h-52">
+      <div className="w-full relative shrink-0 h-44 sm:h-48 lg:h-52">
         {categoriesAmounts.items.length > 0 ? (
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>

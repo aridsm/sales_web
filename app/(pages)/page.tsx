@@ -76,8 +76,8 @@ export default function DashboardPage() {
 
   return (
     <AppPage title="Dashboard">
-      <div className="flex flex-col flex-1 gap-5 min-h-0">
-        <div className="flex items-center gap-2 flex-wrap shrink-0">
+      <div className="flex flex-col gap-4 sm:gap-5 lg:flex-1 lg:min-h-0">
+        <div className="flex items-center gap-2 overflow-x-auto max-w-full pb-1 shrink-0">
           <AppTabs
             tabs={Object.entries(datePeriods).map(([key]) => ({
               value: key,
@@ -90,7 +90,7 @@ export default function DashboardPage() {
 
         <DashboardKPIs startDate={startDate} endDate={endDate} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-[minmax(250px,320px)_minmax(400px,1fr)] min-h-0 gap-5 flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[minmax(250px,320px)_minmax(400px,1fr)] lg:min-h-0 lg:flex-1 gap-4 sm:gap-5">
           <DashboardRevenueExpenseChart activePeriod={activePeriod} />
           <DashboardCategoryProfitChart
             entityLabels={entityLabels}

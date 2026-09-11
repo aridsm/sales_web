@@ -90,17 +90,17 @@ export const DashboardRevenueExpenseChart = ({
   }, [previous, frequency]);
 
   return (
-    <AppCard className="flex px-5 pt-4 pb-5 flex-col lg:col-span-2 min-h-[250px] overflow-hidden">
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex items-center gap-3">
-          <span className="font-semibold text-lg">
+    <AppCard className="flex px-4 py-4 sm:px-5 sm:pt-4 sm:pb-5 flex-col lg:col-span-7 min-[1580px]:col-span-8 min-h-[300px] lg:min-h-0 overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <span className="font-semibold text-base sm:text-lg">
             {t("labels.dashboard.charts.revenue_vs_expenses")}
           </span>
-          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label mt-0.5">
+          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label">
             {t(`labels.dashboard.frequencies.${activePeriod}`)}
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto">
           <div className="flex items-center gap-1">
             <button
               onClick={() => setPrevious((p) => p + 1)}
@@ -135,7 +135,7 @@ export const DashboardRevenueExpenseChart = ({
           {chartType === "line" ? (
             <LineChart
               data={chartData}
-              margin={{ top: 5, right: 10, left: -20, bottom: 0 }}
+              margin={{ top: 5, right: 10, left: -25, bottom: 0 }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -146,13 +146,13 @@ export const DashboardRevenueExpenseChart = ({
                 dataKey="name"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#888888", fontSize: 12 }}
+                tick={{ fill: "#888888", fontSize: 11 }}
                 dy={10}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#888888", fontSize: 12 }}
+                tick={{ fill: "#888888", fontSize: 11 }}
               />
               <Tooltip
                 content={<CustomChartTooltip />}
@@ -180,7 +180,7 @@ export const DashboardRevenueExpenseChart = ({
           ) : (
             <BarChart
               data={chartData}
-              margin={{ top: 5, right: 10, left: -20, bottom: 0 }}
+              margin={{ top: 5, right: 10, left: -25, bottom: 0 }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -191,13 +191,13 @@ export const DashboardRevenueExpenseChart = ({
                 dataKey="name"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#888888", fontSize: 12 }}
+                tick={{ fill: "#888888", fontSize: 11 }}
                 dy={10}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#888888", fontSize: 12 }}
+                tick={{ fill: "#888888", fontSize: 11 }}
               />
               <Tooltip
                 content={<CustomChartTooltip />}
