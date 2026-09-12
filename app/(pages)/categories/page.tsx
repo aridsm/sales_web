@@ -179,24 +179,28 @@ export default function CategoriesPage() {
         className="mb-4"
       />
 
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
+      <div className="flex items-center justify-between gap-2 min-[900px]:gap-3 mb-3">
         <AppSearchInput
           value={search}
           onChange={setSearch}
           onSearch={(val) => pagination.load({ params: { search: val, page: 1 } })}
           placeholder={t("labels.grid.search_placeholder")}
-          className="w-full sm:w-90"
+          className="flex-1 w-full min-w-0 min-[900px]:w-90 min-[900px]:flex-initial"
         />
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {rowsSelected.length > 0 && (
             <AppButton
               onClick={onDeleteSelected}
               color="red"
-              className="px-4 py-2 shrink-0"
+              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+              title={`${t("labels.all.delete")} (${rowsSelected.length})`}
+              aria-label={`${t("labels.all.delete")} (${rowsSelected.length})`}
             >
               <DeleteOutlined fontSize="small" />
-              {t("labels.all.delete")} ({rowsSelected.length})
+              <span className="hidden min-[900px]:inline">
+                {t("labels.all.delete")} ({rowsSelected.length})
+              </span>
             </AppButton>
           )}
 
@@ -204,10 +208,14 @@ export default function CategoriesPage() {
             <AppButton
               onClick={handleNew}
               color="primary"
-              className="px-4 py-2 shrink-0"
+              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+              title={t("labels.grid.add_item")}
+              aria-label={t("labels.grid.add_item")}
             >
               <AddOutlined fontSize="small" />
-              {t("labels.grid.add_item")}
+              <span className="hidden min-[900px]:inline">
+                {t("labels.grid.add_item")}
+              </span>
             </AppButton>
           )}
         </div>

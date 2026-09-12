@@ -67,6 +67,12 @@ body {
   font-size: 14px;
 }
 
+@media (max-width: 899px) {
+  body {
+    font-size: 12px;
+  }
+}
+
 .grid-dashboard {
   grid-template-rows: auto 1fr 1fr;
 }
