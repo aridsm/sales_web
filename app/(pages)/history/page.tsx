@@ -133,7 +133,7 @@ export default function HistoryPage() {
 
   return (
     <AppPage title={t("labels.history.title")}>
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-3">
+      <div className="flex items-center justify-between gap-2 min-[900px]:gap-3 mb-3">
         <AppSearchInput
           value={search}
           onChange={setSearch}
@@ -141,19 +141,25 @@ export default function HistoryPage() {
             pagination.load({ params: { search: val, page: 1 } })
           }
           placeholder={t("labels.grid.search_placeholder")}
-          className="w-full sm:max-w-sm"
+          className="w-full min-w-0 sm:max-w-sm"
         />
-        <div className="flex gap-3 w-full sm:w-auto ml-auto">
+
+        <div className="flex items-center gap-2 min-[900px]:gap-3 shrink-0">
           {rowsSelected.length > 0 && (
             <AppButton
               onClick={onDeleteSelected}
               color="red"
-              className="w-full sm:w-auto px-4 py-2 shrink-0"
+              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+              title={`${t("labels.all.delete")} (${rowsSelected.length})`}
+              aria-label={`${t("labels.all.delete")} (${rowsSelected.length})`}
             >
               <DeleteOutlined fontSize="small" />
-              {t("labels.all.delete")} ({rowsSelected.length})
+              <span className="hidden min-[900px]:inline">
+                {t("labels.all.delete")} ({rowsSelected.length})
+              </span>
             </AppButton>
           )}
+
           <AppFilter
             onChange={handleFilterChange}
             validKeys={["action_type", "entity_type", "created_at"]}

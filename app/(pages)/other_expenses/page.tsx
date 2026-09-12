@@ -176,7 +176,7 @@ export default function OtherExpensesPage() {
 
   return (
     <AppPage title={getLabel("labels.other_expenses.title")}>
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-3">
+      <div className="flex items-center justify-between gap-2 min-[900px]:gap-3 mb-3">
         <AppSearchInput
           value={search}
           onChange={setSearch}
@@ -184,18 +184,21 @@ export default function OtherExpensesPage() {
             pagination.load({ params: { search: val, page: 1 } })
           }
           placeholder={getLabel("labels.grid.search_placeholder")}
-          className="w-full sm:max-w-sm"
+          className="w-full min-w-0 sm:max-w-sm"
         />
-        <div className="flex gap-3 w-full sm:w-auto ml-auto">
-          {" "}
+        <div className="flex items-center gap-2 min-[900px]:gap-3 shrink-0">
           {canEdit && rowsSelected.length > 0 && (
             <AppButton
               onClick={onDeleteSelected}
               color="red"
-              className="w-full sm:w-auto px-4 py-2 shrink-0"
+              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+              title={`${getLabel("labels.all.delete")} (${rowsSelected.length})`}
+              aria-label={`${getLabel("labels.all.delete")} (${rowsSelected.length})`}
             >
               <DeleteOutlined fontSize="small" />
-              {getLabel("labels.all.delete")} ({rowsSelected.length})
+              <span className="hidden min-[900px]:inline">
+                {getLabel("labels.all.delete")} ({rowsSelected.length})
+              </span>
             </AppButton>
           )}
           <AppFilter
@@ -208,10 +211,14 @@ export default function OtherExpensesPage() {
             <AppButton
               onClick={handleNew}
               color="primary"
-              className="w-full sm:w-auto px-4 py-2 shrink-0"
+              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+              title={getLabel("labels.grid.add_item")}
+              aria-label={getLabel("labels.grid.add_item")}
             >
               <AddOutlined fontSize="small" />
-              {getLabel("labels.grid.add_item")}
+              <span className="hidden min-[900px]:inline">
+                {getLabel("labels.grid.add_item")}
+              </span>
             </AppButton>
           )}
         </div>
