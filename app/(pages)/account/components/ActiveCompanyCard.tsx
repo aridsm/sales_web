@@ -20,14 +20,14 @@ export default function ActiveCompanyCard({
 
   return (
     <AppCard className="p-5 flex flex-col gap-2">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <div className="flex flex-col gap-1 min-w-0">
-          <span className=" font-medium">
+          <span className="font-medium">
             {t("labels.account.active_company")}
           </span>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             {activeCompany ? (
-              <span className="text-lg font-semibold text-foreground truncate">
+              <span className="text-base sm:text-lg font-semibold text-foreground break-words">
                 {activeCompany.name}
               </span>
             ) : (
@@ -37,7 +37,7 @@ export default function ActiveCompanyCard({
             )}
 
             {activeCompany && (
-              <span className="text-xs mt-1 px-2 py-0.5 rounded text-primary-3 bg-primary-4 dark:text-primary dark:bg-primary-light font-medium">
+              <span className="text-xs px-2 py-0.5 rounded text-primary-3 bg-primary-4 dark:text-primary dark:bg-primary-light font-medium shrink-0">
                 {t(`labels.account.permissions.${currentUser?.permission}`)}
               </span>
             )}
@@ -48,7 +48,7 @@ export default function ActiveCompanyCard({
           <AppButton
             color="foreground"
             flat
-            className="py-1 px-2.5 text-xs! hover:bg-foreground/5! gap-1.5 shrink-0 self-start sm:self-center"
+            className="py-1 px-2.5 text-xs! hover:bg-foreground/5! gap-1.5 shrink-0"
             onClick={() => onOpenMembers(activeCompany)}
           >
             <GroupOutlined style={{ fontSize: 15 }} />

@@ -77,9 +77,16 @@ export default function CompaniesCard({
   const companyActions = useMemo<ActionItem<CompanyListItem>[]>(
     () => [
       {
+        text: t("labels.account.manage_members"),
+        preText: <GroupOutlined style={{ fontSize: 18 }} />,
+        class: "sm:hidden",
+        click: (comp) => onOpenMembers(comp),
+      },
+      {
         text: t("labels.all.edit"),
         preText: <EditOutlined style={{ fontSize: 18 }} />,
         click: (comp) => onEditCompany(comp),
+        hidden: (comp) => comp.permission !== CompanyPermission.ADMIN,
         disabled: (comp) => comp.permission !== CompanyPermission.ADMIN,
       },
       {
@@ -89,10 +96,11 @@ export default function CompaniesCard({
         ),
         class: "text-red-500 hover:bg-red-500/10!",
         click: (comp) => onDeleteCompany(comp),
+        hidden: (comp) => comp.permission !== CompanyPermission.ADMIN,
         disabled: (comp) => comp.permission !== CompanyPermission.ADMIN,
       },
     ],
-    [t, onEditCompany, onDeleteCompany],
+    [t, onOpenMembers, onEditCompany, onDeleteCompany],
   );
 
   return (
@@ -106,11 +114,15 @@ export default function CompaniesCard({
 
         <AppButton
           color="primary-3"
-          className="gap-1.5!"
+          className="w-8 h-8 min-w-8! min-h-8! max-h-8! p-0! md:w-auto md:min-w-0 md:min-h-10! md:max-h-10! md:py-2.5! md:px-4! gap-1.5! shrink-0"
           onClick={onCreateCompanyClick}
+          title={t("labels.account.create_company")}
+          aria-label={t("labels.account.create_company")}
         >
-          <AddOutlined style={{ fontSize: 16 }} />
-          {t("labels.account.create_company")}
+          <AddOutlined style={{ fontSize: 18 }} />
+          <span className="hidden md:inline">
+            {t("labels.account.create_company")}
+          </span>
         </AppButton>
       </div>
 
@@ -135,7 +147,7 @@ export default function CompaniesCard({
                     {getCompanyInitials(comp.name)}
                   </div>
                   <div className="flex flex-col gap-1 min-w-0">
-                    <span className="text-sm font-semibold text-foreground truncate">
+                    <span className="text-xs sm:text-sm font-semibold text-foreground break-words">
                       {comp.name}
                     </span>
                     <span className="text-xs text-label">
@@ -148,7 +160,7 @@ export default function CompaniesCard({
                   <AppButton
                     color="foreground"
                     flat
-                    className="py-1 px-2.5 text-xs! hover:bg-foreground/5! gap-1.5!"
+                    className="hidden sm:inline-flex py-1 px-2.5 text-xs! hover:bg-foreground/5! gap-1.5!"
                     onClick={() => onOpenMembers(comp)}
                   >
                     <GroupOutlined style={{ fontSize: 15 }} />
@@ -168,10 +180,17 @@ export default function CompaniesCard({
                       {t("labels.account.switch")}
                     </AppButton>
                   )}
-                  {comp.permission == CompanyPermission.ADMIN ? (
-                    <AppActions item={comp} actions={companyActions} />
-                  ) : (
-                    <span className="w-8" />
+                  <AppActions
+                    item={comp}
+                    actions={companyActions}
+                    className={
+                      comp.permission !== CompanyPermission.ADMIN
+                        ? "sm:hidden"
+                        : ""
+                    }
+                  />
+                  {comp.permission !== CompanyPermission.ADMIN && (
+                    <span className="hidden sm:inline-block w-8" />
                   )}
                 </div>
               </div>

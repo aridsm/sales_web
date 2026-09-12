@@ -3,13 +3,14 @@ import { User } from "@/api/schemas/User";
 import AppCard from "../../../components/AppCard";
 import UserInitials from "./UserInitials";
 import {
+  CalendarTodayOutlined,
   CheckOutlined,
   CloseOutlined,
   EditOutlined,
   ExitToAppOutlined,
 } from "@mui/icons-material";
 import { useTranslation } from "@/app/utils/i18n";
-import { formatDateTime, formatDate } from "@/app/utils/formatters/date";
+import { formatDate } from "@/app/utils/formatters/date";
 import AppButton from "@/app/components/AppButton";
 import AppInputText from "@/app/components/inputs/AppInputText";
 
@@ -58,11 +59,11 @@ export default function ProfileCard({
   };
 
   return (
-    <AppCard className="p-6">
-      <div className="flex items-center gap-4 min-w-0">
+    <AppCard className="p-4 sm:p-5 flex flex-col gap-3.5">
+      <div className="flex items-center gap-3.5 min-w-0">
         <UserInitials name={currentUser?.name || "?"} />
 
-        <div className="flex flex-col gap-1 min-w-0 flex-1">
+        <div className="flex flex-col min-w-0 flex-1">
           {isEditingName ? (
             <form
               onSubmit={handleSave}
@@ -103,41 +104,52 @@ export default function ProfileCard({
             </form>
           ) : (
             <div className="flex items-center gap-2 min-w-0">
-              <h2 className="text-lg font-bold text-foreground truncate">
+              <h2 className="text-base sm:text-lg font-bold text-foreground truncate">
                 {currentUser?.name}
               </h2>
-              <AppButton
+              <button
                 type="button"
-                color="transparent"
-                flat
                 onClick={handleStartEditName}
-                className="w-7 h-7 p-0! shrink-0 text-label hover:text-foreground"
+                className="p-1 rounded-md text-label hover:text-foreground hover:bg-foreground/5 transition-colors shrink-0 cursor-pointer"
                 title={t("labels.all.edit")}
+                aria-label={t("labels.all.edit")}
               >
-                <EditOutlined style={{ fontSize: 16 }} />
-              </AppButton>
+                <EditOutlined style={{ fontSize: 15 }} />
+              </button>
             </div>
           )}
-          <span className="text-sm text-label truncate">
+          <span className="text-xs sm:text-sm text-label truncate">
             {currentUser?.email}
           </span>
+        </div>
+      </div>
 
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-label">
-              {t("labels.account.member_since")}{" "}
+      <div className="pt-3 border-t border-border flex items-center justify-between gap-3 text-xs">
+        <span className="text-label flex items-center gap-1.5 min-w-0 truncate">
+          <CalendarTodayOutlined
+            style={{ fontSize: 14 }}
+            className="opacity-60 shrink-0"
+          />
+          <span className="truncate">
+            {t("labels.account.member_since")}{" "}
+            <span className="font-medium text-foreground/80">
               {formatDate(currentUser?.created_at)}
             </span>
-            <AppButton
-              onClick={onLogout}
-              flat
-              color="foreground"
-              className="py-1! px-2! flex items-center gap-1"
-            >
-              <ExitToAppOutlined fontSize="small" className="text-red-500" />
-              {t("labels.menu.logout")}
-            </AppButton>
-          </div>
-        </div>
+          </span>
+        </span>
+
+        <AppButton
+          onClick={onLogout}
+          flat
+          color="foreground"
+          className="py-1 px-2.5 text-xs! hover:bg-red-500/10! hover:text-red-500! gap-1.5 shrink-0"
+        >
+          <ExitToAppOutlined
+            style={{ fontSize: 15 }}
+            className="text-red-500"
+          />
+          <span>{t("labels.menu.logout")}</span>
+        </AppButton>
       </div>
     </AppCard>
   );

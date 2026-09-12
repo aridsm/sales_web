@@ -66,7 +66,10 @@ export default function PreferencesCard() {
                   : "text-label hover:text-foreground"
               }`}
             >
-              {t("labels.account.language_pt")}
+              <span className="sm:hidden">pt-BR</span>
+              <span className="hidden sm:inline">
+                {t("labels.account.language_pt")}
+              </span>
             </button>
             <button
               type="button"
@@ -77,7 +80,10 @@ export default function PreferencesCard() {
                   : "text-label hover:text-foreground"
               }`}
             >
-              {t("labels.account.language_en")}
+              <span className="sm:hidden">en-US</span>
+              <span className="hidden sm:inline">
+                {t("labels.account.language_en")}
+              </span>
             </button>
           </div>
         </div>

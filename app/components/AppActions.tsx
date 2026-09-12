@@ -13,6 +13,7 @@ export interface ActionItem<T> {
   preText?: ReactNode;
   click: (item: T) => void;
   disabled?: (item: T) => boolean;
+  hidden?: (item: T) => boolean;
 }
 
 export interface AppActionsProps<T> {
@@ -31,6 +32,10 @@ export default function AppActions<T>({
     null,
   );
 
+  const visibleActions = actions.filter(
+    (action) => !action.hidden || !action.hidden(item),
+  );
+
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -43,7 +48,7 @@ export default function AppActions<T>({
     const viewportHeight = document.documentElement.clientHeight;
 
     let menuWidth = 224;
-    let menuHeight = actions.length * 44 + 10;
+    let menuHeight = visibleActions.length * 44 + 10;
 
     const opening = typeof isOpening === "boolean" ? isOpening : false;
     if (!opening && menuRef.current) {
@@ -121,6 +126,10 @@ export default function AppActions<T>({
     };
   }, [isOpen]);
 
+  if (visibleActions.length === 0) {
+    return null;
+  }
+
   return (
     <div
       className={`relative inline-block ${className} ${isOpen ? "z-50" : ""}`}
@@ -155,7 +164,7 @@ export default function AppActions<T>({
             className="z-[9999] w-56 rounded-md bg-background-2 border border-border shadow-xl py-1 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200"
             role="menu"
           >
-            {actions.map((action, index) => {
+            {visibleActions.map((action, index) => {
               const isDisabled = action.disabled
                 ? action.disabled(item)
                 : false;
