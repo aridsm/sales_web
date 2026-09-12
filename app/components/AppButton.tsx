@@ -40,7 +40,7 @@ export default function AppButton({
       : "text-foreground border border-border hover:border-border-2 bg-background-2 dark:bg-background-3 dark:hover:bg-background-2";
   } else if (color === "red") {
     colorClasses = flat
-      ? "bg-transparent text-red-500 dark:text-red-600 hover:bg-red-500/5 active:bg-red-500/20 border border-red-300 dark:border-red-700"
+      ? "bg-transparent text-red-500 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/5 active:bg-red-500/20 border border-red-300 dark:border-red-700"
       : "bg-red-600/80 hover:bg-red-600/90 dark:bg-red-700 dark:hover:bg-red-500/90 text-white active:bg-red-500/10";
   } else if (color === "transparent") {
     colorClasses = flat

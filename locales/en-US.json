@@ -92,7 +92,10 @@
     },
     "header": {
       "notifications": "Notifications",
-      "account": "Your Account"
+      "account": "Your Account",
+      "settings": "Settings",
+      "theme": "Theme",
+      "language": "Language"
     },
     "menu": {
       "dashboard": "Dashboard",
@@ -103,7 +106,9 @@
       "history": "History",
       "other_expenses": "Other Expenses",
       "account": "Your Account",
-      "logout": "Logout"
+      "logout": "Logout",
+      "open_menu": "Open menu",
+      "close_menu": "Close menu"
     },
     "select": {
       "placeholder": "Select...",

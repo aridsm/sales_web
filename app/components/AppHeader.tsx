@@ -3,16 +3,17 @@
 import { useEffect } from "react";
 import {
   NotificationsOutlined,
-  AccountCircleOutlined,
   BusinessOutlined,
+  Menu as MenuIcon,
 } from "@mui/icons-material";
 import AppButton from "./AppButton";
 import AppDarkModeToggle from "./AppDarkModeToggle";
 import AppLanguageSelect from "./AppLanguageSelect";
+import AppUserDropdown from "./AppUserDropdown";
 import { useTranslation } from "@/app/utils/i18n";
-import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
 import { useTokenStore } from "@/stores/tokenStore";
+import { useMobileMenuStore } from "@/stores/mobileMenuStore";
 
 interface AppHeaderProps {
   title: string;
@@ -25,23 +26,11 @@ function formatShortName(name: string | undefined | null, max = 20) {
   return `${trimmed.slice(0, max)}...`;
 }
 
-function getUserInitials(name?: string | null) {
-  if (!name) return "U";
-  const initials = name
-    .trim()
-    .split(/\s+/)
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-  return initials || "U";
-}
-
 export default function AppHeader({ title }: AppHeaderProps) {
   const { t } = useTranslation();
-  const router = useRouter();
   const token = useTokenStore((state) => state.token);
   const { currentUser, activeCompany, fetchUserData } = useUserStore();
+  const toggleMobileMenu = useMobileMenuStore((state) => state.toggleMobileMenu);
 
   useEffect(() => {
     if (token && !currentUser) {
@@ -50,17 +39,32 @@ export default function AppHeader({ title }: AppHeaderProps) {
   }, [token, currentUser, fetchUserData]);
 
   return (
-    <div className="flex items-center sticky top-0 z-50 justify-between border-b border-border py-3 transition-colors bg-background-2 dark:bg-background">
+    <div className="flex items-center sticky top-0 z-50 justify-between border-b border-border py-2.5 sm:py-3 transition-colors bg-background-2 dark:bg-background">
       <div className="max-w-400 w-full flex items-center justify-between mx-auto px-3 sm:px-6">
-        <div className="flex items-center gap-3 min-w-0">
-          <h1 className="text-lg sm:text-xl font-semibold text-foreground transition-colors truncate">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <AppButton
+            rounded
+            flat
+            color="transparent"
+            onClick={toggleMobileMenu}
+            className="w-9 h-9 text-foreground hover:text-foreground shrink-0 min-[1250px]:hidden"
+            title={t("labels.menu.open_menu") || "Abrir menu"}
+            aria-label={t("labels.menu.open_menu") || "Abrir menu"}
+          >
+            <MenuIcon fontSize="small" />
+          </AppButton>
+          <h1 className="text-base sm:text-lg min-[900px]:text-xl font-semibold text-foreground transition-colors truncate">
             {title}
           </h1>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3">
-          <AppDarkModeToggle />
-          <AppLanguageSelect />
+        <div className="flex items-center gap-2 min-[900px]:gap-3 shrink-0">
+          <div className="hidden min-[900px]:flex items-center">
+            <AppDarkModeToggle />
+          </div>
+          <div className="hidden min-[900px]:flex items-center">
+            <AppLanguageSelect />
+          </div>
 
           <AppButton
             rounded
@@ -72,12 +76,12 @@ export default function AppHeader({ title }: AppHeaderProps) {
             <NotificationsOutlined fontSize="small" />
           </AppButton>
 
-          <div className="h-4 w-px bg-border hidden sm:block" />
+          <div className="h-4 w-px bg-border hidden min-[900px]:block" />
 
           {activeCompany && (
             <div
               title={activeCompany.name}
-              className="flex items-center gap-1.5 px-2.5 h-9 text-xs font-medium text-foreground select-none"
+              className="hidden min-[900px]:flex items-center gap-1.5 px-2.5 h-9 text-xs font-medium text-foreground select-none"
             >
               <BusinessOutlined
                 style={{ fontSize: 18 }}
@@ -90,17 +94,10 @@ export default function AppHeader({ title }: AppHeaderProps) {
           )}
 
           {activeCompany && (
-            <div className="h-4 w-px bg-border hidden sm:block" />
+            <div className="h-4 w-px bg-border hidden min-[900px]:block" />
           )}
 
-          <button
-            type="button"
-            title={currentUser?.name || t("labels.header.account")}
-            onClick={() => router.push("/account")}
-            className="w-8 h-8 rounded-full bg-primary-3 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center text-white text-xs font-semibold shrink-0 shadow-xs cursor-pointer select-none"
-          >
-            {getUserInitials(currentUser?.name)}
-          </button>
+          <AppUserDropdown />
         </div>
       </div>
     </div>
