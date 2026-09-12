@@ -235,9 +235,9 @@ export default function ProductsPage() {
   return (
     <AppPage title={t("labels.products.title")}>
       <div className="flex flex-col flex-1 gap-4 min-h-0">
-        <div className="flex flex-1 gap-3 min-h-0 overflow-hidden">
-          <div className="w-70 shrink-0 bg-background-2 dark:bg-background-3 border border-border rounded-lg flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+        <div className="flex flex-col min-[1100px]:flex-row flex-1 gap-3 min-h-0 overflow-hidden">
+          <div className="w-full min-[1100px]:w-70 shrink-0 bg-background-2 dark:bg-background-3 border border-border rounded-lg flex flex-col overflow-hidden">
+            <div className="hidden min-[1100px]:flex items-center justify-between px-4 py-3 border-b border-border">
               <span className="font-semibold">
                 {t("labels.categories.title")}
               </span>
@@ -246,19 +246,24 @@ export default function ProductsPage() {
               </span>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-2 flex flex-col gap-0.5">
+            <div className="flex min-[1100px]:flex-col flex-row items-center min-[1100px]:items-stretch gap-1.5 min-[1100px]:gap-0.5 p-1.5 min-[1100px]:p-2 overflow-x-auto min-[1100px]:overflow-y-auto min-[1100px]:flex-1">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-foreground/50 uppercase tracking-wider shrink-0 min-[1100px]:hidden select-none">
+                {t("labels.categories.title")}
+              </div>
+              <div className="w-px h-4 bg-border shrink-0 min-[1100px]:hidden" />
+
               <button
                 type="button"
                 onClick={() => setSelectedCategoryId(null)}
-                className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-150 cursor-pointer group ${
+                className={`shrink-0 min-[1100px]:w-full flex items-center justify-between gap-2 px-3 py-1.5 min-[1100px]:p-3 rounded-lg transition-all duration-150 cursor-pointer group whitespace-nowrap text-xs min-[1100px]:text-sm ${
                   selectedCategoryId === null
                     ? "bg-primary-4 dark:bg-primary-3 text-primary-3 dark:text-white font-semibold"
                     : "text-foreground/70 hover:bg-background dark:hover:bg-foreground/5 hover:text-foreground"
                 }`}
               >
-                <div className="flex items-center gap-2.5 truncate">
+                <div className="flex items-center gap-2 min-[1100px]:gap-2.5 truncate">
                   <div
-                    className={`w-2.5 h-4 rounded-xs  shrink-0 transition-colors ${
+                    className={`w-2 h-3 min-[1100px]:w-2.5 min-[1100px]:h-4 rounded-xs shrink-0 transition-colors ${
                       selectedCategoryId === null
                         ? "bg-primary-3 dark:bg-white"
                         : "bg-foreground/25"
@@ -267,7 +272,7 @@ export default function ProductsPage() {
                   <span className="truncate">{t("labels.categories.all")}</span>
                 </div>
                 <span
-                  className={`text-sm tabular-nums px-1.5 py-0.5 rounded-md transition-colors ${
+                  className={`text-xs min-[1100px]:text-sm tabular-nums px-1.5 py-0.5 rounded-md transition-colors ml-1.5 min-[1100px]:ml-2 ${
                     selectedCategoryId === null
                       ? "bg-primary-3/20 text-primary-3 dark:bg-white/20 dark:text-white font-semibold"
                       : "text-foreground/40 group-hover:text-foreground/60"
@@ -277,14 +282,14 @@ export default function ProductsPage() {
                 </span>
               </button>
 
-              <div className="h-px bg-border mx-2 my-1" />
+              <div className="w-px h-5 bg-border mx-1 shrink-0 min-[1100px]:w-auto min-[1100px]:h-px min-[1100px]:mx-2 min-[1100px]:my-1" />
 
               {categories.loading && !categories.items.length ? (
-                <div className="p-6 text-center">
+                <div className="p-2 min-[1100px]:p-6 text-center shrink-0">
                   <AppLoading />
                 </div>
               ) : categories.items.length === 0 ? (
-                <div className="p-6 text-center text-sm text-foreground/40">
+                <div className="p-2 min-[1100px]:p-6 text-center text-xs min-[1100px]:text-sm text-foreground/40 shrink-0">
                   {t("labels.categories.no_category")}
                 </div>
               ) : (
@@ -295,22 +300,22 @@ export default function ProductsPage() {
                       key={cat.id}
                       type="button"
                       onClick={() => setSelectedCategoryId(cat.id)}
-                      className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-150 cursor-pointer group ${
+                      className={`shrink-0 min-[1100px]:w-full flex items-center justify-between gap-2 px-3 py-1.5 min-[1100px]:p-3 rounded-lg transition-all duration-150 cursor-pointer group whitespace-nowrap text-xs min-[1100px]:text-sm ${
                         isSelected
                           ? "bg-primary-4 dark:bg-primary-3 text-primary-3 dark:text-white font-semibold"
                           : "text-foreground/70 hover:bg-background dark:hover:bg-foreground/5 hover:text-foreground border-transparent"
                       }`}
                     >
-                      <div className="flex items-center gap-2.5 min-w-0 ">
+                      <div className="flex items-center gap-2 min-[1100px]:gap-2.5 min-w-0">
                         <div
-                          className="w-2.5 h-4 rounded-xs shrink-0 "
+                          className="w-2 h-3 min-[1100px]:w-2.5 min-[1100px]:h-4 rounded-xs shrink-0"
                           style={{ backgroundColor: cat.color }}
                         />
-                        <span className="text-start">{cat.name}</span>
+                        <span className="text-start truncate">{cat.name}</span>
                       </div>
                       {cat.products !== undefined && (
                         <span
-                          className={`text-sm tabular-nums px-1.5 py-0.5 rounded-md shrink-0 ml-2 transition-colors ${
+                          className={`text-xs min-[1100px]:text-sm tabular-nums px-1.5 py-0.5 rounded-md shrink-0 ml-1.5 min-[1100px]:ml-2 transition-colors ${
                             isSelected
                               ? "bg-primary-3/20 text-primary-3 dark:bg-white/20 dark:text-white font-semibold"
                               : "text-foreground/40 group-hover:text-foreground/60"
@@ -327,25 +332,27 @@ export default function ProductsPage() {
           </div>
 
           <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between flex-wrap mb-3">
+            <div className="flex items-center justify-between gap-2 min-[1100px]:gap-3 mb-3">
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <AppSearchInput
                   placeholder={t("labels.products.search_placeholder")}
                   value={searchInput}
                   onChange={setSearchInput}
-                  className="min-w-90"
+                  className="flex-1 w-full min-w-0 min-[1100px]:w-90 min-[1100px]:flex-initial"
                 />
               </div>
 
-              <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-2 min-[1100px]:gap-3 shrink-0">
                 {canEdit && rowsSelected.length > 0 && (
                   <AppButton
                     color="red"
                     onClick={onDeleteSelected}
-                    className="flex items-center gap-1.5"
+                    className="flex items-center gap-1.5 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+                    title={`${t("labels.all.delete")} (${rowsSelected.length})`}
+                    aria-label={`${t("labels.all.delete")} (${rowsSelected.length})`}
                   >
                     <DeleteOutlined style={{ fontSize: 18 }} />
-                    <span>
+                    <span className="hidden min-[900px]:inline">
                       {t("labels.all.delete")} ({rowsSelected.length})
                     </span>
                   </AppButton>
@@ -372,10 +379,14 @@ export default function ProductsPage() {
                         },
                       });
                     }}
-                    className="flex items-center gap-1.5"
+                    className="flex items-center gap-1.5 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+                    title={t("labels.grid.add_item")}
+                    aria-label={t("labels.grid.add_item")}
                   >
                     <Add style={{ fontSize: 18 }} />
-                    <span>{t("labels.grid.add_item")}</span>
+                    <span className="hidden min-[900px]:inline">
+                      {t("labels.grid.add_item")}
+                    </span>
                   </AppButton>
                 )}
               </div>

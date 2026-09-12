@@ -107,6 +107,7 @@ interface AppFilterProps {
   /** Called on mount and whenever the user applies or clears the filter. */
   onChange: (params: Record<string, unknown>) => void;
   title?: string;
+  className?: string;
 }
 
 export default function AppFilter({
@@ -114,6 +115,7 @@ export default function AppFilter({
   validKeys,
   onChange,
   title,
+  className,
 }: AppFilterProps) {
   const { t } = useTranslation();
   const modalTitle = title || t("labels.filter.title");
@@ -204,10 +206,14 @@ export default function AppFilter({
       <AppButton
         color="background"
         onClick={handleOpen}
-        className={`px-4 shrink-0 relative ${hasActiveFilters ? "text-primary-3 dark:text-primary border-primary-3 hover:border-primary-3 dark:border-primary/60" : ""}`}
+        className={`w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0 relative ${hasActiveFilters ? "text-primary-3 dark:text-primary border-primary-3 hover:border-primary-3 dark:border-primary/60" : ""} ${className || ""}`}
+        title={t("labels.filter.button")}
+        aria-label={t("labels.filter.button")}
       >
         <FilterList fontSize="small" />
-        {t("labels.filter.button")}
+        <span className="hidden min-[900px]:inline">
+          {t("labels.filter.button")}
+        </span>
         {hasActiveFilters && (
           <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-primary-3 dark:bg-primary rounded-full border-2 border-background" />
         )}
