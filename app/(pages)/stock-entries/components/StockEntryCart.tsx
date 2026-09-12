@@ -40,7 +40,7 @@ export function StockEntryCart({
   const { t } = useTranslation();
 
   return (
-    <div className="w-[420px] shrink-0 flex flex-col min-h-0">
+    <div className="w-full h-full flex flex-col min-h-0">
       <AppCard className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2.5">
@@ -65,7 +65,7 @@ export function StockEntryCart({
             <AppButton
               color="background"
               onClick={onClearCart}
-              className=" px-2! py-1! gap-1! "
+              className="px-2! py-1!"
             >
               <DeleteOutlined
                 style={{ fontSize: 16 }}
@@ -174,11 +174,11 @@ export function StockEntryCart({
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-1 flex-1 items-end">
-                      <span className="text-xs text-label">
+                    <div className="flex flex-col gap-1 flex-1 items-end min-w-0">
+                      <span className="text-xs text-label truncate">
                         {t("labels.stock_entries.new.subtotal")}
                       </span>
-                      <span className="text-sm font-semibold text-foreground py-1.5">
+                      <span className="text-sm font-semibold text-foreground py-1.5 truncate">
                         {formatCurrency(item.unit_price * item.quantity)}
                       </span>
                     </div>
@@ -196,7 +196,7 @@ export function StockEntryCart({
               <span>{totalItems}</span>
             </div>
             <div className="h-px bg-border my-1" />
-            <div className="flex justify-between text-foreground font-semibold text-lg mt-1">
+            <div className="flex justify-between text-base font-semibold text-foreground">
               <span>{t("labels.stock_entries.new.total")}</span>
               <span>{formatCurrency(totalPrice)}</span>
             </div>
@@ -206,7 +206,7 @@ export function StockEntryCart({
             color="primary"
             disabled={cart.length === 0 || isFinishing}
             onClick={onFinishEntry}
-            className="w-full h-12 text-base! gap-2!"
+            className="w-full h-12 gap-2!"
           >
             <CheckCircleOutlined style={{ fontSize: 20 }} />
             {isFinishing

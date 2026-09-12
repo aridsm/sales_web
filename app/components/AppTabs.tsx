@@ -88,7 +88,7 @@ export default function AppTabs({
               if (el) tabRefs.current.set(tab.value, el);
             }}
             onClick={() => handleTabClick(tab.value)}
-            className={`relative z-[1] px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer whitespace-nowrap ${
+            className={`relative z-[1] px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center justify-center ${
               fullWidth ? "flex-1 text-center" : ""
             } ${isActive ? "text-foreground" : "text-label hover:text-foreground"}`}
           >

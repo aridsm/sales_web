@@ -30,12 +30,15 @@ export default function AppCreatedBy({
       >
         {getUserInitials(avatarIdentifier)}
       </div>
-      <div className="flex flex-col min-w-0">
-        <span className="text-xs text-foreground font-medium whitespace-nowrap">
+      <div className="flex flex-col min-w-0 flex-1">
+        <span
+          className="text-xs text-foreground font-medium "
+          title={formatCreatedBy(name, date)}
+        >
           {formatCreatedBy(name, date)}
         </span>
         {email && (
-          <span className="text-xs text-label whitespace-nowrap">
+          <span className="text-xs text-label " title={email}>
             {email}
           </span>
         )}

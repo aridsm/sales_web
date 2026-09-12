@@ -30,11 +30,13 @@ import AppAmountRange from "../../../components/inputs/AppAmountRange";
 import AppNumberRange from "../../../components/inputs/AppNumberRange";
 import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
+import AppTabs from "@/app/components/AppTabs";
 import {
   DeleteOutlined,
   ArrowBackOutlined,
   ErrorTwoTone,
   LockOutlined,
+  ShoppingCartOutlined,
 } from "@mui/icons-material";
 import AppSearchInput from "../../../components/inputs/AppSearchInput";
 import { salesService } from "@/api/services/SaleService";
@@ -46,6 +48,7 @@ export default function NewSalePage() {
   const { t } = useTranslation();
   const { canEdit } = usePermission();
   const router = useRouter();
+  const [mobileTab, setMobileTab] = useState<"products" | "cart">("products");
   const [filterParams, setFilterParams] = useState<Record<string, unknown>>({});
   const handleFilterChange = useCallback(
     (params: Record<string, unknown>) => setFilterParams(params),
@@ -205,8 +208,40 @@ export default function NewSalePage() {
         </AppButton>
       </div>
 
-      <div className="flex gap-5 flex-1 min-h-0">
-        <div className="flex-1 flex flex-col min-h-0 min-w-0">
+      <div className="flex md:hidden mb-3">
+        <AppTabs
+          fullWidth
+          tabs={[
+            {
+              value: "products",
+              label: t("labels.products.title"),
+            },
+            {
+              value: "cart",
+              label: (
+                <span className="flex items-center justify-center gap-1.5">
+                  <ShoppingCartOutlined style={{ fontSize: 16 }} />
+                  <span>{t("labels.sales.new.cart")}</span>
+                  {totalItems > 0 && (
+                    <span className="bg-primary-3 text-white text-xs px-1.5 py-0.5 rounded-full font-bold tabular-nums">
+                      {totalItems}
+                    </span>
+                  )}
+                </span>
+              ),
+            },
+          ]}
+          activeTab={mobileTab}
+          onChange={(v) => setMobileTab(v as "products" | "cart")}
+        />
+      </div>
+
+      <div className="flex gap-4 md:gap-5 flex-1 min-h-0">
+        <div
+          className={`flex-1 flex flex-col min-h-0 min-w-0 ${
+            mobileTab === "products" ? "flex" : "hidden md:flex"
+          }`}
+        >
           <div className="flex gap-3 mb-3">
             <AppSearchInput
               value={search}
@@ -222,13 +257,13 @@ export default function NewSalePage() {
             </AppFilter>
           </div>
 
-          <div className="flex-1 overflow-y-auto pr-1">
+          <div className="flex-1 overflow-y-auto">
             <AppInfinity
               pagination={productsPagination}
               initialLoaded={initialLoaded}
               emptyMessage={t("labels.sales.new.no_products")}
             >
-              <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-3">
                 {productsPagination.items.map((product) => {
                   const inCart = getCartQuantity(product.id);
                   const outOfStock = product.stock_amount <= 0;
@@ -268,24 +303,24 @@ export default function NewSalePage() {
                         {product.name}
                       </p>
 
-                      <div className="flex items-center justify-between mt-auto">
-                        <div className="flex flex-col">
-                          <span className="text-lg font-semibold text-foreground leading-none mb-1">
+                      <div className="flex items-center justify-between mt-auto gap-2">
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-lg font-semibold text-foreground leading-none mb-1 truncate">
                             {formatCurrency(product.price)}
                           </span>
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1 min-w-0">
                             {product.stock_amount <= 5 && (
                               <ErrorTwoTone
                                 style={{ fontSize: 16 }}
-                                className={
+                                className={`shrink-0 ${
                                   product.stock_amount === 0
                                     ? "text-red-500"
                                     : "text-amber-600 dark:text-amber-400"
-                                }
+                                }`}
                               />
                             )}
                             <span
-                              className={`text-xs ${
+                              className={`text-xs truncate ${
                                 product.stock_amount === 0
                                   ? "text-red-500 font-medium"
                                   : product.stock_amount <= 5
@@ -306,13 +341,13 @@ export default function NewSalePage() {
                               removeFromCart(product.id);
                             }}
                             color="background"
-                            className="py-1! px-3!"
+                            className="py-1! px-3! shrink-0"
                           >
                             <DeleteOutlined
                               style={{ fontSize: 16 }}
                               className="text-red-500"
                             />
-                            {t("labels.all.remove")}
+                            <span className="hidden sm:inline">{t("labels.all.remove")}</span>
                           </AppButton>
                         ) : (
                           !outOfStock && (
@@ -322,7 +357,7 @@ export default function NewSalePage() {
                                 e.stopPropagation();
                                 addToCart(product);
                               }}
-                              className="py-1! px-3! opacity-0 group-hover:opacity-100 transition-opacity "
+                              className="py-1! px-3! shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                             >
                               {t("labels.all.add")}
                             </AppButton>
@@ -335,20 +370,49 @@ export default function NewSalePage() {
               </div>
             </AppInfinity>
           </div>
+
+          {totalItems > 0 && (
+            <div className="md:hidden mt-3 p-3 bg-background-2 dark:bg-background-3 border border-border rounded-lg flex items-center justify-between shadow-lg shrink-0">
+              <div className="flex flex-col">
+                <span className="text-xs text-label">
+                  {totalItems} {totalItems === 1 ? t("labels.sales.new.item_singular") : t("labels.sales.new.item_plural")}
+                </span>
+                <span className="text-base font-bold text-foreground">
+                  {formatCurrency(totalPrice)}
+                </span>
+              </div>
+              <AppButton
+                color="primary"
+                onClick={() => setMobileTab("cart")}
+                className="gap-1.5 text-sm"
+              >
+                <ShoppingCartOutlined style={{ fontSize: 18 }} />
+                <span>{t("labels.sales.new.cart")}</span>
+              </AppButton>
+            </div>
+          )}
         </div>
 
-        <SaleCart
-          cart={cart}
-          totalItems={totalItems}
-          totalPrice={totalPrice}
-          isFinishing={isFinishing}
-          onClearCart={clearCart}
-          onRemoveFromCart={removeFromCart}
-          onUpdateQuantity={updateQuantity}
-          onFinishSale={finishSale}
-          saleDate={saleDate}
-          onDateChange={setSaleDate}
-        />
+        <div
+          className={`shrink-0 flex flex-col min-h-0 ${
+            mobileTab === "cart"
+              ? "w-full flex-1 md:flex-initial md:w-[380px] min-[1100px]:w-[420px] xl:w-[450px]"
+              : "hidden md:flex md:w-[380px] min-[1100px]:w-[420px] xl:w-[450px]"
+          }`}
+        >
+          <SaleCart
+            cart={cart}
+            totalItems={totalItems}
+            totalPrice={totalPrice}
+            isFinishing={isFinishing}
+            onClearCart={clearCart}
+            onRemoveFromCart={removeFromCart}
+            onUpdateQuantity={updateQuantity}
+            onFinishSale={finishSale}
+            saleDate={saleDate}
+            onDateChange={setSaleDate}
+          />
+        </div>
       </div>
     </AppPage>
   );

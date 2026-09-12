@@ -39,7 +39,7 @@ export function SaleCart({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="w-96 shrink-0 flex flex-col min-h-0">
+    <div className="w-full h-full flex flex-col min-h-0">
       <AppCard className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2.5">
@@ -168,7 +168,7 @@ export function SaleCart({
             color="primary"
             disabled={cart.length === 0 || isFinishing}
             onClick={onFinishSale}
-            className="w-full h-12 text-base!  gap-2!"
+            className="w-full h-12 gap-2!"
           >
             <CheckCircleOutlined style={{ fontSize: 20 }} />
             {isFinishing

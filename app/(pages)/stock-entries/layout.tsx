@@ -93,11 +93,11 @@ export default function StockEntriesLayout({
           className={`flex-col min-w-0 min-h-0 ${isEntrySelected ? "hidden lg:flex lg:w-96 shrink-0" : "flex flex-1"}`}
         >
           <div
-            className={` gap-3 mb-3 ${isEntrySelected ? "" : "flex items-center"}`}
+            className={`gap-2 min-[900px]:gap-3 mb-3 ${isEntrySelected ? "" : "flex items-center"}`}
           >
-            <div className="flex flex-1 gap-3 items-center">
+            <div className="flex flex-1 gap-2 min-[900px]:gap-3 items-center min-w-0">
               <div
-                className={`flex items-center gap-2 w-full ${isEntrySelected ? "" : "sm:max-w-md mr-auto"}`}
+                className={`flex items-center gap-2 w-full min-w-0 ${isEntrySelected ? "" : "sm:max-w-md mr-auto"}`}
               >
                 <AppSearchInput
                   className="w-full"
@@ -125,10 +125,14 @@ export default function StockEntriesLayout({
               <AppButton
                 color="primary"
                 onClick={() => router.push("/stock-entries/new")}
-                className={`shrink-0 ${isEntrySelected ? " w-full mt-3" : ""}`}
+                className={`shrink-0 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 ${isEntrySelected ? "w-full mt-3 min-[900px]:w-full" : ""}`}
+                title={t("labels.grid.add_item")}
+                aria-label={t("labels.grid.add_item")}
               >
                 <Add style={{ fontSize: 18 }} />
-                {t("labels.grid.add_item")}
+                <span className="hidden min-[900px]:inline">
+                  {t("labels.grid.add_item")}
+                </span>
               </AppButton>
             )}
           </div>
@@ -144,7 +148,7 @@ export default function StockEntriesLayout({
               <AppEmptyState className="py-20" />
             ) : (
               <div
-                className={`grid gap-3 ${isEntrySelected ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}
+                className={`grid gap-3 ${isEntrySelected ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"}`}
               >
                 {stockPagination.items.map((entry) => {
                   const isSelected = pathname === `/stock-entries/${entry.id}`;
@@ -195,27 +199,20 @@ function StockEntryCard({
   return (
     <Link
       href={`/stock-entries/${entry.id}`}
-      className={`flex flex-col w-full text-left p-5 rounded-md border group relative overflow-hidden ${
+      className={`flex flex-col w-full text-left p-3 md:p-5 rounded-md border group relative overflow-hidden ${
         isSelected
           ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-primary-4"
           : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-3 dark:hover:bg-background-2"
       }`}
     >
       <div className="flex items-start justify-between gap-3 mb-3 w-full">
-        <div className="flex flex-col gap-1.5">
-          <span
-            className={`text-base font-bold ${isSelected ? "text-primary-3 dark:text-primary" : "text-foreground"}`}
-          >
-            #{entry.code.toString().padStart(6, "0")}
-          </span>
-          <AppCreatedBy
-            name={entry.created_by_name}
-            date={entry.created_at || entry.date}
-            email={entry.created_by_email}
-          />
-        </div>
         <span
-          className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 ${status.bg} ${status.color}`}
+          className={`text-base font-bold truncate ${isSelected ? "text-primary-3 dark:text-primary" : "text-foreground"}`}
+        >
+          #{entry.code.toString().padStart(6, "0")}
+        </span>
+        <span
+          className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap ${status.bg} ${status.color}`}
         >
           <span
             className={`w-1.5 h-1.5 rounded-full shrink-0 ${
@@ -225,8 +222,12 @@ function StockEntryCard({
           {t(status.labelKey)}
         </span>
       </div>
-
-      <div className="flex items-center justify-between w-full mt-auto pt-4 border-t border-border border-dashed">
+      <AppCreatedBy
+        name={entry.created_by_name}
+        date={entry.created_at || entry.date}
+        email={entry.created_by_email}
+      />
+      <div className="flex items-center justify-between w-full mt-3 pt-4 border-t border-border border-dashed">
         <div className="flex items-center gap-1.5 text-label">
           <InventoryOutlined style={{ fontSize: 16 }} />
           <span className="text-sm">
