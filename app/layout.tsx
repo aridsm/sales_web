@@ -11,7 +11,7 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: "Kivo — Gestão de Vendas",
+  title: "SalesApp — Gestão de Vendas",
   description: "Sistema de gestão de vendas, produtos e despesas.",
 };
 

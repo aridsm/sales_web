@@ -47,7 +47,8 @@
       "button": "Login",
       "logging": "Logging in...",
       "no_account": "Doesn't have an account?",
-      "create_account": "Create account"
+      "create_account": "Create account",
+      "remember_me": "Remember me"
     },
     "register": {
       "title": "Create account!",

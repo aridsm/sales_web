@@ -22,6 +22,7 @@ import {
 import AppButton from "./AppButton";
 import AppDarkModeToggle from "./AppDarkModeToggle";
 import AppLanguageSelect from "./AppLanguageSelect";
+import AppLogo from "./AppLogo";
 import { useTranslation } from "@/app/utils/i18n";
 import { useUserStore } from "@/stores/userStore";
 
@@ -48,23 +49,13 @@ function isItemActive(href: string, pathname: string): boolean {
 
 function KivoLogo({
   textColor = "text-white",
-  iconColor = "text-white",
 }: {
   textColor?: string;
   iconColor?: string;
 }) {
   return (
     <div className="flex items-center gap-2.5 pl-1">
-      <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center shrink-0">
-        <svg
-          className={`w-3.5 h-3.5 ${iconColor}`}
-          viewBox="0 0 200 200"
-          fill="currentColor"
-        >
-          <rect x="25" y="51" width="150" height="34" rx="8" />
-          <rect x="25" y="115" width="150" height="34" rx="8" />
-        </svg>
-      </div>
+      <AppLogo className="w-6 h-6 shrink-0" color="var(--primary, #aeec1c)" />
       <span className={`text-base font-bold tracking-wide ${textColor}`}>
         Kivo
       </span>

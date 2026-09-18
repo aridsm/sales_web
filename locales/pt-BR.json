@@ -47,7 +47,8 @@
       "button": "Entrar",
       "logging": "Entrando...",
       "no_account": "Não tem uma conta?",
-      "create_account": "Criar conta"
+      "create_account": "Criar conta",
+      "remember_me": "Lembrar de mim"
     },
     "register": {
       "title": "Criar conta!",

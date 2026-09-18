@@ -6,13 +6,10 @@ import { usersService } from "@/api/services/UserService";
 import { getApiError } from "@/api/schemas";
 import { useTokenStore } from "@/stores/tokenStore";
 import { useDialogStore } from "@/stores/dialogStore";
-import AppLogo from "@/app/components/AppLogo";
 import AppButton from "@/app/components/AppButton";
 import AppInputText from "@/app/components/inputs/AppInputText";
-import AppDarkModeToggle from "@/app/components/AppDarkModeToggle";
-import AppLanguageSelect from "@/app/components/AppLanguageSelect";
+import AppLogo from "@/app/components/AppLogo";
 import Link from "next/link";
-import AppCard from "@/app/components/AppCard";
 import { useTranslation } from "@/app/utils/i18n";
 
 export default function RegisterPage() {
@@ -65,9 +62,7 @@ export default function RegisterPage() {
       const { code } = getApiError(err);
       openDialog({
         variant: "error",
-        message: t(
-          code ? `errors.auth.${code}` : "errors.all.generic",
-        ),
+        message: t(code ? `errors.auth.${code}` : "errors.all.generic"),
       });
     } finally {
       setLoading(false);
@@ -79,91 +74,75 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto px-4">
-      <div className="flex items-center justify-between gap-4 mb-2">
-        <AppDarkModeToggle />
-        <AppLanguageSelect />
+    <div className="w-full">
+      <div className="mb-8">
+        <div className="bg-primary w-10 h-2 mb-3 mr-auto"></div>
+
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+          {t("labels.register.title")}
+        </h1>
+        <p className="text-label mt-2">{t("labels.register.description")}</p>
       </div>
 
-      <AppCard className="p-8">
-        <div className="flex flex-col items-center gap-4 mb-8">
-          <div className="w-12 h-12 flex items-center justify-center rounded-md bg-primary/10 p-2 text-primary">
-            <AppLogo />
-          </div>
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-foreground tracking-tight">
-              {t("labels.register.title")}
-            </h1>
-            <p className="text-label text-sm mt-1.5">
-              {t("labels.register.description")}
-            </p>
-          </div>
-        </div>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <AppInputText
+          label="Nome"
+          type="text"
+          placeholder={t("labels.all.name")}
+          value={name}
+          onChange={(e) => setName((e.target as HTMLInputElement).value)}
+          required
+        />
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <AppInputText
-            label="Nome"
-            type="text"
-            placeholder={t("labels.all.name")}
-            value={name}
-            onChange={(e) => setName((e.target as HTMLInputElement).value)}
-            required
-          />
+        <AppInputText
+          label="Email"
+          type="email"
+          placeholder={t("labels.all.email")}
+          value={email}
+          onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
+          required
+        />
 
-          <AppInputText
-            label="Email"
-            type="email"
-            placeholder={t("labels.all.email")}
-            value={email}
-            onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
-            required
-          />
+        <AppInputText
+          label={t("labels.all.password")}
+          type="password"
+          placeholder="••••••••"
+          value={password}
+          onChange={(e) => setPassword((e.target as HTMLInputElement).value)}
+          required
+        />
 
-          <AppInputText
-            label={t("labels.all.password")}
-            type="password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword((e.target as HTMLInputElement).value)}
-            required
-          />
+        <AppInputText
+          label={t("labels.register.confirm_password")}
+          type="password"
+          placeholder="••••••••"
+          value={confirmPassword}
+          onChange={(e) =>
+            setConfirmPassword((e.target as HTMLInputElement).value)
+          }
+          required
+        />
 
-          <AppInputText
-            label={t("labels.register.confirm_password")}
-            type="password"
-            placeholder="••••••••"
-            value={confirmPassword}
-            onChange={(e) =>
-              setConfirmPassword((e.target as HTMLInputElement).value)
-            }
-            required
-          />
+        <AppButton
+          type="submit"
+          color="foreground"
+          disabled={loading}
+          className="w-full mt-4 text-base font-semibold rounded-lg shadow-sm"
+        >
+          {loading
+            ? t("labels.register.creating")
+            : t("labels.register.create")}
+        </AppButton>
+      </form>
 
-          <AppButton
-            type="submit"
-            color="primary"
-            disabled={loading}
-            className="w-full h-11 mt-4 text-sm "
-          >
-            {loading
-              ? t("labels.register.creating")
-              : t("labels.register.create")}
-          </AppButton>
-        </form>
-
-        <p className="text-center text-sm text-label mt-6">
-          {t("labels.register.have_account")}{" "}
-          <Link
-            href="/login"
-            className="text-indigo-400 hover:text-primary-3 underline font-semibold transition-colors"
-          >
-            {t("labels.all.enter")}
-          </Link>
-        </p>
-      </AppCard>
-
-      <p className="text-center text-xs text-label mt-8">
-        © {new Date().getFullYear()} Kivo. {t("labels.all.all_rights")}.
+      <p className=" text-label mt-6">
+        {t("labels.register.have_account")}{" "}
+        <Link
+          href="/login"
+          className="text-primary-3 dark:text-primary hover:underline font-semibold transition-colors"
+        >
+          {t("labels.all.enter")}
+        </Link>
       </p>
     </div>
   );
