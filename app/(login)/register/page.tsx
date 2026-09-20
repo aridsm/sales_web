@@ -8,9 +8,9 @@ import { useTokenStore } from "@/stores/tokenStore";
 import { useDialogStore } from "@/stores/dialogStore";
 import AppButton from "@/app/components/AppButton";
 import AppInputText from "@/app/components/inputs/AppInputText";
-import AppLogo from "@/app/components/AppLogo";
 import Link from "next/link";
 import { useTranslation } from "@/app/utils/i18n";
+import { useColorModeStore } from "@/stores/colorModeStore";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -23,6 +23,9 @@ export default function RegisterPage() {
   const { setTokenData } = useTokenStore();
   const { openDialog } = useDialogStore();
   const [mounted, setMounted] = useState(false);
+  const {mode} = useColorModeStore()
+
+  const isDark = mode == 'dark'
 
   useEffect(() => {
     setMounted(true);
@@ -76,8 +79,6 @@ export default function RegisterPage() {
   return (
     <div className="w-full">
       <div className="mb-8">
-        <div className="bg-primary w-10 h-2 mb-3 mr-auto"></div>
-
         <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
           {t("labels.register.title")}
         </h1>
@@ -125,9 +126,8 @@ export default function RegisterPage() {
 
         <AppButton
           type="submit"
-          color="foreground"
+          color='primary-3'
           disabled={loading}
-          className="w-full mt-4 text-base font-semibold rounded-lg shadow-sm"
         >
           {loading
             ? t("labels.register.creating")

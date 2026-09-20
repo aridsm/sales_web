@@ -55,26 +55,24 @@ export default function LoginLayout({
         </div>
       </div>
 
-      <div className="w-full lg:w-2/3 xl:w-[65%] min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-14 relative bg-background-2 dark:bg-background-3">
-        <header className="w-full flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2 lg:hidden group">
-              <AppLogo className="w-7 h-7 shrink-0" />
-              <span className="text-lg font-bold tracking-tight text-foreground group-hover:opacity-80 transition-opacity">
-                SalesApp
-              </span>
-            </Link>
-            <AppDarkModeToggle />
-          </div>
+      <div className="w-full lg:w-2/3 xl:w-[65%] min-h-screen flex flex-col justify-between p-4 sm:p-10 lg:p-14 relative bg-background-2 dark:bg-background-3">
+        <header className="w-full flex items-center justify-between gap-3">
+          <Link href="/" className="flex items-center gap-2 lg:hidden group">
+            <AppLogo className="w-5 h-5 shrink-0" />
+            <span className="text-sm sm:text-lg font-semibold tracking-wide text-foreground group-hover:opacity-80 transition-opacity">
+              SalesApp
+            </span>
+          </Link>
 
-          <div className="flex items-center">
+          <div className="flex items-center justify-end lg:justify-between gap-2 sm:gap-6 w-full">
+            <AppDarkModeToggle variant="responsive" />
             <AppLanguageSelect />
           </div>
         </header>
 
-        <main className="w-full max-w-md mx-auto my-auto py-8">{children}</main>
+        <main className="w-full max-w-md mx-auto sm:my-auto py-8">{children}</main>
 
-        <footer className="w-full text-center text-sm text-label/70 pt-4">
+        <footer className="w-full text-center sm:text-sm text-label/70 pt-4">
           © {new Date().getFullYear()} SalesApp. Todos os direitos reservados.
         </footer>
       </div>

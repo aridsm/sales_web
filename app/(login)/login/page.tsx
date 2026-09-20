@@ -11,6 +11,7 @@ import AppInputText from "@/app/components/inputs/AppInputText";
 import AppCheckbox from "@/app/components/inputs/AppCheckbox";
 import Link from "next/link";
 import { useTranslation } from "@/app/utils/i18n";
+import { useColorModeStore } from "@/stores/colorModeStore";
 
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -22,6 +23,9 @@ export default function LoginPage() {
   const { token, setTokenData } = useTokenStore();
   const { openDialog } = useDialogStore();
   const [mounted, setMounted] = useState(false);
+  const {mode} = useColorModeStore()
+
+  const isDark = mode == 'dark'
 
   useEffect(() => {
     setMounted(true);
@@ -81,7 +85,6 @@ export default function LoginPage() {
   return (
     <div className="w-full">
       <div className="mb-8 flex flex-col">
-        <div className="bg-primary w-10 h-2 mb-3 mr-auto"></div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
           {t("labels.login.title")}
         </h1>
@@ -122,9 +125,8 @@ export default function LoginPage() {
 
         <AppButton
           type="submit"
-          color="foreground"
+          color='primary-3'
           disabled={loading}
-          className="w-full h-12 mt-2 font-semibold rounded-lg shadow-sm"
         >
           {loading ? t("labels.login.logging") : t("labels.login.button")}
         </AppButton>
