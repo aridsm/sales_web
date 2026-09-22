@@ -294,7 +294,17 @@
         "total": "Total",
         "items": "Items",
         "zero_price_title": "Items with zero price",
-        "zero_price_message": "The following items have a zero unit price:\n\n{{items}}.\n\nDo you want to proceed anyway?"
+        "zero_price_message": "The following items have a zero unit price:\n\n{{items}}.\n\nDo you want to proceed anyway?",
+        "comparison_title": "Price Comparison",
+        "selling_price": "Selling price",
+        "purchase_price": "Purchase price",
+        "difference": "Difference",
+        "margin": "Margin",
+        "comparison_warning": "Purchase price is {{percent}}% higher than the registered selling price.",
+        "comparison_positive": "Purchase price is {{percent}}% lower than the selling price.",
+        "comparison_equal": "Purchase price equals registered selling price.",
+        "comparison_no_purchase": "Enter purchase price to calculate variation.",
+        "comparison_no_selling": "Product has no registered selling price."
       }
     },
     "history": {

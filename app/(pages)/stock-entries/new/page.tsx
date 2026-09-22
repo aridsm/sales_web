@@ -345,29 +345,34 @@ export default function NewStockEntryPage() {
                       </p>
 
                       <div className="flex items-center justify-between mt-auto gap-2">
-                        <div className="flex items-center gap-1 min-w-0">
-                          {product.stock_amount <= 5 && (
-                            <ErrorTwoTone
-                              style={{ fontSize: 16 }}
-                              className={`shrink-0 ${
-                                product.stock_amount === 0
-                                  ? "text-red-500"
-                                  : "text-amber-600 dark:text-amber-400"
-                              }`}
-                            />
-                          )}
-                          <span
-                            className={`text-xs truncate ${
-                              product.stock_amount === 0
-                                ? "text-red-500 font-medium"
-                                : product.stock_amount <= 5
-                                  ? "text-amber-600 dark:text-amber-400 font-medium"
-                                  : "text-label"
-                            }`}
-                          >
-                            {product.stock_amount}{" "}
-                            {t("labels.stock_entries.new.in_stock")}
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-lg font-semibold text-foreground leading-none mb-1 truncate">
+                            {formatCurrency(product.price)}
                           </span>
+                          <div className="flex items-center gap-1 min-w-0">
+                            {product.stock_amount <= 5 && (
+                              <ErrorTwoTone
+                                style={{ fontSize: 16 }}
+                                className={`shrink-0 ${
+                                  product.stock_amount === 0
+                                    ? "text-red-500"
+                                    : "text-amber-600 dark:text-amber-400"
+                                }`}
+                              />
+                            )}
+                            <span
+                              className={`text-xs truncate ${
+                                product.stock_amount === 0
+                                  ? "text-red-500 font-medium"
+                                  : product.stock_amount <= 5
+                                    ? "text-amber-600 dark:text-amber-400 font-medium"
+                                    : "text-label"
+                              }`}
+                            >
+                              {product.stock_amount}{" "}
+                              {t("labels.stock_entries.new.in_stock")}
+                            </span>
+                          </div>
                         </div>
 
                         {inCart === 0 ? (

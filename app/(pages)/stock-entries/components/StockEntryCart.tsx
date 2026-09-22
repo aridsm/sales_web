@@ -11,6 +11,7 @@ import {
   CheckCircleOutlined,
 } from "@mui/icons-material";
 import AppDate from "../../../components/inputs/AppDate";
+import { StockPriceComparison } from "./StockPriceComparison";
 
 export function StockEntryCart({
   cart,
@@ -104,9 +105,12 @@ export function StockEntryCart({
                   className="px-4 py-3 flex flex-col gap-2.5"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-sm font-medium text-foreground truncate flex-1">
-                      {item.product.name}
-                    </p>
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {item.product.name}
+                      </p>
+                      <StockPriceComparison item={item} />
+                    </div>
                     <button
                       onClick={() => onRemoveFromCart(item.product.id)}
                       className="text-label hover:text-red-500 transition-colors shrink-0 cursor-pointer p-0.5"

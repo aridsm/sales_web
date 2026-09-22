@@ -288,7 +288,17 @@
         "total": "Total",
         "items": "Itens",
         "zero_price_title": "Itens sem preço",
-        "zero_price_message": "Os seguintes itens estão com preço unitário zerado:\n\n{{items}}.\n\nDeseja prosseguir mesmo assim?"
+        "zero_price_message": "Os seguintes itens estão com preço unitário zerado:\n\n{{items}}.\n\nDeseja prosseguir mesmo assim?",
+        "comparison_title": "Comparação de Preço",
+        "selling_price": "Preço de venda",
+        "purchase_price": "Preço de compra",
+        "difference": "Diferença",
+        "margin": "Margem",
+        "comparison_warning": "Preço de compra {{percent}}% acima do preço de venda cadastrado.",
+        "comparison_positive": "Preço de compra {{percent}}% abaixo do preço de venda.",
+        "comparison_equal": "Preço de compra igual ao preço de venda cadastrado.",
+        "comparison_no_purchase": "Informe o preço de compra para calcular a variação.",
+        "comparison_no_selling": "Produto sem preço de venda cadastrado."
       },
       "list": {
         "purchases_today": "Compras Hoje",
