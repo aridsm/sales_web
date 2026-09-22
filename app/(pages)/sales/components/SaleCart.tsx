@@ -43,7 +43,7 @@ export function SaleCart({
       <AppCard className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-primary-3/10 dark:bg-primary/10 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xs bg-primary-3/10 dark:bg-primary/10 flex items-center justify-center">
               <ShoppingCartOutlined
                 className="text-primary-3 dark:text-primary"
                 style={{ fontSize: 20 }}
@@ -124,7 +124,7 @@ export function SaleCart({
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => onUpdateQuantity(item.product.id, -1)}
-                          className="w-7 h-7 rounded-md border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3"
+                          className="w-7 h-7 rounded-xs border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3"
                         >
                           <RemoveOutlined style={{ fontSize: 14 }} />
                         </button>
@@ -134,7 +134,7 @@ export function SaleCart({
                         <button
                           onClick={() => onUpdateQuantity(item.product.id, 1)}
                           disabled={item.quantity >= item.product.stock_amount}
-                          className="w-7 h-7 rounded-md border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3 disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="w-7 h-7 rounded-xs border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3 disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           <AddOutlined style={{ fontSize: 14 }} />
                         </button>

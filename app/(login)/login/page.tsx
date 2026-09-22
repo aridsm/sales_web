@@ -23,9 +23,9 @@ export default function LoginPage() {
   const { token, setTokenData } = useTokenStore();
   const { openDialog } = useDialogStore();
   const [mounted, setMounted] = useState(false);
-  const {mode} = useColorModeStore()
+  const { mode } = useColorModeStore();
 
-  const isDark = mode == 'dark'
+  const isDark = mode == "dark";
 
   useEffect(() => {
     setMounted(true);
@@ -125,7 +125,7 @@ export default function LoginPage() {
 
         <AppButton
           type="submit"
-          color='primary-3'
+          color="primary"
           disabled={loading}
         >
           {loading ? t("labels.login.logging") : t("labels.login.button")}
@@ -136,7 +136,7 @@ export default function LoginPage() {
         {t("labels.login.no_account")}{" "}
         <Link
           href="/register"
-          className="text-primary-3 dark:text-primary hover:underline font-semibold transition-colors"
+          className="text-primary-3 dark:text-primary-3 hover:underline font-semibold transition-colors"
         >
           {t("labels.login.create_account")}
         </Link>

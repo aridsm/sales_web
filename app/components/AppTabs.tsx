@@ -26,37 +26,44 @@ export default function AppTabs({
     activeTab ?? tabs[0]?.value ?? "",
   );
   const currentTab = activeTab ?? internalTab;
-  const [pillStyle, setPillStyle] = useState<React.CSSProperties>({});
+  const [pillStyle, setPillStyle] = useState<React.CSSProperties>({
+    opacity: 0,
+  });
   const containerRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
   useEffect(() => {
     const updatePill = () => {
       const el = tabRefs.current.get(currentTab);
-      const container = containerRef.current;
-      if (el && container) {
-        const containerRect = container.getBoundingClientRect();
-        const elRect = el.getBoundingClientRect();
+      if (el) {
         setPillStyle({
-          left: elRect.left - containerRect.left + container.scrollLeft,
-          width: elRect.width,
-          height: elRect.height,
+          left: el.offsetLeft,
+          width: el.offsetWidth,
+          opacity: 1,
         });
       }
     };
 
     updatePill();
-    window.addEventListener("resize", updatePill);
+
     const container = containerRef.current;
-    if (container) {
-      container.addEventListener("scroll", updatePill);
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && container) {
+      ro = new ResizeObserver(() => {
+        updatePill();
+      });
+      ro.observe(container);
     }
 
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.ready.then(updatePill);
+    }
+
+    window.addEventListener("resize", updatePill);
+
     return () => {
+      ro?.disconnect();
       window.removeEventListener("resize", updatePill);
-      if (container) {
-        container.removeEventListener("scroll", updatePill);
-      }
     };
   }, [currentTab, tabs]);
 
@@ -70,12 +77,12 @@ export default function AppTabs({
   return (
     <div
       ref={containerRef}
-      className={`relative border border-border inline-flex items-center bg-background-3 dark:bg-background-3 rounded-md p-1 gap-0.5 ${
+      className={`relative border border-border inline-flex items-center bg-background-2 dark:bg-background-3 rounded-xs p-1 gap-0.5 ${
         fullWidth ? "w-full" : "w-fit shrink-0"
       } ${className}`}
     >
       <div
-        className="absolute top-1 border border-border rounded-sm bg-background-2 dark:bg-gray-700/40 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] pointer-events-none"
+        className="absolute inset-y-1 rounded-xs bg-primary shadow-xs transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] pointer-events-none"
         style={pillStyle}
       />
 
@@ -86,11 +93,12 @@ export default function AppTabs({
             key={tab.value}
             ref={(el) => {
               if (el) tabRefs.current.set(tab.value, el);
+              else tabRefs.current.delete(tab.value);
             }}
             onClick={() => handleTabClick(tab.value)}
-            className={`relative z-[1] px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center justify-center ${
+            className={`relative z-[1] h-7 sm:h-8 px-3 sm:px-4 text-xs sm:text-sm rounded-xs transition-colors duration-150 cursor-pointer whitespace-nowrap flex items-center justify-center select-none ${
               fullWidth ? "flex-1 text-center" : ""
-            } ${isActive ? "text-foreground" : "text-label hover:text-foreground"}`}
+            } ${isActive ? "text-white font-semibold" : "text-label hover:text-foreground font-medium"}`}
           >
             {tab.label}
           </button>

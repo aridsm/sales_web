@@ -37,7 +37,7 @@ export default function ActiveCompanyCard({
             )}
 
             {activeCompany && (
-              <span className="text-xs px-2 py-0.5 rounded text-primary-3 bg-primary-4 dark:text-primary dark:bg-primary-light font-medium shrink-0">
+              <span className="text-xs font-medium px-2 py-0.5 rounded-xs bg-background-3 border border-border text-foreground/80 shrink-0">
                 {t(`labels.account.permissions.${currentUser?.permission}`)}
               </span>
             )}

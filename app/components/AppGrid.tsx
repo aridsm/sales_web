@@ -193,7 +193,7 @@ export default function AppGrid<T>({
       className={`flex flex-col h-full min-h-0 min-w-0 flex-1 w-full ${className || ""}`}
     >
       {hasSelection && selectedRows && selectedRows.length > 0 && (
-        <div className="flex items-center justify-between bg-background-2 dark:bg-background-3 border border-border rounded-lg p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between bg-background-2 dark:bg-background-3 border border-border rounded-xs p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200">
           <div className="flex items-center gap-2.5">
             <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-primary-3 text-white font-bold text-xs">
               {selectedRows.length}
@@ -211,7 +211,7 @@ export default function AppGrid<T>({
           {onSelectedChange && (
             <button
               onClick={() => onSelectedChange([])}
-              className="inline-flex items-center gap-1 text-xs font-medium text-label hover:text-foreground p-1 px-2 rounded-md hover:bg-background-3 dark:hover:bg-background-2 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1 text-xs font-medium text-label hover:text-foreground p-1 px-2 rounded-xs hover:bg-background-3 dark:hover:bg-background-2 transition-colors cursor-pointer"
               title={t("labels.all.clear") || "Limpar"}
             >
               <Close style={{ fontSize: 14 }} />
@@ -230,7 +230,7 @@ export default function AppGrid<T>({
             <div className="h-full w-full flex-1" />
           )
         ) : (
-          <div className="overflow-auto min-h-0 border border-border rounded-lg bg-white dark:bg-background">
+          <div className="overflow-auto min-h-0 border border-border rounded-xs bg-white dark:bg-background">
             <table
               className="table-fixed max-w-none border-separate border-spacing-0"
               style={{
@@ -239,10 +239,10 @@ export default function AppGrid<T>({
                   items.length > 0 && tableWidth > 0 ? tableWidth : "100%",
               }}
             >
-              <thead className="text-sm sticky top-0 z-20 text-label bg-background-3 dark:bg-background-3">
+              <thead className="text-xs sm:text-sm sticky top-0 z-20 text-label bg-background-3 dark:bg-background-3">
                 <tr>
                   {hasSelection && (
-                    <th className="p-3 text-center sticky left-0 z-30 w-12 border-b border-border bg-background-3 dark:bg-background-3">
+                    <th className="py-2 px-2.5 sm:py-2.5 sm:px-3 text-center sticky left-0 z-30 w-10 sm:w-12 border-b border-border bg-background-3 dark:bg-background-3">
                       {items.length > 0 && (
                         <AppCheckbox
                           checked={isAllSelected}
@@ -254,7 +254,7 @@ export default function AppGrid<T>({
                   {columns.map((col, index) => (
                     <th
                       key={index}
-                      className={`py-3 px-4 text-left relative border-b border-border font-medium ${resizingIndex === index ? "text-primary-3 dark:text-primary" : ""}`}
+                      className={`py-2 px-3 sm:py-2.5 sm:px-4 text-left relative border-b border-border font-medium whitespace-nowrap ${resizingIndex === index ? "text-primary-3 dark:text-primary" : ""}`}
                       style={{ width: colWidths[index] || col.size || 140 }}
                     >
                       {col.column}
@@ -263,24 +263,24 @@ export default function AppGrid<T>({
                           onMouseDown={(e) => handleMouseDown(e, index)}
                           className="absolute right-0 top-0 bottom-0 w-5 cursor-col-resize z-10 flex items-center justify-center group/resize"
                         >
-                          <div className="w-[2px] h-6 rounded-full bg-border/50 group-hover/resize:bg-primary transition-colors" />
+                          <div className="w-[2px] h-4 sm:h-5 rounded-full bg-border/50 group-hover/resize:bg-primary transition-colors" />
                         </div>
                       )}
                     </th>
                   ))}
                   <th className="border-b border-border"></th>
                   {actions && items.length > 0 && (
-                    <th className="p-3 text-center sticky right-0 z-30 w-12 border-b border-border"></th>
+                    <th className="py-2 px-2.5 sm:py-2.5 sm:px-3 text-center sticky right-0 z-30 w-10 sm:w-12 border-b border-border"></th>
                   )}
                 </tr>
               </thead>
               {items.length > 0 && (
                 <tbody
-                  className={
+                  className={`text-xs sm:text-sm ${
                     delayedLoading
                       ? "opacity-50 transition-opacity pointer-events-none "
                       : ""
-                  }
+                  }`}
                 >
                   {items.map((row: T, rowIndex: number) => {
                     const selected = isSelected(row);
@@ -295,7 +295,7 @@ export default function AppGrid<T>({
                     return (
                       <tr
                         key={rowIndex}
-                        className={`group transition-colors duration-100 ${
+                        className={`group transition-colors duration-100 h-12 sm:h-14 ${
                           selected
                             ? "bg-primary-4 dark:bg-background-3 hover:bg-primary-4 dark:hover:bg-background-3"
                             : `${rowBgClass} ${hoverBgClass}`
@@ -303,7 +303,7 @@ export default function AppGrid<T>({
                       >
                         {hasSelection && (
                           <td
-                            className={`border-border p-3 w-12 sticky left-0 z-10 text-center ${borderBClass} transition-colors ${
+                            className={`border-border py-2 px-2.5 sm:py-2.5 sm:px-3 w-10 sm:w-12 sticky left-0 z-10 text-center ${borderBClass} transition-colors ${
                               selected
                                 ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3"
                                 : `${rowBgClass} ${groupHoverBgClass}`
@@ -320,7 +320,7 @@ export default function AppGrid<T>({
                         {columns.map((col, colIndex) => (
                           <td
                             key={colIndex}
-                            className={`py-3.5 px-4 border-border overflow-hidden ${borderBClass} text-foreground transition-colors ${
+                            className={`py-2 px-3 sm:py-2.5 sm:px-4 border-border overflow-hidden ${borderBClass} text-foreground transition-colors ${
                               selected ? "text-foreground" : ""
                             }`}
                             style={{
@@ -335,7 +335,7 @@ export default function AppGrid<T>({
                         ></td>
                         {actions && (
                           <td
-                            className={`p-3 ${borderBClass} border-border text-center w-12 sticky right-0 z-10 transition-colors ${
+                            className={`py-2 px-2.5 sm:py-2.5 sm:px-3 ${borderBClass} border-border text-center w-10 sm:w-12 sticky right-0 z-10 transition-colors ${
                               selected
                                 ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3"
                                 : `${rowBgClass} ${groupHoverBgClass} border-border`

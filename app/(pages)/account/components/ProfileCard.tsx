@@ -110,7 +110,7 @@ export default function ProfileCard({
               <button
                 type="button"
                 onClick={handleStartEditName}
-                className="p-1 rounded-md text-label hover:text-foreground hover:bg-foreground/5 transition-colors shrink-0 cursor-pointer"
+                className="w-7 h-7 rounded-xs flex items-center justify-center text-label hover:text-foreground hover:bg-foreground/5 transition-colors shrink-0 cursor-pointer"
                 title={t("labels.all.edit")}
                 aria-label={t("labels.all.edit")}
               >

@@ -370,7 +370,7 @@ const AppDateInner = (
         year === today.getFullYear();
 
       let dayClass =
-        "w-8 h-8 flex items-center justify-center rounded-md text-sm cursor-pointer transition-colors";
+        "w-8 h-8 flex items-center justify-center rounded-xs text-sm cursor-pointer transition-colors";
       if (isSelected) {
         dayClass += " bg-primary-3 text-white font-medium";
       } else if (isToday) {
@@ -438,7 +438,7 @@ const AppDateInner = (
               left: `${coords.left}px`,
               zIndex: 9999,
             }}
-            className={`bg-background-2 dark:bg-background-3 border border-border rounded-md shadow-dropdown p-3 w-[320px] ${
+            className={`bg-background-2 dark:bg-background-3 border border-border rounded-xs shadow-dropdown p-3 w-[320px] ${
               coords.isAbove
                 ? "animate-dropdown-open-above"
                 : "animate-dropdown-open"
@@ -530,7 +530,7 @@ const AppDateInner = (
                       setHourText(String(selectedHour).padStart(2, "0"));
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="flex-1 min-w-0 bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary-3 dark:focus:border-primary font-medium text-center"
+                    className="flex-1 min-w-0 bg-background dark:bg-background-2 border border-border rounded-xs py-1.5 text-sm text-foreground focus:outline-none focus:border-primary-3 dark:focus:border-primary font-medium text-center"
                   />
                   <span className="text-foreground font-semibold text-lg">
                     :
@@ -553,7 +553,7 @@ const AppDateInner = (
                       setMinuteText(String(selectedMinute).padStart(2, "0"));
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="flex-1 min-w-0  bg-background dark:bg-background-2 border border-border rounded-md py-1.5 text-sm text-foreground focus:outline-none focus:border-primary-3 dark:focus:border-primary font-medium text-center"
+                    className="flex-1 min-w-0  bg-background dark:bg-background-2 border border-border rounded-xs py-1.5 text-sm text-foreground focus:outline-none focus:border-primary-3 dark:focus:border-primary font-medium text-center"
                   />
                 </div>
               </div>
@@ -562,7 +562,7 @@ const AppDateInner = (
             {activeDraft &&
               !isNaN(activeDraft.getTime()) &&
               activeDraft.getTime() > new Date().setHours(23, 59, 59, 999) && (
-                <div className="mt-3 p-2 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-md">
+                <div className="mt-3 p-2 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-xs">
                   <p className="text-xs text-amber-700 dark:text-amber-400 text-center font-medium">
                     A data selecionada é uma data futura
                   </p>
@@ -573,7 +573,7 @@ const AppDateInner = (
               color="primary"
               onClick={handleSave}
               disabled={!draftValue}
-              className="w-full mt-3 h-9 text-sm! font-semibold"
+              className="w-full mt-3 font-semibold"
             >
               Salvar
             </AppButton>

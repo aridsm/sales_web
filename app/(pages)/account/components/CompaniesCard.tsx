@@ -113,14 +113,14 @@ export default function CompaniesCard({
         </div>
 
         <AppButton
-          color="primary-3"
-          className="w-8 h-8 min-w-8! min-h-8! max-h-8! p-0! md:w-auto md:min-w-0 md:min-h-10! md:max-h-10! md:py-2.5! md:px-4! gap-1.5! shrink-0"
+          color="primary"
           onClick={onCreateCompanyClick}
+          className="w-10 min-w-10 px-0 sm:w-auto sm:min-w-0 sm:px-3.5 shrink-0"
           title={t("labels.account.create_company")}
           aria-label={t("labels.account.create_company")}
         >
-          <AddOutlined style={{ fontSize: 18 }} />
-          <span className="hidden md:inline">
+          <AddOutlined fontSize="small" />
+          <span className="hidden sm:inline">
             {t("labels.account.create_company")}
           </span>
         </AppButton>
@@ -138,7 +138,11 @@ export default function CompaniesCard({
             return (
               <div
                 key={comp.id}
-                className={`flex items-center justify-between p-3.5 rounded-md border transition-colors  gap-3 ${isActive ? "border-primary-3 bg-primary-4/50 dark:bg-primary-3/15" : "border-border bg-background dark:bg-background-2"}`}
+                className={`flex items-center justify-between p-3.5 rounded-xs border transition-colors gap-3 ${
+                  isActive
+                    ? "border-primary-3 dark:border-primary-3 bg-background dark:bg-background-2 shadow-xs"
+                    : "border-border bg-background dark:bg-background-2 hover:border-border-2"
+                }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div
@@ -147,7 +151,7 @@ export default function CompaniesCard({
                     {getCompanyInitials(comp.name)}
                   </div>
                   <div className="flex flex-col gap-1 min-w-0">
-                    <span className="text-xs sm:text-sm font-semibold text-foreground break-words">
+                    <span className="text-xs sm:text-sm font-semibold break-words text-foreground">
                       {comp.name}
                     </span>
                     <span className="text-xs text-label">
@@ -167,7 +171,7 @@ export default function CompaniesCard({
                     {t("labels.account.manage_members")}
                   </AppButton>
                   {isActive ? (
-                    <span className="w-20 py-1 rounded-sm text-xs font-semibold bg-primary-3 text-white flex items-center justify-center shrink-0 select-none">
+                    <span className="w-20 py-1 rounded-xs text-xs font-semibold bg-primary-3 text-white flex items-center justify-center shrink-0 select-none">
                       {t("labels.account.active")}
                     </span>
                   ) : (

@@ -23,9 +23,9 @@ export default function RegisterPage() {
   const { setTokenData } = useTokenStore();
   const { openDialog } = useDialogStore();
   const [mounted, setMounted] = useState(false);
-  const {mode} = useColorModeStore()
+  const { mode } = useColorModeStore();
 
-  const isDark = mode == 'dark'
+  const isDark = mode == "dark";
 
   useEffect(() => {
     setMounted(true);
@@ -126,7 +126,7 @@ export default function RegisterPage() {
 
         <AppButton
           type="submit"
-          color='primary-3'
+          color="primary"
           disabled={loading}
         >
           {loading
@@ -139,7 +139,7 @@ export default function RegisterPage() {
         {t("labels.register.have_account")}{" "}
         <Link
           href="/login"
-          className="text-primary-3 dark:text-primary hover:underline font-semibold transition-colors"
+          className="text-primary-3 dark:text-primary-3 hover:underline font-semibold transition-colors"
         >
           {t("labels.all.enter")}
         </Link>

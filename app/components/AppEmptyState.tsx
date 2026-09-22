@@ -23,16 +23,18 @@ export default function AppEmptyState({
 
   return (
     <div
-      className={`flex flex-col items-center justify-center text-label gap-2 bg-transparent rounded-md ${className}`}
+      className={`flex flex-col items-center justify-center text-label sm:gap-2 bg-transparent rounded-xs ${className}`}
     >
-      <div className={`w-10 h-10 mb-2 rounded-full flex items-center justify-center shrink-0 ${iconClassName}`}>
+      <div
+        className={`w-10 h-10 mb-2 rounded-full flex items-center justify-center shrink-0 ${iconClassName}`}
+      >
         {icon || <InboxOutlined fontSize="medium" />}
       </div>
-      <span className="font-normal text-foreground">
+      <span className="text-foreground">
         {title || t("labels.grid.empty_title")}
       </span>
       {subtitle !== null && (
-        <span className="text-sm text-center max-w-xs">
+        <span className=" text-center max-w-xs">
           {subtitle || t("labels.grid.empty_subtitle")}
         </span>
       )}

@@ -234,9 +234,14 @@
     },
     "stock_entries": {
       "title": "Stock Entry",
+      "items": "items",
+      "total": "Total",
+      "empty": "No stock entries found",
+      "empty_description": "No stock entries registered or matching the applied filters.",
       "product": "Product",
       "category": "Category",
       "filter_category": "Filter by category",
+      "filter_status": "Filter by status",
       "unit_price": "Unit Price",
       "quantity": "Quantity",
       "qty": "Qty",
@@ -263,6 +268,7 @@
       },
       "new": {
         "title": "New Stock Entry",
+        "button": "New Entry",
         "clear_cart_title": "Clear cart",
         "clear_cart_message": "Are you sure you want to remove all items?",
         "finish_entry_title": "Finish Purchase",

@@ -63,7 +63,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
               {value ? (
                 <>
                   <div
-                    className="w-4 h-4 rounded-sm border border-border shrink-0"
+                    className="w-4 h-4 rounded-xs border border-border shrink-0"
                     style={{ backgroundColor: value }}
                   />
                   <span className="truncate text-foreground uppercase tracking-wider text-sm">
@@ -97,7 +97,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
           </div>
 
           {isOpen && (
-            <div className="absolute z-50 mt-1 p-3 bg-background-2 border border-border rounded-md shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute z-50 mt-1 p-3 bg-background-2 border border-border rounded-xs shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
               <HexColorPicker
                 color={value || "#ffffff"}
                 onChange={onChange}
@@ -105,7 +105,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
               />
               <div className="mt-3 flex items-center gap-2">
                 <div
-                  className="w-8 h-8 rounded border border-border shrink-0"
+                  className="w-8 h-8 rounded-xs border border-border shrink-0"
                   style={{ backgroundColor: value || "#ffffff" }}
                 />
                 <input

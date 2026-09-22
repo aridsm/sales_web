@@ -236,12 +236,12 @@ export default function ProductsPage() {
     <AppPage title={t("labels.products.title")}>
       <div className="flex flex-col flex-1 gap-4 min-h-0">
         <div className="flex flex-col min-[1100px]:flex-row flex-1 gap-3 min-h-0 overflow-hidden">
-          <div className="w-full min-[1100px]:w-70 shrink-0 bg-background-2 dark:bg-background-3 border border-border rounded-lg flex flex-col overflow-hidden">
+          <div className="w-full min-[1100px]:w-70 shrink-0 bg-background-2 dark:bg-background-3 border border-border rounded-xs flex flex-col overflow-hidden">
             <div className="hidden min-[1100px]:flex items-center justify-between px-4 py-3 border-b border-border">
               <span className="font-semibold">
                 {t("labels.categories.title")}
               </span>
-              <span className="text-sm bg-foreground/8 text-foreground/60 px-1.5 py-0.5 rounded-md font-medium tabular-nums">
+              <span className="text-sm bg-foreground/8 text-foreground/60 px-1.5 py-0.5 rounded-xs font-medium tabular-nums">
                 {categories.items.length}
               </span>
             </div>
@@ -255,26 +255,26 @@ export default function ProductsPage() {
               <button
                 type="button"
                 onClick={() => setSelectedCategoryId(null)}
-                className={`shrink-0 min-[1100px]:w-full flex items-center justify-between gap-2 px-3 py-1.5 min-[1100px]:p-3 rounded-lg transition-all duration-150 cursor-pointer group whitespace-nowrap text-xs min-[1100px]:text-sm ${
+                className={`shrink-0 min-[1100px]:w-full flex items-center justify-between gap-2 px-3 py-1.5 min-[1100px]:p-3 rounded-xs transition-all duration-150 cursor-pointer group whitespace-nowrap text-xs min-[1100px]:text-sm border ${
                   selectedCategoryId === null
-                    ? "bg-primary-4 dark:bg-primary-3 text-primary-3 dark:text-white font-semibold"
-                    : "text-foreground/70 hover:bg-background dark:hover:bg-foreground/5 hover:text-foreground"
+                    ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-background-2 text-foreground font-semibold"
+                    : "border-transparent text-foreground/70 hover:bg-foreground/5 hover:text-foreground"
                 }`}
               >
                 <div className="flex items-center gap-2 min-[1100px]:gap-2.5 truncate">
                   <div
                     className={`w-2 h-3 min-[1100px]:w-2.5 min-[1100px]:h-4 rounded-xs shrink-0 transition-colors ${
                       selectedCategoryId === null
-                        ? "bg-primary-3 dark:bg-white"
+                        ? "bg-primary-3"
                         : "bg-foreground/25"
                     }`}
                   />
                   <span className="truncate">{t("labels.categories.all")}</span>
                 </div>
                 <span
-                  className={`text-xs min-[1100px]:text-sm tabular-nums px-1.5 py-0.5 rounded-md transition-colors ml-1.5 min-[1100px]:ml-2 ${
+                  className={`text-xs min-[1100px]:text-sm tabular-nums px-1.5 py-0.5 rounded-xs transition-colors ml-1.5 min-[1100px]:ml-2 ${
                     selectedCategoryId === null
-                      ? "bg-primary-3/20 text-primary-3 dark:bg-white/20 dark:text-white font-semibold"
+                      ? "bg-foreground/10 text-foreground font-semibold"
                       : "text-foreground/40 group-hover:text-foreground/60"
                   }`}
                 >
@@ -300,10 +300,10 @@ export default function ProductsPage() {
                       key={cat.id}
                       type="button"
                       onClick={() => setSelectedCategoryId(cat.id)}
-                      className={`shrink-0 min-[1100px]:w-full flex items-center justify-between gap-2 px-3 py-1.5 min-[1100px]:p-3 rounded-lg transition-all duration-150 cursor-pointer group whitespace-nowrap text-xs min-[1100px]:text-sm ${
+                      className={`shrink-0 min-[1100px]:w-full flex items-center justify-between gap-2 px-3 py-1.5 min-[1100px]:p-3 rounded-xs transition-all duration-150 cursor-pointer group whitespace-nowrap text-xs min-[1100px]:text-sm border ${
                         isSelected
-                          ? "bg-primary-4 dark:bg-primary-3 text-primary-3 dark:text-white font-semibold"
-                          : "text-foreground/70 hover:bg-background dark:hover:bg-foreground/5 hover:text-foreground border-transparent"
+                          ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-background-2 text-foreground font-semibold"
+                          : "border-transparent text-foreground/70 hover:bg-foreground/5 hover:text-foreground"
                       }`}
                     >
                       <div className="flex items-center gap-2 min-[1100px]:gap-2.5 min-w-0">
@@ -315,9 +315,9 @@ export default function ProductsPage() {
                       </div>
                       {cat.products !== undefined && (
                         <span
-                          className={`text-xs min-[1100px]:text-sm tabular-nums px-1.5 py-0.5 rounded-md shrink-0 ml-1.5 min-[1100px]:ml-2 transition-colors ${
+                          className={`text-xs min-[1100px]:text-sm tabular-nums px-1.5 py-0.5 rounded-xs shrink-0 ml-1.5 min-[1100px]:ml-2 transition-colors ${
                             isSelected
-                              ? "bg-primary-3/20 text-primary-3 dark:bg-white/20 dark:text-white font-semibold"
+                              ? "bg-foreground/10 text-foreground font-semibold"
                               : "text-foreground/40 group-hover:text-foreground/60"
                           }`}
                         >
@@ -347,7 +347,7 @@ export default function ProductsPage() {
                   <AppButton
                     color="red"
                     onClick={onDeleteSelected}
-                    className="flex items-center gap-1.5 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+                    className="flex items-center gap-1.5 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0"
                     title={`${t("labels.all.delete")} (${rowsSelected.length})`}
                     aria-label={`${t("labels.all.delete")} (${rowsSelected.length})`}
                   >
@@ -379,7 +379,7 @@ export default function ProductsPage() {
                         },
                       });
                     }}
-                    className="flex items-center gap-1.5 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+                    className="flex items-center gap-1.5 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0"
                     title={t("labels.grid.add_item")}
                     aria-label={t("labels.grid.add_item")}
                   >

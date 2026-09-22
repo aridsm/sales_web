@@ -247,7 +247,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
               onClick={toggleDropdown}
               className={`
                              input-field cursor-pointer flex items-center justify-between transition-all duration-200
-                            ${size === "small" ? "h-8! px-1.5! text-xs! gap-1" : "gap-2"}
+                            ${size === "small" ? "h-8! px-1.5! text-xs! gap-1" : "min-h-10! sm:min-h-12! h-auto! py-1.5 sm:py-2 gap-2 text-sm sm:text-base"}
                             ${disabled ? "bg-slate-100 cursor-not-allowed opacity-60" : ""}
                             ${error ? "border-red-500 ring-1 ring-red-500" : "border-slate-300"}
                             ${isOpen && !error ? "active" : ""}
@@ -315,21 +315,21 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                 width: `${coords.width}px`,
                 zIndex: 9999,
               }}
-              className={`bg-background-2 border border-border rounded-md shadow-dropdown overflow-hidden ${
+              className={`bg-background-2 border border-border rounded-xs shadow-dropdown overflow-hidden ${
                 coords.isAbove ? "animate-dropdown-open-above" : "animate-dropdown-open"
               }`}
               role="menu"
             >
               {search && (
-                <div className="px-3 border-b border-slate-100 flex items-center gap-2 sticky top-0 bg-background-2 z-10">
+                <div className="px-3 border-b border-slate-100 dark:border-border flex items-center gap-2 sticky top-0 bg-background-2 z-10">
                   <SearchIcon
                     className="text-slate-400"
-                    style={{ fontSize: "20px" }}
+                    style={{ fontSize: "18px" }}
                   />
                   <input
                     ref={searchInputRef}
                     type="text"
-                    className="w-full outline-none border-none transition-all py-3"
+                    className="w-full outline-none border-none transition-all py-2 sm:py-2.5 text-xs sm:text-sm bg-transparent"
                     placeholder={t("labels.select.search_placeholder")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -350,14 +350,14 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                       <div
                         key={option.id}
                         onClick={() => handleSelect(option)}
-                        className={` cursor-pointer flex items-center justify-between transition-colors ${size === "small" ? "text-sm px-2 py-2" : "px-3 py-3"} ${isSelected ? "bg-foreground/5 text-foreground" : "text-label hover:bg-foreground/5"}`}
+                        className={`cursor-pointer flex items-center justify-between transition-colors ${size === "small" ? "text-xs px-2 py-1.5" : "px-3 py-2 sm:py-2.5 text-xs sm:text-sm"} ${isSelected ? "bg-foreground/5 text-foreground" : "text-label hover:bg-foreground/5"}`}
                       >
                         <span className="truncate pr-4">{option.name}</span>
                       </div>
                     );
                   })
                 ) : (
-                  <div className="px-3 py-4 text-center text-foreground/40 text-sm italic">
+                  <div className="px-3 py-4 text-center text-foreground/40 text-xs sm:text-sm italic">
                     {t("labels.select.no_results")}
                   </div>
                 )}

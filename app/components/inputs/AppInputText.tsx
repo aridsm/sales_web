@@ -132,7 +132,7 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
               <button
                 type="button"
                 onClick={handleClear}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
                 tabIndex={-1}
               >
                 <CloseIcon style={{ fontSize: 16 }} />

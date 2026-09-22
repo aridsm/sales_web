@@ -93,7 +93,7 @@ export default function AppDialog() {
         aria-modal="true"
         aria-labelledby="dialog-title"
         aria-describedby="dialog-description"
-        className="relative w-full max-w-sm bg-background-2 dark:bg-background rounded-lg border border-border shadow-2xl shadow-black/15 p-6 flex flex-col items-center gap-4 animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-sm bg-background-2 dark:bg-background rounded-xs border border-border shadow-2xl shadow-black/15 p-6 flex flex-col items-center gap-4 animate-in fade-in zoom-in-95 duration-200"
       >
         <div
           className={`w-12 h-12 rounded-full flex items-center justify-center ${iconBg} ${iconColor} mt-1`}

@@ -44,7 +44,7 @@ export function StockEntryCart({
       <AppCard className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-primary-3/10 dark:bg-primary/10 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xs bg-primary-3/10 dark:bg-primary/10 flex items-center justify-center">
               <LocalShippingOutlined
                 className="text-primary-3 dark:text-primary"
                 style={{ fontSize: 20 }}
@@ -130,7 +130,7 @@ export function StockEntryCart({
                             onSetQuantity(item.product.id, val);
                           }
                         }}
-                        className="w-full text-center bg-background dark:bg-background-2 border border-border rounded-md py-1.5 px-2 text-sm text-foreground focus:outline-none focus:border-primary font-medium"
+                        className="w-full text-center bg-background dark:bg-background-2 border border-border rounded-xs py-1.5 px-2 text-sm text-foreground focus:outline-none focus:border-primary font-medium"
                       />
                     </div>
 
@@ -165,7 +165,7 @@ export function StockEntryCart({
                               isNaN(val) ? 0 : val,
                             );
                           }}
-                          className={`w-full text-right bg-background dark:bg-background-2 border rounded-md py-1.5 pl-8 pr-2 text-sm text-foreground focus:outline-none focus:border-primary font-medium ${
+                          className={`w-full text-right bg-background dark:bg-background-2 border rounded-xs py-1.5 pl-8 pr-2 text-sm text-foreground focus:outline-none focus:border-primary font-medium ${
                             item.unit_price <= 0
                               ? "border-amber-400/60"
                               : "border-border"

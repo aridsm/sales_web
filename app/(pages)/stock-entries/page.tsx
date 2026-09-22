@@ -7,7 +7,7 @@ export default function StockEntryPage() {
   const { t } = useTranslation();
 
   return (
-    <div className="hidden lg:flex flex-1 items-center justify-center h-full text-label border border-border rounded-xl bg-background-2 dark:bg-background-3 border-dashed">
+    <div className="hidden lg:flex flex-1 items-center justify-center h-full text-label border border-border rounded-xs bg-background-2 dark:bg-background-3 border-dashed">
       <div className="flex flex-col items-center gap-3">
         <LocalShippingOutlined style={{ fontSize: 48 }} className="opacity-30" />
         <span className="text-sm font-medium">{t("labels.stock_entries.title")}</span>

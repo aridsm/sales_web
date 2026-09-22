@@ -55,7 +55,7 @@ function KivoLogo({
 }) {
   return (
     <div className="flex items-center gap-2.5 pl-1">
-      <AppLogo className="w-6 h-6 shrink-0" color="var(--primary, #aeec1c)" />
+      <AppLogo className="w-6 h-6 shrink-0" color="var(--primary, #2563eb)" />
       <span className={`text-base font-bold tracking-wide ${textColor}`}>
         Kivo
       </span>
@@ -95,9 +95,9 @@ function MenuList({
               href={item.href}
               onClick={onItemClick}
               aria-current={isActive ? "page" : undefined}
-              className={`flex items-center gap-3 h-12 rounded-md transition-colors duration-200 ${
+              className={`flex items-center gap-3 h-12 rounded-xs transition-colors duration-200 ${
                 isOpen ? "px-3" : "justify-center"
-              } ${isActive ? "bg-primary text-black font-normal" : inactiveClasses}`}
+              } ${isActive ? "bg-primary text-white font-medium" : inactiveClasses}`}
             >
               <div className="w-5 min-w-5 flex items-center justify-center">
                 <Icon style={{ fontSize: 20 }} />

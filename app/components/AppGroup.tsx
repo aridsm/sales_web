@@ -68,7 +68,7 @@ function GroupRow<G extends { id: string | number }>({
 
   return (
     <div
-      className={`border border-border transition overflow-hidden rounded-md shrink-0 ${open ? "border-primary-3/70 dark:border-primary-3" : "hover:border-border-2"}`}
+      className={`border border-border transition overflow-hidden rounded-xs shrink-0 ${open ? "border-primary-3/70 dark:border-primary-3" : "hover:border-border-2"}`}
     >
       <div
         className={`group w-full flex items-center  transition-colors ${open ? "bg-primary-4" : " bg-background-2 dark:bg-background-3 dark:hover:bg-background-2"}`}

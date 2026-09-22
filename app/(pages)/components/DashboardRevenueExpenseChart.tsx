@@ -29,7 +29,7 @@ const CustomChartTooltip = ({
 }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-background-2 p-3 rounded-lg shadow-md flex flex-col gap-1">
+      <div className="bg-background-2 p-3 rounded-xs shadow-md flex flex-col gap-1">
         {label && (
           <span className="font-semibold mb-1 text-label">{label}</span>
         )}
@@ -37,7 +37,7 @@ const CustomChartTooltip = ({
           return (
             <div key={index} className="flex items-center gap-2">
               <div
-                className="w-3 h-3 rounded-sm"
+                className="w-3 h-3 rounded-xs"
                 style={{ backgroundColor: entry.color }}
               />
               <span className="font-medium text-foreground">{entry.name}</span>
@@ -90,28 +90,28 @@ export const DashboardRevenueExpenseChart = ({
   }, [previous, frequency]);
 
   return (
-    <AppCard className="flex px-4 py-4 sm:px-5 sm:pt-4 sm:pb-5 flex-col lg:col-span-7 min-[1580px]:col-span-8 min-h-[300px] lg:min-h-0 overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+    <AppCard className="flex px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-5 flex-col lg:col-span-7 min-[1580px]:col-span-8 min-h-[300px] lg:min-h-0 overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 mb-3 sm:mb-4">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 flex-wrap">
           <span className="font-semibold text-base sm:text-lg">
             {t("labels.dashboard.charts.revenue_vs_expenses")}
           </span>
-          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label">
+          <span className="px-2 py-0.5 rounded-xs border border-border text-xs font-medium text-foreground-2">
             {t(`labels.dashboard.frequencies.${activePeriod}`)}
           </span>
         </div>
-        <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto">
+        <div className="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-3 w-full sm:w-auto">
           <div className="flex items-center gap-1">
             <button
               onClick={() => setPrevious((p) => p + 1)}
-              className="p-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 rounded-md text-label transition-colors"
+              className="p-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 rounded-xs text-label transition-colors"
             >
               <ChevronLeft fontSize="small" />
             </button>
             <button
               onClick={() => setPrevious((p) => Math.max(0, p - 1))}
               disabled={previous === 0}
-              className={`p-1 flex items-center justify-center rounded-md transition-colors ${
+              className={`p-1 flex items-center justify-center rounded-xs transition-colors ${
                 previous === 0
                   ? "text-label/30 cursor-not-allowed"
                   : "text-label hover:bg-black/5 dark:hover:bg-white/5"

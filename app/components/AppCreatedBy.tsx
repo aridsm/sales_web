@@ -20,8 +20,8 @@ export default function AppCreatedBy({
   const avatarIdentifier = name || email;
   const sizeClasses =
     avatarSize === "sm"
-      ? "w-7 h-7 text-[11px]"
-      : "w-8 h-8 text-xs";
+      ? "w-8 h-8 text-xs"
+      : "w-9 h-9 text-sm";
 
   return (
     <div className={`flex items-center gap-2.5 py-0.5 min-w-0 ${className}`}>
@@ -32,13 +32,13 @@ export default function AppCreatedBy({
       </div>
       <div className="flex flex-col min-w-0 flex-1">
         <span
-          className="text-xs text-foreground font-medium "
+          className="text-sm text-foreground font-medium truncate"
           title={formatCreatedBy(name, date)}
         >
           {formatCreatedBy(name, date)}
         </span>
         {email && (
-          <span className="text-xs text-label " title={email}>
+          <span className="text-[13px] text-label truncate" title={email}>
             {email}
           </span>
         )}

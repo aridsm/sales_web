@@ -48,7 +48,7 @@
       "logging": "Entrando...",
       "no_account": "Não tem uma conta?",
       "create_account": "Criar conta",
-      "remember_me": "Lembrar de mim"
+      "remember_me": "Lembrar-me"
     },
     "register": {
       "title": "Criar conta!",
@@ -234,9 +234,14 @@
     },
     "stock_entries": {
       "title": "Entrada de Estoque",
+      "items": "itens",
+      "total": "Total",
+      "empty": "Nenhuma entrada de estoque encontrada",
+      "empty_description": "Nenhuma entrada de estoque cadastrada ou correspondente aos filtros aplicados.",
       "product": "Produto",
       "category": "Categoria",
       "filter_category": "Filtrar por categoria",
+      "filter_status": "Filtrar por status",
       "unit_price": "Preço un.",
       "quantity": "Quantidade",
       "qty": "Qtd.",
@@ -257,6 +262,7 @@
       },
       "new": {
         "title": "Nova Entrada de Estoque",
+        "button": "Nova Entrada",
         "clear_cart_title": "Limpar carrinho",
         "clear_cart_message": "Tem certeza que deseja remover todos os itens?",
         "finish_entry_title": "Finalizar Compra",

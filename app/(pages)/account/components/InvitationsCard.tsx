@@ -27,12 +27,12 @@ export default function InvitationsCard({
     <AppCard className="p-5 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MailOutlined className="text-indigo-500" style={{ fontSize: 18 }} />
+          <MailOutlined className="text-primary" style={{ fontSize: 18 }} />
           <h3 className="font-semibold text-sm text-foreground">
             {t("labels.account.invitations")}
           </h3>
         </div>
-        <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-500 text-xs font-bold">
+        <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">
           {invitations.length}
         </span>
       </div>
@@ -41,7 +41,7 @@ export default function InvitationsCard({
         {invitations.map((inv) => (
           <div
             key={inv.id}
-            className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-md border border-border bg-background dark:bg-background-2 gap-3"
+            className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xs border border-border bg-background dark:bg-background-2 gap-3"
           >
             <div className="flex flex-col gap-0.5 min-w-0">
               <span className="text-sm font-medium text-foreground truncate">

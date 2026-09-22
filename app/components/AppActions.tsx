@@ -161,7 +161,7 @@ export default function AppActions<T>({
               top: `${coords.top}px`,
               left: `${coords.left}px`,
             }}
-            className="z-[9999] w-56 rounded-md bg-background-2 border border-border shadow-xl py-1 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200"
+            className="z-[9999] w-56 rounded-xs bg-background-2 border border-border shadow-xl py-1 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200"
             role="menu"
           >
             {visibleActions.map((action, index) => {

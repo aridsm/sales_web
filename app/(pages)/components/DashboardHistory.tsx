@@ -49,13 +49,13 @@ export const DashboardHistory = ({
           if (!config) return <span>{row.action_type}</span>;
           return (
             <span
-              className={`text-sm font-medium px-2 py-0.5 rounded-full whitespace-nowrap ${config.bg} ${config.color}`}
+              className={`text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap ${config.bg} ${config.color}`}
             >
               {t(config.labelKey)}
             </span>
           );
         },
-        size: 120,
+        size: 110,
       },
       {
         column: t("labels.all.created_by"),
@@ -71,33 +71,33 @@ export const DashboardHistory = ({
       {
         column: t("labels.history.description"),
         cell: ({ row }: { row: History }) => row.description,
-        size: 280,
+        size: 300,
       },
       {
         column: t("labels.history.entity_type"),
         cell: ({ row }: { row: History }) =>
           entityLabels[Number(row.entity_type)] || row.entity_type,
-        size: 140,
+        size: 180,
       },
     ],
     [t, entityLabels],
   );
 
   return (
-    <AppCard className="flex flex-col lg:col-span-7 min-[1580px]:col-span-8 px-4 py-4 sm:p-5 flex-1 min-h-[360px] lg:min-h-0 overflow-hidden">
-      <div className="flex justify-between items-center mb-3 gap-2">
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+    <AppCard className="flex flex-col lg:col-span-7 min-[1580px]:col-span-8 p-3 sm:p-4 lg:p-5 flex-1 min-h-[360px] lg:min-h-0 overflow-hidden">
+      <div className="flex justify-between items-center mb-2 sm:mb-3 gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 flex-wrap">
           <span className="font-semibold text-base sm:text-lg">
             {t("labels.dashboard.history.title")}
           </span>
-          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label">
+          <span className="px-2 py-0.5 rounded-xs border border-border text-xs font-medium text-foreground-2">
             {t(`labels.dashboard.periods.${activePeriod}`)}
           </span>
         </div>
 
         <Link
           href="/history"
-          className="text-xs sm:text-sm text-primary-3 dark:text-primary hover:underline shrink-0"
+          className="text-xs sm:text-sm text-primary-3 dark:text-primary-3 hover:underline shrink-0 font-medium"
         >
           {t("labels.dashboard.history.view_all")}
         </Link>

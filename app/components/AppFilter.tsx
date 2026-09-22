@@ -19,10 +19,10 @@ import { useTranslation } from "@/app/utils/i18n";
  */
 function readFilterParamsFromUrl(
   searchParams: URLSearchParams,
-  validKeys: string[],
+  validKeys: string[] = [],
 ): Record<string, unknown> {
   const allowed = new Set<string>();
-  validKeys.forEach((key) => {
+  (validKeys || []).forEach((key) => {
     allowed.add(key);
     allowed.add(`start_${key}`);
     allowed.add(`end_${key}`);
@@ -52,11 +52,11 @@ function readFilterParamsFromUrl(
  */
 function flatParamsToFormValues(
   flatParams: Record<string, unknown>,
-  validKeys: string[],
+  validKeys: string[] = [],
 ): Record<string, unknown> {
   const result: Record<string, unknown> = {};
 
-  validKeys.forEach((key) => {
+  (validKeys || []).forEach((key) => {
     const start = flatParams[`start_${key}`];
     const end = flatParams[`end_${key}`];
     const direct = flatParams[key];
@@ -103,17 +103,17 @@ function formValuesToFlatParams(
 interface AppFilterProps {
   children: React.ReactNode;
   /** Field names this filter manages (e.g. ["price", "product_created_at"]). */
-  validKeys: string[];
+  validKeys?: string[];
   /** Called on mount and whenever the user applies or clears the filter. */
-  onChange: (params: Record<string, unknown>) => void;
+  onChange?: (params: Record<string, unknown>) => void;
   title?: string;
   className?: string;
 }
 
 export default function AppFilter({
   children,
-  validKeys,
-  onChange,
+  validKeys = [],
+  onChange = () => {},
   title,
   className,
 }: AppFilterProps) {
@@ -136,7 +136,7 @@ export default function AppFilter({
     const flatParams = readFilterParamsFromUrl(searchParams, validKeys);
     const formValues = flatParamsToFormValues(flatParams, validKeys);
     reset(formValues);
-    onChangeRef.current(flatParams);
+    onChangeRef.current?.(flatParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -153,7 +153,7 @@ export default function AppFilter({
 
     // Sync to URL (preserve non-filter params like page/search).
     const newParams = new URLSearchParams(searchParams.toString());
-    validKeys.forEach((key) => {
+    (validKeys ?? []).forEach((key) => {
       newParams.delete(key);
       newParams.delete(`start_${key}`);
       newParams.delete(`end_${key}`);
@@ -168,21 +168,21 @@ export default function AppFilter({
     newParams.set("page", "1");
 
     router.push(`${pathname}?${newParams.toString()}`);
-    onChange(flatParams);
+    onChange?.(flatParams);
     handleClose();
   };
 
   function handleClear() {
     // Clear form fields.
     const emptyValues: Record<string, unknown> = {};
-    validKeys.forEach((key) => {
+    (validKeys ?? []).forEach((key) => {
       emptyValues[key] = null;
     });
     reset(emptyValues);
 
     // Clear URL params belonging to this filter.
     const newParams = new URLSearchParams(searchParams.toString());
-    validKeys.forEach((key) => {
+    (validKeys ?? []).forEach((key) => {
       newParams.delete(key);
       newParams.delete(`start_${key}`);
       newParams.delete(`end_${key}`);
@@ -190,11 +190,11 @@ export default function AppFilter({
     newParams.set("page", "1");
     router.push(`${pathname}?${newParams.toString()}`);
 
-    onChange({});
+    onChange?.({});
     handleClose();
   }
 
-  const hasActiveFilters = validKeys.some(
+  const hasActiveFilters = (validKeys ?? []).some(
     (key) =>
       searchParams.has(key) ||
       searchParams.has(`start_${key}`) ||
@@ -206,7 +206,7 @@ export default function AppFilter({
       <AppButton
         color="background"
         onClick={handleOpen}
-        className={`w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0 relative ${hasActiveFilters ? "text-primary-3 dark:text-primary border-primary-3 hover:border-primary-3 dark:border-primary/60" : ""} ${className || ""}`}
+        className={`w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0 relative ${hasActiveFilters ? "text-primary-3 dark:text-primary border-primary-3 hover:border-primary-3 dark:border-primary/60" : ""} ${className || ""}`}
         title={t("labels.filter.button")}
         aria-label={t("labels.filter.button")}
       >

@@ -118,7 +118,7 @@ export default function AppSelectDropdown<T extends SelectOption>() {
         width: `${coords.width}px`,
         zIndex: 9999,
       }}
-      className={`bg-background-2 border border-border rounded-md shadow-dropdown overflow-hidden ${
+      className={`bg-background-2 border border-border rounded-xs shadow-dropdown overflow-hidden ${
         coords.isAbove ? "animate-dropdown-open-above" : "animate-dropdown-open"
       }`}
     >
@@ -126,12 +126,12 @@ export default function AppSelectDropdown<T extends SelectOption>() {
         <div className="px-3 border-b border-border flex items-center gap-2 sticky top-0 bg-background-2 z-10">
           <SearchIcon
             className="text-foreground"
-            style={{ fontSize: "20px" }}
+            style={{ fontSize: "18px" }}
           />
           <input
             ref={searchInputRef}
             type="text"
-            className="w-full outline-none border-none transition-all py-3"
+            className="w-full outline-none border-none transition-all py-2 sm:py-2.5 text-xs sm:text-sm bg-transparent"
             placeholder={t("labels.select.search_placeholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -156,24 +156,24 @@ export default function AppSelectDropdown<T extends SelectOption>() {
                   key={option.id}
                   onClick={() => handleSelect(option)}
                   className={`
-                                                        px-3 py-3 cursor-pointer flex items-center justify-between transition-colors
-                                                        ${isSelected ? "bg-foreground/5 text-foreground" : "text-label hover:bg-foreground/5"}
-                                                    `}
+                    px-3 py-2 sm:py-2.5 text-xs sm:text-sm cursor-pointer flex items-center justify-between transition-colors
+                    ${isSelected ? "bg-foreground/5 text-foreground" : "text-label hover:bg-foreground/5"}
+                  `}
                 >
                   <span className="truncate">{option.name}</span>
                 </div>
               );
             })}
             {loading && (
-              <div className="p-4 flex justify-center sticky bottom-0 bg-background/80 backdrop-blur-sm">
-                <CircularProgress size={24} />
+              <div className="p-3 sm:p-4 flex justify-center sticky bottom-0 bg-background/80 backdrop-blur-sm">
+                <CircularProgress size={20} />
               </div>
             )}
           </>
         ) : (
-          <div className="px-3 py-10 text-center text-gray-400 text-sm italic flex flex-col items-center gap-2">
+          <div className="px-3 py-6 sm:py-8 text-center text-gray-400 text-xs sm:text-sm italic flex flex-col items-center gap-2">
             {loading ? (
-              <CircularProgress size={32} />
+              <CircularProgress size={24} />
             ) : (
               t("labels.select.no_results")
             )}

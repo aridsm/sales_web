@@ -30,7 +30,9 @@ export default function AppHeader({ title }: AppHeaderProps) {
   const { t } = useTranslation();
   const token = useTokenStore((state) => state.token);
   const { currentUser, activeCompany, fetchUserData } = useUserStore();
-  const toggleMobileMenu = useMobileMenuStore((state) => state.toggleMobileMenu);
+  const toggleMobileMenu = useMobileMenuStore(
+    (state) => state.toggleMobileMenu,
+  );
 
   useEffect(() => {
     if (token && !currentUser) {
@@ -39,8 +41,8 @@ export default function AppHeader({ title }: AppHeaderProps) {
   }, [token, currentUser, fetchUserData]);
 
   return (
-    <div className="flex items-center sticky top-0 z-50 justify-between border-b border-border py-2.5 sm:py-3 transition-colors bg-background-2 dark:bg-background">
-      <div className="max-w-400 w-full flex items-center justify-between mx-auto px-3 sm:px-6">
+    <div className="flex items-center sticky top-0 z-50 justify-between border-b border-border py-1 sm:py-3 transition-colors bg-background-2 dark:bg-background">
+      <div className="max-w-400 w-full flex items-center justify-between mx-auto pl-0 pr-2 sm:px-6">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <AppButton
             rounded

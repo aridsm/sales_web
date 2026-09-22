@@ -16,18 +16,17 @@ import { SaleStatus } from "@/enums/SaleStatus";
 import { useDialogStore } from "@/stores/dialogStore";
 import {
   ArrowBack,
-  CalendarTodayOutlined,
-  ShoppingBagOutlined,
-  AttachMoneyOutlined,
   ArrowBackOutlined,
   HighlightOffOutlined,
+  InventoryOutlined,
 } from "@mui/icons-material";
 
-import { formatDateTime, formatDate } from "@/app/utils/formatters/date";
+import { formatDateTime } from "@/app/utils/formatters/date";
 import { useTranslation } from "@/app/utils/i18n";
 import { usePermission } from "@/app/utils/usePermission";
 import AppCard from "@/app/components/AppCard";
 import AppCreatedBy from "@/app/components/AppCreatedBy";
+import { useSales } from "../SalesContext";
 
 export default function SaleDetailPage() {
   const { t } = useTranslation();
@@ -35,6 +34,7 @@ export default function SaleDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { openDialog } = useDialogStore();
+  const salesContext = useSales();
   const [sale, setSale] = useState<Sale | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -70,6 +70,7 @@ export default function SaleDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+
   async function handleCancel() {
     if (!sale) return;
 
@@ -86,6 +87,8 @@ export default function SaleDetailPage() {
           await salesService.cancel(sale.id);
           const updated = await salesService.getById(sale.id);
           setSale(updated);
+          salesContext?.updateSale(updated);
+          salesContext?.refreshSales();
         } catch (err) {
           const { code, params } = getApiError(err);
           openDialog({
@@ -114,7 +117,7 @@ export default function SaleDetailPage() {
         cell: ({ row }: { row: SaleProduct }) => (
           <div className="flex items-center gap-2">
             <div
-              className="w-2.5 h-2.5 rounded-sm shrink-0"
+              className="w-2.5 h-2.5 rounded-xs shrink-0"
               style={{ backgroundColor: row.category_color }}
             />
             <span className="text-sm">{row.category_name}</span>
@@ -188,29 +191,31 @@ export default function SaleDetailPage() {
         </AppButton>
       </div>
 
-      <AppCard className="flex flex-col p-5">
-        <div className="flex flex-col gap-1.5 mb-4">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl font-bold text-foreground">
-              #{sale.code.toString().padStart(6, "0")}
-            </span>
+      <AppCard className="p-5 flex flex-col gap-4">
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between gap-3 w-full">
+            <div className="flex items-center gap-3">
+              <span className="text-xl font-bold text-foreground">
+                #{sale.code.toString().padStart(6, "0")}
+              </span>
 
-            <span
-              className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${status.bg} ${status.color}`}
-            >
               <span
-                className={`w-1.5 h-1.5 rounded-full ${
-                  isCanceled ? "bg-red-400" : "bg-emerald-400"
-                }`}
-              />
-              {t(status.labelKey)}
-            </span>
+                className={`inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full ${status.bg} ${status.color}`}
+              >
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    isCanceled ? "bg-red-400" : "bg-emerald-400"
+                  }`}
+                />
+                {t(status.labelKey)}
+              </span>
+            </div>
 
             {canEdit && !isCanceled && (
               <AppButton
                 color="background"
                 onClick={handleCancel}
-                className="px-3! py-1.5! ml-auto"
+                className="px-3! py-1.5! ml-auto shrink-0"
               >
                 <HighlightOffOutlined
                   style={{ fontSize: 16 }}
@@ -220,32 +225,38 @@ export default function SaleDetailPage() {
               </AppButton>
             )}
           </div>
-          <span className=" text-label">{formatDateTime(sale.date)}</span>
-          <span className="text-label/60 mt-1">{sale.id}</span>
+
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-label">
+            <span>{formatDateTime(sale.date)}</span>
+            <span>|</span>
+            <span>ID: {sale.id}</span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3">
-          <SaleStatBlock
-            label={t("labels.all.created_by")}
-            value={
-              <AppCreatedBy
-                name={sale.created_by_name}
-                date={sale.created_at}
-                email={sale.created_by_email}
-              />
-            }
-            icon={<CalendarTodayOutlined style={{ fontSize: 18 }} />}
+        <div className="flex flex-col gap-1 min-w-0">
+          <span className="text-xs text-label font-medium">
+            {t("labels.all.created_by")}
+          </span>
+          <AppCreatedBy
+            name={sale.created_by_name}
+            email={sale.created_by_email}
           />
-          <SaleStatBlock
-            label={t("labels.sales.detail.items")}
-            value={sale.items_count.toString()}
-            icon={<ShoppingBagOutlined style={{ fontSize: 18 }} />}
-          />
-          <SaleStatBlock
-            label={t("labels.sales.new.total")}
-            value={formatCurrency(sale.total)}
-            icon={<AttachMoneyOutlined style={{ fontSize: 18 }} />}
-          />
+        </div>
+
+        <div className="flex items-center justify-between w-full pt-4 border-t border-border">
+          <div className="flex items-center gap-1.5 text-label">
+            <InventoryOutlined style={{ fontSize: 16 }} />
+            <span className="text-sm">
+              {sale.items_count || 0} {t("labels.sales.items")}
+            </span>
+          </div>
+          <span
+            className={`text-lg font-bold tabular-nums ${
+              isCanceled ? "line-through text-label" : "text-foreground"
+            }`}
+          >
+            {formatCurrency(sale.total)}
+          </span>
         </div>
       </AppCard>
 
@@ -264,31 +275,5 @@ export default function SaleDetailPage() {
         <AppGrid columns={columns} pagination={productsPagination} />
       </div>
     </div>
-  );
-}
-
-function SaleStatBlock({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: React.ReactNode;
-  icon: React.ReactNode;
-}) {
-  return (
-    <AppCard className="flex flex-row items-center gap-3 p-3">
-      <div
-        className={`w-9 h-9 rounded-lg  bg-primary-4 dark:bg-primary-3 flex items-center justify-center shrink-0`}
-      >
-        <span className="text-primary-3 dark:text-white -mt-1">{icon}</span>
-      </div>
-      <div className="flex flex-col min-w-0">
-        <span className="text-xs font-bold tracking-wider truncate">
-          {label}
-        </span>
-        <div className="text-sm tabular-nums">{value}</div>
-      </div>
-    </AppCard>
   );
 }

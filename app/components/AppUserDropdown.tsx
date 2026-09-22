@@ -99,7 +99,7 @@ export default function AppUserDropdown({ className = "" }: AppUserDropdownProps
             aria-hidden="true"
           />
 
-          <div className="min-[900px]:hidden absolute right-0 top-full mt-2 w-64 bg-background-2 dark:bg-background-3 border border-border rounded-md shadow-2xl p-3 flex flex-col gap-2.5 z-50 text-foreground">
+          <div className="min-[900px]:hidden absolute right-0 top-full mt-2 w-64 bg-background-2 dark:bg-background-3 border border-border rounded-xs shadow-2xl p-3 flex flex-col gap-2.5 z-50 text-foreground">
             {(currentUser?.name || activeCompany?.name) && (
               <div className="py-1 border-b border-border flex flex-col gap-1">
                 {currentUser?.name && (

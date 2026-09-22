@@ -10,7 +10,7 @@ export default function LoginLayout({
 }) {
   return (
     <div className="min-h-screen flex bg-background-2 dark:bg-background-3 transition-colors">
-      <div className="hidden lg:flex lg:w-1/3 xl:w-[35%] relative bg-[#6366f1] overflow-hidden flex-col justify-between p-10 lg:p-12 xl:p-14 select-none">
+      <div className="hidden lg:flex lg:w-1/3 xl:w-[35%] relative bg-[#1e40af] overflow-hidden flex-col justify-between p-10 lg:p-12 xl:p-14 select-none">
         <img
           src="/sun-tornado.svg"
           alt=""

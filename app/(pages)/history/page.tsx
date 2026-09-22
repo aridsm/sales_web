@@ -149,7 +149,7 @@ export default function HistoryPage() {
             <AppButton
               onClick={onDeleteSelected}
               color="red"
-              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 shrink-0"
+              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0"
               title={`${t("labels.all.delete")} (${rowsSelected.length})`}
               aria-label={`${t("labels.all.delete")} (${rowsSelected.length})`}
             >

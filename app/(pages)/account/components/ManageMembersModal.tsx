@@ -328,7 +328,7 @@ export default function ManageMembersModal({
                                 {mem.user_name}
                               </span>
                               {isMe && (
-                                <span className="text-xs px-1.5 py-0.5 rounded bg-primary-3 text-white font-semibold select-none tracking-wider">
+                                <span className="text-xs px-1.5 py-0.5 rounded-xs bg-primary-3 text-white font-semibold select-none tracking-wider">
                                   {t("labels.account.you")}
                                 </span>
                               )}
@@ -341,7 +341,7 @@ export default function ManageMembersModal({
 
                         <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
                           {!canManage ? (
-                            <span className="text-xs font-medium bg-primary-4 text-primary-3 dark:text-primary dark:bg-primary-light px-1.5 py-0.5 rounded">
+                            <span className="text-xs font-medium px-2 py-0.5 rounded-xs bg-background-3 border border-border text-foreground/80 shrink-0">
                               {t(`labels.account.permissions.${mem.permission}`)}
                             </span>
                           ) : (
@@ -444,7 +444,7 @@ export default function ManageMembersModal({
                 type="submit"
                 color="primary-3"
                 disabled={isInviting || !inviteEmail}
-                className="w-full sm:w-auto h-10 px-6 text-xs font-semibold shrink-0"
+                className="w-full sm:w-auto h-10 px-6 shrink-0"
               >
                 {t("labels.account.invite_button")}
               </AppButton>
@@ -475,7 +475,7 @@ export default function ManageMembersModal({
                       className="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 gap-3 border-b border-border last:border-b-0"
                     >
                       <div className="flex items-center gap-3.5 min-w-0">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 select-none bg-indigo-500/10 text-indigo-500 shadow-xs">
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 select-none bg-primary/10 text-primary shadow-xs">
                           <MailOutlined style={{ fontSize: 16 }} />
                         </div>
                         <div className="flex flex-col gap-0.5 min-w-0">
@@ -491,7 +491,7 @@ export default function ManageMembersModal({
                         </div>
                       </div>
                       <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
-                        <span className="text-xs font-medium bg-primary-4 text-primary-3 dark:text-primary dark:bg-primary-light px-1.5 py-0.5 rounded">
+                        <span className="text-xs font-medium px-2 py-0.5 rounded-xs bg-background-3 border border-border text-foreground/80 shrink-0">
                           {t(`labels.account.permissions.${inv.permission}`)}
                         </span>
                       </div>

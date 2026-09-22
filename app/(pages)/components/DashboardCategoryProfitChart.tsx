@@ -70,11 +70,11 @@ const CustomPieTooltip = ({
 }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-background-2 p-3 rounded-lg shadow-md flex flex-col gap-1">
+      <div className="bg-background-2 p-3 rounded-xs shadow-md flex flex-col gap-1">
         {payload.map((entry, index: number) => (
           <div key={index} className="flex items-center gap-2">
             <div
-              className="w-3 h-3 rounded-sm"
+              className="w-3 h-3 rounded-xs"
               style={{
                 backgroundColor: entry.payload?.category_color || entry.color,
               }}
@@ -136,8 +136,8 @@ export const DashboardCategoryProfitChart = ({
   }, [startDate, endDate, activeTab]);
 
   return (
-    <AppCard className="px-4 py-4 sm:px-5 sm:pt-4 sm:pb-5 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 lg:row-span-2 min-h-[440px] lg:min-h-0 overflow-hidden">
-      <div className="flex flex-col gap-3 mb-4">
+    <AppCard className="px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-5 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 lg:row-span-2 min-h-[440px] lg:min-h-0 overflow-hidden">
+      <div className="flex flex-col gap-2.5 sm:gap-3 mb-3 sm:mb-4">
         <div className="flex items-center justify-between gap-2">
           <span className="font-semibold text-base sm:text-lg truncate">
             {activeTab === "sales"
@@ -146,7 +146,7 @@ export const DashboardCategoryProfitChart = ({
                 ? "Entradas de Estoque por categoria"
                 : t("labels.dashboard.charts.expenses_by_category")}
           </span>
-          <span className="px-2 py-0.5 rounded-full bg-background-3 border border-border text-xs font-medium text-label shrink-0">
+          <span className="px-2 py-0.5 rounded-xs border border-border text-xs font-medium text-foreground-2 shrink-0">
             {t(`labels.dashboard.periods.${activePeriod}`)}
           </span>
         </div>
@@ -199,7 +199,7 @@ export const DashboardCategoryProfitChart = ({
           </ResponsiveContainer>
         ) : (
           <AppEmptyState
-            className="w-full h-full border border-border bg-background-2 dark:bg-background rounded-md"
+            className="w-full h-full border border-border bg-background-2 dark:bg-background rounded-xs"
             title={t("labels.grid.empty_title")}
             subtitle={t("labels.dashboard.charts.no_data")}
             icon={<PieChartOutlined fontSize="medium" />}
@@ -207,13 +207,13 @@ export const DashboardCategoryProfitChart = ({
         )}
       </div>
 
-      <div className="flex-1 mt-6 flex flex-col gap-2 overflow-y-auto">
-        <div className="flex items-center justify-between mb-2">
-          <span className="font-semibold text-lg">
+      <div className="flex-1 mt-4 sm:mt-5 lg:mt-6 flex flex-col gap-1.5 sm:gap-2 overflow-y-auto">
+        <div className="flex justify-between items-center mb-2 sm:mb-3 gap-2">
+          <span className="font-semibold text-base sm:text-lg">
             {t("labels.dashboard.charts.system_categories")}
           </span>
           <Link
-            className="text-sm text-primary-3 dark:text-primary hover:underline"
+            className="text-xs sm:text-sm text-primary-3 dark:text-primary-3 hover:underline shrink-0 font-medium"
             href="/categories"
           >
             {t("labels.dashboard.charts.view_all")}
@@ -223,20 +223,20 @@ export const DashboardCategoryProfitChart = ({
           categories.map((cat) => (
             <div
               key={cat.id}
-              className="flex items-center gap-3 py-1.5 border-b border-border last:border-0"
+              className="flex items-center gap-2 sm:gap-3 py-1 sm:py-1.5 border-b border-border last:border-0"
             >
               <div
-                className="w-3 h-3 rounded-sm shrink-0"
+                className="w-3 h-3 rounded-xs shrink-0"
                 style={{ backgroundColor: cat.color || "#ccc" }}
               />
-              <span className="text-sm flex-1 truncate">{cat.name}</span>
+              <span className=" flex-1 truncate">{cat.name}</span>
               <div
                 title={
                   cat.type === CategoryType.PRODUCT
                     ? entityLabels[EntityType.PRODUCT]
                     : entityLabels[EntityType.OTHER_EXPENSE]
                 }
-                className={`flex items-center justify-center w-8 h-8 rounded-lg shrink-0 transition-colors ${
+                className={`flex items-center justify-center w-8 h-8 rounded-xs shrink-0 transition-colors ${
                   cat.type === CategoryType.PRODUCT
                     ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20"
                     : "bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20"
@@ -252,7 +252,7 @@ export const DashboardCategoryProfitChart = ({
           ))
         ) : (
           <AppEmptyState
-            className="flex-1 py-6 border border-border bg-background-2 dark:bg-background rounded-md"
+            className="flex-1 py-6 border border-border bg-background-2 dark:bg-background rounded-xs"
             title={t("labels.grid.empty_title")}
             subtitle={t("labels.dashboard.charts.no_category")}
             icon={

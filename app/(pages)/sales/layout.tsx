@@ -36,6 +36,7 @@ import { SaleStatus } from "@/enums/SaleStatus";
 import { useTranslation } from "@/app/utils/i18n";
 import { usePermission } from "@/app/utils/usePermission";
 
+import { SalesContext } from "./SalesContext";
 import { Add, InventoryOutlined } from "@mui/icons-material";
 import Link from "next/link";
 
@@ -62,6 +63,21 @@ export default function SalesLayout({
 
   const salesPagination = usePagination<Sale>(salesService, { sort: "-code" });
 
+  const updateSale = useCallback(
+    (updated: Partial<Sale> & { id: string }) => {
+      salesPagination.setItems((prev) =>
+        prev.map((item) =>
+          item.id === updated.id ? { ...item, ...updated } : item,
+        ),
+      );
+    },
+    [salesPagination],
+  );
+
+  const refreshSales = useCallback(() => {
+    salesPagination.load({ replace: true, params: filterParams });
+  }, [salesPagination, filterParams]);
+
   useEffect(() => {
     salesPagination.load({ replace: true, params: filterParams });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,96 +101,98 @@ export default function SalesLayout({
   const isSaleSelected = pathname !== "/sales";
 
   return (
-    <AppPage title={t("labels.sales.title")}>
-      <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0 h-full relative">
-        <div
-          className={`flex-col min-w-0 min-h-0 ${isSaleSelected ? "hidden lg:flex lg:w-96 shrink-0" : "flex flex-1"}`}
-        >
+    <SalesContext.Provider value={{ updateSale, refreshSales }}>
+      <AppPage title={t("labels.sales.title")}>
+        <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0 h-full relative">
           <div
-            className={`gap-2 min-[900px]:gap-3 mb-3 ${isSaleSelected ? "" : "flex items-center"}`}
+            className={`flex-col min-w-0 min-h-0 ${isSaleSelected ? "hidden lg:flex lg:w-96 shrink-0" : "flex flex-1"}`}
           >
-            <div className="flex flex-1 gap-2 min-[900px]:gap-3 items-center min-w-0">
-              <div
-                className={`flex items-center gap-2 w-full min-w-0 ${isSaleSelected ? "" : "sm:max-w-md mr-auto"}`}
-              >
-                <AppSearchInput
-                  className="w-full"
-                  placeholder={t("labels.grid.search_placeholder")}
-                  value={searchInput}
-                  onChange={handleSearch}
-                />
+            <div
+              className={`gap-2 min-[900px]:gap-3 mb-3 ${isSaleSelected ? "" : "flex items-center"}`}
+            >
+              <div className="flex flex-1 gap-2 min-[900px]:gap-3 items-center min-w-0">
+                <div
+                  className={`flex items-center gap-2 w-full min-w-0 ${isSaleSelected ? "" : "sm:max-w-md mr-auto"}`}
+                >
+                  <AppSearchInput
+                    className="w-full"
+                    placeholder={t("labels.grid.search_placeholder")}
+                    value={searchInput}
+                    onChange={handleSearch}
+                  />
+                </div>
+
+                <AppFilter
+                  onChange={handleFilterChange}
+                  validKeys={[
+                    "category_id",
+                    "status",
+                    "product_id",
+                    "date",
+                    "total",
+                  ]}
+                >
+                  <SaleFilterFields />
+                </AppFilter>
               </div>
 
-              <AppFilter
-                onChange={handleFilterChange}
-                validKeys={[
-                  "category_id",
-                  "status",
-                  "product_id",
-                  "date",
-                  "total",
-                ]}
-              >
-                <SaleFilterFields />
-              </AppFilter>
+              {canEdit && (
+                <AppButton
+                  color="primary"
+                  onClick={() => router.push("/sales/new")}
+                  className={`shrink-0 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 ${isSaleSelected ? "w-full mt-3 min-[900px]:w-full" : ""}`}
+                  title={t("labels.grid.add_item")}
+                  aria-label={t("labels.grid.add_item")}
+                >
+                  <Add style={{ fontSize: 18 }} />
+                  <span className="hidden min-[900px]:inline">
+                    {t("labels.grid.add_item")}
+                  </span>
+                </AppButton>
+              )}
             </div>
 
-            {canEdit && (
-              <AppButton
-                color="primary"
-                onClick={() => router.push("/sales/new")}
-                className={`shrink-0 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 ${isSaleSelected ? "w-full mt-3 min-[900px]:w-full" : ""}`}
-                title={t("labels.grid.add_item")}
-                aria-label={t("labels.grid.add_item")}
-              >
-                <Add style={{ fontSize: 18 }} />
-                <span className="hidden min-[900px]:inline">
-                  {t("labels.grid.add_item")}
-                </span>
-              </AppButton>
-            )}
-          </div>
-
-          <div className="flex-1 min-h-0 overflow-y-auto  pr-1">
-            {salesPagination.loading && salesPagination.items.length === 0 ? (
-              <div className="flex-1 flex justify-center py-20">
-                <div className="text-label text-sm">
-                  {t("labels.all.processing")}
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              {salesPagination.loading && salesPagination.items.length === 0 ? (
+                <div className="flex-1 flex justify-center py-20">
+                  <div className="text-label text-sm">
+                    {t("labels.all.processing")}
+                  </div>
                 </div>
-              </div>
-            ) : salesPagination.items.length === 0 ? (
-              <AppEmptyState className="py-20" />
-            ) : (
-              <div
-                className={`grid gap-3 ${isSaleSelected ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"}`}
-              >
-                {salesPagination.items.map((sale) => {
-                  const isSelected = pathname === `/sales/${sale.id}`;
-                  return (
-                    <SaleCard
-                      key={sale.id}
-                      sale={sale}
-                      isSelected={isSelected}
-                      t={t}
-                    />
-                  );
-                })}
-              </div>
-            )}
+              ) : salesPagination.items.length === 0 ? (
+                <AppEmptyState className="py-20" />
+              ) : (
+                <div
+                  className={`grid gap-3 ${isSaleSelected ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"}`}
+                >
+                  {salesPagination.items.map((sale) => {
+                    const isSelected = pathname === `/sales/${sale.id}`;
+                    return (
+                      <SaleCard
+                        key={sale.id}
+                        sale={sale}
+                        isSelected={isSelected}
+                        t={t}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="shrink-0 pt-4 mt-auto">
+              <AppPagination pagination={salesPagination} />
+            </div>
           </div>
 
-          <div className="shrink-0 pt-4 mt-auto">
-            <AppPagination pagination={salesPagination} />
-          </div>
+          {isSaleSelected && (
+            <div className="w-full lg:flex-1 shrink-0 border-border lg:border-l lg:pl-6 overflow-y-auto flex flex-col min-h-0 bg-background dark:bg-background h-full">
+              {children}
+            </div>
+          )}
         </div>
-
-        {isSaleSelected && (
-          <div className="w-full lg:flex-1 shrink-0 border-border lg:border-l lg:pl-6 overflow-y-auto flex flex-col min-h-0 bg-background dark:bg-background h-full">
-            {children}
-          </div>
-        )}
-      </div>
-    </AppPage>
+      </AppPage>
+    </SalesContext.Provider>
   );
 }
 
@@ -193,20 +211,18 @@ function SaleCard({
   return (
     <Link
       href={`/sales/${sale.id}`}
-      className={`flex flex-col w-full text-left p-3 md:p-5 rounded-md border group relative overflow-hidden ${
+      className={`flex flex-col w-full text-left p-3 md:p-5 rounded-xs border group relative overflow-hidden ${
         isSelected
-          ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-primary-4"
-          : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-3 dark:hover:bg-background-2"
+          ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-background-2 shadow-xs"
+          : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2"
       }`}
     >
       <div className="flex items-start justify-between gap-3 mb-3 w-full">
-        <span
-          className={`text-base font-bold truncate ${isSelected ? "text-primary-3 dark:text-primary" : "text-foreground"}`}
-        >
+        <span className="text-base font-bold truncate text-foreground">
           #{sale.code.toString().padStart(6, "0")}
         </span>
         <span
-          className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap ${status.bg} ${status.color}`}
+          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap ${status.bg} ${status.color}`}
         >
           <span
             className={`w-1.5 h-1.5 rounded-full shrink-0 ${
@@ -221,7 +237,7 @@ function SaleCard({
         date={sale.created_at || sale.date}
         email={sale.created_by_email}
       />
-      <div className="flex items-center justify-between w-full mt-3 pt-4 border-t border-border border-dashed">
+      <div className="flex items-center justify-between w-full mt-3 pt-4 border-t border-border">
         <div className="flex items-center gap-1.5 text-label">
           <InventoryOutlined style={{ fontSize: 16 }} />
           <span className="text-sm">
@@ -229,7 +245,7 @@ function SaleCard({
           </span>
         </div>
         <span
-          className={`text-lg font-bold tabular-nums ${
+          className={`text-base font-bold tabular-nums ${
             isCanceled ? "line-through text-label" : "text-foreground"
           }`}
         >

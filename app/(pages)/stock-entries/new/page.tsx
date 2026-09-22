@@ -211,8 +211,8 @@ export default function NewStockEntryPage() {
     return (
       <AppPage title={t("labels.stock_entries.new.title")}>
         <div className="flex-1 flex items-center justify-center p-6">
-          <div className="border border-border bg-background-2 dark:bg-background-3/50 rounded-2xl p-8 max-w-md w-full text-center shadow-xs">
-            <div className="w-16 h-16 rounded-2xl bg-red-500/10 text-red-500 flex items-center justify-center mx-auto mb-4">
+          <div className="border border-border bg-background-2 dark:bg-background-3/50 rounded-xs p-8 max-w-md w-full text-center shadow-xs">
+            <div className="w-16 h-16 rounded-xs bg-red-500/10 text-red-500 flex items-center justify-center mx-auto mb-4">
               <LockOutlined style={{ fontSize: 32 }} />
             </div>
             <h2 className="text-lg font-semibold text-foreground mb-2">
@@ -263,7 +263,13 @@ export default function NewStockEntryPage() {
                   <LocalShippingOutlined style={{ fontSize: 16 }} />
                   <span>{t("labels.stock_entries.new.cart")}</span>
                   {totalItems > 0 && (
-                    <span className="bg-primary-3 text-white text-xs px-1.5 py-0.5 rounded-full font-bold tabular-nums">
+                    <span
+                      className={`text-xs px-1.5 py-0.5 rounded-full font-bold tabular-nums transition-colors ${
+                        mobileTab === "cart"
+                          ? "bg-white text-primary"
+                          : "bg-primary-3 text-white"
+                      }`}
+                    >
                       {totalItems}
                     </span>
                   )}
@@ -314,10 +320,10 @@ export default function NewStockEntryPage() {
                         if (inCart === 0) addToCart(product);
                       }}
                       className={`
-                        group relative text-left p-4 rounded-lg border transition-all duration-200 flex flex-col h-full
+                        group relative text-left p-4 rounded-xs border transition-all duration-200 flex flex-col h-full
                         ${
                           inCart > 0
-                            ? "border-primary-3 bg-primary-3/5 dark:bg-primary-3/10 cursor-default"
+                            ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-background-2 shadow-xs cursor-default"
                             : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-2! cursor-pointer"
                         }
                       `}
@@ -325,7 +331,7 @@ export default function NewStockEntryPage() {
                       <div className="flex items-center justify-between gap-2 mb-1">
                         <div className="flex items-center gap-2 min-w-0">
                           <div
-                            className="w-3 h-3 rounded-sm shrink-0"
+                            className="w-3 h-3 rounded-xs shrink-0"
                             style={{ backgroundColor: product.category_color }}
                           />
                           <span className="text-sm text-label truncate">
@@ -400,7 +406,7 @@ export default function NewStockEntryPage() {
           </div>
 
           {totalItems > 0 && (
-            <div className="md:hidden mt-3 p-3 bg-background-2 dark:bg-background-3 border border-border rounded-lg flex items-center justify-between shadow-lg shrink-0">
+            <div className="md:hidden mt-3 p-3 bg-background-2 dark:bg-background-3 border border-border rounded-xs flex items-center justify-between shadow-lg shrink-0">
               <div className="flex flex-col">
                 <span className="text-xs text-label">
                   {totalItems}{" "}

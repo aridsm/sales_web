@@ -20,8 +20,6 @@ const datePeriods = {
 };
 
 export default function DashboardPage() {
-  const token = useTokenStore((state) => state.token);
-  const router = useRouter();
   const { t } = useTranslation();
 
   const [activePeriod, setActivePeriod] = useState("this_week");
@@ -76,7 +74,7 @@ export default function DashboardPage() {
 
   return (
     <AppPage title="Dashboard">
-      <div className="flex flex-col gap-4 sm:gap-5 lg:flex-1 lg:min-h-0">
+      <div className="flex flex-col gap-2 sm:gap-2.5 lg:gap-3.5 lg:flex-1 lg:min-h-0">
         <div className="flex items-center gap-2 overflow-x-auto max-w-full pb-1 shrink-0">
           <AppTabs
             tabs={Object.entries(datePeriods).map(([key]) => ({
@@ -90,7 +88,7 @@ export default function DashboardPage() {
 
         <DashboardKPIs startDate={startDate} endDate={endDate} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[minmax(250px,320px)_minmax(400px,1fr)] lg:min-h-0 lg:flex-1 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[minmax(250px,320px)_minmax(400px,1fr)] lg:min-h-0 lg:flex-1 gap-2 sm:gap-2.5 lg:gap-3.5">
           <DashboardRevenueExpenseChart activePeriod={activePeriod} />
           <DashboardCategoryProfitChart
             entityLabels={entityLabels}

@@ -11,6 +11,7 @@ export interface AppButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEle
     | "white";
   flat?: boolean;
   rounded?: boolean;
+  size?: "small" | "default" | "large";
 }
 
 export default function AppButton({
@@ -18,18 +19,30 @@ export default function AppButton({
   className = "",
   flat = false,
   rounded = false,
+  size = "default",
   children,
   ...props
 }: AppButtonProps) {
-  const baseClasses = `py-2.5 px-4 min-h-12 justify-center items-center gap-1.5 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+  const hasExplicitHeight = /\b(h-|min-h-)\S+/.test(className);
+  const hasExplicitPadding = /\b(p[xy]?-\S+|p-\S+)/.test(className);
+  const hasExplicitTextSize = /\btext-(xs|sm|base|lg|xl)\b/.test(className);
+  const isSquare = /\bw-\S+\b/.test(className) && /\bh-\S+\b/.test(className);
+
+  const sizeClasses = {
+    small: `${hasExplicitHeight ? "" : "h-8"} ${hasExplicitPadding || isSquare ? "" : "px-2.5"} ${hasExplicitTextSize ? "" : "text-xs"}`,
+    default: `${hasExplicitHeight ? "" : "h-10"} ${hasExplicitPadding || isSquare ? "" : "px-3.5"} ${hasExplicitTextSize ? "" : "text-sm"}`,
+    large: `${hasExplicitHeight ? "" : "h-12"} ${hasExplicitPadding || isSquare ? "" : "px-5"} ${hasExplicitTextSize ? "" : "text-base"}`,
+  }[size];
+
+  const baseClasses = `inline-flex items-center justify-center gap-1.5 font-medium cursor-pointer transition-all duration-200 select-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] ${
     rounded ? "rounded-full" : "rounded-xs"
-  }`;
+  } ${sizeClasses}`;
 
   let colorClasses = "";
   if (color === "primary") {
     colorClasses = flat
-      ? "bg-transparent text-primary hover:bg-primary-light active:bg-primary-light/80 border "
-      : "bg-primary text-black active:bg-primary-2/90 shadow-xs hover:bg-primary-hover";
+      ? "bg-transparent text-primary hover:bg-primary-light active:bg-primary-light/80 border border-transparent"
+      : "bg-primary text-white active:bg-primary-2/90 shadow-xs hover:bg-primary-hover";
   } else if (color === "primary-3") {
     colorClasses = flat
       ? "bg-transparent text-primary-3 hover:bg-primary-3/10 active:bg-primary-3/20 border border-transparent"

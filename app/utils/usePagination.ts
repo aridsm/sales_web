@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, Dispatch, SetStateAction } from "react";
 
 export interface PageData {
   page: number;
@@ -31,7 +31,7 @@ export interface PaginationResult<T> {
   pageData: PageData;
   next: () => void;
   previous: () => void;
-  setItems: (items: T[]) => void;
+  setItems: Dispatch<SetStateAction<T[]>>;
 }
 
 export function usePagination<T>(

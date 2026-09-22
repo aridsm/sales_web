@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { STOCK_ENTRY_STATUS_CONFIG } from "@/app/utils/constants";
 import { formatCurrency } from "@/app/utils/formatters/currency";
-import { formatDateTime } from "@/app/utils/formatters/date";
 import AppCreatedBy from "@/app/components/AppCreatedBy";
 
 import AppPage from "../../components/AppPage";
@@ -36,6 +35,7 @@ import { StockEntryStatus } from "@/enums/StockEntryStatus";
 import { useTranslation } from "@/app/utils/i18n";
 import { usePermission } from "@/app/utils/usePermission";
 
+import { StockEntriesContext } from "./StockEntriesContext";
 import { Add, InventoryOutlined } from "@mui/icons-material";
 import Link from "next/link";
 
@@ -64,6 +64,21 @@ export default function StockEntriesLayout({
     sort: "-code",
   });
 
+  const updateStockEntry = useCallback(
+    (updated: Partial<StockEntry> & { id: string }) => {
+      stockPagination.setItems((prev) =>
+        prev.map((item) =>
+          item.id === updated.id ? { ...item, ...updated } : item,
+        ),
+      );
+    },
+    [stockPagination],
+  );
+
+  const refreshStockEntries = useCallback(() => {
+    stockPagination.load({ replace: true, params: filterParams });
+  }, [stockPagination, filterParams]);
+
   useEffect(() => {
     stockPagination.load({ replace: true, params: filterParams });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,96 +102,100 @@ export default function StockEntriesLayout({
   const isEntrySelected = pathname !== "/stock-entries";
 
   return (
-    <AppPage title={t("labels.stock_entries.title")}>
-      <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0 h-full relative">
-        <div
-          className={`flex-col min-w-0 min-h-0 ${isEntrySelected ? "hidden lg:flex lg:w-96 shrink-0" : "flex flex-1"}`}
-        >
+    <StockEntriesContext.Provider
+      value={{ updateStockEntry, refreshStockEntries }}
+    >
+      <AppPage title={t("labels.stock_entries.title")}>
+        <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0 h-full relative">
           <div
-            className={`gap-2 min-[900px]:gap-3 mb-3 ${isEntrySelected ? "" : "flex items-center"}`}
+            className={`flex-col min-w-0 min-h-0 ${isEntrySelected ? "hidden lg:flex lg:w-96 shrink-0" : "flex flex-1"}`}
           >
-            <div className="flex flex-1 gap-2 min-[900px]:gap-3 items-center min-w-0">
-              <div
-                className={`flex items-center gap-2 w-full min-w-0 ${isEntrySelected ? "" : "sm:max-w-md mr-auto"}`}
-              >
-                <AppSearchInput
-                  className="w-full"
-                  placeholder={t("labels.grid.search_placeholder")}
-                  value={searchInput}
-                  onChange={handleSearch}
-                />
+            <div
+              className={`gap-2 min-[900px]:gap-3 mb-3 ${isEntrySelected ? "" : "flex items-center"}`}
+            >
+              <div className="flex flex-1 gap-2 min-[900px]:gap-3 items-center min-w-0">
+                <div
+                  className={`flex items-center gap-2 w-full min-w-0 ${isEntrySelected ? "" : "sm:max-w-md mr-auto"}`}
+                >
+                  <AppSearchInput
+                    className="w-full"
+                    placeholder={t("labels.grid.search_placeholder")}
+                    value={searchInput}
+                    onChange={handleSearch}
+                  />
+                </div>
+
+                <AppFilter
+                  onChange={handleFilterChange}
+                  validKeys={[
+                    "category_id",
+                    "status",
+                    "product_id",
+                    "date",
+                    "total",
+                  ]}
+                >
+                  <StockEntryFilterFields />
+                </AppFilter>
               </div>
 
-              <AppFilter
-                onChange={handleFilterChange}
-                validKeys={[
-                  "category_id",
-                  "status",
-                  "product_id",
-                  "date",
-                  "total",
-                ]}
-              >
-                <StockEntryFilterFields />
-              </AppFilter>
+              {canEdit && (
+                <AppButton
+                  color="primary"
+                  onClick={() => router.push("/stock-entries/new")}
+                  className={`shrink-0 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 ${isEntrySelected ? "w-full mt-3 min-[900px]:w-full" : ""}`}
+                  title={t("labels.grid.add_item")}
+                  aria-label={t("labels.grid.add_item")}
+                >
+                  <Add style={{ fontSize: 18 }} />
+                  <span className="hidden min-[900px]:inline">
+                    {t("labels.grid.add_item")}
+                  </span>
+                </AppButton>
+              )}
             </div>
 
-            {canEdit && (
-              <AppButton
-                color="primary"
-                onClick={() => router.push("/stock-entries/new")}
-                className={`shrink-0 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-4 ${isEntrySelected ? "w-full mt-3 min-[900px]:w-full" : ""}`}
-                title={t("labels.grid.add_item")}
-                aria-label={t("labels.grid.add_item")}
-              >
-                <Add style={{ fontSize: 18 }} />
-                <span className="hidden min-[900px]:inline">
-                  {t("labels.grid.add_item")}
-                </span>
-              </AppButton>
-            )}
-          </div>
-
-          <div className="flex-1 min-h-0 overflow-y-auto pr-1">
-            {stockPagination.loading && stockPagination.items.length === 0 ? (
-              <div className="flex-1 flex justify-center py-20">
-                <div className="text-label text-sm">
-                  {t("labels.all.processing")}
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              {stockPagination.loading && stockPagination.items.length === 0 ? (
+                <div className="flex-1 flex justify-center py-20">
+                  <div className="text-label text-sm">
+                    {t("labels.all.processing")}
+                  </div>
                 </div>
-              </div>
-            ) : stockPagination.items.length === 0 ? (
-              <AppEmptyState className="py-20" />
-            ) : (
-              <div
-                className={`grid gap-3 ${isEntrySelected ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"}`}
-              >
-                {stockPagination.items.map((entry) => {
-                  const isSelected = pathname === `/stock-entries/${entry.id}`;
-                  return (
-                    <StockEntryCard
-                      key={entry.id}
-                      entry={entry}
-                      isSelected={isSelected}
-                      t={t}
-                    />
-                  );
-                })}
-              </div>
-            )}
+              ) : stockPagination.items.length === 0 ? (
+                <AppEmptyState className="py-20" />
+              ) : (
+                <div
+                  className={`grid gap-3 ${isEntrySelected ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"}`}
+                >
+                  {stockPagination.items.map((entry) => {
+                    const isSelected = pathname === `/stock-entries/${entry.id}`;
+                    return (
+                      <StockEntryCard
+                        key={entry.id}
+                        entry={entry}
+                        isSelected={isSelected}
+                        t={t}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="shrink-0 pt-4 mt-auto">
+              <AppPagination pagination={stockPagination} />
+            </div>
           </div>
 
-          <div className="shrink-0 pt-4 mt-auto">
-            <AppPagination pagination={stockPagination} />
-          </div>
+          {isEntrySelected && (
+            <div className="w-full lg:flex-1 shrink-0 border-border lg:border-l lg:pl-6 overflow-y-auto flex flex-col min-h-0 bg-background dark:bg-background h-full">
+              {children}
+            </div>
+          )}
         </div>
-
-        {isEntrySelected && (
-          <div className="w-full lg:flex-1 shrink-0 border-border lg:border-l lg:pl-6 overflow-y-auto flex flex-col min-h-0 bg-background dark:bg-background h-full">
-            {children}
-          </div>
-        )}
-      </div>
-    </AppPage>
+      </AppPage>
+    </StockEntriesContext.Provider>
   );
 }
 
@@ -199,20 +218,18 @@ function StockEntryCard({
   return (
     <Link
       href={`/stock-entries/${entry.id}`}
-      className={`flex flex-col w-full text-left p-3 md:p-5 rounded-md border group relative overflow-hidden ${
+      className={`flex flex-col w-full text-left p-3 md:p-5 rounded-xs border group relative overflow-hidden ${
         isSelected
-          ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-primary-4"
-          : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-3 dark:hover:bg-background-2"
+          ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-background-2 shadow-xs"
+          : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2"
       }`}
     >
       <div className="flex items-start justify-between gap-3 mb-3 w-full">
-        <span
-          className={`text-base font-bold truncate ${isSelected ? "text-primary-3 dark:text-primary" : "text-foreground"}`}
-        >
+        <span className="text-base font-bold truncate text-foreground">
           #{entry.code.toString().padStart(6, "0")}
         </span>
         <span
-          className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap ${status.bg} ${status.color}`}
+          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap ${status.bg} ${status.color}`}
         >
           <span
             className={`w-1.5 h-1.5 rounded-full shrink-0 ${
@@ -227,15 +244,15 @@ function StockEntryCard({
         date={entry.created_at || entry.date}
         email={entry.created_by_email}
       />
-      <div className="flex items-center justify-between w-full mt-3 pt-4 border-t border-border border-dashed">
+      <div className="flex items-center justify-between w-full mt-3 pt-4 border-t border-border">
         <div className="flex items-center gap-1.5 text-label">
           <InventoryOutlined style={{ fontSize: 16 }} />
           <span className="text-sm">
-            {entry.items_count || 0} {t("labels.stock_entries.detail.items")}
+            {entry.items_count || 0} {t("labels.stock_entries.items")}
           </span>
         </div>
         <span
-          className={`text-lg font-bold tabular-nums ${
+          className={`text-base font-bold tabular-nums ${
             isCanceled ? "line-through text-label" : "text-foreground"
           }`}
         >
@@ -299,7 +316,7 @@ function StockEntryFilterFields() {
         render={({ field }) => (
           <AppSelect
             label={t("labels.all.status")}
-            placeholder={t("labels.stock_entries.list.filter_status")}
+            placeholder={t("labels.stock_entries.filter_status")}
             options={statusOptions}
             multiple
             clearable
@@ -330,7 +347,7 @@ function StockEntryFilterFields() {
         control={control}
         name="date"
         render={({ field }) => (
-          <AppDateRange label={t("labels.all.date")} {...field} />
+          <AppDateRange label={t("labels.stock_entries.detail.date")} {...field} />
         )}
       />
 
@@ -338,7 +355,7 @@ function StockEntryFilterFields() {
         control={control}
         name="total"
         render={({ field }) => (
-          <AppAmountRange label={t("labels.all.total_value")} {...field} />
+          <AppAmountRange label={t("labels.stock_entries.total")} {...field} />
         )}
       />
     </>

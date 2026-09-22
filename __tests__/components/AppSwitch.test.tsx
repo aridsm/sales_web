@@ -18,7 +18,7 @@ describe("AppSwitch", () => {
     render(<AppSwitch value={true} onChange={vi.fn()} />);
     const switchBtn = screen.getByRole("switch");
     expect(switchBtn).toHaveAttribute("aria-checked", "true");
-    expect(switchBtn).toHaveClass("bg-indigo-500");
+    expect(switchBtn).toHaveClass("bg-primary");
   });
 
   it("calls onChange when clicked", async () => {

@@ -18,7 +18,7 @@ export default function AppSwitch({ value, onChange, label }: AppSwitchProps) {
         aria-checked={value}
         onClick={() => onChange(!value)}
         className={`relative inline-flex cursor-pointer h-6 w-11 items-center rounded-full transition-colors ${
-          value ? "bg-indigo-500" : "bg-border"
+          value ? "bg-primary" : "bg-border hover:bg-border-2"
         }`}
       >
         <span

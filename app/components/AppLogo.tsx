@@ -1,6 +1,6 @@
 export default function AppLogo({
   className = "w-8 h-8",
-  color = "var(--primary, #aeec1c)",
+  color = "var(--primary, #2563eb)",
   bgColor,
   iconColor,
   showBackground = false,
@@ -25,12 +25,12 @@ export default function AppLogo({
           width="480"
           height="480"
           rx="96"
-          fill={bgColor || "var(--primary, #aeec1c)"}
+          fill={bgColor || "var(--primary, #2563eb)"}
         />
         <g transform="scale(0.65) translate(129, 129)">
           <path
             d="M160 160h160v160H160zM0 320h160v160H0zM0 0h160v160H0zM320 320h160v160H320zM320 0h160v160H320z"
-            fill={activeColor === "var(--primary, #aeec1c)" ? "#0f172a" : activeColor}
+            fill={activeColor === "var(--primary, #2563eb)" || activeColor === "var(--primary-3, #6366f1)" ? "#ffffff" : activeColor}
           />
         </g>
       </svg>
