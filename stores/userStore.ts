@@ -53,7 +53,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     const active = user
       ? companies.find((c) => c.id === user.company_id) || null
       : null;
-    set({ currentUser: user, activeCompany: active });
+    set({ currentUser: user ? { ...user } : null, activeCompany: active ? { ...active } : null });
   },
 
   setCompanies: (companies) => {
@@ -61,7 +61,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     const active = currentUser
       ? companies.find((c) => c.id === currentUser.company_id) || null
       : null;
-    set({ companies, activeCompany: active });
+    set({ companies: [...companies], activeCompany: active ? { ...active } : null });
   },
 
   clearUserData: () => {

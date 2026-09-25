@@ -2,6 +2,8 @@ import {
   SignUp,
   TokenResponse,
   User,
+  UserBase,
+  ChangePasswordRequest,
   Login,
   RefreshToken,
 } from "@/api/schemas/User";
@@ -17,9 +19,27 @@ export class UserService {
       .then((res) => res.data);
   }
 
-  async updateMe(data: { name?: string }): Promise<User> {
+  async updateMe(data: Partial<UserBase>): Promise<User> {
     return await axiosClient
       .patch(`/${this.resource}/me`, data)
+      .then((res) => res.data);
+  }
+
+  async changePassword(data: ChangePasswordRequest): Promise<void> {
+    return await axiosClient
+      .post(`/${this.resource}/change-password`, data)
+      .then((res) => res.data);
+  }
+
+  async uploadAvatar(file: File): Promise<{ avatar_url: string }> {
+    const formData = new FormData();
+    formData.append("file", file);
+    return await axiosClient
+      .post(`/${this.resource}/me/avatar`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => res.data);
   }
 

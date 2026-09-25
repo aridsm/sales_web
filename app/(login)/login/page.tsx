@@ -93,14 +93,13 @@ export default function LoginPage() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <AppInputText
-          label="Email"
+          label={t("labels.all.email")}
           type="email"
-          placeholder={t("labels.all.email")}
+          placeholder="exemplo@email.com"
           value={username}
           onChange={(e) => setUsername((e.target as HTMLInputElement).value)}
           required
         />
-
         <div className="flex flex-col gap-1">
           <AppInputText
             label={t("labels.all.password")}
@@ -111,7 +110,6 @@ export default function LoginPage() {
             required
           />
         </div>
-
         <div className="flex items-center justify-between pt-1">
           <label className="flex items-center gap-3 cursor-pointer select-none">
             <AppCheckbox
@@ -122,11 +120,11 @@ export default function LoginPage() {
             <span>{t("labels.login.remember_me")}</span>
           </label>
         </div>
-
         <AppButton
           type="submit"
           color="primary"
           disabled={loading}
+          className="py-5!"
         >
           {loading ? t("labels.login.logging") : t("labels.login.button")}
         </AppButton>

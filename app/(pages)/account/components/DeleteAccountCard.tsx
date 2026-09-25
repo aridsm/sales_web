@@ -13,19 +13,19 @@ export default function DeleteAccountCard({
   const { t } = useTranslation();
 
   return (
-    <AppCard className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <AppCard className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-2 border-l-red-500">
       <div className="flex flex-col gap-1">
-        <span className="font-semibold text-sm text-foreground">
+        <span className="font-semibold text-foreground">
           {t("labels.account.delete_account")}
         </span>
-        <span className="text-xs text-label">
+        <span className="text-label">
           {t("labels.account.delete_account_description")}
         </span>
       </div>
 
       <AppButton
         color="red"
-        className="gap-1.5 shrink-0 self-start sm:self-center text-xs"
+        className="gap-1.5 shrink-0 self-start sm:self-center"
         onClick={onDeleteAccount}
         title={t("labels.account.delete_account")}
       >

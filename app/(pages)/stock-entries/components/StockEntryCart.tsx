@@ -66,13 +66,15 @@ export function StockEntryCart({
             <AppButton
               color="background"
               onClick={onClearCart}
-              className="px-2! py-1!"
+              className="w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0"
+              title={t("labels.all.clear")}
+              aria-label={t("labels.all.clear")}
             >
               <DeleteOutlined
                 style={{ fontSize: 16 }}
                 className="text-red-500"
               />
-              {t("labels.all.clear")}
+              <span className="hidden md:inline">{t("labels.all.clear")}</span>
             </AppButton>
           )}
         </div>

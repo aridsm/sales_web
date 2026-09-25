@@ -206,12 +206,12 @@ export default function AppFilter({
       <AppButton
         color="background"
         onClick={handleOpen}
-        className={`w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0 relative ${hasActiveFilters ? "text-primary-3 dark:text-primary border-primary-3 hover:border-primary-3 dark:border-primary/60" : ""} ${className || ""}`}
+        className={`w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0 relative ${hasActiveFilters ? "text-primary-3 dark:text-primary border-primary-3 hover:border-primary-3 dark:border-primary/60" : ""} ${className || ""}`}
         title={t("labels.filter.button")}
         aria-label={t("labels.filter.button")}
       >
         <FilterList fontSize="small" />
-        <span className="hidden min-[900px]:inline">
+        <span className="hidden md:inline">
           {t("labels.filter.button")}
         </span>
         {hasActiveFilters && (

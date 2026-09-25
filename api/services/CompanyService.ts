@@ -20,9 +20,28 @@ export class CompanyService {
       .then((res) => res.data);
   }
 
-  async update(id: string, name: string): Promise<Company> {
+  async getById(id: string): Promise<Company> {
     return await axiosClient
-      .patch(`/${this.resource}/${id}`, { name })
+      .get(`/${this.resource}/${id}`)
+      .then((res) => res.data);
+  }
+
+  async update(id: string, data: Partial<Company> | string): Promise<Company> {
+    const payload = typeof data === "string" ? { name: data } : data;
+    return await axiosClient
+      .patch(`/${this.resource}/${id}`, payload)
+      .then((res) => res.data);
+  }
+
+  async uploadLogo(companyId: string, file: File): Promise<{ logo_url: string }> {
+    const formData = new FormData();
+    formData.append("file", file);
+    return await axiosClient
+      .post(`/${this.resource}/${companyId}/logo`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => res.data);
   }
 
@@ -47,10 +66,37 @@ export class CompanyService {
       .then((res) => res.data);
   }
 
-  async updateMemberPermission(companyId: string, userId: string, permission: CompanyPermission): Promise<CompanyUser> {
+  async updateMember(
+    companyId: string,
+    userId: string,
+    data: {
+      permission?: CompanyPermission;
+      job_title?: string | null;
+      user_job_title?: string | null;
+    },
+  ): Promise<CompanyUser> {
     return await axiosClient
-      .patch(`/${this.resource}/${companyId}/users/${userId}`, { permission })
+      .patch(`/${this.resource}/${companyId}/users/${userId}`, data)
       .then((res) => res.data);
+  }
+
+  async updateMemberPermission(
+    companyId: string,
+    userId: string,
+    permission: CompanyPermission,
+  ): Promise<CompanyUser> {
+    return this.updateMember(companyId, userId, { permission });
+  }
+
+  async updateMemberJobTitle(
+    companyId: string,
+    userId: string,
+    jobTitle: string | null,
+  ): Promise<CompanyUser> {
+    return this.updateMember(companyId, userId, {
+      job_title: jobTitle,
+      user_job_title: jobTitle,
+    });
   }
 
   async removeMember(companyId: string, userId: string): Promise<void> {

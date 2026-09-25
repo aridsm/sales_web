@@ -143,12 +143,12 @@ export default function StockEntriesLayout({
                 <AppButton
                   color="primary"
                   onClick={() => router.push("/stock-entries/new")}
-                  className={`shrink-0 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 ${isEntrySelected ? "w-full mt-3 min-[900px]:w-full" : ""}`}
+                  className={`shrink-0 w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 ${isEntrySelected ? "w-full mt-3 md:w-full" : ""}`}
                   title={t("labels.grid.add_item")}
                   aria-label={t("labels.grid.add_item")}
                 >
                   <Add style={{ fontSize: 18 }} />
-                  <span className="hidden min-[900px]:inline">
+                  <span className="hidden md:inline">
                     {t("labels.grid.add_item")}
                   </span>
                 </AppButton>
@@ -243,6 +243,7 @@ function StockEntryCard({
         name={entry.created_by_name}
         date={entry.created_at || entry.date}
         email={entry.created_by_email}
+        avatarUrl={entry.created_by_avatar_url}
       />
       <div className="flex items-center justify-between w-full mt-3 pt-4 border-t border-border">
         <div className="flex items-center gap-1.5 text-label">

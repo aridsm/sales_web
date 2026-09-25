@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  LightModeOutlined,
-  DarkModeOutlined,
-} from "@mui/icons-material";
+import { LightModeOutlined, DarkModeOutlined } from "@mui/icons-material";
 import AppSwitch from "./inputs/AppSwitch";
 import { useColorModeStore } from "../../stores/colorModeStore";
 
@@ -52,9 +49,9 @@ export default function AppDarkModeToggle({
       className="w-8 h-8 rounded-full flex items-center justify-center border border-border hover:border-border-2 bg-background-3/50 hover:bg-background-3 dark:bg-background-2/50 dark:hover:bg-background-2 text-foreground-2 hover:text-foreground active:scale-95 transition-all cursor-pointer shrink-0"
     >
       {mode === "dark" ? (
-        <LightModeOutlined sx={{ fontSize: 18 }} />
+        <LightModeOutlined sx={{ fontSize: 16 }} />
       ) : (
-        <DarkModeOutlined sx={{ fontSize: 18 }} />
+        <DarkModeOutlined sx={{ fontSize: 16 }} />
       )}
     </button>
   );
@@ -79,7 +76,9 @@ export default function AppDarkModeToggle({
   );
 
   if (variant === "compact") {
-    return <div className={`flex items-center ${className}`}>{compactButton}</div>;
+    return (
+      <div className={`flex items-center ${className}`}>{compactButton}</div>
+    );
   }
 
   if (variant === "responsive") {

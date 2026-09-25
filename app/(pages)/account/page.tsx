@@ -7,20 +7,30 @@ import { useDialogStore } from "@/stores/dialogStore";
 import { useTokenStore } from "@/stores/tokenStore";
 import { useUserStore } from "@/stores/userStore";
 import AppPage from "../../components/AppPage";
+import AppTabs, { AppTabItem } from "../../components/AppTabs";
 import { usersService } from "@/api/services/UserService";
 import { companyService } from "@/api/services/CompanyService";
 import { User } from "@/api/schemas/User";
 import { CompanyListItem, CompanyInvitation, getApiError } from "@/api/schemas";
 import { usePagination } from "@/app/utils/usePagination";
-import ProfileCard from "./components/ProfileCard";
-import ActiveCompanyCard from "./components/ActiveCompanyCard";
-import PreferencesCard from "./components/PreferencesCard";
-import InvitationsCard from "./components/InvitationsCard";
-import CompaniesCard from "./components/CompaniesCard";
-import DeleteAccountCard from "./components/DeleteAccountCard";
+
+import AccountProfileTab from "./components/tabs/AccountProfileTab";
+import AccountSecurityTab from "./components/tabs/AccountSecurityTab";
+import AccountCompanyTab from "./components/tabs/AccountCompanyTab";
+import AccountCompaniesTab from "./components/tabs/AccountCompaniesTab";
+import AccountPreferencesTab from "./components/tabs/AccountPreferencesTab";
+
 import CreateCompanyModal from "./components/CreateCompanyModal";
 import EditCompanyModal from "./components/EditCompanyModal";
 import ManageMembersModal from "./components/ManageMembersModal";
+
+import {
+  PersonOutlined,
+  LockOutlined,
+  BusinessOutlined,
+  ApartmentOutlined,
+  SettingsOutlined,
+} from "@mui/icons-material";
 
 export default function AccountPage() {
   const { t } = useTranslation();
@@ -28,12 +38,16 @@ export default function AccountPage() {
   const { openDialog } = useDialogStore();
   const clearToken = useTokenStore((state) => state.clearToken);
 
+  const [activeTab, setActiveTab] = useState<string>("profile");
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [invitations, setInvitations] = useState<CompanyInvitation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [membersRefreshKey, setMembersRefreshKey] = useState(0);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [editingCompany, setEditingCompany] = useState<CompanyListItem | null>(null);
+  const [editingCompany, setEditingCompany] = useState<CompanyListItem | null>(
+    null,
+  );
   const [selectedCompany, setSelectedCompany] =
     useState<CompanyListItem | null>(null);
 
@@ -68,24 +82,6 @@ export default function AccountPage() {
     companiesPagination.load();
   }, [fetchData]);
 
-  const handleSaveName = async (name: string) => {
-    try {
-      const updated = await usersService.updateMe({ name });
-      setCurrentUser(updated);
-      useUserStore.getState().setCurrentUser(updated);
-      openDialog({
-        variant: "success",
-        message: t("labels.account.name_updated"),
-      });
-    } catch {
-      openDialog({
-        variant: "error",
-        message: t("labels.account.name_update_error"),
-      });
-      throw new Error();
-    }
-  };
-
   const handleSwitchCompany = async (companyId: string) => {
     try {
       await usersService.switchCompany(companyId);
@@ -117,7 +113,10 @@ export default function AccountPage() {
     }
   };
 
-  const handleUpdateCompany = async (companyId: string, companyName: string) => {
+  const handleUpdateCompany = async (
+    companyId: string,
+    companyName: string,
+  ) => {
     try {
       await companyService.update(companyId, companyName);
       companiesPagination.load();
@@ -262,40 +261,116 @@ export default function AccountPage() {
     (c) => c.id === currentUser?.company_id,
   );
 
+  const tabs: AppTabItem[] = [
+    {
+      value: "profile",
+      label: (
+        <span className="flex items-center gap-1.5">
+          <PersonOutlined style={{ fontSize: 16 }} />
+          <span>{t("labels.account.tab_profile")}</span>
+        </span>
+      ),
+    },
+    {
+      value: "security",
+      label: (
+        <span className="flex items-center gap-1.5">
+          <LockOutlined style={{ fontSize: 16 }} />
+          <span>{t("labels.account.tab_security")}</span>
+        </span>
+      ),
+    },
+    {
+      value: "company",
+      label: (
+        <span className="flex items-center gap-1.5">
+          <BusinessOutlined style={{ fontSize: 16 }} />
+          <span>{t("labels.account.tab_company")}</span>
+        </span>
+      ),
+    },
+    {
+      value: "companies",
+      label: (
+        <span className="flex items-center gap-1.5">
+          <ApartmentOutlined style={{ fontSize: 16 }} />
+          <span>{t("labels.account.tab_companies")}</span>
+          {invitations.length > 0 && (
+            <span className="ml-1 px-1.5 py-0.2 rounded-full bg-primary-3 text-white text-[10px] font-bold">
+              {invitations.length}
+            </span>
+          )}
+        </span>
+      ),
+    },
+    {
+      value: "preferences",
+      label: (
+        <span className="flex items-center gap-1.5">
+          <SettingsOutlined style={{ fontSize: 16 }} />
+          <span>{t("labels.account.tab_preferences")}</span>
+        </span>
+      ),
+    },
+  ];
+
   return (
     <AppPage title={t("labels.menu.account")}>
-      <div className="flex flex-col gap-3 max-w-2xl mx-auto w-full pb-10">
-        <ProfileCard
-          currentUser={currentUser}
-          onSaveName={handleSaveName}
-          onLogout={handleLogout}
-        />
+      <div className="flex flex-col md:flex-row gap-3 md:gap-5 w-full pb-10 items-start">
+        <div className="shrink-0 w-full md:w-auto">
+          <AppTabs
+            tabs={tabs}
+            direction="column"
+            activeTab={activeTab}
+            onChange={(val) => setActiveTab(val)}
+            className="w-full md:w-64"
+          />
+        </div>
 
-        <ActiveCompanyCard
-          activeCompany={activeCompany}
-          currentUser={currentUser}
-          onOpenMembers={setSelectedCompany}
-        />
+        <div className="flex-1 min-w-0 w-full">
+          {activeTab === "profile" && (
+            <AccountProfileTab
+              currentUser={currentUser}
+              onUserUpdated={(updated) => setCurrentUser(updated)}
+            />
+          )}
 
-        <PreferencesCard />
+          {activeTab === "security" && (
+            <AccountSecurityTab onDeleteAccount={handleDeleteAccount} />
+          )}
 
-        <InvitationsCard
-          invitations={invitations}
-          onAccept={handleAcceptInvitation}
-          onReject={handleRejectInvitation}
-        />
+          {activeTab === "company" && (
+            <AccountCompanyTab
+              activeCompany={activeCompany}
+              currentUser={currentUser}
+              membersRefreshKey={membersRefreshKey}
+              onOpenMembers={setSelectedCompany}
+              onCompanyUpdated={() => {
+                fetchData(true);
+                companiesPagination.load();
+              }}
+            />
+          )}
 
-        <CompaniesCard
-          companiesPagination={companiesPagination}
-          currentUser={currentUser}
-          onOpenMembers={setSelectedCompany}
-          onSwitchCompany={handleSwitchCompany}
-          onEditCompany={setEditingCompany}
-          onDeleteCompany={handleDeleteCompany}
-          onCreateCompanyClick={() => setIsCreateModalOpen(true)}
-        />
+          {activeTab === "companies" && (
+            <AccountCompaniesTab
+              companiesPagination={companiesPagination}
+              currentUser={currentUser}
+              invitations={invitations}
+              onOpenMembers={setSelectedCompany}
+              onSwitchCompany={handleSwitchCompany}
+              onEditCompany={setEditingCompany}
+              onDeleteCompany={handleDeleteCompany}
+              onCreateCompanyClick={() => setIsCreateModalOpen(true)}
+              onAcceptInvitation={handleAcceptInvitation}
+              onRejectInvitation={handleRejectInvitation}
+            />
+          )}
 
-        <DeleteAccountCard onDeleteAccount={handleDeleteAccount} />
+          {activeTab === "preferences" && (
+            <AccountPreferencesTab onLogout={handleLogout} />
+          )}
+        </div>
       </div>
 
       <CreateCompanyModal
@@ -316,6 +391,10 @@ export default function AccountPage() {
         onClose={() => setSelectedCompany(null)}
         company={selectedCompany}
         currentUser={currentUser}
+        onMemberChanged={() => {
+          setMembersRefreshKey((k) => k + 1);
+          fetchData(true);
+        }}
         onLeaveSuccess={async () => {
           await fetchData(true);
           companiesPagination.load();

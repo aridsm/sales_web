@@ -6,6 +6,7 @@ import { ChevronLeft } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useClickOutside } from "../../utils/useClickOutside";
 import { HexColorPicker } from "react-colorful";
+import { useTranslation } from "@/app/utils/i18n";
 
 export interface AppColorProps {
   label?: string;
@@ -23,7 +24,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
     {
       label,
       error,
-      placeholder = "Selecione uma cor...",
+      placeholder,
       disabled = false,
       value,
       clearable = false,
@@ -32,6 +33,9 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
     },
     ref,
   ) => {
+    const { t } = useTranslation();
+    const effectivePlaceholder =
+      placeholder ?? t("labels.select.select_color");
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -72,7 +76,7 @@ const AppColor = forwardRef<HTMLDivElement, AppColorProps>(
                 </>
               ) : (
                 <span className="truncate text-foreground/40">
-                  {placeholder}
+                  {effectivePlaceholder}
                 </span>
               )}
             </div>

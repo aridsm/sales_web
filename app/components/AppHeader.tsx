@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   NotificationsOutlined,
   BusinessOutlined,
@@ -14,6 +14,7 @@ import { useTranslation } from "@/app/utils/i18n";
 import { useUserStore } from "@/stores/userStore";
 import { useTokenStore } from "@/stores/tokenStore";
 import { useMobileMenuStore } from "@/stores/mobileMenuStore";
+import { getImageUrl } from "@/app/utils/image";
 
 interface AppHeaderProps {
   title: string;
@@ -33,6 +34,12 @@ export default function AppHeader({ title }: AppHeaderProps) {
   const toggleMobileMenu = useMobileMenuStore(
     (state) => state.toggleMobileMenu,
   );
+  const [logoError, setLogoError] = useState(false);
+  const companyLogoUrl = getImageUrl(activeCompany?.logo_url);
+
+  useEffect(() => {
+    setLogoError(false);
+  }, [activeCompany?.logo_url, activeCompany?.id]);
 
   useEffect(() => {
     if (token && !currentUser) {
@@ -41,8 +48,8 @@ export default function AppHeader({ title }: AppHeaderProps) {
   }, [token, currentUser, fetchUserData]);
 
   return (
-    <div className="flex items-center sticky top-0 z-50 justify-between border-b border-border py-1 sm:py-3 transition-colors bg-background-2 dark:bg-background">
-      <div className="max-w-400 w-full flex items-center justify-between mx-auto pl-0 pr-2 sm:px-6">
+    <div className="flex items-center sticky top-0 z-50 justify-between border-b border-border py-2 sm:py-3 transition-colors bg-background-2 dark:bg-background">
+      <div className="max-w-400 w-full flex items-center justify-between mx-auto px-2 sm:px-6">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <AppButton
             rounded
@@ -85,10 +92,20 @@ export default function AppHeader({ title }: AppHeaderProps) {
               title={activeCompany.name}
               className="hidden min-[900px]:flex items-center gap-1.5 px-2.5 h-9 text-xs font-medium text-foreground select-none"
             >
-              <BusinessOutlined
-                style={{ fontSize: 18 }}
-                className="text-primary-3 shrink-0"
-              />
+              {companyLogoUrl && !logoError ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={companyLogoUrl}
+                  alt={activeCompany.name}
+                  onError={() => setLogoError(true)}
+                  className="w-6.5 h-6.5 rounded-xs object-cover shrink-0"
+                />
+              ) : (
+                <BusinessOutlined
+                  style={{ fontSize: 18 }}
+                  className="text-primary-3 shrink-0"
+                />
+              )}
               <span className="truncate max-w-[90px] sm:max-w-[140px] md:max-w-[180px]">
                 {formatShortName(activeCompany.name, 30)}
               </span>

@@ -239,7 +239,7 @@ export default function AppGrid<T>({
                   items.length > 0 && tableWidth > 0 ? tableWidth : "100%",
               }}
             >
-              <thead className="text-xs sm:text-sm sticky top-0 z-20 text-label bg-background-3 dark:bg-background-3">
+              <thead className=" sm:text-sm sticky top-0 z-20 text-label bg-background-3 dark:bg-background-3">
                 <tr>
                   {hasSelection && (
                     <th className="py-2 px-2.5 sm:py-2.5 sm:px-3 text-center sticky left-0 z-30 w-10 sm:w-12 border-b border-border bg-background-3 dark:bg-background-3">
@@ -276,7 +276,7 @@ export default function AppGrid<T>({
               </thead>
               {items.length > 0 && (
                 <tbody
-                  className={`text-xs sm:text-sm ${
+                  className={`sm:text-sm ${
                     delayedLoading
                       ? "opacity-50 transition-opacity pointer-events-none "
                       : ""

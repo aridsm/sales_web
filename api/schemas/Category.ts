@@ -10,6 +10,7 @@ export interface Category {
   created_by?: string;
   created_by_name?: string;
   created_by_email?: string;
+  created_by_avatar_url?: string | null;
 }
 
 export interface CategoryAmount {

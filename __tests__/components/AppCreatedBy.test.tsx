@@ -31,15 +31,16 @@ describe("AppCreatedBy", () => {
     expect(screen.getByText("carlos@empresa.com")).toBeInTheDocument();
   });
 
-  it("renderiza apenas nome e data quando email não for informado", () => {
+  it("renderiza a foto do autor quando avatarUrl for fornecido", () => {
     render(
       <AppCreatedBy
         name="Lucas"
         date="2026-09-05T14:33:00Z"
+        avatarUrl="/uploads/avatars/lucas.png"
       />,
     );
 
-    expect(screen.getByText("L")).toBeInTheDocument();
-    expect(screen.getByText(/Lucas em/)).toBeInTheDocument();
+    const img = screen.getByAltText("Lucas");
+    expect(img).toBeInTheDocument();
   });
 });

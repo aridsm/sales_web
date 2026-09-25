@@ -74,13 +74,7 @@ body {
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
-  font-size: 15px;
-}
-
-@media (max-width: 639px) {
-  body {
-    font-size: 12px;
-  }
+  @apply text-sm 2xl:text-[15px];
 }
 
 .grid-dashboard {
@@ -112,7 +106,7 @@ body {
 }
 
 .input-field {
-  @apply border border-border bg-background-2 dark:bg-background-3 hover:border-border-2 placeholder:text-foreground/40 rounded-xs px-3 sm:px-3.5 h-10 text-sm transition-all duration-200 text-foreground! outline-none!;
+  @apply border border-border bg-background-2 dark:bg-background-3 hover:border-border-2 placeholder:text-foreground/40 rounded-xs px-3 sm:px-3.5 h-10 transition-all duration-200 text-foreground! outline-none!;
 }
 
 .input-field:focus,

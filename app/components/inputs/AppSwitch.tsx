@@ -17,13 +17,13 @@ export default function AppSwitch({ value, onChange, label }: AppSwitchProps) {
         role="switch"
         aria-checked={value}
         onClick={() => onChange(!value)}
-        className={`relative inline-flex cursor-pointer h-6 w-11 items-center rounded-full transition-colors ${
+        className={`relative inline-flex cursor-pointer h-5 md:h-6 w-9 md:w-11 items-center rounded-full transition-colors ${
           value ? "bg-primary" : "bg-border hover:bg-border-2"
         }`}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-            value ? "translate-x-6" : "translate-x-1"
+          className={`inline-block h-3 md:h-4 w-3 md:w-4 transform rounded-full bg-white transition-transform ${
+            value ? "translate-x-5 md:translate-x-6" : "translate-x-1"
           }`}
         />
       </button>

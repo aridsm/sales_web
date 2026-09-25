@@ -54,6 +54,22 @@ describe("AppHeader", () => {
     expect(screen.getByText("AT")).toBeInTheDocument();
   });
 
+  it("renderiza a foto do usuário quando avatar_url estiver presente", () => {
+    useUserStore.setState({
+      currentUser: {
+        id: "u1",
+        name: "Ana Terra",
+        email: "ana@empresa.com",
+        avatar_url: "/uploads/avatars/ana.png",
+        created_at: "2026-01-01",
+      },
+    });
+
+    render(<AppHeader title="Dashboard" />);
+    const avatarImg = screen.getByAltText("Ana Terra");
+    expect(avatarImg).toBeInTheDocument();
+  });
+
   it("redireciona diretamente para /account ao clicar no avatar em telas desktop (>= 900px)", () => {
     window.innerWidth = 1024;
     render(<AppHeader title="Dashboard" />);

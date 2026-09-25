@@ -199,6 +199,7 @@ export default function ProductsPage() {
             name={row.created_by_name}
             date={row.created_at}
             email={row.created_by_email}
+            avatarUrl={row.created_by_avatar_url}
           />
         ),
         size: 280,
@@ -347,12 +348,12 @@ export default function ProductsPage() {
                   <AppButton
                     color="red"
                     onClick={onDeleteSelected}
-                    className="flex items-center gap-1.5 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0"
+                    className="w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0"
                     title={`${t("labels.all.delete")} (${rowsSelected.length})`}
                     aria-label={`${t("labels.all.delete")} (${rowsSelected.length})`}
                   >
                     <DeleteOutlined style={{ fontSize: 18 }} />
-                    <span className="hidden min-[900px]:inline">
+                    <span className="hidden md:inline">
                       {t("labels.all.delete")} ({rowsSelected.length})
                     </span>
                   </AppButton>
@@ -379,12 +380,12 @@ export default function ProductsPage() {
                         },
                       });
                     }}
-                    className="flex items-center gap-1.5 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0"
+                    className="w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0"
                     title={t("labels.grid.add_item")}
                     aria-label={t("labels.grid.add_item")}
                   >
                     <Add style={{ fontSize: 18 }} />
-                    <span className="hidden min-[900px]:inline">
+                    <span className="hidden md:inline">
                       {t("labels.grid.add_item")}
                     </span>
                   </AppButton>

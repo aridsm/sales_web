@@ -10,10 +10,19 @@ import {
   GroupOutlined,
   EditOutlined,
   DeleteOutlined,
+  CheckCircleOutlined,
+  EmailOutlined,
+  PhoneOutlined,
+  LocationOnOutlined,
+  LanguageOutlined,
+  AdminPanelSettingsOutlined,
+  BadgeOutlined,
+  ApartmentOutlined,
 } from "@mui/icons-material";
 import { useTranslation } from "@/app/utils/i18n";
 import { CompanyPermission } from "@/enums/CompanyPermission";
 import { PaginationResult } from "@/app/utils/usePagination";
+import { getImageUrl } from "@/app/utils/image";
 
 interface CompaniesCardProps {
   companiesPagination: PaginationResult<CompanyListItem>;
@@ -79,7 +88,6 @@ export default function CompaniesCard({
       {
         text: t("labels.account.manage_members"),
         preText: <GroupOutlined style={{ fontSize: 18 }} />,
-        class: "sm:hidden",
         click: (comp) => onOpenMembers(comp),
       },
       {
@@ -104,12 +112,21 @@ export default function CompaniesCard({
   );
 
   return (
-    <AppCard className="p-5 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-sm text-foreground">
-            {t("labels.account.my_companies")} ({totalCompanies})
-          </h3>
+    <AppCard className="p-4 md:p-5 flex flex-col gap-3 md:gap-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <ApartmentOutlined
+            style={{ fontSize: 18 }}
+            className="text-primary-3 shrink-0"
+          />
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="font-semibold text-base text-foreground truncate">
+              {t("labels.account.my_companies")}
+            </h3>
+            <span className="px-2 py-0.2 rounded-full bg-primary/10 text-primary-3 text-xs font-semibold shrink-0">
+              {totalCompanies}
+            </span>
+          </div>
         </div>
 
         <AppButton
@@ -117,6 +134,7 @@ export default function CompaniesCard({
           onClick={onCreateCompanyClick}
           className="w-10 min-w-10 px-0 sm:w-auto sm:min-w-0 sm:px-3.5 shrink-0"
           title={t("labels.account.create_company")}
+          size="small"
           aria-label={t("labels.account.create_company")}
         >
           <AddOutlined fontSize="small" />
@@ -131,70 +149,174 @@ export default function CompaniesCard({
           {t("labels.account.no_active_company")}
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-3.5">
           {companies.map((comp) => {
             const isActive = comp.id === currentUser?.company_id;
+            const logoUrl = getImageUrl(comp.logo_url);
 
             return (
               <div
                 key={comp.id}
-                className={`flex items-center justify-between p-3.5 rounded-xs border transition-colors gap-3 ${
+                className={`flex flex-col justify-between p-4 rounded-xs border transition-all gap-3.5 ${
                   isActive
-                    ? "border-primary-3 dark:border-primary-3 bg-background dark:bg-background-2 shadow-xs"
-                    : "border-border bg-background dark:bg-background-2 hover:border-border-2"
+                    ? "border-primary-3/40 bg-primary/2"
+                    : "border-border hover:border-border-2"
                 }`}
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 select-none shadow-xs ${getCompanyColor(comp.name)}`}
-                  >
-                    {getCompanyInitials(comp.name)}
+                <div className="flex items-start justify-between gap-2.5">
+                  <div className="flex items-center gap-3 min-w-0">
+                    {logoUrl ? (
+                      <div className="w-11 h-11 rounded-xs overflow-hidden shrink-0 border border-border bg-background-3 flex items-center justify-center p-1">
+                        <img
+                          src={logoUrl}
+                          alt={comp.name}
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className={`w-11 h-11 rounded-xs flex items-center justify-center text-sm font-bold shrink-0 select-none shadow-xs ${getCompanyColor(comp.name)}`}
+                      >
+                        {getCompanyInitials(comp.name)}
+                      </div>
+                    )}
+
+                    <div className="flex flex-col gap-1 min-w-0">
+                      <span
+                        className="text-sm font-semibold text-foreground truncate"
+                        title={comp.name}
+                      >
+                        {comp.name}
+                      </span>
+                      <span
+                        className={`font-medium px-2 py-0.5 rounded-xs text-[11px] flex items-center gap-1 w-fit ${
+                          comp.permission === 3
+                            ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                            : comp.permission === 2
+                              ? "bg-primary/10 text-primary"
+                              : "bg-slate-500/10 text-slate-600 dark:text-slate-400"
+                        }`}
+                      >
+                        {comp.permission === 3 && (
+                          <AdminPanelSettingsOutlined
+                            style={{ fontSize: 13 }}
+                          />
+                        )}
+                        <span>
+                          {t(`labels.account.permissions.${comp.permission}`)}
+                        </span>
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-1 min-w-0">
-                    <span className="text-xs sm:text-sm font-semibold break-words text-foreground">
-                      {comp.name}
-                    </span>
-                    <span className="text-xs text-label">
-                      {t(`labels.account.permissions.${comp.permission}`)}
-                    </span>
-                  </div>
+
+                  <AppActions item={comp} actions={companyActions} />
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                {(comp.document ||
+                  comp.email ||
+                  comp.phone ||
+                  comp.city ||
+                  comp.state ||
+                  comp.website) && (
+                  <div className="flex flex-col gap-2 text-label pt-3 pb-0.5 border-t border-border/40">
+                    {comp.document && (
+                      <div className="flex items-center gap-2 min-w-0">
+                        <BadgeOutlined
+                          style={{ fontSize: 16 }}
+                          className="text-primary-3 shrink-0"
+                        />
+                        <span className="truncate text-foreground/80">
+                          CNPJ: {comp.document}
+                        </span>
+                      </div>
+                    )}
+
+                    {comp.email && (
+                      <div className="flex items-center gap-2 min-w-0">
+                        <EmailOutlined
+                          style={{ fontSize: 16 }}
+                          className="text-primary-3 shrink-0"
+                        />
+                        <span className="truncate text-foreground/80">
+                          {comp.email}
+                        </span>
+                      </div>
+                    )}
+
+                    {comp.phone && (
+                      <div className="flex items-center gap-2 min-w-0">
+                        <PhoneOutlined
+                          style={{ fontSize: 16 }}
+                          className="text-primary-3 shrink-0"
+                        />
+                        <span className="truncate text-foreground/80">
+                          {comp.phone}
+                        </span>
+                      </div>
+                    )}
+
+                    {(comp.city || comp.state) && (
+                      <div className="flex items-center gap-2 min-w-0">
+                        <LocationOnOutlined
+                          style={{ fontSize: 16 }}
+                          className="text-primary-3 shrink-0"
+                        />
+                        <span className="truncate text-foreground/80">
+                          {[comp.city, comp.state].filter(Boolean).join(" - ")}
+                        </span>
+                      </div>
+                    )}
+
+                    {comp.website && (
+                      <div className="flex items-center gap-2 min-w-0">
+                        <LanguageOutlined
+                          style={{ fontSize: 16 }}
+                          className="text-primary-3 shrink-0"
+                        />
+                        <a
+                          href={
+                            comp.website.startsWith("http")
+                              ? comp.website
+                              : `https://${comp.website}`
+                          }
+                          target="_blank"
+                          rel="noreferrer"
+                          className="truncate text-primary hover:underline"
+                        >
+                          {comp.website.replace(/^https?:\/\//, "")}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/60">
                   <AppButton
                     color="foreground"
                     flat
-                    className="hidden sm:inline-flex py-1 px-2.5 text-xs! hover:bg-foreground/5! gap-1.5!"
+                    size="small"
+                    className="py-1 px-2.5 text-xs! hover:bg-foreground/5! gap-1.5"
                     onClick={() => onOpenMembers(comp)}
                   >
                     <GroupOutlined style={{ fontSize: 15 }} />
-                    {t("labels.account.manage_members")}
+                    <span>{t("labels.account.manage_members")}</span>
                   </AppButton>
+
                   {isActive ? (
-                    <span className="w-20 py-1 rounded-xs text-xs font-semibold bg-primary-3 text-white flex items-center justify-center shrink-0 select-none">
-                      {t("labels.account.active")}
+                    <span className="px-2.5 py-1 rounded-xs text-xs font-semibold bg-primary-3 text-white flex items-center gap-1 shrink-0 select-none">
+                      <CheckCircleOutlined style={{ fontSize: 13 }} />
+                      <span>{t("labels.account.active")}</span>
                     </span>
                   ) : (
                     <AppButton
-                      color="foreground"
+                      color="primary"
                       flat
-                      className="w-20 py-1 text-xs! justify-center text-primary-3 dark:text-primary! underline underline-offset-2"
+                      size="small"
+                      className="py-1 px-2.5 text-xs! font-medium"
                       onClick={() => onSwitchCompany(comp.id)}
                     >
                       {t("labels.account.switch")}
                     </AppButton>
-                  )}
-                  <AppActions
-                    item={comp}
-                    actions={companyActions}
-                    className={
-                      comp.permission !== CompanyPermission.ADMIN
-                        ? "sm:hidden"
-                        : ""
-                    }
-                  />
-                  {comp.permission !== CompanyPermission.ADMIN && (
-                    <span className="hidden sm:inline-block w-8" />
                   )}
                 </div>
               </div>

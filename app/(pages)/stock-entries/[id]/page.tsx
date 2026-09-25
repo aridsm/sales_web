@@ -225,16 +225,16 @@ export default function StockEntryDetailPage() {
         </AppButton>
       </div>
 
-      <AppCard className="p-5 flex flex-col gap-4">
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between gap-3 w-full">
-            <div className="flex items-center gap-3">
-              <span className="text-xl font-bold text-foreground">
+      <AppCard className="p-3.5 sm:p-5 flex flex-col gap-3.5 sm:gap-4">
+        <div className="flex flex-col gap-2 sm:gap-1.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 w-full">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <span className="text-lg sm:text-xl font-bold text-foreground">
                 #{stockEntry.code.toString().padStart(6, "0")}
               </span>
 
               <span
-                className={`inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full ${status.bg} ${status.color}`}
+                className={`inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full ${status.bg} ${status.color}`}
               >
                 <span
                   className={`w-2 h-2 rounded-full ${
@@ -249,7 +249,7 @@ export default function StockEntryDetailPage() {
               <AppButton
                 onClick={handleCancel}
                 color="background"
-                className="px-3! py-1.5! ml-auto shrink-0"
+                className="px-3! py-1.5! self-start sm:self-auto sm:ml-auto shrink-0 text-xs sm:text-sm"
               >
                 <HighlightOffOutlined
                   style={{ fontSize: 16 }}
@@ -260,10 +260,10 @@ export default function StockEntryDetailPage() {
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-label">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-label">
             <span>{formatDateTime(stockEntry.date)}</span>
-            <span>|</span>
-            <span>ID: {stockEntry.id}</span>
+            <span className="hidden min-[400px]:inline">|</span>
+            <span className="break-all">ID: {stockEntry.id}</span>
           </div>
         </div>
 
@@ -274,18 +274,19 @@ export default function StockEntryDetailPage() {
           <AppCreatedBy
             name={stockEntry.created_by_name}
             email={stockEntry.created_by_email}
+            avatarUrl={stockEntry.created_by_avatar_url}
           />
         </div>
 
-        <div className="flex items-center justify-between w-full pt-4 border-t border-border">
+        <div className="flex items-center justify-between w-full pt-3 sm:pt-4 border-t border-border">
           <div className="flex items-center gap-1.5 text-label">
             <InventoryOutlined style={{ fontSize: 16 }} />
-            <span className="text-sm">
+            <span className="text-xs sm:text-sm">
               {stockEntry.items_count || 0} {t("labels.stock_entries.items")}
             </span>
           </div>
           <span
-            className={`text-lg font-bold tabular-nums ${
+            className={`text-base sm:text-lg font-bold tabular-nums ${
               isCanceled ? "line-through text-label" : "text-foreground"
             }`}
           >

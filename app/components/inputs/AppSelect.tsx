@@ -36,7 +36,9 @@ export interface AppSelectProps {
   onChange?: (value: AppSelectOption["id"] | AppSelectOption["id"][]) => void;
   className?: string;
   size?: "default" | "small";
-  triggerTemplate?: (selectedOption: AppSelectOption | AppSelectOption[] | null) => React.ReactNode;
+  triggerTemplate?: (
+    selectedOption: AppSelectOption | AppSelectOption[] | null,
+  ) => React.ReactNode;
 }
 
 const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
@@ -61,7 +63,12 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
     const { t } = useTranslation();
     const effectivePlaceholder = placeholder ?? t("labels.select.placeholder");
     const [isOpen, setIsOpen] = useState(false);
-    const [coords, setCoords] = useState<{ top: number; left: number; width: number; isAbove: boolean } | null>(null);
+    const [coords, setCoords] = useState<{
+      top: number;
+      left: number;
+      width: number;
+      isAbove: boolean;
+    } | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const containerRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
@@ -247,7 +254,7 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
               onClick={toggleDropdown}
               className={`
                              input-field cursor-pointer flex items-center justify-between transition-all duration-200
-                            ${size === "small" ? "h-8! px-1.5! text-xs! gap-1" : "min-h-10! sm:min-h-12! h-auto! py-1.5 sm:py-2 gap-2 text-sm sm:text-base"}
+                            ${size === "small" ? "h-8! px-1.5! text-xs! gap-1" : (multiple && (Array.isArray(value) ? value.length > 0 : value !== undefined && value !== null && value !== "")) ? "min-h-10! h-auto! py-1.5 px-3 sm:px-3.5 gap-2" : "h-10! px-3 sm:px-3.5 gap-2"}
                             ${disabled ? "bg-slate-100 cursor-not-allowed opacity-60" : ""}
                             ${error ? "border-red-500 ring-1 ring-red-500" : "border-slate-300"}
                             ${isOpen && !error ? "active" : ""}
@@ -284,19 +291,26 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
                 )}
               </div>
               <div className="flex items-center gap-1">
-                {clearable && (value !== undefined && value !== null && value !== "") && (!Array.isArray(value) || value.length > 0) && !disabled && (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onChange?.(multiple ? [] : undefined as any);
-                    }}
-                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-                    tabIndex={-1}
-                  >
-                    <CloseIcon style={{ fontSize: size === "small" ? 14 : 16 }} />
-                  </button>
-                )}
+                {clearable &&
+                  value !== undefined &&
+                  value !== null &&
+                  value !== "" &&
+                  (!Array.isArray(value) || value.length > 0) &&
+                  !disabled && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onChange?.(multiple ? [] : (undefined as any));
+                      }}
+                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex items-center justify-center p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                      tabIndex={-1}
+                    >
+                      <CloseIcon
+                        style={{ fontSize: size === "small" ? 14 : 16 }}
+                      />
+                    </button>
+                  )}
                 <ChevronLeft
                   className={`text-foreground/40 transition-all! duration-200 ${isOpen ? "-rotate-90" : "rotate-0"} ${size === "small" ? "w-4! h-4!" : ""}`}
                 />
@@ -304,67 +318,72 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
             </div>
           )}
 
-          {isOpen && coords && typeof window !== "undefined" && createPortal(
-            <div
-              ref={dropdownRef}
-              data-portal="true"
-              style={{
-                position: "fixed",
-                top: `${coords.top}px`,
-                left: `${coords.left}px`,
-                width: `${coords.width}px`,
-                zIndex: 9999,
-              }}
-              className={`bg-background-2 border border-border rounded-xs shadow-dropdown overflow-hidden ${
-                coords.isAbove ? "animate-dropdown-open-above" : "animate-dropdown-open"
-              }`}
-              role="menu"
-            >
-              {search && (
-                <div className="px-3 border-b border-slate-100 dark:border-border flex items-center gap-2 sticky top-0 bg-background-2 z-10">
-                  <SearchIcon
-                    className="text-slate-400"
-                    style={{ fontSize: "18px" }}
-                  />
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    className="w-full outline-none border-none transition-all py-2 sm:py-2.5 text-xs sm:text-sm bg-transparent"
-                    placeholder={t("labels.select.search_placeholder")}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </div>
-              )}
-              <div className="max-h-60 overflow-y-auto">
-                {filteredOptions.length > 0 ? (
-                  filteredOptions.map((option) => {
-                    const isSelected = multiple
-                      ? Array.isArray(value)
-                        ? value.includes(option.id)
-                        : value === option.id
-                      : value === option.id;
-
-                    return (
-                      <div
-                        key={option.id}
-                        onClick={() => handleSelect(option)}
-                        className={`cursor-pointer flex items-center justify-between transition-colors ${size === "small" ? "text-xs px-2 py-1.5" : "px-3 py-2 sm:py-2.5 text-xs sm:text-sm"} ${isSelected ? "bg-foreground/5 text-foreground" : "text-label hover:bg-foreground/5"}`}
-                      >
-                        <span className="truncate pr-4">{option.name}</span>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="px-3 py-4 text-center text-foreground/40 text-xs sm:text-sm italic">
-                    {t("labels.select.no_results")}
+          {isOpen &&
+            coords &&
+            typeof window !== "undefined" &&
+            createPortal(
+              <div
+                ref={dropdownRef}
+                data-portal="true"
+                style={{
+                  position: "fixed",
+                  top: `${coords.top}px`,
+                  left: `${coords.left}px`,
+                  width: `${coords.width}px`,
+                  zIndex: 9999,
+                }}
+                className={`bg-background-2 border border-border rounded-xs shadow-dropdown overflow-hidden ${
+                  coords.isAbove
+                    ? "animate-dropdown-open-above"
+                    : "animate-dropdown-open"
+                }`}
+                role="menu"
+              >
+                {search && (
+                  <div className="px-3 border-b border-slate-100 dark:border-border flex items-center gap-2 sticky top-0 bg-background-2 z-10">
+                    <SearchIcon
+                      className="text-slate-400"
+                      style={{ fontSize: "18px" }}
+                    />
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      className="w-full outline-none border-none transition-all py-2 sm:py-2.5 text-xs sm:text-sm bg-transparent"
+                      placeholder={t("labels.select.search_placeholder")}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
                   </div>
                 )}
-              </div>
-            </div>,
-            document.body
-          )}
+                <div className="max-h-60 overflow-y-auto">
+                  {filteredOptions.length > 0 ? (
+                    filteredOptions.map((option) => {
+                      const isSelected = multiple
+                        ? Array.isArray(value)
+                          ? value.includes(option.id)
+                          : value === option.id
+                        : value === option.id;
+
+                      return (
+                        <div
+                          key={option.id}
+                          onClick={() => handleSelect(option)}
+                          className={`cursor-pointer flex items-center justify-between transition-colors ${size === "small" ? "text-xs px-2 py-1.5" : "px-3 py-2 sm:py-2.5 text-xs sm:text-sm"} ${isSelected ? "bg-foreground/5 text-foreground" : "text-label hover:bg-foreground/5"}`}
+                        >
+                          <span className="truncate pr-4">{option.name}</span>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="px-3 py-4 text-center text-foreground/40 text-xs sm:text-sm italic">
+                      {t("labels.select.no_results")}
+                    </div>
+                  )}
+                </div>
+              </div>,
+              document.body,
+            )}
         </div>
         {error && <span className="text-xs text-red-500 mt-1">{error}</span>}
       </div>

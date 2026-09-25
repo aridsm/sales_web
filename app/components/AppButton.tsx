@@ -23,18 +23,21 @@ export default function AppButton({
   children,
   ...props
 }: AppButtonProps) {
-  const hasExplicitHeight = /\b(h-|min-h-)\S+/.test(className);
-  const hasExplicitPadding = /\b(p[xy]?-\S+|p-\S+)/.test(className);
-  const hasExplicitTextSize = /\btext-(xs|sm|base|lg|xl)\b/.test(className);
-  const isSquare = /\bw-\S+\b/.test(className) && /\bh-\S+\b/.test(className);
+  const hasExplicitHeight = /(?:^|\s)(?:h-|min-h-)\S+/.test(className);
+  const hasExplicitPadding = /(?:^|\s)p[xy]?-\S+/.test(className);
+  const hasExplicitTextSize = /(?:^|\s)text-(?:xs|sm|base|lg|xl)\b/.test(
+    className,
+  );
+  const isSquare =
+    /(?:^|\s)w-\S+/.test(className) && /(?:^|\s)h-\S+/.test(className);
 
   const sizeClasses = {
-    small: `${hasExplicitHeight ? "" : "h-8"} ${hasExplicitPadding || isSquare ? "" : "px-2.5"} ${hasExplicitTextSize ? "" : "text-xs"}`,
-    default: `${hasExplicitHeight ? "" : "h-10"} ${hasExplicitPadding || isSquare ? "" : "px-3.5"} ${hasExplicitTextSize ? "" : "text-sm"}`,
-    large: `${hasExplicitHeight ? "" : "h-12"} ${hasExplicitPadding || isSquare ? "" : "px-5"} ${hasExplicitTextSize ? "" : "text-base"}`,
+    small: `${hasExplicitHeight ? "" : "h-8"} ${hasExplicitPadding || isSquare ? "" : "px-2.5"} ${hasExplicitTextSize ? "" : "text-[11px] md:text-xs"}`,
+    default: `${hasExplicitHeight ? "" : "h-8 md:h-10"} ${hasExplicitPadding || isSquare ? "" : "px-3.5"} ${hasExplicitTextSize ? "" : "text-sm"}`,
+    large: `${hasExplicitHeight ? "" : "h-10 md:h-12"} ${hasExplicitPadding || isSquare ? "" : "px-5"} ${hasExplicitTextSize ? "" : "text-sm md:text-base"}`,
   }[size];
 
-  const baseClasses = `inline-flex items-center justify-center gap-1.5 font-medium cursor-pointer transition-all duration-200 select-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] ${
+  const baseClasses = `inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200 select-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] ${
     rounded ? "rounded-full" : "rounded-xs"
   } ${sizeClasses}`;
 

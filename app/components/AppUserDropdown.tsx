@@ -15,18 +15,27 @@ import { useUserStore } from "@/stores/userStore";
 import { useTokenStore } from "@/stores/tokenStore";
 import { usersService } from "@/api/services/UserService";
 import { getUserInitials } from "@/app/utils/user";
+import { getImageUrl } from "@/app/utils/image";
 
 interface AppUserDropdownProps {
   className?: string;
 }
 
-export default function AppUserDropdown({ className = "" }: AppUserDropdownProps) {
+export default function AppUserDropdown({
+  className = "",
+}: AppUserDropdownProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const clearToken = useTokenStore((state) => state.clearToken);
   const { currentUser, activeCompany } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
+  const userAvatarUrl = getImageUrl(currentUser?.avatar_url);
+
+  useEffect(() => {
+    setAvatarError(false);
+  }, [currentUser?.avatar_url]);
 
   useEffect(() => {
     setIsOpen(false);
@@ -86,9 +95,19 @@ export default function AppUserDropdown({ className = "" }: AppUserDropdownProps
         onClick={handleAvatarClick}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="w-8 h-8 rounded-full bg-primary-3 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center text-white text-xs font-semibold shrink-0 shadow-xs cursor-pointer select-none"
+        className="w-8 h-8 rounded-full bg-primary-3 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center text-white text-xs font-semibold shrink-0 shadow-xs cursor-pointer select-none overflow-hidden"
       >
-        {getUserInitials(currentUser?.name)}
+        {userAvatarUrl && !avatarError ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={userAvatarUrl}
+            alt={currentUser?.name || "User"}
+            onError={() => setAvatarError(true)}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          getUserInitials(currentUser?.name)
+        )}
       </button>
 
       {isOpen && (
@@ -101,9 +120,13 @@ export default function AppUserDropdown({ className = "" }: AppUserDropdownProps
 
           <div className="min-[900px]:hidden absolute right-0 top-full mt-2 w-64 bg-background-2 dark:bg-background-3 border border-border rounded-xs shadow-2xl p-3 flex flex-col gap-2.5 z-50 text-foreground">
             {(currentUser?.name || activeCompany?.name) && (
-              <div className="py-1 border-b border-border flex flex-col gap-1">
+              <div className="py-1 border-b border-border flex flex-col gap-1 pb-4">
                 {currentUser?.name && (
-                  <div className={activeCompany ? "pb-2 border-b border-border" : ""}>
+                  <div
+                    className={
+                      activeCompany ? "pb-2 border-b border-border" : ""
+                    }
+                  >
                     <p className="text-sm font-medium text-foreground truncate">
                       {currentUser.name}
                     </p>
@@ -155,9 +178,9 @@ export default function AppUserDropdown({ className = "" }: AppUserDropdownProps
                 setIsOpen(false);
                 router.push("/account");
               }}
-              className="justify-start"
+              className="justify-start px-2"
             >
-              <SettingsOutlined fontSize="small"/>
+              <SettingsOutlined fontSize="small" />
               <span>{t("labels.header.settings") || "Configurações"}</span>
             </AppButton>
 
@@ -165,7 +188,7 @@ export default function AppUserDropdown({ className = "" }: AppUserDropdownProps
               flat
               color="red"
               onClick={handleLogout}
-              className="justify-start border-0"
+              className="justify-start border-0 px-2"
             >
               <ExitToAppOutlined fontSize="small" />
               <span>{t("labels.menu.logout") || "Sair"}</span>

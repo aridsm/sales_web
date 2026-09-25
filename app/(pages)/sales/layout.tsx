@@ -140,12 +140,12 @@ export default function SalesLayout({
                 <AppButton
                   color="primary"
                   onClick={() => router.push("/sales/new")}
-                  className={`shrink-0 w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 ${isSaleSelected ? "w-full mt-3 min-[900px]:w-full" : ""}`}
+                  className={`shrink-0 w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 ${isSaleSelected ? "w-full mt-3 md:w-full" : ""}`}
                   title={t("labels.grid.add_item")}
                   aria-label={t("labels.grid.add_item")}
                 >
                   <Add style={{ fontSize: 18 }} />
-                  <span className="hidden min-[900px]:inline">
+                  <span className="hidden md:inline">
                     {t("labels.grid.add_item")}
                   </span>
                 </AppButton>
@@ -236,6 +236,7 @@ function SaleCard({
         name={sale.created_by_name}
         date={sale.created_at || sale.date}
         email={sale.created_by_email}
+        avatarUrl={sale.created_by_avatar_url}
       />
       <div className="flex items-center justify-between w-full mt-3 pt-4 border-t border-border">
         <div className="flex items-center gap-1.5 text-label">

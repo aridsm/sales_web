@@ -64,6 +64,7 @@ export const DashboardHistory = ({
             name={row.created_by_name}
             date={row.created_at}
             email={row.created_by_email}
+            avatarUrl={row.created_by_avatar_url}
           />
         ),
         size: 280,

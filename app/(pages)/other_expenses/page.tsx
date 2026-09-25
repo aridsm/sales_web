@@ -103,6 +103,7 @@ export default function OtherExpensesPage() {
             name={row.created_by_name}
             date={row.created_at}
             email={row.created_by_email}
+            avatarUrl={row.created_by_avatar_url}
           />
         ),
         size: 280,
@@ -191,12 +192,12 @@ export default function OtherExpensesPage() {
             <AppButton
               onClick={onDeleteSelected}
               color="red"
-              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0"
+              className="w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0"
               title={`${getLabel("labels.all.delete")} (${rowsSelected.length})`}
               aria-label={`${getLabel("labels.all.delete")} (${rowsSelected.length})`}
             >
               <DeleteOutlined fontSize="small" />
-              <span className="hidden min-[900px]:inline">
+              <span className="hidden md:inline">
                 {getLabel("labels.all.delete")} ({rowsSelected.length})
               </span>
             </AppButton>
@@ -211,12 +212,12 @@ export default function OtherExpensesPage() {
             <AppButton
               onClick={handleNew}
               color="primary"
-              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0"
+              className="w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0"
               title={getLabel("labels.grid.add_item")}
               aria-label={getLabel("labels.grid.add_item")}
             >
               <AddOutlined fontSize="small" />
-              <span className="hidden min-[900px]:inline">
+              <span className="hidden md:inline">
                 {getLabel("labels.grid.add_item")}
               </span>
             </AppButton>

@@ -13,6 +13,7 @@ interface AppTabsProps {
   onChange?: (value: string) => void;
   className?: string;
   fullWidth?: boolean;
+  direction?: "row" | "column";
 }
 
 export default function AppTabs({
@@ -21,6 +22,7 @@ export default function AppTabs({
   onChange,
   className = "",
   fullWidth = false,
+  direction = "row",
 }: AppTabsProps) {
   const [internalTab, setInternalTab] = useState<string>(
     activeTab ?? tabs[0]?.value ?? "",
@@ -32,15 +34,29 @@ export default function AppTabs({
   const containerRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
+  const isColumn = direction === "column";
+
   useEffect(() => {
     const updatePill = () => {
       const el = tabRefs.current.get(currentTab);
       if (el) {
-        setPillStyle({
-          left: el.offsetLeft,
-          width: el.offsetWidth,
-          opacity: 1,
-        });
+        if (isColumn) {
+          setPillStyle({
+            top: el.offsetTop,
+            height: el.offsetHeight,
+            left: el.offsetLeft,
+            width: el.offsetWidth,
+            opacity: 1,
+          });
+        } else {
+          setPillStyle({
+            left: el.offsetLeft,
+            width: el.offsetWidth,
+            top: el.offsetTop,
+            height: el.offsetHeight,
+            opacity: 1,
+          });
+        }
       }
     };
 
@@ -65,7 +81,7 @@ export default function AppTabs({
       ro?.disconnect();
       window.removeEventListener("resize", updatePill);
     };
-  }, [currentTab, tabs]);
+  }, [currentTab, tabs, isColumn]);
 
   const handleTabClick = (value: string) => {
     if (activeTab === undefined) {
@@ -77,13 +93,29 @@ export default function AppTabs({
   return (
     <div
       ref={containerRef}
-      className={`relative border border-border inline-flex items-center bg-background-2 dark:bg-background-3 rounded-xs p-1 gap-0.5 ${
-        fullWidth ? "w-full" : "w-fit shrink-0"
+      className={`relative box-border border border-border bg-background-2 dark:bg-background-3 rounded-xs p-1 gap-0.5 min-w-0 ${
+        isColumn
+          ? `${fullWidth ? "w-full" : "w-fit shrink-0 min-w-56 sm:min-w-64"} flex flex-col items-stretch`
+          : `inline-flex items-center ${fullWidth ? "w-full" : "w-fit shrink-0"}`
       } ${className}`}
     >
       <div
-        className="absolute inset-y-1 rounded-xs bg-primary shadow-xs transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] pointer-events-none"
-        style={pillStyle}
+        className={`absolute rounded-xs bg-primary shadow-xs transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] pointer-events-none ${
+          isColumn ? "inset-x-1" : "inset-y-1"
+        }`}
+        style={
+          isColumn
+            ? {
+                top: pillStyle.top,
+                height: pillStyle.height,
+                opacity: pillStyle.opacity,
+              }
+            : {
+                left: pillStyle.left,
+                width: pillStyle.width,
+                opacity: pillStyle.opacity,
+              }
+        }
       />
 
       {tabs.map((tab) => {
@@ -96,11 +128,21 @@ export default function AppTabs({
               else tabRefs.current.delete(tab.value);
             }}
             onClick={() => handleTabClick(tab.value)}
-            className={`relative z-[1] h-7 sm:h-8 px-3 sm:px-4 text-xs sm:text-sm rounded-xs transition-colors duration-150 cursor-pointer whitespace-nowrap flex items-center justify-center select-none ${
-              fullWidth ? "flex-1 text-center" : ""
-            } ${isActive ? "text-white font-semibold" : "text-label hover:text-foreground font-medium"}`}
+            className={`relative z-[1] sm:text-sm rounded-xs transition-colors duration-150 cursor-pointer select-none min-w-0 overflow-hidden flex items-center ${
+              isColumn
+                ? "w-full h-9.5 px-3.5 justify-start gap-2 text-left"
+                : `h-7 sm:h-8.5 px-4 sm:px-5 justify-center ${fullWidth ? "flex-1 text-center" : ""}`
+            } ${isActive ? "text-white " : "text-label hover:text-foreground"}`}
           >
-            {tab.label}
+            <span
+              className={`truncate w-full min-w-0 flex items-center gap-2 [&>*]:truncate ${
+                isColumn
+                  ? "justify-start text-left"
+                  : "justify-center text-center"
+              }`}
+            >
+              {tab.label}
+            </span>
           </button>
         );
       })}

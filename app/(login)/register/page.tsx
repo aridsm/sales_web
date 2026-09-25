@@ -96,9 +96,9 @@ export default function RegisterPage() {
         />
 
         <AppInputText
-          label="Email"
+          label={t("labels.all.email")}
           type="email"
-          placeholder={t("labels.all.email")}
+          placeholder="exemplo@email.com"
           value={email}
           onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
           required
@@ -128,6 +128,7 @@ export default function RegisterPage() {
           type="submit"
           color="primary"
           disabled={loading}
+          className="py-5!"
         >
           {loading
             ? t("labels.register.creating")

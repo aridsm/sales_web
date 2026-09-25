@@ -143,7 +143,7 @@ export const DashboardCategoryProfitChart = ({
             {activeTab === "sales"
               ? t("labels.dashboard.charts.profit_by_category")
               : activeTab === "stock_entries"
-                ? "Entradas de Estoque por categoria"
+                ? t("labels.dashboard.charts.stock_entries_by_category")
                 : t("labels.dashboard.charts.expenses_by_category")}
           </span>
           <span className="px-2 py-0.5 rounded-xs border border-border text-xs font-medium text-foreground-2 shrink-0">
@@ -155,15 +155,15 @@ export const DashboardCategoryProfitChart = ({
             tabs={[
               {
                 value: "sales",
-                label: "Vendas",
+                label: t("labels.dashboard.charts.sales_tab"),
               },
               {
                 value: "stock_entries",
-                label: "Entrada de Estoque",
+                label: t("labels.dashboard.charts.stock_entries_tab"),
               },
               {
                 value: "other_expenses",
-                label: "Outros Gastos",
+                label: t("labels.dashboard.charts.other_expenses_tab"),
               },
             ]}
             activeTab={activeTab}

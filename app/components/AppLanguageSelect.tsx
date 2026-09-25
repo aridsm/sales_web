@@ -5,7 +5,11 @@ import { LanguageOutlined } from "@mui/icons-material";
 import AppSelect from "./inputs/AppSelect";
 import { useTranslation, setLocale } from "@/app/utils/i18n";
 
-export default function AppLanguageSelect({ className = "" }: { className?: string }) {
+export default function AppLanguageSelect({
+  className = "",
+}: {
+  className?: string;
+}) {
   const [mounted, setMounted] = useState(false);
   const { locale: currentLocale } = useTranslation();
 

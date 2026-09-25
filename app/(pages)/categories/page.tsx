@@ -12,11 +12,7 @@ import {
 import { categoriesService } from "@/api/services/CategoryService";
 import { CategoryType } from "@/enums/CategoryType";
 import { ActionItem } from "../../components/AppActions";
-import {
-  Edit,
-  AddOutlined,
-  DeleteOutlined,
-} from "@mui/icons-material";
+import { Edit, AddOutlined, DeleteOutlined } from "@mui/icons-material";
 import AppSearchInput from "../../components/inputs/AppSearchInput";
 import AppButton from "../../components/AppButton";
 import AppTabs from "../../components/AppTabs";
@@ -83,6 +79,7 @@ export default function CategoriesPage() {
             name={row.created_by_name}
             date={row.created_at}
             email={row.created_by_email}
+            avatarUrl={row.created_by_avatar_url}
           />
         ),
         size: 280,
@@ -176,14 +173,17 @@ export default function CategoriesPage() {
           setActiveTab(Number(val) as CategoryType);
           setRowsSelected([]);
         }}
-        className="mb-4"
+        fullWidth
+        className="mb-3 md:mb-4 w-full md:w-fit"
       />
 
       <div className="flex items-center justify-between gap-2 min-[900px]:gap-3 mb-3">
         <AppSearchInput
           value={search}
           onChange={setSearch}
-          onSearch={(val) => pagination.load({ params: { search: val, page: 1 } })}
+          onSearch={(val) =>
+            pagination.load({ params: { search: val, page: 1 } })
+          }
           placeholder={t("labels.grid.search_placeholder")}
           className="flex-1 w-full min-w-0 min-[900px]:w-90 min-[900px]:flex-initial"
         />
@@ -193,12 +193,12 @@ export default function CategoriesPage() {
             <AppButton
               onClick={onDeleteSelected}
               color="red"
-              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0"
+              className="w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0"
               title={`${t("labels.all.delete")} (${rowsSelected.length})`}
               aria-label={`${t("labels.all.delete")} (${rowsSelected.length})`}
             >
               <DeleteOutlined fontSize="small" />
-              <span className="hidden min-[900px]:inline">
+              <span className="hidden md:inline">
                 {t("labels.all.delete")} ({rowsSelected.length})
               </span>
             </AppButton>
@@ -208,12 +208,12 @@ export default function CategoriesPage() {
             <AppButton
               onClick={handleNew}
               color="primary"
-              className="w-10 min-w-10 px-0 min-[900px]:w-auto min-[900px]:min-w-0 min-[900px]:px-3.5 shrink-0"
+              className="w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0"
               title={t("labels.grid.add_item")}
               aria-label={t("labels.grid.add_item")}
             >
               <AddOutlined fontSize="small" />
-              <span className="hidden min-[900px]:inline">
+              <span className="hidden md:inline">
                 {t("labels.grid.add_item")}
               </span>
             </AppButton>

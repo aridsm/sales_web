@@ -44,7 +44,9 @@ const menuItems: MenuItem[] = [
 ];
 
 function isItemActive(href: string, pathname: string): boolean {
-  return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
+  return href === "/"
+    ? pathname === "/"
+    : pathname === href || pathname.startsWith(href + "/");
 }
 
 function KivoLogo({
@@ -97,14 +99,14 @@ function MenuList({
               aria-current={isActive ? "page" : undefined}
               className={`flex items-center gap-3 h-12 rounded-xs transition-colors duration-200 ${
                 isOpen ? "px-3" : "justify-center"
-              } ${isActive ? "bg-primary text-white font-medium" : inactiveClasses}`}
+              } ${isActive ? "bg-primary text-white" : inactiveClasses}`}
             >
               <div className="w-5 min-w-5 flex items-center justify-center">
                 <Icon style={{ fontSize: 20 }} />
               </div>
 
               {isOpen && (
-                <span className="whitespace-nowrap text-sm">
+                <span className="whitespace-nowrap">
                   {t(`labels.menu.${item.key}`)}
                 </span>
               )}
@@ -217,7 +219,7 @@ export default function AppMenu() {
             </div>
 
             {isOpen && (
-              <span className="whitespace-nowrap text-sm mt-0.5 ml-1">
+              <span className="whitespace-nowrap mt-0.5 ml-1">
                 {t("labels.menu.logout")}
               </span>
             )}
@@ -291,7 +293,7 @@ export default function AppMenu() {
               <div className="w-5 min-w-5 flex items-center justify-center">
                 <ExitToAppOutlined style={{ fontSize: 20 }} />
               </div>
-              <span className="whitespace-nowrap text-sm mt-0.5 ml-1">
+              <span className="whitespace-nowrap mt-0.5 ml-1">
                 {t("labels.menu.logout")}
               </span>
             </AppButton>
