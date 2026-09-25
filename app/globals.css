@@ -74,7 +74,7 @@ body {
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
-  @apply text-sm 2xl:text-[15px];
+  @apply text-sm;
 }
 
 .grid-dashboard {

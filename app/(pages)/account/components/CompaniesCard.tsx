@@ -134,7 +134,6 @@ export default function CompaniesCard({
           onClick={onCreateCompanyClick}
           className="w-10 min-w-10 px-0 sm:w-auto sm:min-w-0 sm:px-3.5 shrink-0"
           title={t("labels.account.create_company")}
-          size="small"
           aria-label={t("labels.account.create_company")}
         >
           <AddOutlined fontSize="small" />
@@ -294,7 +293,6 @@ export default function CompaniesCard({
                   <AppButton
                     color="foreground"
                     flat
-                    size="small"
                     className="py-1 px-2.5 text-xs! hover:bg-foreground/5! gap-1.5"
                     onClick={() => onOpenMembers(comp)}
                   >
@@ -311,7 +309,6 @@ export default function CompaniesCard({
                     <AppButton
                       color="primary"
                       flat
-                      size="small"
                       className="py-1 px-2.5 text-xs! font-medium"
                       onClick={() => onSwitchCompany(comp.id)}
                     >

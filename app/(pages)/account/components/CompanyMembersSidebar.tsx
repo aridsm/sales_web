@@ -100,7 +100,6 @@ export default function CompanyMembersSidebar({
               <AppButton
                 type="button"
                 color="primary-3"
-                size="small"
                 flat
                 onClick={() => onOpenManageModal(company)}
                 className="gap-1 px-2! shrink-0"

@@ -11,7 +11,6 @@ export interface AppButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEle
     | "white";
   flat?: boolean;
   rounded?: boolean;
-  size?: "small" | "default" | "large";
 }
 
 export default function AppButton({
@@ -19,7 +18,6 @@ export default function AppButton({
   className = "",
   flat = false,
   rounded = false,
-  size = "default",
   children,
   ...props
 }: AppButtonProps) {
@@ -31,11 +29,7 @@ export default function AppButton({
   const isSquare =
     /(?:^|\s)w-\S+/.test(className) && /(?:^|\s)h-\S+/.test(className);
 
-  const sizeClasses = {
-    small: `${hasExplicitHeight ? "" : "h-8"} ${hasExplicitPadding || isSquare ? "" : "px-2.5"} ${hasExplicitTextSize ? "" : "text-[11px] md:text-xs"}`,
-    default: `${hasExplicitHeight ? "" : "h-8 md:h-10"} ${hasExplicitPadding || isSquare ? "" : "px-3.5"} ${hasExplicitTextSize ? "" : "text-sm"}`,
-    large: `${hasExplicitHeight ? "" : "h-10 md:h-12"} ${hasExplicitPadding || isSquare ? "" : "px-5"} ${hasExplicitTextSize ? "" : "text-sm md:text-base"}`,
-  }[size];
+  const sizeClasses = `${hasExplicitHeight ? "" : "h-10"} ${hasExplicitPadding || isSquare ? "" : "px-3.5"} ${hasExplicitTextSize ? "" : "text-sm"}`;
 
   const baseClasses = `inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200 select-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] ${
     rounded ? "rounded-full" : "rounded-xs"

@@ -180,13 +180,15 @@ export default function AccountCompanyTab({
         : null;
 
       const currentCompanies = useUserStore.getState().companies;
-      useUserStore.getState().setCompanies(
-        currentCompanies.map((c: CompanyListItem) =>
-          c.id === activeCompany.id
-            ? { ...c, ...formData, logo_url: logoWithCacheBuster }
-            : c,
-        ),
-      );
+      useUserStore
+        .getState()
+        .setCompanies(
+          currentCompanies.map((c: CompanyListItem) =>
+            c.id === activeCompany.id
+              ? { ...c, ...formData, logo_url: logoWithCacheBuster }
+              : c,
+          ),
+        );
 
       openDialog({
         variant: "success",
@@ -373,15 +375,19 @@ export default function AccountCompanyTab({
             </div>
           </div>
 
-        <div className="h-px bg-border w-full" />
+          <div className="h-px bg-border w-full" />
 
-        <AppAddressFields
-          data={formData as AddressData}
-          onChange={(field, value) => handleChange(field as keyof Company, value)}
-          onAddressFill={(filled) => setFormData((prev) => ({ ...prev, ...filled }))}
-          disabled={!isAdmin || isSaving || isLoading}
-          title={t("labels.account.company_address")}
-        />
+          <AppAddressFields
+            data={formData as AddressData}
+            onChange={(field, value) =>
+              handleChange(field as keyof Company, value)
+            }
+            onAddressFill={(filled) =>
+              setFormData((prev) => ({ ...prev, ...filled }))
+            }
+            disabled={!isAdmin || isSaving || isLoading}
+            title={t("labels.account.company_address")}
+          />
 
           {isAdmin && (
             <>
@@ -422,7 +428,7 @@ export default function AccountCompanyTab({
         />
 
         {currentUser && activeCompany && (
-          <AppCard className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <AppCard className="p-4 sm:p-5 flex flex-col justify-between gap-3">
             <div className="flex flex-col gap-1">
               <span className="font-semibold text-base text-foreground">
                 {t("labels.account.leave_company")}
@@ -434,9 +440,8 @@ export default function AccountCompanyTab({
 
             <AppButton
               color="red"
-              className="gap-1.5 shrink-0 self-start sm:self-center"
+              className="gap-1.5 shrink-0 mr-auto"
               onClick={handleLeaveCompany}
-              size="small"
               title={t("labels.account.leave_company")}
             >
               <ExitToAppOutlined style={{ fontSize: 16 }} />

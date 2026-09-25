@@ -83,7 +83,7 @@ export default function AppImagePicker({
       <div className="relative shrink-0">
         {variant === "user" ? (
           activeUrl ? (
-            <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-full overflow-hidden border-2 border-border bg-background-3 shadow-xs">
+            <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-full overflow-hidden bg-background-3">
               <img
                 src={activeUrl}
                 alt={nameFallback || "Avatar"}
@@ -99,7 +99,7 @@ export default function AppImagePicker({
             />
           )
         ) : activeUrl ? (
-          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xs overflow-hidden border-2 border-border bg-background-3 shadow-xs flex items-center justify-center p-1">
+          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xs overflow-hidden border-2 border-border bg-background-3 flex items-center justify-center p-1">
             <img
               src={activeUrl}
               alt={nameFallback || "Company Logo"}
@@ -107,8 +107,8 @@ export default function AppImagePicker({
             />
           </div>
         ) : (
-          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xs border-2 border-dashed border-border bg-background dark:bg-background-3/50 flex flex-col items-center justify-center text-label gap-1">
-            <BusinessOutlined style={{ fontSize: 28 }} className="opacity-60" />
+          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xs border-2 border-dashed border-red-500/40 dark:border-red-400/50 bg-red-500/2 flex flex-col items-center justify-center text-red-500/70 dark:text-red-400 gap-1">
+            <BusinessOutlined style={{ fontSize: 28 }} />
           </div>
         )}
       </div>
@@ -118,7 +118,6 @@ export default function AppImagePicker({
           <AppButton
             type="button"
             color="primary"
-            size="small"
             onClick={() => fileInputRef.current?.click()}
             disabled={disabled || isUploading}
             className="gap-1.5"
@@ -137,7 +136,6 @@ export default function AppImagePicker({
             <AppButton
               type="button"
               color="transparent"
-              size="small"
               flat
               onClick={handleRemove}
               disabled={disabled || isUploading}

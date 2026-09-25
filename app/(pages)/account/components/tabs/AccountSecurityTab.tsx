@@ -133,7 +133,6 @@ export default function AccountSecurityTab({
           <div className="pt-2">
             <AppButton
               type="submit"
-              color="primary-3"
               disabled={isChangingPassword}
               className="gap-2"
             >

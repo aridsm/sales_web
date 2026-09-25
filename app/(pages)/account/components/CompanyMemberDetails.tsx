@@ -118,7 +118,6 @@ export default function CompanyMemberDetails({
         <AppButton
           type="button"
           color="foreground"
-          size="small"
           flat
           onClick={onBack}
           className="gap-1.5 px-2! shrink-0"
@@ -169,7 +168,6 @@ export default function CompanyMemberDetails({
                 <AppButton
                   type="submit"
                   color="primary"
-                  size="small"
                   flat
                   disabled={isSavingJobTitle}
                   className="w-7 h-7 p-0! flex items-center justify-center text-primary!"
@@ -180,7 +178,6 @@ export default function CompanyMemberDetails({
                 <AppButton
                   type="button"
                   color="transparent"
-                  size="small"
                   flat
                   disabled={isSavingJobTitle}
                   onClick={() => {
