@@ -421,6 +421,16 @@
       "profile_settings": "Profile Settings",
       "user_name": "Name",
       "user_email": "Email",
+      "change_email_button": "Change email",
+      "change_email_title": "Change Email",
+      "change_email_description": "Enter your new email address and confirm your current password. A verification link will be sent to the new address.",
+      "current_email": "Current Email",
+      "new_email": "New Email",
+      "new_email_placeholder": "Enter new email",
+      "confirm_password_label": "Current Password",
+      "confirm_password_placeholder": "Enter your current password",
+      "send_email_change_request": "Request Change",
+      "change_email_success": "Request sent successfully! Please check your new email inbox to confirm the change.",
       "member_since": "Member since",
       "delete_account": "Delete Account",
       "delete_account_description": "Deleting your account will permanently remove all of your data and access. This action cannot be undone.",
@@ -640,6 +650,13 @@
       "errorUserNotFound": "User not found.",
       "errorPasswordsNotMatch": "Passwords do not match.",
       "errorPasswordMinLength": "Password must be at least 6 characters long."
+    },
+    "users": {
+      "errorEmailSameAsCurrent": "The new email cannot be the same as the current email.",
+      "errorEmailAlreadyRegistered": "This email is already registered to another account.",
+      "errorInvalidCurrentPassword": "The current password provided is incorrect.",
+      "errorInvalidOrExpiredVerificationToken": "The verification link is invalid or has expired.",
+      "errorUserNotFound": "User not found."
     },
     "fallback": "An unexpected error occurred. Please try again."
   }

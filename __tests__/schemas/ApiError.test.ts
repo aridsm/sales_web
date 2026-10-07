@@ -84,4 +84,34 @@ describe("getApiError", () => {
     expect(result.params?.name).toBe("Tenis Esportivo");
     expect(result.params?.product_name).toBe("Tenis Esportivo");
   });
+
+  it("extrai código quando detail é array de validação", () => {
+    const error = {
+      response: {
+        data: {
+          detail: [
+            {
+              type: "string_too_short",
+              loc: ["body", "password"],
+              msg: "String should have at least 6 characters",
+            },
+          ],
+        },
+      },
+    };
+    const result = getApiError(error);
+    expect(result.code).toBe("String should have at least 6 characters");
+  });
+
+  it("extrai message quando detail não existe mas message existe", () => {
+    const error = {
+      response: {
+        data: {
+          message: "Custom error message",
+        },
+      },
+    };
+    const result = getApiError(error);
+    expect(result.code).toBe("Custom error message");
+  });
 });

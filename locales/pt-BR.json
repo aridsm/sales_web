@@ -421,6 +421,16 @@
       "profile_settings": "Configurações do Perfil",
       "user_name": "Nome",
       "user_email": "E-mail",
+      "change_email_button": "Alterar e-mail",
+      "change_email_title": "Alterar E-mail",
+      "change_email_description": "Informe o novo e-mail e sua senha atual para confirmação. Um link de verificação será enviado para o novo endereço.",
+      "current_email": "E-mail Atual",
+      "new_email": "Novo E-mail",
+      "new_email_placeholder": "Digite o novo e-mail",
+      "confirm_password_label": "Senha Atual",
+      "confirm_password_placeholder": "Digite sua senha atual",
+      "send_email_change_request": "Solicitar Alteração",
+      "change_email_success": "Solicitação enviada com sucesso! Verifique a caixa de entrada do novo e-mail para confirmar a alteração.",
       "member_since": "Membro desde",
       "delete_account": "Excluir Conta",
       "delete_account_description": "Ao excluir sua conta, todos os seus dados e acessos serão perdidos. Esta ação não poderá ser desfeita.",
@@ -640,6 +650,13 @@
       "errorUserNotFound": "Usuário não encontrado.",
       "errorPasswordsNotMatch": "As senhas não coincidem.",
       "errorPasswordMinLength": "A senha deve ter pelo menos 6 caracteres."
+    },
+    "users": {
+      "errorEmailSameAsCurrent": "O novo e-mail não pode ser igual ao e-mail atual.",
+      "errorEmailAlreadyRegistered": "Este e-mail já está cadastrado em outra conta.",
+      "errorInvalidCurrentPassword": "A senha atual informada está incorreta.",
+      "errorInvalidOrExpiredVerificationToken": "O link de confirmação é inválido ou expirou.",
+      "errorUserNotFound": "Usuário não encontrado."
     },
     "fallback": "Ocorreu um erro inesperado. Tente novamente."
   }

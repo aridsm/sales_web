@@ -9,8 +9,10 @@ import { useTranslation } from "@/app/utils/i18n";
 import AppCard from "@/app/components/AppCard";
 import AppButton from "@/app/components/AppButton";
 import AppInputText from "@/app/components/inputs/AppInputText";
+import AppLabel from "@/app/components/AppLabel";
 import AppImagePicker from "../AppImagePicker";
 import AppAddressFields from "../AccountAddressFields";
+import ChangeEmailModal from "../ChangeEmailModal";
 import { usePermission } from "@/app/utils/usePermission";
 import { getApiError } from "@/api/schemas";
 import {
@@ -50,6 +52,7 @@ export default function AccountProfileTab({
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isChangeEmailOpen, setIsChangeEmailOpen] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -103,7 +106,6 @@ export default function AccountProfileTab({
 
       const payload: Partial<UserBase> = {
         name: formData.name?.trim() || "",
-        email: formData.email?.trim() || "",
         phone: formData.phone?.trim() || null,
         job_title: formData.job_title?.trim() || null,
         document: formData.document?.trim() || null,
@@ -147,129 +149,148 @@ export default function AccountProfileTab({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full">
-      <AppCard className="p-4 sm:p-6 flex flex-col gap-6">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <AddPhotoAlternateOutlined
-              style={{ fontSize: 18 }}
-              className="text-primary"
+    <>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full">
+        <AppCard className="p-4 sm:p-6 flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <AddPhotoAlternateOutlined
+                style={{ fontSize: 18 }}
+                className="text-primary"
+              />
+              <h3 className="font-semibold text-sm sm:text-base text-foreground">
+                {t("labels.account.profile_picture")}
+              </h3>
+            </div>
+            <AppImagePicker
+              currentImageUrl={formData.avatar_url}
+              nameFallback={formData.name}
+              variant="user"
+              onChangeImage={(file) => setAvatarFile(file)}
+              onRemoveImage={() => {
+                setAvatarFile(null);
+                setFormData((prev) => ({ ...prev, avatar_url: null }));
+              }}
+              disabled={isSaving}
             />
-            <h3 className="font-semibold text-sm sm:text-base text-foreground">
-              {t("labels.account.profile_picture")}
-            </h3>
           </div>
-          <AppImagePicker
-            currentImageUrl={formData.avatar_url}
-            nameFallback={formData.name}
-            variant="user"
-            onChangeImage={(file) => setAvatarFile(file)}
-            onRemoveImage={() => {
-              setAvatarFile(null);
-              setFormData((prev) => ({ ...prev, avatar_url: null }));
-            }}
+
+          <div className="h-px bg-border w-full" />
+
+          {/* Informações Pessoais */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <PersonOutlined
+                style={{ fontSize: 18 }}
+                className="text-primary"
+              />
+              <h3 className="font-semibold text-sm sm:text-base text-foreground">
+                {t("labels.account.personal_info")}
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <AppInputText
+                label={t("labels.account.user_name")}
+                value={formData.name}
+                onChange={(e) =>
+                  handleChange("name", String(e?.target?.value ?? ""))
+                }
+                placeholder={t("labels.account.user_name_placeholder")}
+                required
+                disabled={isSaving}
+              />
+
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <AppLabel htmlFor="profile_user_email">
+                    {t("labels.account.user_email")}
+                  </AppLabel>
+                  <button
+                    type="button"
+                    onClick={() => setIsChangeEmailOpen(true)}
+                    className="text-xs text-primary hover:underline font-medium cursor-pointer"
+                  >
+                    {t("labels.account.change_email_button")}
+                  </button>
+                </div>
+                <AppInputText
+                  id="profile_user_email"
+                  type="email"
+                  value={formData.email}
+                  placeholder="exemplo@email.com"
+                  disabled={true}
+                />
+              </div>
+
+              <AppInputText
+                label={t("labels.account.phone")}
+                value={formData.phone || ""}
+                onChange={(e) =>
+                  handleChange("phone", String(e?.target?.value ?? ""))
+                }
+                placeholder="(11) 99999-9999"
+                disabled={isSaving}
+              />
+
+              <AppInputText
+                label={t("labels.account.job_title")}
+                value={formData.job_title || ""}
+                onChange={(e) =>
+                  handleChange("job_title", String(e?.target?.value ?? ""))
+                }
+                placeholder={t("labels.account.job_title_placeholder")}
+                disabled={isSaving || !isAdmin}
+              />
+
+              <AppInputText
+                label={t("labels.account.document_cpf")}
+                value={formData.document || ""}
+                onChange={(e) =>
+                  handleChange("document", String(e?.target?.value ?? ""))
+                }
+                placeholder="000.000.000-00"
+                disabled={isSaving}
+              />
+            </div>
+          </div>
+
+          <div className="h-px bg-border w-full" />
+
+          {/* Endereço Residencial */}
+          <AppAddressFields
+            data={formData}
+            onChange={(field, value) => handleChange(field as keyof UserBase, value)}
+            onAddressFill={(filled) => setFormData((prev) => ({ ...prev, ...filled }))}
             disabled={isSaving}
+            title={t("labels.account.address_info")}
           />
-        </div>
 
-        <div className="h-px bg-border w-full" />
+          <div className="h-px bg-border w-full" />
 
-        {/* Informações Pessoais */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <PersonOutlined
-              style={{ fontSize: 18 }}
-              className="text-primary"
-            />
-            <h3 className="font-semibold text-sm sm:text-base text-foreground">
-              {t("labels.account.personal_info")}
-            </h3>
+          <div className="flex items-center justify-end gap-3">
+            <AppButton
+              type="submit"
+              color="primary"
+              disabled={isSaving}
+              className="gap-2 "
+            >
+              <SaveOutlined style={{ fontSize: 18 }} />
+              <span>
+                {isSaving
+                  ? t("labels.all.saving")
+                  : t("labels.account.save_changes")}
+              </span>
+            </AppButton>
           </div>
+        </AppCard>
+      </form>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <AppInputText
-              label={t("labels.account.user_name")}
-              value={formData.name}
-              onChange={(e) =>
-                handleChange("name", String(e?.target?.value ?? ""))
-              }
-              placeholder={t("labels.account.user_name_placeholder")}
-              required
-              disabled={isSaving}
-            />
-
-            <AppInputText
-              label={t("labels.account.user_email")}
-              type="email"
-              value={formData.email}
-              onChange={(e) =>
-                handleChange("email", String(e?.target?.value ?? ""))
-              }
-              placeholder="exemplo@email.com"
-              disabled={isSaving}
-            />
-
-            <AppInputText
-              label={t("labels.account.phone")}
-              value={formData.phone || ""}
-              onChange={(e) =>
-                handleChange("phone", String(e?.target?.value ?? ""))
-              }
-              placeholder="(11) 99999-9999"
-              disabled={isSaving}
-            />
-
-            <AppInputText
-              label={t("labels.account.job_title")}
-              value={formData.job_title || ""}
-              onChange={(e) =>
-                handleChange("job_title", String(e?.target?.value ?? ""))
-              }
-              placeholder={t("labels.account.job_title_placeholder")}
-              disabled={isSaving || !isAdmin}
-            />
-
-            <AppInputText
-              label={t("labels.account.document_cpf")}
-              value={formData.document || ""}
-              onChange={(e) =>
-                handleChange("document", String(e?.target?.value ?? ""))
-              }
-              placeholder="000.000.000-00"
-              disabled={isSaving}
-            />
-          </div>
-        </div>
-
-        <div className="h-px bg-border w-full" />
-
-        {/* Endereço Residencial */}
-        <AppAddressFields
-          data={formData}
-          onChange={(field, value) => handleChange(field as keyof UserBase, value)}
-          onAddressFill={(filled) => setFormData((prev) => ({ ...prev, ...filled }))}
-          disabled={isSaving}
-          title={t("labels.account.address_info")}
-        />
-
-        <div className="h-px bg-border w-full" />
-
-        <div className="flex items-center justify-end gap-3">
-          <AppButton
-            type="submit"
-            color="primary"
-            disabled={isSaving}
-            className="gap-2 "
-          >
-            <SaveOutlined style={{ fontSize: 18 }} />
-            <span>
-              {isSaving
-                ? t("labels.all.saving")
-                : t("labels.account.save_changes")}
-            </span>
-          </AppButton>
-        </div>
-      </AppCard>
-    </form>
+      <ChangeEmailModal
+        isOpen={isChangeEmailOpen}
+        onClose={() => setIsChangeEmailOpen(false)}
+        currentEmail={formData.email}
+      />
+    </>
   );
 }

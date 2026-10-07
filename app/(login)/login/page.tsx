@@ -165,7 +165,7 @@ export default function LoginPage() {
 
       {unverifiedEmail && (
         <div className="mt-4 p-3.5 rounded-xs border border-primary/30 bg-primary/5 flex flex-col gap-2">
-          <p className="text-xs text-foreground/80">
+          <p className="text-sm text-foreground/90">
             {t("errors.auth.errorEmailNotVerified")}
           </p>
           <AppButton
@@ -174,7 +174,7 @@ export default function LoginPage() {
             flat
             disabled={resendCooldown > 0 || resending}
             onClick={handleResend}
-            className="text-xs! py-1.5! self-start"
+            className="self-start px-3.5 py-2 h-auto text-sm"
           >
             {resendCooldown > 0
               ? t("labels.register_success.resend_cooldown", {

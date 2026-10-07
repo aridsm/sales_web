@@ -10,7 +10,7 @@ export interface ApiErrorDetail {
 }
 
 export interface ApiErrorResponse {
-  detail?: string | ApiErrorDetail;
+  detail?: string | ApiErrorDetail | Record<string, unknown>[];
   message?: string;
 }
 
@@ -31,6 +31,18 @@ export function getApiError(err: unknown): {
     return { code: detail };
   }
 
+  if (Array.isArray(detail)) {
+    const first = detail[0];
+    if (first && typeof first === "object") {
+      const code =
+        (first as Record<string, unknown>).error ||
+        (first as Record<string, unknown>).msg ||
+        (first as Record<string, unknown>).type;
+      return { code: typeof code === "string" ? code : undefined };
+    }
+    return {};
+  }
+
   if (detail && typeof detail === "object") {
     const { error, ...rest } = detail;
     const name =
@@ -43,6 +55,11 @@ export function getApiError(err: unknown): {
         ...(name !== undefined ? { name } : {}),
       },
     };
+  }
+
+  const message = axiosErr.response?.data?.message;
+  if (typeof message === "string") {
+    return { code: message };
   }
 
   return {};

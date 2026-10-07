@@ -68,3 +68,13 @@ export interface TokenResponse {
 export interface RefreshToken {
   refresh_token: string;
 }
+
+export interface RequestEmailChangeRequest {
+  new_email: string;
+  password: string;
+}
+
+export interface ConfirmEmailChangeRequest {
+  token: string;
+}
+

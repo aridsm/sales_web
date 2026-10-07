@@ -10,6 +10,8 @@ import {
   ChangePasswordRequest,
   Login,
   RefreshToken,
+  RequestEmailChangeRequest,
+  ConfirmEmailChangeRequest,
 } from "@/api/schemas/User";
 import { CompanyInvitation } from "@/api/schemas/Company";
 import { axiosClient, CustomAxiosConfig } from "@/api/axiosClient";
@@ -122,6 +124,29 @@ export class UserService {
       {
         skipAuth: true,
       } as CustomAxiosConfig
+    );
+    return response.data;
+  }
+
+  async requestEmailChange(
+    data: RequestEmailChangeRequest,
+  ): Promise<MessageResponse> {
+    const response = await axiosClient.post(
+      `/${this.resource}/request-email-change`,
+      data,
+    );
+    return response.data;
+  }
+
+  async confirmEmailChange(
+    data: ConfirmEmailChangeRequest,
+  ): Promise<TokenResponse> {
+    const response = await axiosClient.post(
+      `/${this.resource}/confirm-email-change`,
+      data,
+      {
+        skipAuth: true,
+      } as CustomAxiosConfig,
     );
     return response.data;
   }

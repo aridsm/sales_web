@@ -54,8 +54,13 @@ function VerifyEmailContent() {
     }
     verifiedTokenRef.current = verificationToken;
 
-    usersService
-      .verifyEmail({ token: verificationToken })
+    const changeType = searchParams.get("type");
+    const requestPromise =
+      changeType === "email_change"
+        ? usersService.confirmEmailChange({ token: verificationToken })
+        : usersService.verifyEmail({ token: verificationToken });
+
+    requestPromise
       .then((tokenResponse) => {
         if (tokenResponse?.access_token) {
           setTokenData(
