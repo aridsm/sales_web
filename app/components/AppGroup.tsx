@@ -68,10 +68,10 @@ function GroupRow<G extends { id: string | number }>({
 
   return (
     <div
-      className={`border border-border transition overflow-hidden rounded-xs shrink-0 ${open ? "border-primary-3/70 dark:border-primary-3" : "hover:border-border-2"}`}
+      className={`border border-border transition overflow-hidden rounded-xs shrink-0 ${open ? "border-primary/70" : "hover:border-border-2"}`}
     >
       <div
-        className={`group w-full flex items-center  transition-colors ${open ? "bg-primary-4" : " bg-background-2 dark:bg-background-3 dark:hover:bg-background-2"}`}
+        className={`group w-full flex items-center  transition-colors ${open ? "bg-primary/5" : " bg-background-2 dark:bg-background-3 dark:hover:bg-background-2"}`}
       >
         <button
           type="button"
@@ -111,7 +111,7 @@ function GroupRow<G extends { id: string | number }>({
       >
         <div className="overflow-hidden">
           {hasBeenOpened && (
-            <div className="px-3 pb-3 flex flex-col gap-2 min-h-0 border-t border-primary-3/70 dark:border-primary-3">
+            <div className="px-3 pb-3 flex flex-col gap-2 min-h-0 border-t border-primary/70">
               {children({ group, search })}
             </div>
           )}
@@ -218,7 +218,7 @@ export default function AppGroup<G extends { id: string | number }, T>({
             selectedItems.length > 0 &&
             !hideSelectionCount && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium text-foreground bg-background-2 dark:bg-background-3 border border-border whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
-                <span className="inline-flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-primary-3 text-white font-bold text-[10px]">
+                <span className="inline-flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-primary text-white font-bold text-[10px]">
                   {selectedItems.length}
                 </span>
                 <span>

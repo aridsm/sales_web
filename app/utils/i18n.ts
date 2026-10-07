@@ -76,10 +76,17 @@ export function getLabel(
   return params ? interpolate(value, params) : value;
 }
 
+import { useCallback } from "react";
+
 export function useTranslation() {
   const locale = useLocaleStore((state) => state.locale);
+  const t = useCallback(
+    (route: string, params?: Record<string, unknown>) =>
+      getLabel(route, params, locale),
+    [locale],
+  );
   return {
-    t: (route: string, params?: Record<string, unknown>) => getLabel(route, params, locale),
-    locale
+    t,
+    locale,
   };
 }

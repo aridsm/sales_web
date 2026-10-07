@@ -45,6 +45,11 @@
         "view_all": "View all"
       }
     },
+    "auth_banner": {
+      "title": "Manage your sales with intelligence and simplicity",
+      "description": "Track your revenue, control expenses, and organize your inventory in real time.",
+      "start_now": "Get started"
+    },
     "login": {
       "title": "Welcome back!",
       "subtitle": "Enter your credentials to access the system",
@@ -61,6 +66,31 @@
       "creating": "Creating account...",
       "create": "Create account",
       "have_account": "Already have an account?"
+    },
+    "register_success": {
+      "title": "Verify your email!",
+      "description": "We have sent a confirmation link to",
+      "instructions": "Click the link sent to your email to activate your account and start using the system.",
+      "resend_prompt": "Didn't receive the email?",
+      "resend_button": "Resend email",
+      "resend_cooldown": "Resend in {{seconds}}s",
+      "resend_success": "Confirmation email resent successfully!",
+      "back_to_login": "Back to Login"
+    },
+    "verify_email": {
+      "title": "Email Confirmation",
+      "verifying_title": "Verifying your email...",
+      "verifying_description": "Please wait while we validate your confirmation link.",
+      "success_title": "Email verified successfully!",
+      "success_description": "Your account has been activated. You can now log in.",
+      "error_title": "Could not verify email",
+      "error_description": "The verification link is invalid or has expired. You can request a new link below.",
+      "email_placeholder": "Enter your registered email",
+      "resend_button": "Resend confirmation link",
+      "resending": "Resending...",
+      "resend_success": "If the email is registered, a new link has been sent!",
+      "go_to_login": "Go to Login",
+      "go_to_dashboard": "Go to Dashboard"
     },
     "all": {
       "all_rights": "All rights reserved",
@@ -600,6 +630,10 @@
       "errorInvalidCredentials": "Invalid email or password.",
       "errorEmailAlreadyRegistered": "This email is already registered.",
       "errorEmailAlreadyExists": "This email is already registered.",
+      "errorEmailNotVerified": "Your email has not been verified yet. Please check your inbox or request a new link.",
+      "errorInvalidOrExpiredVerificationToken": "The verification link is invalid or has already been used.",
+      "errorVerificationTokenExpired": "The verification link has expired. Please request a new link.",
+      "errorRateLimitExceeded": "Too many attempts. Please wait a few minutes before trying again.",
       "errorInvalidToken": "Invalid or expired session. Please log in again.",
       "errorExpiredToken": "Session expired. Please log in again.",
       "errorInvalidRefreshToken": "Session expired. Please log in again.",

@@ -341,7 +341,7 @@ export default function AppImageCropperModal({
 
           <AppButton
             type="button"
-            color="primary-3"
+            color="primary"
             onClick={handleCrop}
             disabled={isProcessing || !imageSrc}
             className="gap-1.5 text-xs px-4"

@@ -43,9 +43,9 @@ export function SaleCart({
       <AppCard className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xs bg-primary-3/10 dark:bg-primary/10 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xs bg-primary/10 flex items-center justify-center">
               <ShoppingCartOutlined
-                className="text-primary-3 dark:text-primary"
+                className="text-primary"
                 style={{ fontSize: 20 }}
               />
             </div>
@@ -94,7 +94,7 @@ export function SaleCart({
                 title={t("labels.sales.new.add_products_to_cart")}
                 subtitle={null as any}
                 className="bg-transparent! dark:bg-transparent! border-none!"
-                iconClassName="text-primary-3 bg-primary-3/10 dark:text-primary dark:bg-primary/20"
+                iconClassName="text-primary bg-primary/10"
               />
             </div>
           ) : (

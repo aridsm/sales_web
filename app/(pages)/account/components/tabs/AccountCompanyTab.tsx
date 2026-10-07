@@ -268,7 +268,7 @@ export default function AccountCompanyTab({
                 <span className="font-semibold text-base md:text-lg text-foreground truncate">
                   {activeCompany.name}
                 </span>
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded-xs bg-primary/8 text-primary-3 shrink-0">
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-xs bg-primary/8 text-primary shrink-0">
                   {t(`labels.account.permissions.${currentUser?.permission}`)}
                 </span>
               </div>
@@ -286,7 +286,7 @@ export default function AccountCompanyTab({
             <div className="flex items-center gap-2">
               <AddPhotoAlternateOutlined
                 style={{ fontSize: 18 }}
-                className="text-primary-3"
+                className="text-primary"
               />
               <h3 className="font-semibold text-sm sm:text-base text-foreground">
                 {t("labels.account.company_logo")}
@@ -311,7 +311,7 @@ export default function AccountCompanyTab({
             <div className="flex items-center gap-2">
               <BusinessOutlined
                 style={{ fontSize: 18 }}
-                className="text-primary-3"
+                className="text-primary"
               />
               <h3 className="font-semibold text-sm sm:text-base text-foreground">
                 {t("labels.account.company_info")}
@@ -395,7 +395,7 @@ export default function AccountCompanyTab({
               <div className="flex items-center justify-end gap-3">
                 <AppButton
                   type="submit"
-                  color="primary-3"
+                  color="primary"
                   disabled={isSaving || isLoading}
                   className="gap-2 px-5 min-w-[160px]"
                 >

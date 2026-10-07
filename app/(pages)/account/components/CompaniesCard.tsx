@@ -117,13 +117,13 @@ export default function CompaniesCard({
         <div className="flex items-center gap-2 min-w-0">
           <ApartmentOutlined
             style={{ fontSize: 18 }}
-            className="text-primary-3 shrink-0"
+            className="text-primary shrink-0"
           />
           <div className="flex items-center gap-2 min-w-0">
             <h3 className="font-semibold text-base text-foreground truncate">
               {t("labels.account.my_companies")}
             </h3>
-            <span className="px-2 py-0.2 rounded-full bg-primary/10 text-primary-3 text-xs font-semibold shrink-0">
+            <span className="px-2 py-0.2 rounded-full bg-primary/10 text-primary text-xs font-semibold shrink-0">
               {totalCompanies}
             </span>
           </div>
@@ -156,10 +156,10 @@ export default function CompaniesCard({
             return (
               <div
                 key={comp.id}
-                className={`flex flex-col justify-between p-4 rounded-xs border transition-all gap-3.5 ${
+                className={`flex flex-col justify-between p-4 rounded-xs border transition-all duration-200 gap-3.5 relative ${
                   isActive
-                    ? "border-primary-3/40 bg-primary/2"
-                    : "border-border hover:border-border-2"
+                    ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs"
+                    : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2.5">
@@ -222,7 +222,7 @@ export default function CompaniesCard({
                       <div className="flex items-center gap-2 min-w-0">
                         <BadgeOutlined
                           style={{ fontSize: 16 }}
-                          className="text-primary-3 shrink-0"
+                          className="text-primary shrink-0"
                         />
                         <span className="truncate text-foreground/80">
                           CNPJ: {comp.document}
@@ -234,7 +234,7 @@ export default function CompaniesCard({
                       <div className="flex items-center gap-2 min-w-0">
                         <EmailOutlined
                           style={{ fontSize: 16 }}
-                          className="text-primary-3 shrink-0"
+                          className="text-primary shrink-0"
                         />
                         <span className="truncate text-foreground/80">
                           {comp.email}
@@ -246,7 +246,7 @@ export default function CompaniesCard({
                       <div className="flex items-center gap-2 min-w-0">
                         <PhoneOutlined
                           style={{ fontSize: 16 }}
-                          className="text-primary-3 shrink-0"
+                          className="text-primary shrink-0"
                         />
                         <span className="truncate text-foreground/80">
                           {comp.phone}
@@ -258,7 +258,7 @@ export default function CompaniesCard({
                       <div className="flex items-center gap-2 min-w-0">
                         <LocationOnOutlined
                           style={{ fontSize: 16 }}
-                          className="text-primary-3 shrink-0"
+                          className="text-primary shrink-0"
                         />
                         <span className="truncate text-foreground/80">
                           {[comp.city, comp.state].filter(Boolean).join(" - ")}
@@ -270,7 +270,7 @@ export default function CompaniesCard({
                       <div className="flex items-center gap-2 min-w-0">
                         <LanguageOutlined
                           style={{ fontSize: 16 }}
-                          className="text-primary-3 shrink-0"
+                          className="text-primary shrink-0"
                         />
                         <a
                           href={
@@ -291,9 +291,8 @@ export default function CompaniesCard({
 
                 <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/60">
                   <AppButton
-                    color="foreground"
-                    flat
-                    className="py-1 px-2.5 text-xs! hover:bg-foreground/5! gap-1.5"
+                    color="background"
+                    className="h-7 px-2.5 text-xs! gap-1.5"
                     onClick={() => onOpenMembers(comp)}
                   >
                     <GroupOutlined style={{ fontSize: 15 }} />
@@ -301,15 +300,13 @@ export default function CompaniesCard({
                   </AppButton>
 
                   {isActive ? (
-                    <span className="px-2.5 py-1 rounded-xs text-xs font-semibold bg-primary-3 text-white flex items-center gap-1 shrink-0 select-none">
-                      <CheckCircleOutlined style={{ fontSize: 13 }} />
-                      <span>{t("labels.account.active")}</span>
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary flex items-center shrink-0 select-none">
+                      {t("labels.account.active")}
                     </span>
                   ) : (
                     <AppButton
-                      color="primary"
-                      flat
-                      className="py-1 px-2.5 text-xs! font-medium"
+                      color="background"
+                      className="h-7 px-3 text-xs! font-medium"
                       onClick={() => onSwitchCompany(comp.id)}
                     >
                       {t("labels.account.switch")}

@@ -153,7 +153,7 @@ export default function AccountProfileTab({
           <div className="flex items-center gap-2">
             <AddPhotoAlternateOutlined
               style={{ fontSize: 18 }}
-              className="text-primary-3"
+              className="text-primary"
             />
             <h3 className="font-semibold text-sm sm:text-base text-foreground">
               {t("labels.account.profile_picture")}
@@ -179,7 +179,7 @@ export default function AccountProfileTab({
           <div className="flex items-center gap-2">
             <PersonOutlined
               style={{ fontSize: 18 }}
-              className="text-primary-3"
+              className="text-primary"
             />
             <h3 className="font-semibold text-sm sm:text-base text-foreground">
               {t("labels.account.personal_info")}
@@ -257,7 +257,7 @@ export default function AccountProfileTab({
         <div className="flex items-center justify-end gap-3">
           <AppButton
             type="submit"
-            color="primary-3"
+            color="primary"
             disabled={isSaving}
             className="gap-2 "
           >

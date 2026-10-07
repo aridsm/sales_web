@@ -8,6 +8,7 @@ import {
   BusinessOutlined,
 } from "@mui/icons-material";
 import { getImageUrl } from "@/app/utils/image";
+import { getUserInitials } from "@/app/utils/user";
 import UserInitials from "./UserInitials";
 import AppImageCropperModal from "./AppImageCropperModal";
 import { useTranslation } from "@/app/utils/i18n";
@@ -99,7 +100,7 @@ export default function AppImagePicker({
             />
           )
         ) : activeUrl ? (
-          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xs overflow-hidden border-2 border-border bg-background-3 flex items-center justify-center p-1">
+          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xs overflow-hidden border border-border bg-background-3 flex items-center justify-center p-1">
             <img
               src={activeUrl}
               alt={nameFallback || "Company Logo"}
@@ -107,8 +108,12 @@ export default function AppImagePicker({
             />
           </div>
         ) : (
-          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xs border-2 border-dashed border-red-500/40 dark:border-red-400/50 bg-red-500/2 flex flex-col items-center justify-center text-red-500/70 dark:text-red-400 gap-1">
-            <BusinessOutlined style={{ fontSize: 28 }} />
+          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xs bg-primary/10 text-primary flex items-center justify-center font-bold text-2xl select-none shadow-xs">
+            {nameFallback ? (
+              getUserInitials(nameFallback)
+            ) : (
+              <BusinessOutlined style={{ fontSize: 28 }} />
+            )}
           </div>
         )}
       </div>
@@ -117,7 +122,7 @@ export default function AppImagePicker({
         <div className="flex flex-wrap items-center gap-2">
           <AppButton
             type="button"
-            color="primary"
+            color="background"
             onClick={() => fileInputRef.current?.click()}
             disabled={disabled || isUploading}
             className="gap-1.5"

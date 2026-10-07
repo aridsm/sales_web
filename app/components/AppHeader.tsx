@@ -103,7 +103,7 @@ export default function AppHeader({ title }: AppHeaderProps) {
               ) : (
                 <BusinessOutlined
                   style={{ fontSize: 18 }}
-                  className="text-primary-3 shrink-0"
+                  className="text-primary shrink-0"
                 />
               )}
               <span className="truncate max-w-[90px] sm:max-w-[140px] md:max-w-[180px]">

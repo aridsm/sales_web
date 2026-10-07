@@ -11,7 +11,7 @@ export function getUserInitials(name?: string | null): string {
 }
 
 export function getUserColor(name?: string | null): string {
-  if (!name) return "bg-primary-3 text-white";
+  if (!name) return "bg-primary text-white";
   const colors = [
     "bg-red-500 text-white",
     "bg-orange-500 text-white",

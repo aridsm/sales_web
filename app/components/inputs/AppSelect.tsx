@@ -255,8 +255,8 @@ const AppSelect = forwardRef<HTMLDivElement, AppSelectProps>(
               className={`
                              input-field cursor-pointer flex items-center justify-between transition-all duration-200
                             ${size === "small" ? "h-8! px-1.5! text-xs! gap-1" : (multiple && (Array.isArray(value) ? value.length > 0 : value !== undefined && value !== null && value !== "")) ? "min-h-10! h-auto! py-1.5 px-3 sm:px-3.5 gap-2" : "h-10! px-3 sm:px-3.5 gap-2"}
-                            ${disabled ? "bg-slate-100 cursor-not-allowed opacity-60" : ""}
-                            ${error ? "border-red-500 ring-1 ring-red-500" : "border-slate-300"}
+                            ${disabled ? "bg-slate-100 dark:bg-background-2 cursor-not-allowed opacity-60" : ""}
+                            ${error ? "border-red-500 ring-1 ring-red-500" : "border-border hover:border-primary/50"}
                             ${isOpen && !error ? "active" : ""}
                         `}
             >

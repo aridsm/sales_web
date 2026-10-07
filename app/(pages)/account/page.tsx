@@ -296,7 +296,7 @@ export default function AccountPage() {
           <ApartmentOutlined style={{ fontSize: 16 }} />
           <span>{t("labels.account.tab_companies")}</span>
           {invitations.length > 0 && (
-            <span className="ml-1 px-1.5 py-0.2 rounded-full bg-primary-3 text-white text-[10px] font-bold">
+            <span className="ml-1 px-1.5 py-0.2 rounded-full bg-primary text-white text-[10px] font-bold">
               {invitations.length}
             </span>
           )}

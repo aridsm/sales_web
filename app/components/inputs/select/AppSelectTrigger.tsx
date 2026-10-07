@@ -31,7 +31,7 @@ export default function AppSelectTrigger<T extends SelectOption>() {
       className={`
         input-field ${hasMultipleTags ? "min-h-10! h-auto! py-1.5" : "h-10!"} px-3 sm:px-3.5 cursor-pointer flex items-center justify-between gap-2 transition-all duration-200
         ${disabled ? "bg-background-2 cursor-not-allowed opacity-60" : ""}
-        ${error ? "border-red-500 ring-1 ring-red-500" : isOpen ? "border-primary-3 dark:border-primary" : "border-border hover:border-primary-3/50 dark:hover:border-primary/50"}
+        ${error ? "border-red-500 ring-1 ring-red-500" : isOpen ? "border-primary" : "border-border hover:border-primary/50"}
         ${isOpen && !error ? "active" : ""}
       `}
     >
@@ -49,7 +49,7 @@ export default function AppSelectTrigger<T extends SelectOption>() {
               >
                 {opt ? opt.name : `ID: ${v}`}
                 <CloseIcon
-                  className="w-3 h-3 cursor-pointer hover:text-primary-dark"
+                  className="w-3 h-3 cursor-pointer hover:text-primary-hover"
                   onClick={(e) => removeValue(e, v!)}
                   style={{ fontSize: "14px" }}
                 />

@@ -227,7 +227,7 @@ export default function NewSalePage() {
                       className={`text-xs px-1.5 py-0.5 rounded-full font-bold tabular-nums transition-colors ${
                         mobileTab === "cart"
                           ? "bg-white text-primary"
-                          : "bg-primary-3 text-white"
+                          : "bg-primary text-white"
                       }`}
                     >
                       {totalItems}
@@ -286,7 +286,7 @@ export default function NewSalePage() {
                           group relative text-left p-4 rounded-xs border transition-all duration-200 flex flex-col h-full
                           ${
                             inCart > 0
-                              ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-background-2 shadow-xs"
+                              ? "border-primary bg-primary/8 dark:border-primary dark:bg-background-2 shadow-xs"
                               : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2 hover:bg-background-2!"
                           }
                           ${outOfStock ? "opacity-50 cursor-not-allowed" : ""}
@@ -358,7 +358,7 @@ export default function NewSalePage() {
                         ) : (
                           !outOfStock && (
                             <AppButton
-                              color="primary-3"
+                              color="primary"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 addToCart(product);

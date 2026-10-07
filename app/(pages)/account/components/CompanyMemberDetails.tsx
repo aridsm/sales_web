@@ -108,7 +108,7 @@ export default function CompanyMemberDetails({
         <div className="flex items-center gap-2 min-w-0">
           <PersonOutlined
             style={{ fontSize: 18 }}
-            className="text-primary-3 shrink-0"
+            className="text-primary shrink-0"
           />
           <h3 className="font-semibold text-sm sm:text-base text-foreground truncate">
             {t("labels.account.member_details")}
@@ -161,7 +161,7 @@ export default function CompanyMemberDetails({
                   value={jobTitleInput}
                   onChange={(e) => setJobTitleInput(e.target.value)}
                   placeholder={t("labels.account.job_title_placeholder")}
-                  className="text-xs px-2 py-1 rounded-xs border border-border bg-background text-foreground focus:outline-hidden focus:border-primary-3 w-36 sm:w-44"
+                  className="text-xs px-2 py-1 rounded-xs border border-border bg-background text-foreground focus:outline-hidden focus:border-primary w-36 sm:w-44"
                   autoFocus
                   disabled={isSavingJobTitle}
                 />
@@ -253,7 +253,7 @@ export default function CompanyMemberDetails({
             <div className="flex items-start gap-2.5 min-w-0">
               <EmailOutlined
                 style={{ fontSize: 16 }}
-                className="text-primary-3 shrink-0 mt-0.5"
+                className="text-primary shrink-0 mt-0.5"
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-label text-sm">
@@ -270,7 +270,7 @@ export default function CompanyMemberDetails({
             <div className="flex items-start gap-2.5 min-w-0">
               <PhoneOutlined
                 style={{ fontSize: 16 }}
-                className="text-primary-3 shrink-0 mt-0.5"
+                className="text-primary shrink-0 mt-0.5"
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-label text-sm">
@@ -287,7 +287,7 @@ export default function CompanyMemberDetails({
             <div className="flex items-start gap-2.5 min-w-0">
               <BadgeOutlined
                 style={{ fontSize: 16 }}
-                className="text-primary-3 shrink-0 mt-0.5"
+                className="text-primary shrink-0 mt-0.5"
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-label text-sm">
@@ -304,7 +304,7 @@ export default function CompanyMemberDetails({
             <div className="flex items-start gap-2.5 min-w-0">
               <LocationOnOutlined
                 style={{ fontSize: 16 }}
-                className="text-primary-3 shrink-0 mt-0.5"
+                className="text-primary shrink-0 mt-0.5"
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-label text-sm">
@@ -346,7 +346,7 @@ export default function CompanyMemberDetails({
             <div className="flex items-start gap-2.5 min-w-0">
               <CalendarTodayOutlined
                 style={{ fontSize: 16 }}
-                className="text-primary-3 shrink-0 mt-0.5"
+                className="text-primary shrink-0 mt-0.5"
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-label text-sm">

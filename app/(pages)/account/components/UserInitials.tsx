@@ -53,7 +53,7 @@ export default function UserInitials({
     variant === "primary-soft"
       ? "bg-primary/10 text-primary"
       : variant === "primary"
-        ? "bg-primary-3 text-white"
+        ? "bg-primary text-white"
         : getUserColor(name);
 
   return (

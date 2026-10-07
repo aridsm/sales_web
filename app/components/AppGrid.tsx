@@ -195,7 +195,7 @@ export default function AppGrid<T>({
       {hasSelection && selectedRows && selectedRows.length > 0 && (
         <div className="flex items-center justify-between bg-background-2 dark:bg-background-3 border border-border rounded-xs p-2.5 px-4 mb-3 animate-in fade-in zoom-in-95 duration-200">
           <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-primary-3 text-white font-bold text-xs">
+            <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-primary text-white font-bold text-xs">
               {selectedRows.length}
             </span>
             <span className="font-medium text-sm text-foreground">
@@ -254,7 +254,7 @@ export default function AppGrid<T>({
                   {columns.map((col, index) => (
                     <th
                       key={index}
-                      className={`py-2 px-3 sm:py-2.5 sm:px-4 text-left relative border-b border-border font-medium whitespace-nowrap ${resizingIndex === index ? "text-primary-3 dark:text-primary" : ""}`}
+                      className={`py-2 px-3 sm:py-2.5 sm:px-4 text-left relative border-b border-border font-medium whitespace-nowrap ${resizingIndex === index ? "text-primary" : ""}`}
                       style={{ width: colWidths[index] || col.size || 140 }}
                     >
                       {col.column}
@@ -297,7 +297,7 @@ export default function AppGrid<T>({
                         key={rowIndex}
                         className={`group transition-colors duration-100 h-12 sm:h-14 ${
                           selected
-                            ? "bg-primary-4 dark:bg-background-3 hover:bg-primary-4 dark:hover:bg-background-3"
+                            ? "bg-primary/8 dark:bg-background-3 hover:bg-primary/10 dark:hover:bg-background-3"
                             : `${rowBgClass} ${hoverBgClass}`
                         }`}
                       >
@@ -305,7 +305,7 @@ export default function AppGrid<T>({
                           <td
                             className={`border-border py-2 px-2.5 sm:py-2.5 sm:px-3 w-10 sm:w-12 sticky left-0 z-10 text-center ${borderBClass} transition-colors ${
                               selected
-                                ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3"
+                                ? "bg-primary/8 dark:bg-background-3 group-hover:bg-primary/10 dark:group-hover:bg-background-3"
                                 : `${rowBgClass} ${groupHoverBgClass}`
                             }`}
                           >
@@ -337,7 +337,7 @@ export default function AppGrid<T>({
                           <td
                             className={`py-2 px-2.5 sm:py-2.5 sm:px-3 ${borderBClass} border-border text-center w-10 sm:w-12 sticky right-0 z-10 transition-colors ${
                               selected
-                                ? "bg-primary-4 dark:bg-background-3 group-hover:bg-primary-4 dark:group-hover:bg-background-3"
+                                ? "bg-primary/8 dark:bg-background-3 group-hover:bg-primary/10 dark:group-hover:bg-background-3"
                                 : `${rowBgClass} ${groupHoverBgClass} border-border`
                             }`}
                           >

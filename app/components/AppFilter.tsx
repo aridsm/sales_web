@@ -206,7 +206,7 @@ export default function AppFilter({
       <AppButton
         color="background"
         onClick={handleOpen}
-        className={`w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0 relative ${hasActiveFilters ? "text-primary-3 dark:text-primary border-primary-3 hover:border-primary-3 dark:border-primary/60" : ""} ${className || ""}`}
+        className={`w-8 min-w-8 px-0 md:w-auto md:min-w-0 md:px-3.5 shrink-0 relative ${hasActiveFilters ? "text-primary border-primary hover:border-primary" : ""} ${className || ""}`}
         title={t("labels.filter.button")}
         aria-label={t("labels.filter.button")}
       >
@@ -215,7 +215,7 @@ export default function AppFilter({
           {t("labels.filter.button")}
         </span>
         {hasActiveFilters && (
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-primary-3 dark:bg-primary rounded-full border-2 border-background" />
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-primary rounded-full border-2 border-background" />
         )}
       </AppButton>
 

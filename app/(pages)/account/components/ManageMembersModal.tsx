@@ -298,7 +298,7 @@ export default function ManageMembersModal({
 
               {loadingMembers ? (
                 <div className="flex justify-center py-8">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-3" />
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
                 </div>
               ) : (
                 <div className="flex flex-col max-h-80 overflow-y-auto scrollbar-thin">
@@ -460,7 +460,7 @@ export default function ManageMembersModal({
                 </div>
                 <AppButton
                   type="submit"
-                  color="primary-3"
+                  color="primary"
                   disabled={isInviting || !inviteEmail}
                   className="w-full sm:w-auto h-10 px-6 shrink-0"
                 >
@@ -480,7 +480,7 @@ export default function ManageMembersModal({
 
               {invitationsPagination.loading ? (
                 <div className="flex justify-center py-8">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-3" />
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
                 </div>
               ) : invitationsPagination.items.length === 0 ? (
                 <div className="text-center py-8 text-label text-sm">

@@ -220,7 +220,7 @@ function StockEntryCard({
       href={`/stock-entries/${entry.id}`}
       className={`flex flex-col w-full text-left p-3 md:p-5 rounded-xs border group relative overflow-hidden ${
         isSelected
-          ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-background-2 shadow-xs"
+          ? "border-primary bg-primary/8 dark:border-primary dark:bg-background-2 shadow-xs"
           : "border-border bg-background-2 dark:bg-background-3 hover:border-border-2"
       }`}
     >

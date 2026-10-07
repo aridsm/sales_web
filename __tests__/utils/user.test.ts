@@ -22,8 +22,8 @@ describe("getUserInitials", () => {
 
 describe("getUserColor", () => {
   it("retorna cor padrão para valores nulos ou indefinidos", () => {
-    expect(getUserColor(null)).toBe("bg-primary-3 text-white");
-    expect(getUserColor(undefined)).toBe("bg-primary-3 text-white");
+    expect(getUserColor(null)).toBe("bg-primary text-white");
+    expect(getUserColor(undefined)).toBe("bg-primary text-white");
   });
 
   it("retorna uma cor consistente para o mesmo nome", () => {

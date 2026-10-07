@@ -71,7 +71,7 @@ export default function AccountAddressFields({
       <div className="flex items-center gap-2">
         <LocationOnOutlined
           style={{ fontSize: 18 }}
-          className="text-primary-3"
+          className="text-primary"
         />
         <h3 className="font-semibold text-sm sm:text-base text-foreground">
           {title || t("labels.account.address_info")}

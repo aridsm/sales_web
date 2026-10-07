@@ -47,7 +47,7 @@ export default function CompanyGuard({
         <AppHeader title={t("labels.no_active_company.title")} />
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="border border-border bg-background-2 dark:bg-background-3/50 rounded-xs p-8 max-w-md w-full text-center shadow-xs">
-            <div className="w-12 h-12 md:w-14 md:h-14 rounded-xs bg-primary-3/10 text-primary-3 flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-xs bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
               <BusinessOutlined />
             </div>
             <h2 className="text-base md:text-lg font-semibold text-foreground mb-2">

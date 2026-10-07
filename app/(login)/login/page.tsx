@@ -19,13 +19,13 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const router = useRouter();
   const { token, setTokenData } = useTokenStore();
   const { openDialog } = useDialogStore();
   const [mounted, setMounted] = useState(false);
-  const { mode } = useColorModeStore();
-
-  const isDark = mode == "dark";
 
   useEffect(() => {
     setMounted(true);
@@ -41,6 +41,14 @@ export default function LoginPage() {
   }, []);
 
   useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
+
+  useEffect(() => {
     if (token) {
       router.push("/");
     }
@@ -49,6 +57,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setUnverifiedEmail(null);
 
     try {
       const formData = new URLSearchParams();
@@ -69,12 +78,36 @@ export default function LoginPage() {
       router.push("/");
     } catch (err) {
       const { code } = getApiError(err);
+      if (code === "errorEmailNotVerified") {
+        setUnverifiedEmail(username);
+      }
       openDialog({
         variant: "error",
         message: t(code ? `errors.auth.${code}` : "errors.all.generic"),
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!unverifiedEmail || resendCooldown > 0 || resending) return;
+    setResending(true);
+    try {
+      await usersService.resendVerification({ email: unverifiedEmail });
+      setResendCooldown(60);
+      openDialog({
+        variant: "success",
+        message: t("labels.verify_email.resend_success"),
+      });
+    } catch (err) {
+      const { code } = getApiError(err);
+      openDialog({
+        variant: "error",
+        message: t(code ? `errors.auth.${code}` : "errors.all.generic"),
+      });
+    } finally {
+      setResending(false);
     }
   };
 
@@ -130,11 +163,35 @@ export default function LoginPage() {
         </AppButton>
       </form>
 
+      {unverifiedEmail && (
+        <div className="mt-4 p-3.5 rounded-xs border border-primary/30 bg-primary/5 flex flex-col gap-2">
+          <p className="text-xs text-foreground/80">
+            {t("errors.auth.errorEmailNotVerified")}
+          </p>
+          <AppButton
+            type="button"
+            color="primary"
+            flat
+            disabled={resendCooldown > 0 || resending}
+            onClick={handleResend}
+            className="text-xs! py-1.5! self-start"
+          >
+            {resendCooldown > 0
+              ? t("labels.register_success.resend_cooldown", {
+                  seconds: resendCooldown,
+                })
+              : resending
+                ? t("labels.verify_email.resending")
+                : t("labels.verify_email.resend_button")}
+          </AppButton>
+        </div>
+      )}
+
       <p className="text-label mt-6">
         {t("labels.login.no_account")}{" "}
         <Link
           href="/register"
-          className="text-primary-3 dark:text-primary-3 hover:underline font-semibold transition-colors"
+          className="text-primary hover:underline font-semibold transition-colors"
         >
           {t("labels.login.create_account")}
         </Link>

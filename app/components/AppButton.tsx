@@ -3,7 +3,6 @@ import React from "react";
 export interface AppButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?:
     | "primary"
-    | "primary-3"
     | "background"
     | "red"
     | "transparent"
@@ -38,16 +37,12 @@ export default function AppButton({
   let colorClasses = "";
   if (color === "primary") {
     colorClasses = flat
-      ? "bg-transparent text-primary hover:bg-primary-light active:bg-primary-light/80 border border-transparent"
-      : "bg-primary text-white active:bg-primary-2/90 shadow-xs hover:bg-primary-hover";
-  } else if (color === "primary-3") {
-    colorClasses = flat
-      ? "bg-transparent text-primary-3 hover:bg-primary-3/10 active:bg-primary-3/20 border border-transparent"
-      : "bg-primary-3 text-white active:bg-primary-3/90 shadow-xs border border-primary-3 hover:brightness-110";
+      ? "bg-transparent text-primary hover:bg-primary/10 active:bg-primary/20 border border-transparent"
+      : "bg-primary text-white active:bg-primary/90 shadow-xs hover:bg-primary-hover";
   } else if (color === "background") {
     colorClasses = flat
-      ? "bg-transparent text-foreground bg-background-3/50 border border-transparent"
-      : "text-foreground border border-border hover:border-border-2 bg-background-2 dark:bg-background-3 dark:hover:bg-background-2";
+      ? "bg-transparent text-foreground hover:bg-background-3 active:bg-background-3/80 border border-transparent"
+      : "text-foreground border border-border hover:border-border-2 bg-background-2 dark:bg-background-3 hover:bg-background-3/60 dark:hover:bg-background-2/80 active:bg-background-3";
   } else if (color === "red") {
     colorClasses = flat
       ? "bg-transparent text-red-500 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/5 active:bg-red-500/20 border border-red-300 dark:border-red-700"

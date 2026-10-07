@@ -95,7 +95,7 @@ export default function AppUserDropdown({
         onClick={handleAvatarClick}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="w-8 h-8 rounded-full bg-primary-3 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center text-white text-xs font-semibold shrink-0 shadow-xs cursor-pointer select-none overflow-hidden"
+        className="w-8 h-8 rounded-full bg-primary hover:brightness-110 active:scale-95 transition-all flex items-center justify-center text-white text-xs font-semibold shrink-0 shadow-xs cursor-pointer select-none overflow-hidden"
       >
         {userAvatarUrl && !avatarError ? (
           /* eslint-disable-next-line @next/next/no-img-element */
@@ -145,7 +145,7 @@ export default function AppUserDropdown({
                   >
                     <BusinessOutlined
                       style={{ fontSize: 16 }}
-                      className="text-primary-3 shrink-0"
+                      className="text-primary shrink-0"
                     />
                     <span className="truncate text-xs font-medium text-foreground">
                       {activeCompany.name}

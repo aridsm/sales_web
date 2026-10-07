@@ -98,7 +98,7 @@ export const DashboardHistory = ({
 
         <Link
           href="/history"
-          className="text-xs sm:text-sm text-primary-3 dark:text-primary-3 hover:underline shrink-0 font-medium"
+          className="text-xs sm:text-sm text-primary hover:underline shrink-0 font-medium"
         >
           {t("labels.dashboard.history.view_all")}
         </Link>

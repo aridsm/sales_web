@@ -258,7 +258,7 @@ export default function ProductsPage() {
                 onClick={() => setSelectedCategoryId(null)}
                 className={`shrink-0 min-[1100px]:w-full flex items-center justify-between gap-2 px-3 py-1.5 min-[1100px]:p-3 rounded-xs transition-all duration-150 cursor-pointer group whitespace-nowrap text-xs min-[1100px]:text-sm border ${
                   selectedCategoryId === null
-                    ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-background-2 text-foreground font-semibold"
+                    ? "border-primary bg-primary/10 dark:border-primary dark:bg-background-2 text-foreground font-semibold"
                     : "border-transparent text-foreground/70 hover:bg-foreground/5 hover:text-foreground"
                 }`}
               >
@@ -266,7 +266,7 @@ export default function ProductsPage() {
                   <div
                     className={`w-2 h-3 min-[1100px]:w-2.5 min-[1100px]:h-4 rounded-xs shrink-0 transition-colors ${
                       selectedCategoryId === null
-                        ? "bg-primary-3"
+                        ? "bg-primary"
                         : "bg-foreground/25"
                     }`}
                   />
@@ -303,7 +303,7 @@ export default function ProductsPage() {
                       onClick={() => setSelectedCategoryId(cat.id)}
                       className={`shrink-0 min-[1100px]:w-full flex items-center justify-between gap-2 px-3 py-1.5 min-[1100px]:p-3 rounded-xs transition-all duration-150 cursor-pointer group whitespace-nowrap text-xs min-[1100px]:text-sm border ${
                         isSelected
-                          ? "border-primary-3 bg-primary-4 dark:border-primary-3 dark:bg-background-2 text-foreground font-semibold"
+                          ? "border-primary bg-primary/10 dark:border-primary dark:bg-background-2 text-foreground font-semibold"
                           : "border-transparent text-foreground/70 hover:bg-foreground/5 hover:text-foreground"
                       }`}
                     >

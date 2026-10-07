@@ -65,7 +65,7 @@ export default function EditCompanyModal({
           </AppButton>
           <AppButton
             type="submit"
-            color="primary-3"
+            color="primary"
             disabled={isUpdating}
           >
             {isUpdating ? t("labels.all.saving") : t("labels.all.save")}

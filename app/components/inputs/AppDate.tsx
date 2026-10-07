@@ -372,10 +372,10 @@ const AppDateInner = (
       let dayClass =
         "w-8 h-8 flex items-center justify-center rounded-xs text-sm cursor-pointer transition-colors";
       if (isSelected) {
-        dayClass += " bg-primary-3 text-white font-medium";
+        dayClass += " bg-primary text-white font-medium";
       } else if (isToday) {
         dayClass +=
-          " bg-primary-3/10 text-primary-3 dark:bg-primary/10 dark:text-primary font-medium hover:bg-primary-3/20 dark:hover:bg-primary/20";
+          " bg-primary/10 text-primary font-medium hover:bg-primary/20";
       } else {
         dayClass += " hover:bg-background dark:hover:bg-background-2";
       }
@@ -530,7 +530,7 @@ const AppDateInner = (
                       setHourText(String(selectedHour).padStart(2, "0"));
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="flex-1 min-w-0 bg-background dark:bg-background-2 border border-border rounded-xs py-1.5 text-sm text-foreground focus:outline-none focus:border-primary-3 dark:focus:border-primary font-medium text-center"
+                    className="flex-1 min-w-0 bg-background dark:bg-background-2 border border-border rounded-xs py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
                   />
                   <span className="text-foreground font-semibold text-lg">
                     :
@@ -553,7 +553,7 @@ const AppDateInner = (
                       setMinuteText(String(selectedMinute).padStart(2, "0"));
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="flex-1 min-w-0  bg-background dark:bg-background-2 border border-border rounded-xs py-1.5 text-sm text-foreground focus:outline-none focus:border-primary-3 dark:focus:border-primary font-medium text-center"
+                    className="flex-1 min-w-0  bg-background dark:bg-background-2 border border-border rounded-xs py-1.5 text-sm text-foreground focus:outline-none focus:border-primary font-medium text-center"
                   />
                 </div>
               </div>

@@ -213,7 +213,7 @@ export const DashboardCategoryProfitChart = ({
             {t("labels.dashboard.charts.system_categories")}
           </span>
           <Link
-            className="text-xs sm:text-sm text-primary-3 dark:text-primary-3 hover:underline shrink-0 font-medium"
+            className="text-xs sm:text-sm text-primary hover:underline shrink-0 font-medium"
             href="/categories"
           >
             {t("labels.dashboard.charts.view_all")}

@@ -19,6 +19,7 @@ export interface UserBase {
 export interface User extends UserBase {
   id: string;
   created_at: string | Date;
+  is_verified?: boolean;
   company_id?: string | null;
   permission?: CompanyPermission | null;
 }
@@ -32,6 +33,24 @@ export interface ChangePasswordRequest {
 
 export interface SignUp extends UserBase {
   password: string;
+}
+
+export interface SignUpResponse {
+  message: string;
+  email: string;
+  is_verified: boolean;
+}
+
+export interface VerifyEmailRequest {
+  token: string;
+}
+
+export interface ResendVerificationRequest {
+  email: string;
+}
+
+export interface MessageResponse {
+  message: string;
 }
 
 export interface Login {

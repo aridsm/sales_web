@@ -61,7 +61,7 @@ export default function CreateCompanyModal({
           </AppButton>
           <AppButton
             type="submit"
-            color="primary-3"
+            color="primary"
             disabled={isCreatingCompany}
           >
             {isCreatingCompany ? t("labels.all.saving") : t("labels.all.save")}

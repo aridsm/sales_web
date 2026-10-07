@@ -86,7 +86,7 @@ export default function AccountSecurityTab({
     <div className="flex flex-col gap-3 md:gap-5 w-full">
       <AppCard className="p-4 sm:p-6 flex flex-col gap-3">
         <div className="flex items-center gap-2">
-          <LockOutlined style={{ fontSize: 18 }} className="text-primary-3" />
+          <LockOutlined style={{ fontSize: 18 }} className="text-primary" />
           <h3 className="font-semibold text-sm sm:text-base text-foreground">
             {t("labels.account.change_password")}
           </h3>
@@ -133,6 +133,7 @@ export default function AccountSecurityTab({
           <div className="pt-2">
             <AppButton
               type="submit"
+              color="background"
               disabled={isChangingPassword}
               className="gap-2"
             >

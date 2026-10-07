@@ -45,6 +45,11 @@
         "view_all": "Ver tudo"
       }
     },
+    "auth_banner": {
+      "title": "Gerencie suas vendas com inteligência e simplicidade",
+      "description": "Acompanhe seu faturamento, controle despesas e organize seu estoque em tempo real.",
+      "start_now": "Começar agora"
+    },
     "login": {
       "title": "Bem-vindo de volta!",
       "subtitle": "Entre com suas credenciais para acessar o sistema",
@@ -61,6 +66,31 @@
       "creating": "Criando conta...",
       "create": "Criar conta",
       "have_account": "Já tem uma conta?"
+    },
+    "register_success": {
+      "title": "Verifique seu e-mail!",
+      "description": "Enviamos um link de confirmação para",
+      "instructions": "Clique no link enviado para o seu e-mail para ativar sua conta e começar a usar o sistema.",
+      "resend_prompt": "Não recebeu o e-mail?",
+      "resend_button": "Reenviar e-mail",
+      "resend_cooldown": "Reenviar em {{seconds}}s",
+      "resend_success": "E-mail de confirmação reenviado com sucesso!",
+      "back_to_login": "Voltar para o Login"
+    },
+    "verify_email": {
+      "title": "Confirmação de E-mail",
+      "verifying_title": "Verificando seu e-mail...",
+      "verifying_description": "Por favor, aguarde enquanto validamos seu link de confirmação.",
+      "success_title": "E-mail confirmado com sucesso!",
+      "success_description": "Sua conta foi ativada. Você já pode acessar a plataforma.",
+      "error_title": "Não foi possível confirmar o e-mail",
+      "error_description": "O link de verificação é inválido ou já expirou. Você pode solicitar um novo link abaixo.",
+      "email_placeholder": "Digite seu e-mail cadastrado",
+      "resend_button": "Reenviar link de confirmação",
+      "resending": "Reenviando...",
+      "resend_success": "Se o e-mail estiver cadastrado, um novo link foi enviado!",
+      "go_to_login": "Ir para o Login",
+      "go_to_dashboard": "Ir para o Início"
     },
     "all": {
       "all_rights": "Todos os direitos reservados",
@@ -600,6 +630,10 @@
       "errorInvalidCredentials": "E-mail ou senha incorretos.",
       "errorEmailAlreadyRegistered": "Este e-mail já está cadastrado.",
       "errorEmailAlreadyExists": "Este e-mail já está cadastrado.",
+      "errorEmailNotVerified": "Seu e-mail ainda não foi verificado. Verifique sua caixa de entrada ou solicite um novo link.",
+      "errorInvalidOrExpiredVerificationToken": "O link de verificação é inválido ou já foi utilizado.",
+      "errorVerificationTokenExpired": "O link de verificação expirou. Solicite um novo link.",
+      "errorRateLimitExceeded": "Muitas tentativas. Por favor, aguarde alguns minutos antes de tentar novamente.",
       "errorInvalidToken": "Sessão inválida ou expirada. Faça login novamente.",
       "errorExpiredToken": "Sessão expirada. Faça login novamente.",
       "errorInvalidRefreshToken": "Sessão expirada. Faça login novamente.",

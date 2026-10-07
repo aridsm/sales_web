@@ -1,5 +1,9 @@
 import {
   SignUp,
+  SignUpResponse,
+  VerifyEmailRequest,
+  ResendVerificationRequest,
+  MessageResponse,
   TokenResponse,
   User,
   UserBase,
@@ -73,12 +77,34 @@ export class UserService {
       .then((res) => res.data);
   }
 
-  async signup(data: SignUp) {
+  async signup(data: SignUp): Promise<SignUpResponse> {
     return (
       await axiosClient.post(`/${this.resource}/signup`, data, {
         skipAuth: true,
       } as CustomAxiosConfig)
     ).data;
+  }
+
+  async verifyEmail(data: VerifyEmailRequest): Promise<TokenResponse> {
+    const response = await axiosClient.post(
+      `/${this.resource}/verify-email`,
+      data,
+      {
+        skipAuth: true,
+      } as CustomAxiosConfig
+    );
+    return response.data;
+  }
+
+  async resendVerification(data: ResendVerificationRequest): Promise<MessageResponse> {
+    const response = await axiosClient.post(
+      `/${this.resource}/resend-verification`,
+      data,
+      {
+        skipAuth: true,
+      } as CustomAxiosConfig
+    );
+    return response.data;
   }
 
   async login(data: Login): Promise<TokenResponse> {

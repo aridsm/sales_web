@@ -30,7 +30,7 @@ export default function AppLogo({
         <g transform="scale(0.65) translate(129, 129)">
           <path
             d="M160 160h160v160H160zM0 320h160v160H0zM0 0h160v160H0zM320 320h160v160H320zM320 0h160v160H320z"
-            fill={activeColor === "var(--primary, #2563eb)" || activeColor === "var(--primary-3, #6366f1)" ? "#ffffff" : activeColor}
+            fill={activeColor === "var(--primary, #2563eb)" ? "#ffffff" : activeColor}
           />
         </g>
       </svg>

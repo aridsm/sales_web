@@ -84,13 +84,13 @@ export default function CompanyMembersSidebar({
             <div className="flex items-center gap-2 min-w-0">
               <GroupOutlined
                 style={{ fontSize: 18 }}
-                className="text-primary-3 shrink-0"
+                className="text-primary shrink-0"
               />
               <div className="flex items-center gap-2 min-w-0">
                 <h3 className="font-semibold text-base text-foreground truncate">
                   {t("labels.account.active_members")}
                 </h3>
-                <span className="px-2 py-0.2 rounded-full bg-primary/10 text-primary-3 text-xs font-semibold shrink-0">
+                <span className="px-2 py-0.2 rounded-full bg-primary/10 text-primary text-xs font-semibold shrink-0">
                   {totalMembers}
                 </span>
               </div>
@@ -99,10 +99,9 @@ export default function CompanyMembersSidebar({
             {isAdmin && (
               <AppButton
                 type="button"
-                color="primary-3"
-                flat
+                color="background"
                 onClick={() => onOpenManageModal(company)}
-                className="gap-1 px-2! shrink-0"
+                className="gap-1 px-2.5! shrink-0"
                 title={t("labels.account.manage_members")}
               >
                 <PersonAddAlt1Outlined style={{ fontSize: 15 }} />
