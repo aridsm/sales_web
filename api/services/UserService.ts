@@ -151,6 +151,31 @@ export class UserService {
     return response.data;
   }
 
+  async forgotPassword(email: string): Promise<MessageResponse> {
+    const response = await axiosClient.post(
+      `/${this.resource}/forgot-password`,
+      { email },
+      {
+        skipAuth: true,
+      } as CustomAxiosConfig,
+    );
+    return response.data;
+  }
+
+  async resetPassword(
+    token: string,
+    new_password: string,
+  ): Promise<MessageResponse> {
+    const response = await axiosClient.post(
+      `/${this.resource}/reset-password`,
+      { token, new_password },
+      {
+        skipAuth: true,
+      } as CustomAxiosConfig,
+    );
+    return response.data;
+  }
+
   async logout(): Promise<void> {
     const response = await axiosClient.post(`/${this.resource}/logout`);
     return response.data;

@@ -40,6 +40,18 @@
         "no_category": "No category found...",
         "no_data": "No data for this period"
       },
+      "top_products": {
+        "title": "Top Selling Products",
+        "rank": "#",
+        "product": "Product",
+        "quantity": "Qty",
+        "revenue": "Revenue",
+        "units_sold": "{{count}} units",
+        "tab_ranking": "Ranking",
+        "tab_chart": "Chart",
+        "view_all": "View all",
+        "no_data": "No sales recorded in this period"
+      },
       "history": {
         "title": "Activity History",
         "view_all": "View all"
@@ -57,7 +69,8 @@
       "logging": "Logging in...",
       "no_account": "Doesn't have an account?",
       "create_account": "Create account",
-      "remember_me": "Remember me"
+      "remember_me": "Remember me",
+      "forgot_password": "Forgot password"
     },
     "register": {
       "title": "Create account!",
@@ -92,6 +105,30 @@
       "go_to_login": "Go to Login",
       "go_to_dashboard": "Go to Dashboard"
     },
+    "forgot_password": {
+      "title": "Reset password",
+      "subtitle": "Enter your registered email and we will send instructions to reset your password",
+      "email_placeholder": "Enter your email",
+      "send_button": "Send reset link",
+      "sending": "Sending...",
+      "success_title": "Check your email",
+      "success_message": "If the email is registered, password reset instructions have been sent.",
+      "back_to_login": "Back to Login"
+    },
+    "reset_password": {
+      "title": "Set New Password",
+      "subtitle": "Enter your new password below",
+      "new_password": "New password",
+      "confirm_password": "Confirm new password",
+      "button": "Reset password",
+      "saving": "Saving...",
+      "success_title": "Password reset successfully!",
+      "success_message": "Your new password has been set. You can now log in to your account.",
+      "invalid_token_title": "Invalid or expired link",
+      "invalid_token_message": "The recovery link is invalid or has expired.",
+      "request_new_link": "Request a new link",
+      "back_to_login": "Go to Login"
+    },
     "all": {
       "all_rights": "All rights reserved",
       "name": "Name",
@@ -114,6 +151,8 @@
       "status": "Status",
       "date": "Date",
       "total_value": "Total Value",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
       "remove": "Remove",
       "created_by": "Created by",
       "created_at": "Created at",
@@ -262,6 +301,8 @@
         "title": "Sale",
         "cancel_title": "Cancel sale",
         "cancel_message": "Are you sure you want to cancel sale #{{code}}? This action cannot be undone.",
+        "delete_title": "Delete sale",
+        "delete_message": "Are you sure you want to permanently delete sale #{{code}}? This action cannot be undone.",
         "not_found": "Sale not found.",
         "date": "Date",
         "items": "Items",
@@ -290,6 +331,8 @@
         "title": "Stock Entry",
         "cancel_title": "Cancel entry",
         "cancel_message": "Are you sure you want to cancel stock entry #{{code}}? This action cannot be undone.",
+        "delete_title": "Delete entry",
+        "delete_message": "Are you sure you want to permanently delete stock entry #{{code}}? This action cannot be undone.",
         "not_found": "Stock entry not found.",
         "date": "Date",
         "items": "Items",
@@ -479,6 +522,8 @@
       "job_title_update_error": "Error updating job title.",
       "invitation_accepted": "Invitation accepted successfully!",
       "invitation_rejected": "Invitation rejected.",
+      "new_invitation_received": "You have received a new company invitation!",
+      "view_invitations": "View Invitations",
       "members_modal_title": "Company Members: {{name}}",
       "invite_member": "Invite Member",
       "invite_button": "Invite",
@@ -580,6 +625,9 @@
       "invited_by_subtitle": "By {{name}} • Sent on {{date}}",
       "remove_member_confirm": "Are you sure you want to remove {{name}}?",
       "member_details": "Member Details",
+      "cancel_invitation": "Cancel Invitation",
+      "cancel_invitation_confirm": "Are you sure you want to cancel the invitation for {{name}}?",
+      "invitation_cancelled": "Invitation cancelled successfully.",
       "crop_modal_title": "Adjust Image",
       "crop_modal_instruction": "Drag to position and use the slider to zoom.",
       "crop_apply": "Apply Image",
@@ -602,10 +650,16 @@
       "errorEntityNotFound": "The requested record was not found.",
       "errorNoCompanySelected": "No company selected.",
       "errorInsufficientPermission": "You do not have permission to perform this action.",
-      "errorNotMemberOfCompany": "You are not a member of this company."
+      "errorNotMemberOfCompany": "You are not a member of this company.",
+      "errorFileTooLarge": "The uploaded file is too large (maximum 5MB).",
+      "errorInvalidFileType": "Invalid file type. Please upload a JPEG, PNG or WebP image.",
+      "errorInvalidImageContent": "The uploaded file is not a valid image.",
+      "errorUserHasNoActiveCompany": "You do not have an active company selected.",
+      "errorRateLimitExceeded": "Too many attempts. Please wait a few minutes before trying again."
     },
     "products": {
       "errorHasDoneSales": "The following products have linked sales: {{name}}",
+      "errorHasStockEntries": "The following products have linked stock entries: {{name}}",
       "errorEntityNotFound": "Product not found."
     },
     "categories": {
@@ -616,11 +670,13 @@
     "sales": {
       "errorInsufficientStock": "Insufficient stock for {{name}}.",
       "errorSaleAlreadyCanceled": "This sale has already been canceled.",
+      "errorSaleMustBeCanceledBeforeDeletion": "The sale must be canceled before being deleted.",
       "errorEntityNotFound": "Sale not found."
     },
     "stock_entries": {
       "errorNoRemainingItems": "Insufficient stock to return the following products: {{products}}.",
       "errorStockEntryAlreadyCanceled": "This stock entry has already been canceled.",
+      "errorStockEntryMustBeCanceledBeforeDeletion": "The stock entry must be canceled before being deleted.",
       "errorEntityNotFound": "Stock entry not found."
     },
     "companies": {
@@ -643,6 +699,7 @@
       "errorEmailNotVerified": "Your email has not been verified yet. Please check your inbox or request a new link.",
       "errorInvalidOrExpiredVerificationToken": "The verification link is invalid or has already been used.",
       "errorVerificationTokenExpired": "The verification link has expired. Please request a new link.",
+      "errorInvalidOrExpiredResetToken": "The password reset link is invalid or has expired.",
       "errorRateLimitExceeded": "Too many attempts. Please wait a few minutes before trying again.",
       "errorInvalidToken": "Invalid or expired session. Please log in again.",
       "errorExpiredToken": "Session expired. Please log in again.",
@@ -656,6 +713,7 @@
       "errorEmailAlreadyRegistered": "This email is already registered to another account.",
       "errorInvalidCurrentPassword": "The current password provided is incorrect.",
       "errorInvalidOrExpiredVerificationToken": "The verification link is invalid or has expired.",
+      "errorInvalidOrExpiredResetToken": "The password reset link is invalid or has expired.",
       "errorUserNotFound": "User not found."
     },
     "fallback": "An unexpected error occurred. Please try again."

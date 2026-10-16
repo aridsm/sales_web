@@ -7,6 +7,7 @@ import { useDialogStore } from "@/stores/dialogStore";
 import { useTokenStore } from "@/stores/tokenStore";
 import { useUserStore } from "@/stores/userStore";
 import AppPage from "../../components/AppPage";
+import AppLoading from "../../components/AppLoading";
 import AppTabs, { AppTabItem } from "../../components/AppTabs";
 import { usersService } from "@/api/services/UserService";
 import { companyService } from "@/api/services/CompanyService";
@@ -250,8 +251,8 @@ export default function AccountPage() {
   if (loading) {
     return (
       <AppPage title={t("labels.menu.account")}>
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="flex-1 flex items-center justify-center min-h-[300px]">
+          <AppLoading />
         </div>
       </AppPage>
     );

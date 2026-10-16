@@ -57,6 +57,7 @@ export default function NewStockEntryPage() {
   );
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<StockCartItem<Product>[]>([]);
+  const [discount, setDiscount] = useState<number>(0);
   const [entryDate, setEntryDate] = useState(() => new Date().toISOString());
   const [isFinishing, setIsFinishing] = useState(false);
   const { openDialog } = useDialogStore();
@@ -103,18 +104,23 @@ export default function NewStockEntryPage() {
       title: t("labels.stock_entries.new.clear_cart_title"),
       message: t("labels.stock_entries.new.clear_cart_message"),
       confirmLabel: t("labels.all.clear"),
-      onConfirm: () => setCart([]),
+      onConfirm: () => {
+        setCart([]);
+        setDiscount(0);
+      },
     });
   }
 
   const totalItems = getTotalStockItems(cart);
   const totalPrice = getTotalStockPrice(cart);
+  const finalTotal = Math.max(0, totalPrice - discount);
 
   function submitEntry() {
     setIsFinishing(true);
     stockEntriesService
       .post({
         date: entryDate,
+        discount: discount > 0 ? discount : undefined,
         products: cart.map((i) => ({
           product_id: i.product.id,
           quantity: i.quantity,
@@ -123,6 +129,7 @@ export default function NewStockEntryPage() {
       })
       .then(() => {
         setCart([]);
+        setDiscount(0);
         setSearch("");
         openDialog({
           variant: "success",
@@ -167,7 +174,7 @@ export default function NewStockEntryPage() {
             title: t("labels.stock_entries.new.finish_entry_title"),
             message: t("labels.stock_entries.new.finish_entry_message", {
               items: `${totalItems} ${totalItems === 1 ? t("labels.stock_entries.new.item_singular") : t("labels.stock_entries.new.item_plural")}`,
-              total: formatCurrency(totalPrice),
+              total: formatCurrency(finalTotal),
             }),
             confirmLabel: t("labels.all.finish"),
             onConfirm: submitEntry,
@@ -182,7 +189,7 @@ export default function NewStockEntryPage() {
       title: t("labels.stock_entries.new.finish_entry_title"),
       message: t("labels.stock_entries.new.finish_entry_message", {
         items: `${totalItems} ${totalItems === 1 ? t("labels.stock_entries.new.item_singular") : t("labels.stock_entries.new.item_plural")}`,
-        total: formatCurrency(totalPrice),
+        total: formatCurrency(finalTotal),
       }),
       confirmLabel: t("labels.all.finish"),
       onConfirm: submitEntry,
@@ -446,6 +453,8 @@ export default function NewStockEntryPage() {
             cart={cart}
             totalItems={totalItems}
             totalPrice={totalPrice}
+            discount={discount}
+            onDiscountChange={setDiscount}
             isFinishing={isFinishing}
             onClearCart={clearCart}
             onRemoveFromCart={removeFromCart}

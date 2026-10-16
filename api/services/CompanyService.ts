@@ -119,6 +119,15 @@ export class CompanyService {
       .get(`/${this.resource}/${companyId}/invitations`, { params })
       .then((res) => res.data);
   }
+
+  async cancelInvitation(
+    companyId: string,
+    invitationId: string,
+  ): Promise<void> {
+    return await axiosClient
+      .delete(`/${this.resource}/${companyId}/invitations/${invitationId}`)
+      .then((res) => res.data);
+  }
 }
 
 export const companyService = new CompanyService();

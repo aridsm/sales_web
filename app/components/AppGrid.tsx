@@ -289,6 +289,12 @@ export default function AppGrid<T>({
                       "hover:bg-background dark:hover:bg-background-3";
                     const groupHoverBgClass =
                       "group-hover:bg-background dark:group-hover:bg-background-3";
+                    const selectedRowBgClass =
+                      "bg-[#eef3fd] dark:bg-[#1c2433]";
+                    const selectedHoverBgClass =
+                      "hover:bg-[#e6effd] dark:hover:bg-[#222c3e]";
+                    const selectedGroupHoverBgClass =
+                      "group-hover:bg-[#e6effd] dark:group-hover:bg-[#222c3e]";
                     const borderBClass =
                       rowIndex === items.length - 1 ? "" : "border-b";
 
@@ -297,7 +303,7 @@ export default function AppGrid<T>({
                         key={rowIndex}
                         className={`group transition-colors duration-100 h-12 sm:h-14 ${
                           selected
-                            ? "bg-primary/8 dark:bg-background-3 hover:bg-primary/10 dark:hover:bg-background-3"
+                            ? `${selectedRowBgClass} ${selectedHoverBgClass}`
                             : `${rowBgClass} ${hoverBgClass}`
                         }`}
                       >
@@ -305,7 +311,7 @@ export default function AppGrid<T>({
                           <td
                             className={`border-border py-2 px-2.5 sm:py-2.5 sm:px-3 w-10 sm:w-12 sticky left-0 z-10 text-center ${borderBClass} transition-colors ${
                               selected
-                                ? "bg-primary/8 dark:bg-background-3 group-hover:bg-primary/10 dark:group-hover:bg-background-3"
+                                ? `${selectedRowBgClass} ${selectedGroupHoverBgClass}`
                                 : `${rowBgClass} ${groupHoverBgClass}`
                             }`}
                           >
@@ -337,7 +343,7 @@ export default function AppGrid<T>({
                           <td
                             className={`py-2 px-2.5 sm:py-2.5 sm:px-3 ${borderBClass} border-border text-center w-10 sm:w-12 sticky right-0 z-10 transition-colors ${
                               selected
-                                ? "bg-primary/8 dark:bg-background-3 group-hover:bg-primary/10 dark:group-hover:bg-background-3"
+                                ? `${selectedRowBgClass} ${selectedGroupHoverBgClass}`
                                 : `${rowBgClass} ${groupHoverBgClass} border-border`
                             }`}
                           >

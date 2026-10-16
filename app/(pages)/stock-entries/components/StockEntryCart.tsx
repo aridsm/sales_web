@@ -17,6 +17,8 @@ export function StockEntryCart({
   cart,
   totalItems,
   totalPrice,
+  discount,
+  onDiscountChange,
   isFinishing,
   onClearCart,
   onRemoveFromCart,
@@ -29,6 +31,8 @@ export function StockEntryCart({
   cart: StockCartItem<Product>[];
   totalItems: number;
   totalPrice: number;
+  discount: number;
+  onDiscountChange: (value: number) => void;
   isFinishing: boolean;
   onClearCart: () => void;
   onRemoveFromCart: (productId: string) => void;
@@ -201,10 +205,32 @@ export function StockEntryCart({
               <span>{t("labels.stock_entries.new.items")}</span>
               <span>{totalItems}</span>
             </div>
+            <div className="flex justify-between text-label">
+              <span>{t("labels.all.subtotal")}</span>
+              <span>{formatCurrency(totalPrice)}</span>
+            </div>
+            <div className="flex items-center justify-between text-label gap-2">
+              <span>{t("labels.all.discount")}</span>
+              <div className="w-28">
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={discount > 0 ? discount : ""}
+                  onChange={(e) =>
+                    onDiscountChange(
+                      Math.max(0, parseFloat(e.target.value) || 0),
+                    )
+                  }
+                  placeholder="0,00"
+                  className="w-full text-right h-8 py-1 px-2 border border-border rounded-xs bg-background text-sm font-medium text-foreground focus:outline-none focus:border-primary"
+                />
+              </div>
+            </div>
             <div className="h-px bg-border my-1" />
             <div className="flex justify-between text-base font-semibold text-foreground">
               <span>{t("labels.stock_entries.new.total")}</span>
-              <span>{formatCurrency(totalPrice)}</span>
+              <span>{formatCurrency(Math.max(0, totalPrice - discount))}</span>
             </div>
           </div>
 

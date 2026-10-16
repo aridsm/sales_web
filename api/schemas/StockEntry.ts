@@ -4,6 +4,7 @@ export interface StockEntry {
   id: string;
   status: StockEntryStatus;
   total: number;
+  discount?: number;
   date: string;
   user_id: string;
   created_at: string;
@@ -18,6 +19,7 @@ export interface StockEntry {
 
 export interface StockEntryCreate {
   date: string;
+  discount?: number;
   products: {
     product_id: string;
     quantity: number;

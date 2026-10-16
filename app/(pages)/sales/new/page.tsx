@@ -56,6 +56,7 @@ export default function NewSalePage() {
   );
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<CartItem<Product>[]>([]);
+  const [discount, setDiscount] = useState<number>(0);
   const [saleDate, setSaleDate] = useState(() => new Date().toISOString());
   const [isFinishing, setIsFinishing] = useState(false);
   const { openDialog } = useDialogStore();
@@ -98,12 +99,16 @@ export default function NewSalePage() {
       title: t("labels.sales.new.clear_cart_title"),
       message: t("labels.sales.new.clear_cart_message"),
       confirmLabel: t("labels.all.clear"),
-      onConfirm: () => setCart([]),
+      onConfirm: () => {
+        setCart([]);
+        setDiscount(0);
+      },
     });
   }
 
   const totalItems = getTotalItems(cart);
   const totalPrice = getTotalPrice(cart);
+  const finalTotal = Math.max(0, totalPrice - discount);
 
   async function finishSale() {
     if (cart.length === 0) return;
@@ -113,7 +118,7 @@ export default function NewSalePage() {
       title: t("labels.sales.new.finish_sale_title"),
       message: t("labels.sales.new.finish_sale_message", {
         items: `${totalItems} ${totalItems === 1 ? t("labels.sales.new.item_singular") : t("labels.sales.new.item_plural")}`,
-        total: formatCurrency(totalPrice),
+        total: formatCurrency(finalTotal),
       }),
       confirmLabel: t("labels.all.finish"),
       onConfirm: async () => {
@@ -121,12 +126,14 @@ export default function NewSalePage() {
         try {
           await salesService.post({
             date: saleDate,
+            discount,
             products: cart.map((i) => ({
               product_id: i.product.id,
               quantity: i.quantity,
             })),
           });
           setCart([]);
+          setDiscount(0);
           setSearch("");
           openDialog({
             variant: "success",
@@ -410,6 +417,8 @@ export default function NewSalePage() {
             cart={cart}
             totalItems={totalItems}
             totalPrice={totalPrice}
+            discount={discount}
+            onDiscountChange={setDiscount}
             isFinishing={isFinishing}
             onClearCart={clearCart}
             onRemoveFromCart={removeFromCart}

@@ -15,3 +15,13 @@ export interface DashboardChart {
   revenue: string;
   expenses: string;
 }
+
+export interface TopProductItem {
+  product_id: string;
+  product_name: string;
+  category_name: string;
+  category_color?: string | null;
+  quantity_sold: number;
+  total_revenue: number;
+}
+

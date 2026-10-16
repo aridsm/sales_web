@@ -43,7 +43,7 @@ export default function HistoryPage() {
   );
 
   useEffect(() => {
-    pagination.load({ replace: true, params: filterParams });
+    pagination.load({ replace: true, params: { ...filterParams, search: search || undefined } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterParams]);
 
@@ -139,7 +139,7 @@ export default function HistoryPage() {
           value={search}
           onChange={setSearch}
           onSearch={(val) =>
-            pagination.load({ params: { search: val, page: 1 } })
+            pagination.load({ params: { ...filterParams, search: val || undefined, page: 1 } })
           }
           placeholder={t("labels.grid.search_placeholder")}
           className="w-full min-w-0 sm:max-w-sm"

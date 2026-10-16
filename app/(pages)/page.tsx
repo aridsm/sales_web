@@ -10,6 +10,7 @@ import { DashboardKPIs } from "./components/DashboardKPIs";
 import { DashboardRevenueExpenseChart } from "./components/DashboardRevenueExpenseChart";
 import { DashboardCategoryProfitChart } from "./components/DashboardCategoryProfitChart";
 import { DashboardHistory } from "./components/DashboardHistory";
+import { DashboardTopProducts } from "./components/DashboardTopProducts";
 import { EntityType } from "@/enums";
 
 const datePeriods = {
@@ -88,15 +89,20 @@ export default function DashboardPage() {
 
         <DashboardKPIs startDate={startDate} endDate={endDate} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[minmax(250px,320px)_minmax(400px,1fr)] lg:min-h-0 lg:flex-1 gap-2 sm:gap-2.5 lg:gap-3.5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[minmax(280px,340px)_minmax(380px,1fr)] lg:min-h-0 lg:flex-1 gap-2 sm:gap-2.5 lg:gap-3.5">
           <DashboardRevenueExpenseChart activePeriod={activePeriod} />
-          <DashboardCategoryProfitChart
-            entityLabels={entityLabels}
+          <DashboardTopProducts
             startDate={startDate}
             endDate={endDate}
             activePeriod={activePeriod}
           />
           <DashboardHistory
+            entityLabels={entityLabels}
+            startDate={startDate}
+            endDate={endDate}
+            activePeriod={activePeriod}
+          />
+          <DashboardCategoryProfitChart
             entityLabels={entityLabels}
             startDate={startDate}
             endDate={endDate}

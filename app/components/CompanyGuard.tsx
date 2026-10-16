@@ -9,6 +9,7 @@ import AppHeader from "./AppHeader";
 import AppButton from "./AppButton";
 import AppLoading from "./AppLoading";
 import { BusinessOutlined } from "@mui/icons-material";
+import { useWebSocket } from "@/app/utils/useWebSocket";
 
 export default function CompanyGuard({
   children,
@@ -20,6 +21,8 @@ export default function CompanyGuard({
   const pathname = usePathname();
   const token = useTokenStore((state) => state.token);
   const { currentUser, loading, fetchUserData } = useUserStore();
+
+  useWebSocket();
 
   const isAccountPage = pathname?.startsWith("/account");
 

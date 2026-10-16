@@ -4,6 +4,7 @@ import AppCard from "../../../components/AppCard";
 import AppInputText from "../../../components/inputs/AppInputText";
 import AppSelect from "../../../components/inputs/AppSelect";
 import AppButton from "../../../components/AppButton";
+import AppLoading from "../../../components/AppLoading";
 import AppPagination from "../../../components/AppPagination";
 import AppTabs from "../../../components/AppTabs";
 import {
@@ -193,6 +194,34 @@ export default function ManageMembersModal({
     });
   };
 
+  const handleCancelInvitation = (invitationId: string, email: string) => {
+    if (!company) return;
+    openDialog({
+      variant: "confirm",
+      title: t("labels.account.cancel_invitation"),
+      message: t("labels.account.cancel_invitation_confirm", { name: email }),
+      confirmLabel: t("labels.account.cancel_invitation"),
+      onConfirm: async () => {
+        try {
+          await companyService.cancelInvitation(company.id, invitationId);
+          openDialog({
+            variant: "success",
+            message: t("labels.account.invitation_cancelled"),
+          });
+          invitationsPagination.load();
+        } catch (err) {
+          const { code } = getApiError(err);
+          openDialog({
+            variant: "error",
+            message: code
+              ? t(`errors.companies.${code}`)
+              : t("errors.all.generic"),
+          });
+        }
+      },
+    });
+  };
+
   const handleLeaveCompany = () => {
     if (!company || !currentUser) return;
     openDialog({
@@ -297,8 +326,8 @@ export default function ManageMembersModal({
               </h4>
 
               {loadingMembers ? (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+                <div className="flex justify-center py-6">
+                  <AppLoading />
                 </div>
               ) : (
                 <div className="flex flex-col max-h-80 overflow-y-auto scrollbar-thin">
@@ -479,8 +508,8 @@ export default function ManageMembersModal({
               </h4>
 
               {invitationsPagination.loading ? (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+                <div className="flex justify-center py-6">
+                  <AppLoading />
                 </div>
               ) : invitationsPagination.items.length === 0 ? (
                 <div className="text-center py-8 text-label text-sm">
@@ -521,6 +550,22 @@ export default function ManageMembersModal({
                         >
                           {t(`labels.account.permissions.${inv.permission}`)}
                         </span>
+                        {company?.permission === CompanyPermission.ADMIN && (
+                          <AppButton
+                            color="transparent"
+                            flat
+                            className="w-8 h-8 p-0! flex items-center justify-center text-red-500! hover:bg-red-500/10! transition-colors shrink-0"
+                            onClick={() =>
+                              handleCancelInvitation(
+                                inv.id,
+                                inv.user_email || t("labels.account.guest"),
+                              )
+                            }
+                            title={t("labels.account.cancel_invitation")}
+                          >
+                            <DeleteOutlined style={{ fontSize: 18 }} />
+                          </AppButton>
+                        )}
                       </div>
                     </div>
                   ))}

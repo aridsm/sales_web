@@ -5,6 +5,7 @@ export interface Sale {
   code: number;
   status: SaleStatus;
   total: number;
+  discount?: number;
   user_id: string;
   created_at: string;
   date: string;
@@ -18,6 +19,7 @@ export interface Sale {
 
 export interface SaleCreate {
   date: string;
+  discount?: number;
   products: {
     product_id: string;
     quantity: number;

@@ -136,7 +136,7 @@ export const DashboardCategoryProfitChart = ({
   }, [startDate, endDate, activeTab]);
 
   return (
-    <AppCard className="px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-5 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 lg:row-span-2 min-h-[440px] lg:min-h-0 overflow-hidden">
+    <AppCard className="px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-5 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 min-h-[360px] lg:min-h-0 overflow-hidden">
       <div className="flex flex-col gap-2.5 sm:gap-3 mb-3 sm:mb-4">
         <div className="flex items-center justify-between gap-2">
           <span className="font-semibold text-base sm:text-lg truncate">

@@ -4,6 +4,7 @@ import {
   DashboardChart,
   DashboardChartParams,
   DashboardBudgetParams,
+  TopProductItem,
 } from "../schemas/Dashboard";
 
 export class DashboardService extends BaseService<DashboardChart> {
@@ -23,6 +24,18 @@ export class DashboardService extends BaseService<DashboardChart> {
     return (
       await axiosClient.get(`/${this.resource}/budgets`, {
         params: data,
+      })
+    ).data;
+  }
+
+  async getTopProducts(params?: {
+    start_date?: string;
+    end_date?: string;
+    limit?: number;
+  }): Promise<TopProductItem[]> {
+    return (
+      await axiosClient.get(`/${this.resource}/top-products`, {
+        params,
       })
     ).data;
   }

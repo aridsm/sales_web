@@ -44,7 +44,7 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
-    pagination.load({ params: { ...params, type: activeTab } });
+    pagination.load({ params: { ...params, search: search || undefined, type: activeTab } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
@@ -182,7 +182,7 @@ export default function CategoriesPage() {
           value={search}
           onChange={setSearch}
           onSearch={(val) =>
-            pagination.load({ params: { search: val, page: 1 } })
+            pagination.load({ params: { search: val, page: 1, type: activeTab } })
           }
           placeholder={t("labels.grid.search_placeholder")}
           className="flex-1 w-full min-w-0 min-[900px]:w-90 min-[900px]:flex-initial"

@@ -152,6 +152,12 @@ export default function LoginPage() {
             />
             <span>{t("labels.login.remember_me")}</span>
           </label>
+          <Link
+            href="/forgot-password"
+            className="text-sm text-primary hover:underline"
+          >
+            {t("labels.login.forgot_password")}
+          </Link>
         </div>
         <AppButton
           type="submit"

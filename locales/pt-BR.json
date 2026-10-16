@@ -40,6 +40,18 @@
         "no_category": "Nenhuma categoria encontrada",
         "no_data": "Nenhum dado para o período"
       },
+      "top_products": {
+        "title": "Produtos Mais Vendidos",
+        "rank": "#",
+        "product": "Produto",
+        "quantity": "Qtd.",
+        "revenue": "Faturamento",
+        "units_sold": "{{count}} un",
+        "tab_ranking": "Ranking",
+        "tab_chart": "Gráfico",
+        "view_all": "Ver tudo",
+        "no_data": "Nenhuma venda registrada no período"
+      },
       "history": {
         "title": "Histórico de Atividade",
         "view_all": "Ver tudo"
@@ -57,7 +69,8 @@
       "logging": "Entrando...",
       "no_account": "Não tem uma conta?",
       "create_account": "Criar conta",
-      "remember_me": "Lembrar-me"
+      "remember_me": "Lembrar-me",
+      "forgot_password": "Esqueci minha senha"
     },
     "register": {
       "title": "Criar conta!",
@@ -92,6 +105,30 @@
       "go_to_login": "Ir para o Login",
       "go_to_dashboard": "Ir para o Início"
     },
+    "forgot_password": {
+      "title": "Recuperar senha",
+      "subtitle": "Informe seu e-mail cadastrado e enviaremos um link para você redefinir sua senha",
+      "email_placeholder": "Digite seu e-mail",
+      "send_button": "Enviar link de recuperação",
+      "sending": "Enviando...",
+      "success_title": "Verifique seu e-mail",
+      "success_message": "Se o e-mail estiver cadastrado, enviamos as instruções de recuperação.",
+      "back_to_login": "Voltar para o Login"
+    },
+    "reset_password": {
+      "title": "Criar Nova Senha",
+      "subtitle": "Digite sua nova senha abaixo",
+      "new_password": "Nova senha",
+      "confirm_password": "Confirme a nova senha",
+      "button": "Redefinir senha",
+      "saving": "Salvando...",
+      "success_title": "Senha alterada com sucesso!",
+      "success_message": "Sua nova senha foi definida. Você já pode fazer login na sua conta.",
+      "invalid_token_title": "Link inválido ou expirado",
+      "invalid_token_message": "O link de recuperação não é válido ou já expirou.",
+      "request_new_link": "Solicitar novo link",
+      "back_to_login": "Ir para o Login"
+    },
     "all": {
       "all_rights": "Todos os direitos reservados",
       "name": "Nome",
@@ -115,6 +152,8 @@
       "status": "Status",
       "date": "Data",
       "total_value": "Valor Total",
+      "subtotal": "Subtotal",
+      "discount": "Desconto",
       "created_by": "Criado por",
       "created_at": "Criado em",
       "not_defined": "Não definido"
@@ -262,6 +301,8 @@
         "title": "Venda",
         "cancel_title": "Cancelar venda",
         "cancel_message": "Tem certeza que deseja cancelar a venda #{{code}}? Esta ação não pode ser desfeita.",
+        "delete_title": "Excluir venda",
+        "delete_message": "Tem certeza que deseja excluir permanentemente a venda #{{code}}? Esta ação não pode ser desfeita.",
         "not_found": "Venda não encontrada.",
         "date": "Data",
         "items": "Itens",
@@ -290,6 +331,8 @@
         "title": "Entrada de Estoque",
         "cancel_title": "Cancelar entrada",
         "cancel_message": "Tem certeza que deseja cancelar a entrada de estoque #{{code}}? Esta ação não pode ser desfeita.",
+        "delete_title": "Excluir entrada",
+        "delete_message": "Tem certeza que deseja excluir permanentemente a entrada de estoque #{{code}}? Esta ação não pode ser desfeita.",
         "not_found": "Entrada de estoque não encontrada.",
         "date": "Data",
         "items": "Itens",
@@ -479,6 +522,8 @@
       "job_title_update_error": "Erro ao atualizar cargo.",
       "invitation_accepted": "Convite aceito com sucesso!",
       "invitation_rejected": "Convite recusado.",
+      "new_invitation_received": "Você recebeu um novo convite de empresa!",
+      "view_invitations": "Ver Convites",
       "members_modal_title": "Membros da Empresa: {{name}}",
       "invite_member": "Convidar Membro",
       "invite_button": "Convidar",
@@ -580,6 +625,9 @@
       "invited_by_subtitle": "Por {{name}} • Enviado em {{date}}",
       "remove_member_confirm": "Tem certeza que deseja remover {{name}}?",
       "member_details": "Detalhes do Membro",
+      "cancel_invitation": "Cancelar Convite",
+      "cancel_invitation_confirm": "Tem certeza que deseja cancelar o convite para {{name}}?",
+      "invitation_cancelled": "Convite cancelado com sucesso.",
       "crop_modal_title": "Ajustar Imagem",
       "crop_modal_instruction": "Arraste para posicionar e use a barra para dar zoom.",
       "crop_apply": "Aplicar Imagem",
@@ -602,10 +650,16 @@
       "errorEntityNotFound": "O registro solicitado não foi encontrado.",
       "errorNoCompanySelected": "Nenhuma empresa selecionada.",
       "errorInsufficientPermission": "Você não tem permissão para realizar esta ação.",
-      "errorNotMemberOfCompany": "Você não é membro desta empresa."
+      "errorNotMemberOfCompany": "Você não é membro desta empresa.",
+      "errorFileTooLarge": "O arquivo enviado é muito grande (máximo 5MB).",
+      "errorInvalidFileType": "Tipo de arquivo inválido. Envie uma imagem JPEG, PNG ou WebP.",
+      "errorInvalidImageContent": "O arquivo enviado não é uma imagem válida.",
+      "errorUserHasNoActiveCompany": "Você não possui nenhuma empresa ativa selecionada.",
+      "errorRateLimitExceeded": "Muitas tentativas. Por favor, aguarde alguns minutos antes de tentar novamente."
     },
     "products": {
       "errorHasDoneSales": "Os seguintes produtos possuem vendas vinculadas: {{name}}",
+      "errorHasStockEntries": "Os seguintes produtos possuem entradas de estoque vinculadas: {{name}}",
       "errorEntityNotFound": "Produto não encontrado."
     },
     "categories": {
@@ -616,11 +670,13 @@
     "sales": {
       "errorInsufficientStock": "Estoque insuficiente para {{name}}.",
       "errorSaleAlreadyCanceled": "Esta venda já foi cancelada.",
+      "errorSaleMustBeCanceledBeforeDeletion": "A venda deve ser cancelada antes de ser excluída.",
       "errorEntityNotFound": "Venda não encontrada."
     },
     "stock_entries": {
       "errorNoRemainingItems": "Estoque insuficiente para a devolução dos seguintes produtos: {{products}}.",
       "errorStockEntryAlreadyCanceled": "Esta entrada de estoque já foi cancelada.",
+      "errorStockEntryMustBeCanceledBeforeDeletion": "A entrada de estoque deve ser cancelada antes de ser excluída.",
       "errorEntityNotFound": "Entrada de estoque não encontrada."
     },
     "companies": {
@@ -643,6 +699,7 @@
       "errorEmailNotVerified": "Seu e-mail ainda não foi verificado. Verifique sua caixa de entrada ou solicite um novo link.",
       "errorInvalidOrExpiredVerificationToken": "O link de verificação é inválido ou já foi utilizado.",
       "errorVerificationTokenExpired": "O link de verificação expirou. Solicite um novo link.",
+      "errorInvalidOrExpiredResetToken": "O link de redefinição de senha é inválido ou já expirou.",
       "errorRateLimitExceeded": "Muitas tentativas. Por favor, aguarde alguns minutos antes de tentar novamente.",
       "errorInvalidToken": "Sessão inválida ou expirada. Faça login novamente.",
       "errorExpiredToken": "Sessão expirada. Faça login novamente.",
@@ -656,6 +713,7 @@
       "errorEmailAlreadyRegistered": "Este e-mail já está cadastrado em outra conta.",
       "errorInvalidCurrentPassword": "A senha atual informada está incorreta.",
       "errorInvalidOrExpiredVerificationToken": "O link de confirmação é inválido ou expirou.",
+      "errorInvalidOrExpiredResetToken": "O link de redefinição de senha é inválido ou já expirou.",
       "errorUserNotFound": "Usuário não encontrado."
     },
     "fallback": "Ocorreu um erro inesperado. Tente novamente."

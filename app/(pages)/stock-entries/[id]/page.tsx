@@ -17,6 +17,7 @@ import { useDialogStore } from "@/stores/dialogStore";
 import {
   ArrowBack,
   ArrowBackOutlined,
+  DeleteOutlined,
   HighlightOffOutlined,
   InventoryOutlined,
 } from "@mui/icons-material";
@@ -108,6 +109,36 @@ export default function StockEntryDetailPage() {
           setStockEntry(updated);
           stockContext?.updateStockEntry(updated);
           stockContext?.refreshStockEntries();
+        } catch (err) {
+          const { code, params } = getApiError(err);
+          openDialog({
+            variant: "error",
+            message: t(
+              code ? `errors.stock_entries.${code}` : "errors.all.generic",
+              params,
+            ),
+          });
+        }
+      },
+    });
+  }
+
+  async function handleDelete() {
+    if (!stockEntry) return;
+
+    openDialog({
+      variant: "confirm",
+      title: t("labels.stock_entries.detail.delete_title"),
+      message: t("labels.stock_entries.detail.delete_message", {
+        code: stockEntry.code.toString().padStart(6, "0"),
+      }),
+      confirmLabel: t("labels.all.delete"),
+      cancelLabel: t("labels.all.close"),
+      onConfirm: async () => {
+        try {
+          await stockEntriesService.delete(stockEntry.id);
+          stockContext?.refreshStockEntries();
+          router.push("/stock-entries");
         } catch (err) {
           const { code, params } = getApiError(err);
           openDialog({
@@ -258,6 +289,20 @@ export default function StockEntryDetailPage() {
                 {t("labels.stock_entries.detail.cancel_title")}
               </AppButton>
             )}
+
+            {canEdit && isCanceled && (
+              <AppButton
+                color="background"
+                onClick={handleDelete}
+                className="px-3! py-1.5! self-start sm:self-auto sm:ml-auto shrink-0 text-xs sm:text-sm text-red-500 hover:text-red-600 hover:border-red-300 dark:hover:border-red-700"
+              >
+                <DeleteOutlined
+                  style={{ fontSize: 16 }}
+                  className="text-red-500"
+                />
+                {t("labels.stock_entries.detail.delete_title")}
+              </AppButton>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-label">
@@ -278,20 +323,38 @@ export default function StockEntryDetailPage() {
           />
         </div>
 
-        <div className="flex items-center justify-between w-full pt-3 sm:pt-4 border-t border-border">
-          <div className="flex items-center gap-1.5 text-label">
-            <InventoryOutlined style={{ fontSize: 16 }} />
-            <span className="text-xs sm:text-sm">
-              {stockEntry.items_count || 0} {t("labels.stock_entries.items")}
+        <div className="flex flex-col gap-2 w-full pt-3 sm:pt-4 border-t border-border">
+          {stockEntry.discount && stockEntry.discount > 0 ? (
+            <>
+              <div className="flex items-center justify-between text-xs sm:text-sm text-label">
+                <span>{t("labels.all.subtotal")}</span>
+                <span className="tabular-nums">
+                  {formatCurrency(stockEntry.total + stockEntry.discount)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs sm:text-sm text-label">
+                <span>{t("labels.all.discount")}</span>
+                <span className="tabular-nums text-emerald-600 dark:text-emerald-400">
+                  -{formatCurrency(stockEntry.discount)}
+                </span>
+              </div>
+            </>
+          ) : null}
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-1.5 text-label">
+              <InventoryOutlined style={{ fontSize: 16 }} />
+              <span className="text-xs sm:text-sm">
+                {stockEntry.items_count || 0} {t("labels.stock_entries.items")}
+              </span>
+            </div>
+            <span
+              className={`text-base sm:text-lg font-bold tabular-nums ${
+                isCanceled ? "line-through text-label" : "text-foreground"
+              }`}
+            >
+              {formatCurrency(stockEntry.total)}
             </span>
           </div>
-          <span
-            className={`text-base sm:text-lg font-bold tabular-nums ${
-              isCanceled ? "line-through text-label" : "text-foreground"
-            }`}
-          >
-            {formatCurrency(stockEntry.total)}
-          </span>
         </div>
       </AppCard>
 

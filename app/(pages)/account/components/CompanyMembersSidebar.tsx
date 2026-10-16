@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import AppCard from "@/app/components/AppCard";
 import AppButton from "@/app/components/AppButton";
+import AppLoading from "@/app/components/AppLoading";
 import CompanyMemberItem from "./CompanyMemberItem";
 import CompanyMemberDetails from "./CompanyMemberDetails";
 import { CompanyListItem, CompanyUser } from "@/api/schemas/Company";
@@ -113,8 +114,8 @@ export default function CompanyMembersSidebar({
           <div className="h-px bg-border w-full" />
 
           {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary" />
+            <div className="flex items-center justify-center py-6">
+              <AppLoading />
             </div>
           ) : members.length === 0 ? (
             <div className="text-center py-6 text-label">
