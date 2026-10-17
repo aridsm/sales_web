@@ -59,7 +59,7 @@ function KivoLogo({
     <div className="flex items-center gap-2.5 pl-1">
       <AppLogo className="w-6 h-6 shrink-0" color="var(--primary, #2563eb)" />
       <span className={`text-base font-bold tracking-wide ${textColor}`}>
-        Kivo
+        SalesApp
       </span>
     </div>
   );

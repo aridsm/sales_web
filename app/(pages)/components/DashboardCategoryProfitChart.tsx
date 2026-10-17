@@ -1,145 +1,97 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import AppCard from "../../components/AppCard";
 import AppTabs from "../../components/AppTabs";
 import AppEmptyState from "../../components/AppEmptyState";
 import { useTranslation } from "@/app/utils/i18n";
 import { categoriesService } from "@/api/services/CategoryService";
-import { Category, CategoryAmount } from "@/api/schemas/Category";
+import { CategoryAmount } from "@/api/schemas/Category";
 import { CategoryType } from "@/enums/CategoryType";
-import { EntityType } from "@/enums/EntityType";
 import { formatCurrency } from "@/app/utils/formatters/currency";
 import {
   ShoppingCartOutlined,
   ReceiptOutlined,
-  PieChartOutlined,
+  Inventory2Outlined,
+  ChevronRight,
 } from "@mui/icons-material";
-import Link from "next/link";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Sector,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-
-interface ActiveShapeProps {
-  cx?: number;
-  cy?: number;
-  innerRadius?: number;
-  outerRadius?: number;
-  startAngle?: number;
-  endAngle?: number;
-  fill?: string;
-}
-
-const renderActiveShape = (props: ActiveShapeProps) => {
-  const { cx, cy, startAngle, endAngle, fill } = props;
-
-  return (
-    <g>
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={props.innerRadius}
-        outerRadius={(props.outerRadius || 0) + 6}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-      <Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={(props.outerRadius || 0) + 8}
-        outerRadius={(props.outerRadius || 0) + 12}
-        fill={fill}
-        opacity={0.3}
-      />
-    </g>
-  );
-};
-
-const CustomPieTooltip = ({
-  active,
-  payload,
-}: {
-  active?: boolean;
-  payload?: any[];
-}) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-background-2 p-3 rounded-xs shadow-md flex flex-col gap-1">
-        {payload.map((entry, index: number) => (
-          <div key={index} className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-xs"
-              style={{
-                backgroundColor: entry.payload?.category_color || entry.color,
-              }}
-            />
-            <span className="font-medium text-foreground">{entry.name}</span>
-            <span className="font-bold ml-auto pl-4 text-foreground">
-              {entry.payload?.amount !== undefined
-                ? formatCurrency(entry.payload.amount)
-                : formatCurrency(entry.value || 0)}
-            </span>
-          </div>
-        ))}
-      </div>
-    );
-  }
-  return null;
-};
 
 export const DashboardCategoryProfitChart = ({
-  entityLabels,
   startDate,
   endDate,
   activePeriod,
 }: {
-  entityLabels: Record<number, string>;
+  entityLabels?: Record<number, string>;
   startDate: string;
   endDate: string;
   activePeriod: string;
 }) => {
   const { t } = useTranslation();
-  const [activePieIndex, setActivePieIndex] = useState<number | undefined>();
   const [activeTab, setActiveTab] = useState<string>("sales");
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [categoriesAmounts, setCategoriesAmounts] = useState<CategoryAmount>({
     items: [],
     total: 0,
   });
 
   useEffect(() => {
+    let isCancelled = false;
+    setLoading(true);
+
     categoriesService
       .getAmounts({
         start_created_at: startDate,
         end_created_at: endDate,
         type: activeTab as unknown as CategoryType,
       })
-      .then((res: CategoryAmount) => setCategoriesAmounts(res));
-
-    const categoryEnum =
-      activeTab === "other_expenses"
-        ? CategoryType.OTHER_EXPENSE
-        : CategoryType.PRODUCT;
-
-    categoriesService
-      .getAll({ type: categoryEnum })
-      .then((res: { items: Category[] } | Category[]) => {
-        setCategories("items" in res ? res.items : res);
+      .then((res: CategoryAmount) => {
+        if (!isCancelled) {
+          if (res && Array.isArray(res.items)) {
+            const sortedItems = [...res.items].sort(
+              (a, b) => b.value - a.value,
+            );
+            setCategoriesAmounts({ items: sortedItems, total: res.total });
+          } else {
+            setCategoriesAmounts({ items: [], total: 0 });
+          }
+        }
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error("Error loading category amounts:", err);
+        if (!isCancelled) {
+          setCategoriesAmounts({ items: [], total: 0 });
+        }
+      })
+      .finally(() => {
+        if (!isCancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [startDate, endDate, activeTab]);
+
+  const maxAmount = useMemo(() => {
+    if (categoriesAmounts.items.length === 0) return 1;
+    return Math.max(...categoriesAmounts.items.map((item) => item.value), 1);
+  }, [categoriesAmounts.items]);
+
+  const emptyIcon =
+    activeTab === "sales" ? (
+      <ShoppingCartOutlined fontSize="medium" />
+    ) : activeTab === "stock_entries" ? (
+      <Inventory2Outlined fontSize="medium" />
+    ) : (
+      <ReceiptOutlined fontSize="medium" />
+    );
 
   return (
     <AppCard className="px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-5 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 min-h-[360px] lg:min-h-0 overflow-hidden">
-      <div className="flex flex-col gap-2.5 sm:gap-3 mb-3 sm:mb-4">
-        <div className="flex items-center justify-between gap-2">
-          <span className="font-semibold text-base sm:text-lg truncate">
+      {/* Header */}
+      <div className="flex flex-col gap-2.5 mb-3 shrink-0">
+        <div className="flex items-center justify-between gap-2 min-w-0">
+          <span className="font-semibold text-base sm:text-lg text-foreground truncate">
             {activeTab === "sales"
               ? t("labels.dashboard.charts.profit_by_category")
               : activeTab === "stock_entries"
@@ -150,121 +102,154 @@ export const DashboardCategoryProfitChart = ({
             {t(`labels.dashboard.periods.${activePeriod}`)}
           </span>
         </div>
-        <div className="overflow-x-auto max-w-full pb-0.5 scrollbar-none">
-          <AppTabs
-            tabs={[
-              {
-                value: "sales",
-                label: t("labels.dashboard.charts.sales_tab"),
-              },
-              {
-                value: "stock_entries",
-                label: t("labels.dashboard.charts.stock_entries_tab"),
-              },
-              {
-                value: "other_expenses",
-                label: t("labels.dashboard.charts.other_expenses_tab"),
-              },
-            ]}
-            activeTab={activeTab}
-            onChange={(val) => setActiveTab(val)}
-          />
-        </div>
-      </div>
-      <div className="w-full relative shrink-0 h-44 sm:h-48 lg:h-52">
-        {categoriesAmounts.items.length > 0 ? (
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={categoriesAmounts.items}
-                innerRadius="50%"
-                outerRadius="80%"
-                paddingAngle={5}
-                dataKey="value"
-                nameKey="category_name"
-                stroke="none"
-                {...({
-                  activeIndex: activePieIndex,
-                  activeShape: renderActiveShape,
-                } as unknown as object)}
-                onMouseEnter={(_, index) => setActivePieIndex(index)}
-                onMouseLeave={() => setActivePieIndex(undefined)}
-              >
-                {categoriesAmounts.items.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.category_color} />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomPieTooltip />} />
-            </PieChart>
-          </ResponsiveContainer>
-        ) : (
-          <AppEmptyState
-            className="w-full h-full border border-border bg-background-2 dark:bg-background rounded-xs"
-            title={t("labels.grid.empty_title")}
-            subtitle={t("labels.dashboard.charts.no_data")}
-            icon={<PieChartOutlined fontSize="medium" />}
-          />
-        )}
+
+        <AppTabs
+          fullWidth
+          className="w-full [&_button]:px-2 sm:[&_button]:px-3 [&_button]:text-xs"
+          tabs={[
+            {
+              value: "sales",
+              label: t("labels.dashboard.charts.sales_tab"),
+            },
+            {
+              value: "stock_entries",
+              label: t("labels.dashboard.charts.stock_entries_tab"),
+            },
+            {
+              value: "other_expenses",
+              label: t("labels.dashboard.charts.other_expenses_tab"),
+            },
+          ]}
+          activeTab={activeTab}
+          onChange={(val) => setActiveTab(val)}
+        />
       </div>
 
-      <div className="flex-1 mt-4 sm:mt-5 lg:mt-6 flex flex-col gap-1.5 sm:gap-2 overflow-y-auto">
-        <div className="flex justify-between items-center mb-2 sm:mb-3 gap-2">
-          <span className="font-semibold text-base sm:text-lg">
-            {t("labels.dashboard.charts.system_categories")}
-          </span>
-          <Link
-            className="text-xs sm:text-sm text-primary hover:underline shrink-0 font-medium"
-            href="/categories"
-          >
-            {t("labels.dashboard.charts.view_all")}
-          </Link>
-        </div>
-        {categories.length > 0 ? (
-          categories.map((cat) => (
-            <div
-              key={cat.id}
-              className="flex items-center gap-2 sm:gap-3 py-1 sm:py-1.5 border-b border-border last:border-0"
-            >
+      {/* Body */}
+      <div className="flex-1 flex flex-col min-h-0">
+        {loading ? (
+          <div className="flex-1 flex flex-col justify-center gap-2 py-2">
+            {[1, 2, 3, 4, 5].map((i) => (
               <div
-                className="w-3 h-3 rounded-xs shrink-0"
-                style={{ backgroundColor: cat.color || "#ccc" }}
+                key={i}
+                className="h-10 rounded-xs bg-border/30 animate-pulse w-full"
               />
-              <span className=" flex-1 truncate">{cat.name}</span>
-              <div
-                title={
-                  cat.type === CategoryType.PRODUCT
-                    ? entityLabels[EntityType.PRODUCT]
-                    : entityLabels[EntityType.OTHER_EXPENSE]
-                }
-                className={`flex items-center justify-center w-8 h-8 rounded-xs shrink-0 transition-colors ${
-                  cat.type === CategoryType.PRODUCT
-                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20"
-                    : "bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20"
-                }`}
-              >
-                {cat.type === CategoryType.PRODUCT ? (
-                  <ShoppingCartOutlined fontSize="small" />
-                ) : (
-                  <ReceiptOutlined fontSize="small" />
-                )}
-              </div>
-            </div>
-          ))
-        ) : (
+            ))}
+          </div>
+        ) : categoriesAmounts.items.length === 0 ? (
           <AppEmptyState
-            className="flex-1 py-6 border border-border bg-background-2 dark:bg-background rounded-xs"
+            className="flex-1 w-full border border-border bg-background-2 dark:bg-background rounded-xs my-auto py-8"
             title={t("labels.grid.empty_title")}
-            subtitle={t("labels.dashboard.charts.no_category")}
-            icon={
-              activeTab === "sales" || activeTab === "stock_entries" ? (
-                <ShoppingCartOutlined fontSize="medium" />
-              ) : (
-                <ReceiptOutlined fontSize="medium" />
-              )
-            }
+            subtitle={t("labels.dashboard.charts.no_data")}
+            icon={emptyIcon}
           />
+        ) : (
+          <div className="flex-1 flex flex-col min-h-0">
+            {/* Table Header */}
+            <div className="grid grid-cols-[24px_1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 pb-1.5 border-b border-border text-[11px] font-semibold text-label uppercase tracking-wider select-none">
+              <span className="text-center">
+                {t("labels.dashboard.top_products.rank")}
+              </span>
+              <span>{t("labels.dashboard.charts.category")}</span>
+              <span className="text-right">
+                {t("labels.dashboard.charts.share")}
+              </span>
+              <span className="text-right w-24 sm:w-28">
+                {t("labels.dashboard.charts.amount")}
+              </span>
+            </div>
+
+            {/* Rows */}
+            <div className="flex-1 flex flex-col gap-1 overflow-y-auto py-1">
+              {categoriesAmounts.items.map((item, index) => {
+                const barWidth = Math.round((item.value / maxAmount) * 100);
+                const sharePercent =
+                  categoriesAmounts.total > 0
+                    ? ((item.value / categoriesAmounts.total) * 100).toFixed(1)
+                    : "0.0";
+                const categoryColor = item.category_color || "var(--primary)";
+
+                return (
+                  <Link
+                    key={item.category_id}
+                    href="/categories"
+                    className="relative group grid grid-cols-[24px_1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 py-2 rounded-xs hover:bg-background-3/60 dark:hover:bg-border/30 transition-colors"
+                  >
+                    {/* Integrated background bar */}
+                    <div
+                      className="absolute inset-y-0 left-0 bg-primary/6 dark:bg-border/45 rounded-xs transition-all duration-500 pointer-events-none"
+                      style={{ width: `${barWidth}%` }}
+                    />
+
+                    {/* Rank */}
+                    <span
+                      className={`relative z-1 text-xs text-center select-none tabular-nums ${
+                        index === 0
+                          ? "font-bold text-primary"
+                          : "font-medium text-label"
+                      }`}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    {/* Category Name & Color Bar */}
+                    <div className="relative z-1 flex flex-col min-w-0 pr-1 gap-1">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className="w-2.5 h-2.5 rounded-xs shrink-0"
+                          style={{ backgroundColor: categoryColor }}
+                        />
+                        <span className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
+                          {item.category_name}
+                        </span>
+                      </div>
+                      <div className="w-full h-1 rounded-full bg-border/50 overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${sharePercent}%`,
+                            backgroundColor: categoryColor,
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Share % */}
+                    <span className="relative z-1 text-xs text-label text-right shrink-0 tabular-nums">
+                      {sharePercent}%
+                    </span>
+
+                    {/* Value */}
+                    <span className="relative z-1 text-sm font-semibold text-foreground text-right w-24 sm:w-28 shrink-0 tabular-nums">
+                      {formatCurrency(item.value)}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Footer Total & View all */}
+            <div className="pt-2 border-t border-border flex items-center justify-between gap-2 shrink-0">
+              <div className="flex items-center gap-1.5 text-xs">
+                <span className="text-label font-medium">
+                  {t("labels.dashboard.charts.total")}:
+                </span>
+                <span className="font-semibold text-foreground tabular-nums">
+                  {formatCurrency(categoriesAmounts.total)}
+                </span>
+              </div>
+              <Link
+                href="/categories"
+                className="text-xs text-primary hover:underline font-medium inline-flex items-center gap-0.5"
+              >
+                <span>{t("labels.dashboard.charts.view_all")}</span>
+                <ChevronRight style={{ fontSize: 14 }} />
+              </Link>
+            </div>
+          </div>
         )}
       </div>
     </AppCard>
   );
 };
+

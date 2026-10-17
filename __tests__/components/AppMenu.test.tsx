@@ -43,8 +43,8 @@ describe("AppMenu", () => {
     render(<AppMenu />);
 
     const toggleButton = screen.getByLabelText("Abrir menu");
-    // Initially expanded - Kivo logo is visible
-    expect(screen.getAllByText("Kivo").length).toBeGreaterThan(0);
+    // Initially expanded - SalesApp logo is visible
+    expect(screen.getAllByText("SalesApp").length).toBeGreaterThan(0);
 
     fireEvent.click(toggleButton);
     // After collapsing, the aside is still in the document with collapsed width class

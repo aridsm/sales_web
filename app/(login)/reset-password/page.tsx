@@ -86,7 +86,7 @@ function ResetPasswordForm() {
     if (password !== confirmPassword) {
       openDialog({
         variant: "error",
-        message: t("errors.auth.errorPasswordsDoNotMatch"),
+        message: t("errors.auth.errorPasswordsNotMatch"),
       });
       return;
     }
@@ -94,7 +94,7 @@ function ResetPasswordForm() {
     if (password.length < 6) {
       openDialog({
         variant: "error",
-        message: t("errors.auth.errorPasswordTooShort"),
+        message: t("errors.auth.errorPasswordMinLength"),
       });
       return;
     }

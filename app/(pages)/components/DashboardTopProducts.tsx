@@ -13,6 +13,7 @@ import { LocalMallOutlined, ChevronRight } from "@mui/icons-material";
 import {
   BarChart,
   Bar,
+  Cell,
   XAxis,
   YAxis,
   Tooltip,
@@ -48,7 +49,9 @@ export function DashboardTopProducts({
       })
       .then((res) => {
         if (!isCancelled) {
-          setTopProducts(Array.isArray(res) ? res : []);
+          const list = Array.isArray(res) ? [...res] : [];
+          list.sort((a, b) => b.total_revenue - a.total_revenue);
+          setTopProducts(list);
         }
       })
       .catch((err) => {
@@ -149,17 +152,17 @@ export function DashboardTopProducts({
                   <Link
                     key={item.product_id}
                     href="/products"
-                    className="relative group grid grid-cols-[24px_1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 py-1.5 rounded-xs border border-transparent hover:border-border hover:bg-background-3/40 transition-colors"
+                    className="relative group grid grid-cols-[24px_1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 py-1.5 rounded-xs hover:bg-background-3/60 dark:hover:bg-border/30 transition-colors"
                   >
                     {/* Integrated background bar */}
                     <div
-                      className="absolute inset-y-0 left-0 bg-primary/6 dark:bg-primary/10 rounded-xs transition-all duration-500 pointer-events-none"
+                      className="absolute inset-y-0 left-0 bg-primary/6 dark:bg-border/45 rounded-xs transition-all duration-500 pointer-events-none"
                       style={{ width: `${percentage}%` }}
                     />
 
                     {/* Rank */}
                     <span
-                      className={`relative z-1 text-xs font-mono text-center select-none ${
+                      className={`relative z-1 text-xs text-center select-none tabular-nums ${
                         index === 0
                           ? "font-bold text-primary"
                           : "font-medium text-label"
@@ -251,7 +254,16 @@ export function DashboardTopProducts({
                         <span className="font-semibold text-foreground">
                           {data.product_name}
                         </span>
-                        <span className="text-label">{data.category_name}</span>
+                        <div className="flex items-center gap-1.5 text-label">
+                          <span
+                            className="w-2 h-2 rounded-full shrink-0"
+                            style={{
+                              backgroundColor:
+                                data.category_color || "var(--primary)",
+                            }}
+                          />
+                          <span>{data.category_name}</span>
+                        </div>
                         <div className="h-px bg-border my-0.5" />
                         <div className="flex justify-between gap-4">
                           <span className="text-label">
@@ -274,11 +286,14 @@ export function DashboardTopProducts({
                   }}
                   cursor={{ fill: "transparent" }}
                 />
-                <Bar
-                  dataKey="total_revenue"
-                  fill="var(--primary)"
-                  radius={[0, 3, 3, 0]}
-                />
+                <Bar dataKey="total_revenue" radius={[0, 3, 3, 0]}>
+                  {topProducts.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.category_color || "var(--primary)"}
+                    />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
