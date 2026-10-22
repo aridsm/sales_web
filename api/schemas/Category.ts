@@ -3,7 +3,7 @@ import { CategoryType } from "@/enums/CategoryType";
 export interface Category {
   id: string;
   name: string;
-  color: string;
+  color?: string | null;
   type: CategoryType;
   products?: number;
   created_at?: string | Date;

@@ -36,7 +36,7 @@ export default function AppCategoryForm({
           .string()
           .min(1, { message: t("labels.categories.form.name_required") }),
         type: z.number(),
-        color: z.string(),
+        color: z.string().nullable().optional(),
       }),
     [t],
   );
@@ -55,7 +55,11 @@ export default function AppCategoryForm({
   useEffect(() => {
     if (isOpen) {
       if (model) {
-        reset(model);
+        reset({
+          ...model,
+          name: model.name || "",
+          color: model.color || "",
+        });
       } else {
         reset({
           name: "",
@@ -68,10 +72,14 @@ export default function AppCategoryForm({
 
   async function onSubmit(data: CategoryForm) {
     try {
+      const payload: CategoryForm = {
+        ...data,
+        color: data.color?.trim() || null,
+      };
       if (model?.id) {
-        await categoriesService.patch(model.id, data);
+        await categoriesService.patch(model.id, payload);
       } else {
-        await categoriesService.post(data);
+        await categoriesService.post(payload);
       }
       await onSave();
       handleClose();
@@ -129,8 +137,9 @@ export default function AppCategoryForm({
             <AppColor
               label={t("labels.categories.color")}
               placeholder={t("labels.categories.form.color_placeholder")}
-              value={field.value}
+              value={field.value ?? ""}
               onChange={field.onChange}
+              clearable
               error={errors.color?.message}
             />
           )}

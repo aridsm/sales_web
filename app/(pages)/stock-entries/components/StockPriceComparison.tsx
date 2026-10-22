@@ -135,7 +135,7 @@ export function StockPriceComparison({ item }: StockPriceComparisonProps) {
         onClick={handleToggleClick}
         className="shrink-0 cursor-pointer select-none"
       >
-        {!hasPurchase ? (
+        {!hasPurchase || !hasSelling ? (
           <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-background dark:bg-background-2 text-label hover:text-foreground transition-colors">
             <InfoOutlined style={{ fontSize: 13 }} />
             <span>{formatCurrency(sellingPrice)}</span>
@@ -173,7 +173,7 @@ export function StockPriceComparison({ item }: StockPriceComparisonProps) {
               <span className="text-xs font-semibold text-foreground">
                 {t("labels.stock_entries.new.comparison_title")}
               </span>
-              {hasPurchase && (
+              {hasPurchase && hasSelling && (
                 <span
                   className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${
                     isHigher
@@ -224,7 +224,7 @@ export function StockPriceComparison({ item }: StockPriceComparisonProps) {
 
             <div
               className={`p-2.5 rounded-xs text-xs leading-snug ${
-                !hasPurchase
+                !hasSelling || !hasPurchase
                   ? "bg-background dark:bg-background-2 text-label"
                   : isHigher
                     ? "bg-red-500/10 text-red-600 dark:text-red-400"
@@ -233,17 +233,19 @@ export function StockPriceComparison({ item }: StockPriceComparisonProps) {
                       : "bg-background dark:bg-background-2 text-label"
               }`}
             >
-              {!hasPurchase
-                ? t("labels.stock_entries.new.comparison_no_purchase")
-                : isHigher
-                  ? t("labels.stock_entries.new.comparison_warning", {
-                      percent: formattedPercent,
-                    })
-                  : isLower
-                    ? t("labels.stock_entries.new.comparison_positive", {
+              {!hasSelling
+                ? t("labels.stock_entries.new.comparison_no_selling")
+                : !hasPurchase
+                  ? t("labels.stock_entries.new.comparison_no_purchase")
+                  : isHigher
+                    ? t("labels.stock_entries.new.comparison_warning", {
                         percent: formattedPercent,
                       })
-                    : t("labels.stock_entries.new.comparison_equal")}
+                    : isLower
+                      ? t("labels.stock_entries.new.comparison_positive", {
+                          percent: formattedPercent,
+                        })
+                      : t("labels.stock_entries.new.comparison_equal")}
             </div>
           </div>,
           document.body,

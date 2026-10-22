@@ -17,7 +17,8 @@ import { EntityType } from "@/enums/EntityType";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import AppCreatedBy from "@/app/components/AppCreatedBy";
 import { useDialogStore } from "@/stores/dialogStore";
-import { DeleteOutlined } from "@mui/icons-material";
+import { DeleteOutlined, OpenInNewOutlined } from "@mui/icons-material";
+import Link from "next/link";
 import AppSearchInput from "../../components/inputs/AppSearchInput";
 import AppButton from "../../components/AppButton";
 import AppFilter from "../../components/AppFilter";
@@ -98,7 +99,32 @@ export default function HistoryPage() {
       },
       {
         column: t("labels.history.entity_id"),
-        cell: ({ row }: { row: History }) => row.entity_id,
+        cell: ({ row }: { row: History }) => {
+          if (!row.entity_id) return "-";
+          const entityType = Number(row.entity_type);
+          const href =
+            entityType === EntityType.SALE
+              ? `/sales/${row.entity_id}`
+              : entityType === EntityType.STOCK_ENTRY
+                ? `/stock-entries/${row.entity_id}`
+                : null;
+
+          if (href) {
+            return (
+              <Link
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline inline-flex items-center gap-1"
+              >
+                <span>{row.entity_id}</span>
+                <OpenInNewOutlined style={{ fontSize: 14 }} />
+              </Link>
+            );
+          }
+
+          return row.entity_id;
+        },
         size: 350,
       },
     ],

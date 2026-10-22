@@ -24,8 +24,8 @@ const variantConfig: Record<
 > = {
   success: {
     icon: <CheckCircleOutlined fontSize="large" />,
-    iconColor: "text-emerald-500",
-    iconBg: "bg-emerald-500/10",
+    iconColor: "text-primary",
+    iconBg: "bg-primary/10",
     titleKey: "labels.dialog.success",
   },
   error: {

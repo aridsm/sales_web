@@ -2,7 +2,7 @@ interface OtherExpenseBase {
   name: string;
   category_id: string;
   value: number;
-  description?: string;
+  description?: string | null;
   date: string;
 }
 

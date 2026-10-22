@@ -10,6 +10,8 @@ import {
 } from "../../utils/usePagination";
 import { ACTION_CONFIG } from "@/app/utils/constants";
 import { ActionType } from "@/enums/ActionType";
+import { EntityType } from "@/enums/EntityType";
+import { OpenInNewOutlined } from "@mui/icons-material";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import AppCreatedBy from "@/app/components/AppCreatedBy";
 import Link from "next/link";
@@ -78,6 +80,36 @@ export const DashboardHistory = ({
         cell: ({ row }: { row: History }) =>
           entityLabels[Number(row.entity_type)] || row.entity_type,
         size: 180,
+      },
+      {
+        column: t("labels.history.entity_id"),
+        cell: ({ row }: { row: History }) => {
+          if (!row.entity_id) return "-";
+          const entityType = Number(row.entity_type);
+          const href =
+            entityType === EntityType.SALE
+              ? `/sales/${row.entity_id}`
+              : entityType === EntityType.STOCK_ENTRY
+                ? `/stock-entries/${row.entity_id}`
+                : null;
+
+          if (href) {
+            return (
+              <Link
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline inline-flex items-center gap-1"
+              >
+                <span>{row.entity_id}</span>
+                <OpenInNewOutlined style={{ fontSize: 14 }} />
+              </Link>
+            );
+          }
+
+          return row.entity_id;
+        },
+        size: 350,
       },
     ],
     [t, entityLabels],

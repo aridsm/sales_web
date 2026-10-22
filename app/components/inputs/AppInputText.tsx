@@ -3,7 +3,7 @@
 import {
   forwardRef,
   InputHTMLAttributes,
-  useImperativeHandle,
+  useCallback,
   useRef,
   useState,
   useEffect,
@@ -52,7 +52,17 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
     const [isFocused, setIsFocused] = useState(false);
     const [localValue, setLocalValue] = useState("");
 
-    useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
+    const setRefs = useCallback(
+      (node: HTMLInputElement | null) => {
+        inputRef.current = node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      },
+      [ref],
+    );
 
     useEffect(() => {
       if (isFocused && mask) {
@@ -114,12 +124,13 @@ const AppInputText = forwardRef<HTMLInputElement, AppInputTextProps>(
         {label && <AppLabel htmlFor={label}>{label}</AppLabel>}
         <div className="relative flex items-center w-full">
           <input
-            ref={inputRef}
+            ref={setRefs}
             id={label}
             type={type}
+            autoComplete="off"
             className={`input-field pr-9 w-full ${error ? "border-red-500!" : ""} ${className}`}
             {...props}
-            value={displayValue}
+            {...(displayValue !== undefined ? { value: displayValue } : {})}
             onChange={handleChange}
             onFocus={handleFocus}
             onBlur={handleBlur}

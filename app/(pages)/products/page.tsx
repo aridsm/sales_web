@@ -310,7 +310,7 @@ export default function ProductsPage() {
                       <div className="flex items-center gap-2 min-[1100px]:gap-2.5 min-w-0">
                         <div
                           className="w-2 h-3 min-[1100px]:w-2.5 min-[1100px]:h-4 rounded-xs shrink-0"
-                          style={{ backgroundColor: cat.color }}
+                          style={{ backgroundColor: cat.color || undefined }}
                         />
                         <span className="text-start truncate">{cat.name}</span>
                       </div>

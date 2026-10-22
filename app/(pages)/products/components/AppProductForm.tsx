@@ -147,7 +147,6 @@ export default function AppProductForm({
         name="price"
         control={control}
         rules={{
-          required: t("labels.products.form.price_required"),
           min: { value: 0, message: t("labels.products.form.price_positive") },
         }}
         render={({ field }) => (

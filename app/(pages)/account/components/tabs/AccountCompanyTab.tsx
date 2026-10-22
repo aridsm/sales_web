@@ -146,34 +146,23 @@ export default function AccountCompanyTab({
 
       const cleanLogoUrl = updatedLogoUrl ? updatedLogoUrl.split("?")[0] : null;
 
-      const payload: Record<string, any> = {
+      const payload: Partial<Company> = {
         name: formData.name?.trim() || "",
+        logo_url: cleanLogoUrl,
+        document: formData.document?.trim() || null,
+        email: formData.email?.trim() || null,
+        phone: formData.phone?.trim() || null,
+        website: formData.website?.trim() || null,
+        zip_code: formData.zip_code?.trim() || null,
+        street: formData.street?.trim() || null,
+        number: formData.number?.trim() || null,
+        complement: formData.complement?.trim() || null,
+        neighborhood: formData.neighborhood?.trim() || null,
+        city: formData.city?.trim() || null,
+        state: formData.state?.trim() || null,
       };
-      if (formData.document?.trim())
-        payload.document = formData.document.trim();
-      if (formData.email?.trim()) payload.email = formData.email.trim();
-      if (formData.phone?.trim()) payload.phone = formData.phone.trim();
-      if (formData.website?.trim()) payload.website = formData.website.trim();
-      if (formData.zip_code?.trim())
-        payload.zip_code = formData.zip_code.trim();
-      if (formData.street?.trim()) payload.street = formData.street.trim();
-      if (formData.number?.trim()) payload.number = formData.number.trim();
-      if (formData.complement?.trim())
-        payload.complement = formData.complement.trim();
-      if (formData.neighborhood?.trim())
-        payload.neighborhood = formData.neighborhood.trim();
-      if (formData.city?.trim()) payload.city = formData.city.trim();
-      if (formData.state?.trim()) payload.state = formData.state.trim();
 
-      try {
-        await companyService.update(activeCompany.id, payload);
-      } catch (patchErr) {
-        if (Object.keys(payload).length > 1) {
-          await companyService.update(activeCompany.id, { name: payload.name });
-        } else {
-          throw patchErr;
-        }
-      }
+      await companyService.update(activeCompany.id, payload);
 
       const logoWithCacheBuster = cleanLogoUrl
         ? `${cleanLogoUrl}?t=${Date.now()}`

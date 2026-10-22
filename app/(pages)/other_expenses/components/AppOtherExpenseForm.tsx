@@ -72,12 +72,11 @@ export default function AppOtherExpenseForm({
     try {
       const payload = {
         name: data.name,
-        description: data.description || undefined,
+        description: data.description?.trim() || null,
         value: Number(data.value),
         date: data.date,
         category_id: data.category_id,
       };
-
 
       if (isEditing) {
         await otherExpensesService.patch(model!.id!, payload);

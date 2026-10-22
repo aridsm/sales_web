@@ -128,7 +128,7 @@ export default function AppTabs({
               else tabRefs.current.delete(tab.value);
             }}
             onClick={() => handleTabClick(tab.value)}
-            className={`relative z-[1] sm:text-sm rounded-xs transition-colors duration-150 cursor-pointer select-none min-w-0 overflow-hidden flex items-center ${
+            className={`relative z-[1] text-xs sm:text-sm rounded-xs transition-colors duration-150 cursor-pointer select-none min-w-0 overflow-hidden flex items-center ${
               isColumn
                 ? "w-full h-9.5 px-3.5 justify-start gap-2 text-left"
                 : `h-7 sm:h-8.5 px-4 sm:px-5 justify-center ${fullWidth ? "flex-1 text-center" : ""}`

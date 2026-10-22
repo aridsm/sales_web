@@ -72,8 +72,13 @@ export default function DashboardPage() {
   }, [activePeriod]);
 
   return (
-    <AppPage title="Dashboard" scrollable contentClassName="py-3 sm:py-4">
-      <div className="flex flex-col gap-2 sm:gap-2.5 lg:gap-3 lg:flex-1">
+    <AppPage
+      title="Dashboard"
+      scrollable
+      className="lg:min-h-[960px]"
+      contentClassName="py-3 sm:py-4 lg:min-h-0"
+    >
+      <div className="flex flex-col gap-2 sm:gap-2.5 lg:gap-3 lg:flex-1 lg:min-h-0">
         <div className="flex items-center gap-2 overflow-x-auto max-w-full pb-1 shrink-0">
           <AppTabs
             tabs={Object.entries(datePeriods).map(([key]) => ({
@@ -91,7 +96,7 @@ export default function DashboardPage() {
           activePeriod={activePeriod}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[350px_430px] lg:flex-1 gap-2 sm:gap-2.5 lg:gap-3.5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[1fr_1.15fr] lg:flex-1 lg:min-h-0 gap-2 sm:gap-2.5 lg:gap-3.5">
           <DashboardRevenueExpenseChart activePeriod={activePeriod} />
           <DashboardTopProducts
             startDate={startDate}

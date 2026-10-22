@@ -98,7 +98,7 @@ export const DashboardCategoryProfitChart = ({
 
         <AppTabs
           fullWidth
-          className="w-full [&_button]:px-2 sm:[&_button]:px-3"
+          className="w-full [&_button]:flex-auto [&_button]:px-1.5 sm:[&_button]:px-2.5 [&_button]:text-xs xl:[&_button]:text-sm"
           tabs={[
             {
               value: "sales",
