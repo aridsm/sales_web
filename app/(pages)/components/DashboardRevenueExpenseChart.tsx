@@ -90,8 +90,8 @@ export const DashboardRevenueExpenseChart = ({
   }, [previous, frequency]);
 
   return (
-    <AppCard className="flex px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-5 flex-col lg:col-span-7 min-[1580px]:col-span-8 min-h-[300px] lg:min-h-0 overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 mb-3 sm:mb-4">
+    <AppCard className="flex px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-4 flex-col lg:col-span-7 min-[1580px]:col-span-8 min-h-[300px] lg:min-h-0 overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 mb-3">
         <div className="flex items-center gap-1.5 sm:gap-2.5 flex-wrap">
           <span className="font-semibold text-base sm:text-lg">
             {t("labels.dashboard.charts.revenue_vs_expenses")}

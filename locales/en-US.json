@@ -6,7 +6,8 @@
         "today": "Today",
         "this_week": "This week",
         "this_month": "This month",
-        "this_year": "This year"
+        "this_year": "This year",
+        "all_time": "All time"
       },
       "frequencies": {
         "today": "Daily",
@@ -18,7 +19,11 @@
         "current_balance": "Current balance",
         "net_profit": "Net profit",
         "revenue": "Revenue",
-        "expenses": "Expenses"
+        "expenses": "Expenses",
+        "current_balance_info": "Overall accumulated company balance: total completed sales minus stock entries and other expenses.",
+        "net_profit_info": "Net result for the selected period (Revenue minus Expenses in the period).",
+        "revenue_info": "Sum of the net amount of completed sales in the selected period (already accounting for discounts).",
+        "expenses_info": "Sum of Stock Entries (product purchases) and Other Expenses recorded in the selected period."
       },
       "charts": {
         "revenue_vs_expenses": "Revenue vs Expenses",
@@ -52,6 +57,11 @@
         "units_sold": "{{count}} units",
         "tab_ranking": "Ranking",
         "tab_chart": "Chart",
+        "sort_label": "Sort by",
+        "sort_quantity_short": "Quantity sold",
+        "sort_revenue_short": "Revenue",
+        "sort_by_quantity": "Sort by quantity sold",
+        "sort_by_revenue": "Sort by revenue",
         "view_all": "View all",
         "no_data": "No sales recorded in this period"
       },

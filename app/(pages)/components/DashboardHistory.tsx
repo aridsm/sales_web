@@ -13,7 +13,6 @@ import { ActionType } from "@/enums/ActionType";
 import { formatDateTime } from "@/app/utils/formatters/date";
 import AppCreatedBy from "@/app/components/AppCreatedBy";
 import Link from "next/link";
-import { ChevronRight } from "@mui/icons-material";
 
 export const DashboardHistory = ({
   entityLabels,
@@ -107,7 +106,7 @@ export const DashboardHistory = ({
       <AppGrid
         columns={historyColumns}
         pagination={historyPagination}
-        className="flex-1 w-full max-w-[100%] min-h-[280px]"
+        className="flex-1 w-full max-w-[100%] min-h-[260px] lg:min-h-0"
       />
     </AppCard>
   );

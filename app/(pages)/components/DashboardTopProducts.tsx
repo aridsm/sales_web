@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import AppCard from "../../components/AppCard";
 import AppTabs from "../../components/AppTabs";
@@ -9,7 +10,11 @@ import { useTranslation } from "@/app/utils/i18n";
 import { dashboardService } from "@/api/services/DashboardService";
 import { TopProductItem } from "@/api/schemas/Dashboard";
 import { formatCurrency } from "@/app/utils/formatters/currency";
-import { LocalMallOutlined, ChevronRight } from "@mui/icons-material";
+import {
+  LocalMallOutlined,
+  SwapVertRounded,
+  CheckRounded,
+} from "@mui/icons-material";
 import {
   BarChart,
   Bar,
@@ -36,6 +41,48 @@ export function DashboardTopProducts({
   const [topProducts, setTopProducts] = useState<TopProductItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"ranking" | "chart">("ranking");
+  const [sortBy, setSortBy] = useState<"quantity" | "revenue">("quantity");
+
+  const [sortMenuOpen, setSortMenuOpen] = useState(false);
+  const [menuCoords, setMenuCoords] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
+  const sortTriggerRef = useRef<HTMLButtonElement>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const updateMenuPosition = useCallback(() => {
+    if (!sortTriggerRef.current) return;
+    const rect = sortTriggerRef.current.getBoundingClientRect();
+    const viewportWidth =
+      typeof window !== "undefined" ? window.innerWidth : 1000;
+    const menuWidth = 190;
+
+    let left = rect.right - menuWidth;
+    if (left + menuWidth > viewportWidth - 12) {
+      left = viewportWidth - menuWidth - 12;
+    }
+    if (left < 12) {
+      left = 12;
+    }
+
+    setMenuCoords({ top: rect.bottom + 6, left });
+  }, []);
+
+  const openSortMenu = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    updateMenuPosition();
+    setSortMenuOpen(true);
+  };
+
+  const closeSortMenuDelayed = () => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setSortMenuOpen(false);
+    }, 150);
+  };
 
   useEffect(() => {
     let isCancelled = false;
@@ -45,13 +92,12 @@ export function DashboardTopProducts({
       .getTopProducts({
         start_date: startDate,
         end_date: endDate,
-        limit: 5,
+        limit: 15,
+        sort_by: sortBy,
       })
       .then((res) => {
         if (!isCancelled) {
-          const list = Array.isArray(res) ? [...res] : [];
-          list.sort((a, b) => b.total_revenue - a.total_revenue);
-          setTopProducts(list);
+          setTopProducts(Array.isArray(res) ? res : []);
         }
       })
       .catch((err) => {
@@ -69,17 +115,20 @@ export function DashboardTopProducts({
     return () => {
       isCancelled = true;
     };
-  }, [startDate, endDate]);
+  }, [startDate, endDate, sortBy]);
 
-  const maxRevenue = useMemo(() => {
+  const maxValue = useMemo(() => {
     if (topProducts.length === 0) return 1;
+    if (sortBy === "quantity") {
+      return Math.max(...topProducts.map((p) => p.quantity_sold), 1);
+    }
     return Math.max(...topProducts.map((p) => p.total_revenue), 1);
-  }, [topProducts]);
+  }, [topProducts, sortBy]);
 
   return (
-    <AppCard className="px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-5 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 min-h-[340px] lg:min-h-0 overflow-hidden">
+    <AppCard className="px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-4 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 min-h-[320px] lg:min-h-0 overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 mb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 mb-2.5">
         <div className="flex items-center gap-1.5 sm:gap-2.5 flex-wrap">
           <span className="font-semibold text-base sm:text-lg text-foreground truncate">
             {t("labels.dashboard.top_products.title")}
@@ -90,20 +139,96 @@ export function DashboardTopProducts({
         </div>
 
         {topProducts.length > 0 && (
-          <AppTabs
-            tabs={[
-              {
-                value: "ranking",
-                label: t("labels.dashboard.top_products.tab_ranking"),
-              },
-              {
-                value: "chart",
-                label: t("labels.dashboard.top_products.tab_chart"),
-              },
-            ]}
-            activeTab={viewMode}
-            onChange={(val) => setViewMode(val as "ranking" | "chart")}
-          />
+          <div className="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 shrink-0">
+            <button
+              ref={sortTriggerRef}
+              type="button"
+              onMouseEnter={openSortMenu}
+              onMouseLeave={closeSortMenuDelayed}
+              onClick={() =>
+                setSortBy((prev) =>
+                  prev === "quantity" ? "revenue" : "quantity",
+                )
+              }
+              className="p-1.5 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 rounded-xs text-label hover:text-foreground transition-colors cursor-pointer"
+              aria-label={t("labels.dashboard.top_products.sort_label")}
+            >
+              <SwapVertRounded fontSize="small" />
+            </button>
+
+            {sortMenuOpen &&
+              menuCoords &&
+              typeof document !== "undefined" &&
+              createPortal(
+                <div
+                  onMouseEnter={openSortMenu}
+                  onMouseLeave={closeSortMenuDelayed}
+                  style={{
+                    top: `${menuCoords.top}px`,
+                    left: `${menuCoords.left}px`,
+                  }}
+                  className="fixed z-50 w-48 bg-background-2 dark:bg-background-3 border border-border rounded-xs shadow-dropdown p-1.5 flex flex-col gap-0.5 animate-in fade-in zoom-in-95 duration-100"
+                >
+                  <span className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-label">
+                    {t("labels.dashboard.top_products.sort_label")}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSortBy("quantity");
+                      setSortMenuOpen(false);
+                    }}
+                    className={`w-full px-2 py-1.5 rounded-xs text-xs flex items-center justify-between transition-colors cursor-pointer ${
+                      sortBy === "quantity"
+                        ? "bg-primary/10 text-primary font-semibold"
+                        : "text-foreground hover:bg-background-3 dark:hover:bg-background-2"
+                    }`}
+                  >
+                    <span>
+                      {t("labels.dashboard.top_products.sort_quantity_short")}
+                    </span>
+                    {sortBy === "quantity" && (
+                      <CheckRounded style={{ fontSize: 14 }} />
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSortBy("revenue");
+                      setSortMenuOpen(false);
+                    }}
+                    className={`w-full px-2 py-1.5 rounded-xs text-xs flex items-center justify-between transition-colors cursor-pointer ${
+                      sortBy === "revenue"
+                        ? "bg-primary/10 text-primary font-semibold"
+                        : "text-foreground hover:bg-background-3 dark:hover:bg-background-2"
+                    }`}
+                  >
+                    <span>
+                      {t("labels.dashboard.top_products.sort_revenue_short")}
+                    </span>
+                    {sortBy === "revenue" && (
+                      <CheckRounded style={{ fontSize: 14 }} />
+                    )}
+                  </button>
+                </div>,
+                document.body,
+              )}
+
+            <AppTabs
+              tabs={[
+                {
+                  value: "ranking",
+                  label: t("labels.dashboard.top_products.tab_ranking"),
+                },
+                {
+                  value: "chart",
+                  label: t("labels.dashboard.top_products.tab_chart"),
+                },
+              ]}
+              activeTab={viewMode}
+              onChange={(val) => setViewMode(val as "ranking" | "chart")}
+            />
+          </div>
         )}
       </div>
 
@@ -120,102 +245,76 @@ export function DashboardTopProducts({
           </div>
         ) : topProducts.length === 0 ? (
           <AppEmptyState
-            className="flex-1 w-full border border-border bg-background-2 dark:bg-background rounded-xs my-auto py-8"
+            className="flex-1 w-full border border-border bg-background-2 dark:bg-background rounded-xs my-auto py-6"
             title={t("labels.grid.empty_title")}
             subtitle={t("labels.dashboard.top_products.no_data")}
             icon={<LocalMallOutlined fontSize="medium" />}
           />
         ) : viewMode === "ranking" ? (
-          <div className="flex-1 flex flex-col min-h-0">
-            {/* Table Header */}
-            <div className="grid grid-cols-[24px_1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 pb-1.5 border-b border-border text-[11px] font-semibold text-label uppercase tracking-wider select-none">
-              <span className="text-center">
-                {t("labels.dashboard.top_products.rank")}
-              </span>
-              <span>{t("labels.dashboard.top_products.product")}</span>
-              <span className="text-right">
-                {t("labels.dashboard.top_products.quantity")}
-              </span>
-              <span className="text-right w-24 sm:w-28">
-                {t("labels.dashboard.top_products.revenue")}
-              </span>
-            </div>
+          <div className="flex-1 flex flex-col gap-1 overflow-y-auto py-1">
+            {topProducts.map((item) => {
+              const metricValue =
+                sortBy === "quantity"
+                  ? item.quantity_sold
+                  : item.total_revenue;
+              const percentage = Math.round((metricValue / maxValue) * 100);
+              const categoryColor = item.category_color || "var(--primary)";
 
-            {/* Rows */}
-            <div className="flex-1 flex flex-col gap-1 overflow-y-auto py-1">
-              {topProducts.map((item, index) => {
-                const percentage = Math.round(
-                  (item.total_revenue / maxRevenue) * 100,
-                );
-
-                return (
-                  <Link
-                    key={item.product_id}
-                    href="/products"
-                    className="relative group grid grid-cols-[24px_1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 py-1.5 rounded-xs hover:bg-background-3/60 dark:hover:bg-border/30 transition-colors"
-                  >
-                    {/* Integrated background bar */}
-                    <div
-                      className="absolute inset-y-0 left-0 bg-primary/6 dark:bg-border/45 rounded-xs transition-all duration-500 pointer-events-none"
-                      style={{ width: `${percentage}%` }}
-                    />
-
-                    {/* Rank */}
-                    <span
-                      className={`relative z-1 text-xs text-center select-none tabular-nums ${
-                        index === 0
-                          ? "font-bold text-primary"
-                          : "font-medium text-label"
-                      }`}
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-
-                    {/* Product & Category */}
-                    <div className="relative z-1 flex flex-col min-w-0 pr-1">
+              return (
+                <Link
+                  key={item.product_id}
+                  href="/products"
+                  className="group grid grid-cols-[1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 py-2 rounded-xs hover:bg-background-3/60 dark:hover:bg-border/30 transition-colors"
+                >
+                  {/* Product & Category */}
+                  <div className="flex flex-col min-w-0 pr-1 gap-1.5">
+                    <div className="flex items-center gap-2 min-w-0">
                       <span className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
                         {item.product_name}
                       </span>
-                      <div className="flex items-center gap-1.5 text-xs text-label mt-0.5">
-                        <span
-                          className="w-1.5 h-1.5 rounded-full shrink-0"
-                          style={{
-                            backgroundColor:
-                              item.category_color || "var(--primary)",
-                          }}
-                        />
-                        <span className="truncate">{item.category_name}</span>
-                      </div>
+                      <span className="text-xs text-label truncate max-w-28 shrink-0">
+                        {item.category_name}
+                      </span>
                     </div>
+                    <div className="w-full h-2 rounded-xs bg-border/50 overflow-hidden">
+                      <div
+                        className="h-full rounded-xs transition-all duration-500"
+                        style={{
+                          width: `${percentage}%`,
+                          backgroundColor: categoryColor,
+                        }}
+                      />
+                    </div>
+                  </div>
 
-                    {/* Quantity */}
-                    <span className="relative z-1 text-xs text-label text-right shrink-0 tabular-nums">
-                      {item.quantity_sold} un.
-                    </span>
+                  {/* Quantity */}
+                  <span
+                    className={`text-right shrink-0 tabular-nums ${
+                      sortBy === "quantity"
+                        ? "text-xs font-semibold text-foreground"
+                        : "text-xs text-label"
+                    }`}
+                  >
+                    {item.quantity_sold} un.
+                  </span>
 
-                    {/* Revenue */}
-                    <span className="relative z-1 text-sm font-semibold text-foreground text-right w-24 sm:w-28 shrink-0 tabular-nums">
-                      {formatCurrency(item.total_revenue)}
-                    </span>
-                  </Link>
-                );
-              })}
-            </div>
-
-            {/* Footer View all */}
-            <div className="pt-2 border-t border-border flex justify-end shrink-0">
-              <Link
-                href="/products"
-                className="text-xs text-primary hover:underline font-medium inline-flex items-center gap-0.5"
-              >
-                <span>{t("labels.dashboard.top_products.view_all")}</span>
-                <ChevronRight style={{ fontSize: 14 }} />
-              </Link>
-            </div>
+                  {/* Revenue */}
+                  <span
+                    className={`text-sm text-right w-24 sm:w-28 shrink-0 tabular-nums ${
+                      sortBy === "revenue"
+                        ? "font-semibold text-foreground"
+                        : "font-medium text-foreground-2"
+                    }`}
+                  >
+                    {formatCurrency(item.total_revenue)}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         ) : (
           /* Chart View */
-          <div className="flex-1 w-full min-h-[220px]">
+          <div className="flex-1 w-full min-h-[180px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 layout="vertical"
@@ -232,7 +331,9 @@ export function DashboardTopProducts({
                   axisLine={false}
                   tickLine={false}
                   tick={{ fill: "#888888", fontSize: 11 }}
-                  tickFormatter={(v) => formatCurrency(v)}
+                  tickFormatter={(v) =>
+                    sortBy === "quantity" ? `${v} un.` : formatCurrency(v)
+                  }
                 />
                 <YAxis
                   type="category"
@@ -286,7 +387,12 @@ export function DashboardTopProducts({
                   }}
                   cursor={{ fill: "transparent" }}
                 />
-                <Bar dataKey="total_revenue" radius={[0, 3, 3, 0]}>
+                <Bar
+                  dataKey={
+                    sortBy === "quantity" ? "quantity_sold" : "total_revenue"
+                  }
+                  radius={[0, 3, 3, 0]}
+                >
                   {topProducts.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}

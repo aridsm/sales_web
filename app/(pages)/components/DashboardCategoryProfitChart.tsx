@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import AppCard from "../../components/AppCard";
 import AppTabs from "../../components/AppTabs";
@@ -12,7 +12,6 @@ import {
   ShoppingCartOutlined,
   ReceiptOutlined,
   Inventory2Outlined,
-  ChevronRight,
 } from "@mui/icons-material";
 
 export const DashboardCategoryProfitChart = ({
@@ -20,7 +19,6 @@ export const DashboardCategoryProfitChart = ({
   endDate,
   activePeriod,
 }: {
-  entityLabels?: Record<number, string>;
   startDate: string;
   endDate: string;
   activePeriod: string;
@@ -72,11 +70,6 @@ export const DashboardCategoryProfitChart = ({
     };
   }, [startDate, endDate, activeTab]);
 
-  const maxAmount = useMemo(() => {
-    if (categoriesAmounts.items.length === 0) return 1;
-    return Math.max(...categoriesAmounts.items.map((item) => item.value), 1);
-  }, [categoriesAmounts.items]);
-
   const emptyIcon =
     activeTab === "sales" ? (
       <ShoppingCartOutlined fontSize="medium" />
@@ -87,9 +80,9 @@ export const DashboardCategoryProfitChart = ({
     );
 
   return (
-    <AppCard className="px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-5 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 min-h-[360px] lg:min-h-0 overflow-hidden">
+    <AppCard className="px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:pt-4 lg:pb-4 flex flex-col lg:col-span-5 min-[1580px]:col-span-4 min-h-[360px] lg:min-h-0 overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col gap-2.5 mb-3 shrink-0">
+      <div className="flex flex-col gap-2.5 mb-2.5 shrink-0">
         <div className="flex items-center justify-between gap-2 min-w-0">
           <span className="font-semibold text-base sm:text-lg text-foreground truncate">
             {activeTab === "sales"
@@ -105,7 +98,7 @@ export const DashboardCategoryProfitChart = ({
 
         <AppTabs
           fullWidth
-          className="w-full [&_button]:px-2 sm:[&_button]:px-3 [&_button]:text-xs"
+          className="w-full [&_button]:px-2 sm:[&_button]:px-3"
           tabs={[
             {
               value: "sales",
@@ -138,31 +131,16 @@ export const DashboardCategoryProfitChart = ({
           </div>
         ) : categoriesAmounts.items.length === 0 ? (
           <AppEmptyState
-            className="flex-1 w-full border border-border bg-background-2 dark:bg-background rounded-xs my-auto py-8"
+            className="flex-1 w-full border border-border bg-background-2 dark:bg-background rounded-xs my-auto py-6"
             title={t("labels.grid.empty_title")}
             subtitle={t("labels.dashboard.charts.no_data")}
             icon={emptyIcon}
           />
         ) : (
           <div className="flex-1 flex flex-col min-h-0">
-            {/* Table Header */}
-            <div className="grid grid-cols-[24px_1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 pb-1.5 border-b border-border text-[11px] font-semibold text-label uppercase tracking-wider select-none">
-              <span className="text-center">
-                {t("labels.dashboard.top_products.rank")}
-              </span>
-              <span>{t("labels.dashboard.charts.category")}</span>
-              <span className="text-right">
-                {t("labels.dashboard.charts.share")}
-              </span>
-              <span className="text-right w-24 sm:w-28">
-                {t("labels.dashboard.charts.amount")}
-              </span>
-            </div>
-
             {/* Rows */}
             <div className="flex-1 flex flex-col gap-1 overflow-y-auto py-1">
-              {categoriesAmounts.items.map((item, index) => {
-                const barWidth = Math.round((item.value / maxAmount) * 100);
+              {categoriesAmounts.items.map((item) => {
                 const sharePercent =
                   categoriesAmounts.total > 0
                     ? ((item.value / categoriesAmounts.total) * 100).toFixed(1)
@@ -173,27 +151,10 @@ export const DashboardCategoryProfitChart = ({
                   <Link
                     key={item.category_id}
                     href="/categories"
-                    className="relative group grid grid-cols-[24px_1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 py-2 rounded-xs hover:bg-background-3/60 dark:hover:bg-border/30 transition-colors"
+                    className="group grid grid-cols-[1fr_auto_auto] items-center gap-2 sm:gap-3 px-2 py-2 rounded-xs hover:bg-background-3/60 dark:hover:bg-border/30 transition-colors"
                   >
-                    {/* Integrated background bar */}
-                    <div
-                      className="absolute inset-y-0 left-0 bg-primary/6 dark:bg-border/45 rounded-xs transition-all duration-500 pointer-events-none"
-                      style={{ width: `${barWidth}%` }}
-                    />
-
-                    {/* Rank */}
-                    <span
-                      className={`relative z-1 text-xs text-center select-none tabular-nums ${
-                        index === 0
-                          ? "font-bold text-primary"
-                          : "font-medium text-label"
-                      }`}
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-
                     {/* Category Name & Color Bar */}
-                    <div className="relative z-1 flex flex-col min-w-0 pr-1 gap-1">
+                    <div className="flex flex-col min-w-0 pr-1 gap-1.5">
                       <div className="flex items-center gap-2 min-w-0">
                         <span
                           className="w-2.5 h-2.5 rounded-xs shrink-0"
@@ -203,9 +164,9 @@ export const DashboardCategoryProfitChart = ({
                           {item.category_name}
                         </span>
                       </div>
-                      <div className="w-full h-1 rounded-full bg-border/50 overflow-hidden">
+                      <div className="w-full h-2 rounded-xs bg-border/50 overflow-hidden">
                         <div
-                          className="h-full rounded-full transition-all duration-500"
+                          className="h-full rounded-xs transition-all duration-500"
                           style={{
                             width: `${sharePercent}%`,
                             backgroundColor: categoryColor,
@@ -215,12 +176,12 @@ export const DashboardCategoryProfitChart = ({
                     </div>
 
                     {/* Share % */}
-                    <span className="relative z-1 text-xs text-label text-right shrink-0 tabular-nums">
+                    <span className="text-xs text-label text-right shrink-0 tabular-nums">
                       {sharePercent}%
                     </span>
 
                     {/* Value */}
-                    <span className="relative z-1 text-sm font-semibold text-foreground text-right w-24 sm:w-28 shrink-0 tabular-nums">
+                    <span className="text-sm font-semibold text-foreground text-right w-24 sm:w-28 shrink-0 tabular-nums">
                       {formatCurrency(item.value)}
                     </span>
                   </Link>
@@ -228,23 +189,14 @@ export const DashboardCategoryProfitChart = ({
               })}
             </div>
 
-            {/* Footer Total & View all */}
-            <div className="pt-2 border-t border-border flex items-center justify-between gap-2 shrink-0">
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-label font-medium">
-                  {t("labels.dashboard.charts.total")}:
-                </span>
-                <span className="font-semibold text-foreground tabular-nums">
-                  {formatCurrency(categoriesAmounts.total)}
-                </span>
-              </div>
-              <Link
-                href="/categories"
-                className="text-xs text-primary hover:underline font-medium inline-flex items-center gap-0.5"
-              >
-                <span>{t("labels.dashboard.charts.view_all")}</span>
-                <ChevronRight style={{ fontSize: 14 }} />
-              </Link>
+            {/* Footer Total */}
+            <div className="pt-1.5 border-t border-border flex items-center justify-end gap-1.5 text-xs shrink-0">
+              <span className="text-label font-medium">
+                {t("labels.dashboard.charts.total")}:
+              </span>
+              <span className="font-semibold text-foreground tabular-nums">
+                {formatCurrency(categoriesAmounts.total)}
+              </span>
             </div>
           </div>
         )}
@@ -252,4 +204,3 @@ export const DashboardCategoryProfitChart = ({
     </AppCard>
   );
 };
-

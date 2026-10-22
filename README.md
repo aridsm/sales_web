@@ -1,6 +1,8 @@
 # SalesApp Web (`sales_web`)
 
-Interface web moderna para gestão de vendas, controle de estoque, despesas e acompanhamento financeiro em tempo real. Desenvolvida com **Next.js (App Router)**, **React 19**, **TypeScript** e **Tailwind CSS 4**, consumindo a API REST e WebSockets do [`sales_api`](../sales_api).
+Interface web moderna para gestão de vendas, controle de estoque, despesas e acompanhamento financeiro em tempo real. Desenvolvida com **Next.js (App Router)**, **React 19**, **TypeScript** e **Tailwind CSS 4**, consumindo a API REST e WebSockets do [`sales_api`](https://github.com/aridsm/sales_api).
+
+> ⚙️ **Repositório Back-end (API):** [`sales_api`](https://github.com/aridsm/sales_api) — API assíncrona desenvolvida com FastAPI, SQLModel, PostgreSQL 16, Redis 7 e Alembic.
 
 ---
 
@@ -79,7 +81,7 @@ sales_web/
 
 - **Node.js** `20+`
 - **pnpm** (ou `npm` / `yarn`)
-- Backend [`sales_api`](../sales_api) em execução (padrão em `http://localhost:8000`)
+- Backend [`sales_api`](https://github.com/aridsm/sales_api) em execução (padrão em `http://localhost:8000`)
 
 ### 2. Variáveis de Ambiente
 

@@ -6,7 +6,8 @@
         "today": "Hoje",
         "this_week": "Esta semana",
         "this_month": "Este mês",
-        "this_year": "Este ano"
+        "this_year": "Este ano",
+        "all_time": "Geral"
       },
       "frequencies": {
         "today": "Diário",
@@ -18,7 +19,11 @@
         "current_balance": "Saldo atual",
         "net_profit": "Lucro líquido",
         "revenue": "Receitas",
-        "expenses": "Despesas"
+        "expenses": "Despesas",
+        "current_balance_info": "Saldo acumulado geral da empresa: total de vendas concluídas menos entradas de estoque e outras despesas.",
+        "net_profit_info": "Resultado líquido do período selecionado (Receitas menos Despesas do período).",
+        "revenue_info": "Soma do valor líquido das vendas concluídas no período selecionado (já considerando descontos).",
+        "expenses_info": "Soma das Entradas de Estoque (compras de produtos) e das Outras Despesas registradas no período."
       },
       "charts": {
         "revenue_vs_expenses": "Receitas vs Despesas",
@@ -52,6 +57,11 @@
         "units_sold": "{{count}} un",
         "tab_ranking": "Ranking",
         "tab_chart": "Gráfico",
+        "sort_label": "Ordenar por",
+        "sort_quantity_short": "Quantidade vendida",
+        "sort_revenue_short": "Faturamento",
+        "sort_by_quantity": "Ordenar por quantidade vendida",
+        "sort_by_revenue": "Ordenar por faturamento",
         "view_all": "Ver tudo",
         "no_data": "Nenhuma venda registrada no período"
       },

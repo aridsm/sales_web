@@ -32,6 +32,7 @@ export class DashboardService extends BaseService<DashboardChart> {
     start_date?: string;
     end_date?: string;
     limit?: number;
+    sort_by?: "quantity" | "revenue";
   }): Promise<TopProductItem[]> {
     return (
       await axiosClient.get(`/${this.resource}/top-products`, {

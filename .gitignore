@@ -40,3 +40,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch
+/scratch
+
+# AI agent config files
+AGENTS.md
+CLAUDE.md
+
+

@@ -1,10 +1,8 @@
 "use client";
 
 import AppPage from "../components/AppPage";
-import { useState, useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
 import AppTabs from "../components/AppTabs";
-import { useTokenStore } from "@/stores/tokenStore";
 import { useTranslation } from "@/app/utils/i18n";
 import { DashboardKPIs } from "./components/DashboardKPIs";
 import { DashboardRevenueExpenseChart } from "./components/DashboardRevenueExpenseChart";
@@ -74,8 +72,8 @@ export default function DashboardPage() {
   }, [activePeriod]);
 
   return (
-    <AppPage title="Dashboard" scrollable>
-      <div className="flex flex-col gap-2 sm:gap-2.5 lg:gap-3.5 lg:flex-1">
+    <AppPage title="Dashboard" scrollable contentClassName="py-3 sm:py-4">
+      <div className="flex flex-col gap-2 sm:gap-2.5 lg:gap-3 lg:flex-1">
         <div className="flex items-center gap-2 overflow-x-auto max-w-full pb-1 shrink-0">
           <AppTabs
             tabs={Object.entries(datePeriods).map(([key]) => ({
@@ -87,9 +85,13 @@ export default function DashboardPage() {
           />
         </div>
 
-        <DashboardKPIs startDate={startDate} endDate={endDate} />
+        <DashboardKPIs
+          startDate={startDate}
+          endDate={endDate}
+          activePeriod={activePeriod}
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[minmax(280px,340px)_minmax(380px,1fr)] lg:flex-1 gap-2 sm:gap-2.5 lg:gap-3.5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[350px_430px] lg:flex-1 gap-2 sm:gap-2.5 lg:gap-3.5">
           <DashboardRevenueExpenseChart activePeriod={activePeriod} />
           <DashboardTopProducts
             startDate={startDate}
@@ -103,7 +105,6 @@ export default function DashboardPage() {
             activePeriod={activePeriod}
           />
           <DashboardCategoryProfitChart
-            entityLabels={entityLabels}
             startDate={startDate}
             endDate={endDate}
             activePeriod={activePeriod}

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AppCard from "../../../components/AppCard";
 import AppButton from "../../../components/AppButton";
 import AppEmptyState from "../../../components/AppEmptyState";
@@ -42,6 +43,8 @@ export function SaleCart({
   onDateChange: (value: string) => void;
 }) {
   const { t } = useTranslation();
+  const [editingQty, setEditingQty] = useState<Record<string, string>>({});
+
   return (
     <div className="w-full h-full flex flex-col min-h-0">
       <AppCard className="flex-1 flex flex-col min-h-0 overflow-hidden">
@@ -129,16 +132,82 @@ export function SaleCart({
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-1">
                         <button
-                          onClick={() => onUpdateQuantity(item.product.id, -1)}
+                          onClick={() => {
+                            setEditingQty((prev) => {
+                              const next = { ...prev };
+                              delete next[item.product.id];
+                              return next;
+                            });
+                            onUpdateQuantity(item.product.id, -1);
+                          }}
                           className="w-7 h-7 rounded-xs border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3"
                         >
                           <RemoveOutlined style={{ fontSize: 14 }} />
                         </button>
-                        <span className="w-8 text-center font-semibold text-foreground text-sm">
-                          {item.quantity}
-                        </span>
+                        <input
+                          type="number"
+                          min={1}
+                          max={item.product.stock_amount}
+                          value={
+                            editingQty[item.product.id] !== undefined
+                              ? editingQty[item.product.id]
+                              : item.quantity
+                          }
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "-" ||
+                              e.key === "e" ||
+                              e.key === "E" ||
+                              e.key === "." ||
+                              e.key === ","
+                            ) {
+                              e.preventDefault();
+                            }
+                          }}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            setEditingQty((prev) => ({
+                              ...prev,
+                              [item.product.id]: raw,
+                            }));
+                            const parsed = parseInt(raw, 10);
+                            if (!isNaN(parsed) && parsed > 0) {
+                              const clamped = Math.min(
+                                parsed,
+                                item.product.stock_amount,
+                              );
+                              if (clamped !== item.quantity) {
+                                onUpdateQuantity(
+                                  item.product.id,
+                                  clamped - item.quantity,
+                                );
+                              }
+                              if (parsed > item.product.stock_amount) {
+                                setEditingQty((prev) => ({
+                                  ...prev,
+                                  [item.product.id]: String(clamped),
+                                }));
+                              }
+                            }
+                          }}
+                          onBlur={() => {
+                            setEditingQty((prev) => {
+                              const next = { ...prev };
+                              delete next[item.product.id];
+                              return next;
+                            });
+                          }}
+                          className="w-12 h-7 text-center font-semibold text-foreground text-sm border border-border rounded-xs bg-background dark:bg-background-2 focus:outline-none focus:border-primary tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
                         <button
-                          onClick={() => onUpdateQuantity(item.product.id, 1)}
+                          onClick={() => {
+                            setEditingQty((prev) => {
+                              const next = { ...prev };
+                              delete next[item.product.id];
+                              return next;
+                            });
+                            onUpdateQuantity(item.product.id, 1);
+                          }}
                           disabled={item.quantity >= item.product.stock_amount}
                           className="w-7 h-7 rounded-xs border border-border hover:border-border-2 flex items-center justify-center text-foreground-2 hover:text-foreground transition-all cursor-pointer bg-background-2 dark:bg-background-3 disabled:opacity-40 disabled:cursor-not-allowed"
                         >
